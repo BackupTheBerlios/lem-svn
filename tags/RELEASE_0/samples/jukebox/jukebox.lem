@@ -1,0 +1,283 @@
+// A sample LEM model that describes a Jukebox
+// This model is the work of the Executable Study Group lead by Greg O'Keefe 
+//
+// $Id$
+// $Log$
+// Revision 1.1  2005/03/15 12:17:16  u3957053
+// Initial revision
+//
+// Revision 1.9  2005/01/25 01:22:59  u2550921
+// Restructured and updated to align with work done by Annette
+//
+// Revision 1.8  2004/11/08 23:03:03  u2550921
+// Parameters values cannot be refernces to instances, must use ids instead
+//
+// Revision 1.7  2004/10/06 11:04:46  u2550921
+// fix some errors
+//
+// Revision 1.6  2004/09/16 20:01:33  u2550921
+// Added events and state machine definition for PlaylistItem
+//
+// Revision 1.5  2004/09/14 03:14:25  u2550921
+// Start experimenting with Event declarations
+//
+// Revision 1.4  2004/09/14 02:13:19  u2550921
+// Insert the "attribute" keyword
+//
+// Revision 1.3  2004/09/01 01:32:49  u2550921
+// Fix some glaring grammatical and spelling errors ;-)
+//
+// Revision 1.2  2004/08/31 22:26:09  u2550921
+// Some additional comments
+//
+// Revision 1.1  2004/08/31 22:10:01  u2550921
+// first draft of CIM
+//
+//                      -----------------------------------------
+
+/*
+ * Lets define the model...
+ * for a picture of this model see http://xtuml.jdns.org/samples/jukebox/cim.png
+ *
+ * LEM is an experimental Language for Executable Models. Its mission is to 
+ * provide a means of formally expressing an xtUML model in plain text while
+ * remaining readable by domain experts.  LEM's key driver is human readibility. 
+ *
+ * While modelling a problems, authors are invited to explain modelled concepts
+ * in natural language "descriptions" embedded in the LEM text.
+ *
+ * LEM's grammar definition can be found at http://xtuml.jdns.org/LemParser.html 
+ *
+ * Comments on LEM's structure, syntax and readability are welcome. 
+ * Please mailto:steven@southsky.com.au
+ *                        
+ *                      ------------------------------------------
+ */
+
+
+model Jukebox is 
+
+  "an executable UML model of an electronic entertainment center"
+
+  domain MusicPlayer is
+  
+    "concerned with the storage and playing of music tracks"
+
+	// define some domain specific types
+
+	type ItemName 
+	   "names are assigned to things in the player (tracks, playlists, etc)"
+		is string length: 60;
+	type Direction 
+	   "a convenient way to re-order things" 
+	   is ( UP or DOWN );
+	type ID 
+	    "used for identification of things" 
+		is arbitrary_id;
+   
+	subsystem mainSubsystem is 
+
+      "a definition of the high level conceptual concepts of the jukebox"
+	   
+	   // ------------------------------------------------------------------------
+	   // Now define a Playlist.
+	   // ------------------------------------------------------------------------
+
+       object Track is 
+	   
+	   	 "an item of music that can be played by the Jukebox"
+
+		  attribute trackID 
+		  	"a unique identifier for a track" is ID;
+
+		  attribute trackTitle 
+		  	"the name of the track" is ItemName;
+
+		  attribute composer
+		    "the name of the composer of the track" is string;
+
+		  attribute content 
+		  	"the audio data for this Track" is string;
+
+		  identifier is trackID;
+
+       end Track;
+	   
+	   // ------------------------------------------------------------------------
+	   // Now define a Playlist.
+	   // ------------------------------------------------------------------------
+
+	   object Playlist is
+
+	     "a collection of one or more tracks that may be played
+		  sequentially or in random order.  A playlist is a core concept within
+		  the Jukebox."
+
+		  // define the attributes of a playlist
+
+		  attribute title "the title of the PlayList" is ItemName;
+
+		  identifier 
+		  
+		  		"playlists are uniquely identified by their title
+		  		
+				is title;
+
+		  // define the external events to which a playlist will respond
+
+		  event Create 
+		  	"creates a new Playlist with a specific name" 
+				carries ( aName is string );
+
+		  event Swap 
+		  	"swap two playlist items" 
+				carries ( direction is Direction,
+						  plId is ID );
+
+		  event AddTrack 
+		  	"adds a track to the playlist" 
+				carries ( trackId is ID );
+
+		  event DeleteTrack 
+		  	"removes a track from the playlist" 
+				carries ( trackId is ID );
+
+	   end Playlist;
+
+	   association R1 is 
+
+	     "the notion that a Playlist is a collection of zero or more Tracks" 
+
+	     Playlist "organises" 0..* Track;
+		 Track "is organised by" 0..* Playlist;
+
+		 // ----------------------------------------------------------------
+		 // note here that PlaylistItem is an Associative Class. It defines
+		 // attributes and behaviour for PlayListItems
+		 // ----------------------------------------------------------------
+		 
+		 object PlaylistItem is 
+		 
+		   "an individual Track on a single Playlist"
+		 
+		   	attribute id "a unique identifier for a PlayListItem" is ID;
+
+			attribute name 
+			   "the name of the playlist" is ItemName;
+
+			referential attriubte trackId
+			   "identifies the Track associated with this PlaylistItem"
+			   refers to Track.id across R1;
+			   
+			referential attribute nextItem
+			   "is the id of the next PlaylistItem in the Playlist"
+			   refers to "precedes" PlaylistItem.id across R2;
+
+			referential attribute lastItem
+			   "is the id of the previous PlaylistItem in the Playlist"
+			   refers to "follows" PlaylistItem.id across R2;
+			
+			// identifiers 
+
+			identifier is id;
+			identifier is id, name and trackId;
+
+			// events
+			
+            event Stop 
+			   "causes this PlaylistItem to cease playing";
+
+            event Create 
+			   "creates a new PlaylistItem" 
+				carries ( aTitle is ItemName, aTrackId is ID );
+
+			event Delete 
+			   "destroys this PlayListItem";
+
+		 	event Play 
+			   "initiates the playing of a playable item";
+
+		 	event Pause 
+			   "causes this PlaylistItem to pause playing
+			    playing may be resumed via a Play event";
+				
+			event Done 
+			   "is sent by the soundcard hardware indicating the 
+			    playing is done";
+
+			// State machine starts here 
+
+            behaviour is "described as a series of states and transitions arrising from events"
+
+				state Creating "creates a new playlist item"
+					( aTitle is ItemName, aTrackId is ID ) is
+
+					// action language goes here
+
+					generate Stop to self;
+
+				end Loading;
+
+				state Playing "when this PlaylistItem is being played" is
+
+					// action language here
+					// including the code to send a small segment of MP3 data
+					// to the hardware
+
+					// set self.playing := true;
+					// set self.position := self.position + 0.01; // assume 10 msecs of data sent
+
+				end Playing;
+
+				state Paused "the player has been instructed to pause" is
+
+					// action language here
+
+				end Paused;
+
+				state Stopped "this PlayListItem is not playing" is
+
+					// set self.playing := false;
+					// set self.position := 0.0;
+
+				end Stopped;
+
+				deletion state Deleting "the PlayListItem is being removed from the Playlist" is 
+
+					// action language here
+
+				end Deleting;
+
+				// join the states together by definining state transitions
+				// form an old state to a new state on receipt of a certain event
+
+				on New transition from creation state to Creating;
+				on Stop transition from Loading to Stopped;
+				on Stop transition from Playing to Stopped;
+				on Stop transition from Paused to Stopped;
+				on Play transition from Stopped to Playing;
+				on Pause transition from Playing to Paused;
+				on Pause transition from Paused to Playing;
+				on Done transition from Playing to Stopped;
+				on Delete transition from Stopped to Deleting;
+
+           end behaviour;
+						 
+		 end PlaylistItem;
+
+	   end R1;
+
+	   association R2 is 
+	   
+	   	  "PlayListItems are arranged as an ordered list with the PlayList" 
+		  
+	       PlaylistItem "precedes" 0..1 PlaylistItem;
+	       PlaylistItem "follows" 0..1 PlaylistItem;
+
+	   end R2;
+
+    end mainSubsystem;
+
+  end MusicPlayer;
+
+end Jukebox;

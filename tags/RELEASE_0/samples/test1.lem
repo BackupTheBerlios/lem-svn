@@ -1,0 +1,7 @@
+Model TestModel is 
+  "A demonstration
+   of LEM
+   This is a very long description 
+   consisting of many lines
+   of detailed explanation"
+End TestModel;

@@ -1,0 +1,34 @@
+// Timesheet and billing system
+//
+// Steven Ring, October 2004
+//
+// $Id$
+//==================================================================================
+
+
+model BillingSystem is "concerned with billing client"
+   domain Timesheets is "the domain of client, jobs, tasks, activities, timesheets"
+
+	type UID "a unique identifier" is string length:30;
+	type Description "descriptive text" is string length: 2500;
+	type Duration 
+			"a period of time in hours to two decimal places" is numeric
+			precision: 0.01;
+
+	subsystem Activities is 
+
+		object Activity is "Time spent on a clients job" 
+			
+			attribute uid  		"a unique identifier for an activity" is UID;
+			attribute client  	"the name of the client" is string;
+			attribute startTime  	"the time the activity started" is date;
+			attribute endTime  	"the time the activity finished" is date;
+			attribute workDone  	"a description of the activity" is Description;
+			attribute duration "the time spend on this activity" is Duration;
+
+			identifier is uid;
+
+		end Activity;
+       end Activities;
+   end Timesheets;
+end BillingSystem;
