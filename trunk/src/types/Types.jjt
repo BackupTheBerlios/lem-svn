@@ -1,0 +1,460 @@
+options {
+    STATIC = false;
+    VISITOR = false;
+    MULTI = true;
+    NODE_USES_PARSER=true;
+	NODE_PREFIX = "TYPES";
+	NODE_PACKAGE = "types";
+}
+
+PARSER_BEGIN(Types)
+
+ /* Test Type declarations
+ *
+ * @author  Steven Ring
+ */
+public class Types {
+
+    public static void main(String args[]) {
+
+        
+        Types parser = null;
+        try {
+        	parser = new Types( System.in );
+            
+			// parse the input file to generate a parse tree
+			// (exceptions at this point are fatal)
+            
+            TYPESModelDeclaration td = parser.ModelDeclaration();
+            
+            // if no exceptions were thrown, then the input stream is valid LEM
+            
+            System.out.println("Input file is VALID.");
+            
+            // all done ... bit of an anti-climax really!
+            
+        } catch ( Exception e) {
+
+            System.err.println("Doh! ... got " + e.getClass().getName() );
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+        }
+        
+        System.exit( 0 );
+    }
+}
+
+PARSER_END(Types)
+
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+| <"//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
+| <"/*" (~["*"])* "*" (~["/"] (~["*"])* "*")* "/">
+}
+
+TOKEN : /* LITERALS */
+{
+  < DECIMAL_LITERAL: ["0"-"9"] (["0"-"9"])* >
+| < REAL_LITERAL:
+        (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)? (["f","F","d","D"])?
+      | "." (["0"-"9"])+ (<EXPONENT>)? (["f","F","d","D"])?
+      | (["0"-"9"])+ <EXPONENT> (["f","F","d","D"])?
+      | (["0"-"9"])+ (<EXPONENT>)? ["f","F","d","D"]
+  >
+|
+  < #EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
+|
+  < STRING_LITERAL:
+      "\""
+      (   (~["\"","\\"])
+        | ("\\"
+            ( ["n","t","b","r","f","\\","'","\""]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )*
+      "\""
+  >
+}
+
+/* RESERVED WORDS AND LITERALS */
+
+TOKEN :
+{
+  < ARBITRARY_ID: "arbitrary_id" >
+| < BOOLEAN: "boolean" >
+| < DATE: "date" >
+| < INTEGER: "integer" >
+| < REAL: "real" >
+| < STRING: "string">
+| < TIMESTAMP: "timestamp" >
+| < UNIQUE_ID: "unique_id" >
+| < ARRAY: "array">
+
+}
+
+
+TOKEN : /* IDENTIFIERS */
+{
+  <ASSOCIATION: "association">
+| <GENERALISATION: "generalisation">
+| <SPECIALISATION: "specialisation">
+| <ATTRIBUTE: "attribute">
+| <END: "end">
+| <ABS: "abs">
+| <REM: "rem">
+| <MOD: "mod">
+| <AND: "and">
+| <NOT: "not">
+| <BETWEEN: "between">
+| <BRIDGE: "bridge">
+| <OBJECT: "object">
+| <IS: "is">
+| <OR: "or">
+| <XOR: "xor">
+| <TRUE: "true">
+| <FALSE: "false">
+| <DOMAIN: "domain">
+| <SUBSYSTEM: "subsystem">
+| <MODEL: "model">
+| <TYPE: "type">
+| <DESCRIPTION: "description">
+| <STATE: "state">
+| <TRANSITION: "transition">
+| <EVENT: "event">
+| <BEHAVIOUR: "behaviour">
+| <TO: "to">
+| <FROM: "from">
+| <BY: "by">
+| <AT: "at">
+| <ON: "on">
+| <NULL: "null">
+| <CARRIES: "carries">
+| <CREATION: "creation">
+| <DELETION: "deletion">
+| <SELF: "self">
+| <GENERATE: "generate">
+| <DELAY: "delay">
+| <DECLARE: "declare">
+| <CANCEL: "cancel">
+| <RELATED: "related">
+| <RELATE: "relate">
+| <UNRELATE: "unrelate">
+| <WHERE: "where">
+| <THAT: "that">
+| <RELATES: "relates">
+| <ACROSS: "across">
+| <INSTANCES: "instances">
+| <INSTANCE: "instance">
+| <OF: "of">
+| <ONE: "one">
+| <MANY: "many">
+| <ANY: "any">
+| <SET: "set">
+| <SELECT: "select">
+| <CREATING: "creating">
+| <CREATE: "create">
+| <RECLASSIFY: "reclassify">
+| <DELETE: "delete">
+| <FOR: "for">
+| <EACH: "each">
+| <WHILE: "while">
+| <IN: "in">
+| <IF: "if">
+| <ELSE: "else">
+| <ELSEIF: "elseif">
+| <RANGE: "range">
+| <PATTERN: "pattern" >
+| <NUMERIC: "numeric" >
+| <UNITS: "units" >
+| <LENGTH: "length" >
+| <PRECISION: "precision" >
+| < IDENTIFIER: <LETTER> (<LETTER>|<DIGIT>)* >
+| < #LETTER: ["_","a"-"z","A"-"Z"] >
+| < #UPPER_LETTER: ["A" - "Z"] >
+| < #LOWER_LETTER: ["a" - "z"] >
+| < #DIGIT: ["0"-"9"] >
+| <SEMI: ";">
+| <LBRACKET: "[">
+| <RBRACKET: "]">
+| <LPAREN: "(">
+| <RPAREN: ")">
+| <COMMA: ",">
+| <COLON: ":">
+| <DOT: ".">
+| <DOT_DOT: "..">
+| <RIGHT_ARROW: "->">
+| <IS_ASSIGNED: ":=">
+| <EQUAL: "=" >
+|	<NE:		"/="	>
+|	<LT:		"<"	>
+|	<LT_EQ:		"<="	>
+|	<GT:		">"	>
+|	<GE:		">="	>
+|	<PLUS:		"+"	>
+|	<DASH:		"-"	>
+|	<AMPERSAND:	"&"	>
+|	<STAR:		"*"	>
+|	<SLASH:		"/"	>
+|	<EXPON:		"^"	>
+
+}
+
+TYPESModelDeclaration ModelDeclaration() : {}
+{
+		<MODEL> 
+			( TypeDeclaration() )+
+		<END>
+		{ return jjtThis; }
+}
+
+void TypeDeclaration() : {}
+{ 
+	<TYPE> TypeIdentifier()
+	[Description()]
+	<IS> TypeSpecification()
+	<SEMI>
+
+}
+
+void TypeIdentifier() : { }
+{
+  <IDENTIFIER>
+}
+
+void Description() : {}
+{ <STRING_LITERAL> }
+
+void PrimitiveType() : {}
+{ "arbitrary_id" | "numeric" | "string" | "boolean"  }
+
+void TypeSpecification() : {}
+{
+	(   <ARBITRARY_ID> 
+	  | EnumeratedList() 
+	  | <BOOLEAN> 
+	  | NumericTypeSpecification() 
+	  | StringTypeSpecification() 
+	)
+}
+
+void StringTypeSpecification() : {}
+{
+	<STRING> [ LengthSpec() ] [ PatternSpec() ]
+}
+
+void LengthSpec() : {}
+{
+	<LENGTH> <DECIMAL_LITERAL>
+}
+
+void PatternSpec() : {}
+{
+	<PATTERN> <STRING_LITERAL>
+}
+
+
+
+void NumericTypeSpecification() : {}
+{
+	<NUMERIC> ( UnitsSpec() )? ( RangeSpec() )? ( PrecisionSpec() )?
+}
+
+void UnitsSpec() : {}
+{
+	<UNITS> <COLON> <STRING_LITERAL>
+}
+
+void RangeSpec() : {
+
+// constraint: LowRangeValue() and/or HighRangeValue() is required
+// constraint: LowRangeValue() must be less that HighRangeValue() where both are specified
+
+}
+{
+	<RANGE> <COLON> 
+			<LBRACKET>
+				[ LowRangeValue() ]  <COMMA>  [ HighRangeValue() ] 
+			<RBRACKET>
+}
+
+void LowRangeValue() : {}
+{
+	simple_expression()
+}
+
+void HighRangeValue() : {}
+{
+	simple_expression()
+}
+
+
+void PrecisionSpec() : {}
+{
+	<PRECISION> <COLON> PrecisionValue()
+}
+
+void PrecisionValue() : {}
+{
+	<REAL_LITERAL> | <DECIMAL_LITERAL>
+}
+
+void EnumeratedList() : {}
+{	"(" EnumerationMember() ("," EnumerationMember())* <OR> EnumerationMember()  ")"
+}
+
+void EnumerationMember() : {
+}
+{	<IDENTIFIER> } 
+
+
+
+
+// =========================================================
+
+//-----------------------------------------------------------------------------
+// Expressions 
+//-----------------------------------------------------------------------------
+
+void Name() : {}
+{ 
+	LOOKAHEAD(2)
+	( ObjectReference() "." AttributeIdentifier() )
+	| AttributeIdentifier()
+}
+
+void ObjectReference() : {}
+{ 	"self" | <IDENTIFIER> }
+
+void AttributeIdentifier() : {}
+{ 	<IDENTIFIER> }
+
+void Literal() : {} 
+{  	
+		<DECIMAL_LITERAL> 
+	| 	<REAL_LITERAL> 
+}
+
+void expression() :
+{}
+{
+	relation()
+	(	(	<AND>
+		|	<OR> 
+		|	<XOR>
+		)
+		relation()
+	)*
+}
+
+void relation() :
+{}
+{
+	simple_expression()
+	( relational() simple_expression()
+	)?
+}
+                 
+void relational() :
+{}
+{
+	<EQUAL>
+//	Revisit: does this go here?!?
+// |	<DOT_DOT>
+|	<NE>
+|	<LT>
+|	<LT_EQ>
+|	<GT>
+|	<GE>
+}
+
+void membership() :
+{}
+{
+	<IN>
+|	<NOT> <IN>
+}
+
+void simple_expression() :
+{}
+{
+	unary() term()
+|	term() ( adding() term() )*
+}
+
+void unary() :
+{}
+{
+	<PLUS>
+|	<DASH>
+}
+
+void adding() :
+{}
+{
+	<PLUS>
+|	<DASH>
+|	<AMPERSAND>
+}
+
+void term() :
+{}
+{
+	factor() ( multiplying() factor() )*
+}
+
+void multiplying() :
+{}
+{
+	<STAR>
+|	<SLASH>
+|	<MOD>
+|	<REM>
+}
+
+void factor() :
+{}
+{
+	primary() ( <EXPON> primary() )?
+|	<NOT> primary()
+|	<ABS> primary()
+}
+
+void primary() :
+{}
+{
+	Literal()
+|	Name()
+|	parenthesized_primary()
+}
+
+void parenthesized_primary() :
+{}
+{
+	aggregate()
+	// REVISIT Covered by aggregate
+	//  | LPAREN expression RPAREN
+}
+
+void qualified() :
+{}
+{
+	Name()
+	// REVISIT: SEMANTICS
+	// demands "TIC parenthesized_primary"
+	// is part of the name
+}
+
+void aggregate() :
+{}
+{
+	<LPAREN>
+	expression()
+	<RPAREN>
+}

@@ -1,0 +1,22 @@
+object Order is
+
+   ...
+
+   attribute dateOrderPlaced is Date;
+   derived attribute totalValue 
+      "the totalValue is the sum of all ProductSelections"
+      is Money
+      calculation is 
+	     
+         declare total is Money = 0.00;
+         select many selections related by self->ProductSelection across R3;
+         for each selection in selections
+            total = total + selection.selectionValue;
+         end for;
+         return total;
+
+      end calculation;
+
+   ...
+
+end Order;

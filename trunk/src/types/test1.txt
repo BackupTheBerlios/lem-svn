@@ -1,0 +1,20 @@
+model
+	type Mytype is boolean;
+	type ID "used to define arbitrary (and unique) identifiers" is arbitrary_id;
+	type SwitchOn "indicates if a switch is on or off" is boolean;
+	type Direction "one of the points of the compass" is ( North, South, East or West );
+	type CompassDirection "one of the points of the compass" is ( North or West );
+	type Name "acts as a human readable identifier" is string;
+	type Name is string;
+	type Name is string length 80 ;
+
+	type Age "in years" is numeric;
+	type Age "in years" is numeric units: "years";
+	type Age "in years" is numeric range: [-1.5,10.5];
+	type Age "in years" is numeric units: "years" precision: 1.0;
+	type Age "in years" is numeric units: "years" range: [0,999] precision: 1.0;
+	type Age "in years" is numeric units: "years" range: [0,MAX_AGE] precision: 1.0;
+	type Age "in years" is numeric units: "years" range: [0,Constants.MAX_AGE] precision: 1.0;
+	type Age "in years" is numeric units: "years" range: [0,5*Constants.MAX_AGE] precision: 1.0;
+	
+end

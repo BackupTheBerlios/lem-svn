@@ -1,0 +1,8 @@
+// A simple example of LEM with just the bare framework 
+//
+model SimpleModel is "a very simple example of LEM syntax"
+	domain SimpleDomain is "a very simple domain"
+		subsystem SimpleSubSystem is "a demonstration subsystem"
+		end SimpleSubSystem;
+	end SimpleDomain;
+end SimpleModel;

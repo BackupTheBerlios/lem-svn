@@ -1,0 +1,60 @@
+Model RealEstate is 
+	"a sample model concerned with the real estate industry"
+
+
+	Domain PropertyManagement is
+		"concerned with the leasing of properties to tenants"
+
+		Type Money is integer;
+  
+		Subsystem Letting is
+			"concerned with property letting" 
+
+			Class Property is
+				"the structure that is available for rent under a residential lease"
+
+				id "uniquely identifies the property" : arbitrary_id;
+				address "defines the location of the property" : String;
+				askingRent "is the rental amount sought by the owner" : Money;
+
+			End Property;
+
+			Class Owner is 
+				"an owner of rental properties"
+
+				id "uniquely identifies the owner" : arbitrary_id;
+				name : String;
+				address : String;
+				phoneNo : String;
+				email : Sting;
+			End Owner;
+
+			Class Tennant is 
+				"a person who may, from time to time, lease a property"
+	
+				id "uniquely identifies the tennant" : arbitrary_id;
+				name "of the person" : String;
+			End Tennant;
+
+			Association R1 is
+				"the tennancy agreement relating the property and the tennant"
+
+				Class Lease is
+					"the formal agreement between the owner and the tenant in relation to a leased property"
+
+					id "uniquely identifies the lease" : arbitrary_id;
+					from "the date form which the lease starts" : date;
+					expires "the date on which the lease expires" : date;
+					rent "the monthly rent payable by the tennant" : Money;
+				End Lease;
+
+				Tennant "leases" 0..* Property;
+				Property "is leased by" 0..* Tennant;
+			End R1;
+  	  	End Letting;
+	End PropertyManagement;
+End RealEstate;
+			
+			
+
+		

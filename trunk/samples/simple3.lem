@@ -1,0 +1,17 @@
+// A simple example of LEM with just the bare framework 
+//
+model SimpleModel is "Demonstrates the declaration of domain specific data type"
+	domain SimpleDomain is "a domain with three domain specific data types"
+	
+		// declare some domain specific types
+
+		type Money "the root of all evil" is numeric units: "cents"  range: [0.0,1.0E14] precision: 1;
+		type Intensity "represents an earthquakes force on the Richter scale"
+				is numeric range: [0.,-10.] precision: 0.1;
+		type CompassPoint is (North, East, South or West );
+                type PlaceName is string length 30;
+		
+		subsystem SimpleSubSystem is "a demonstration subsystem"
+		end SimpleSubSystem;
+	end SimpleDomain;
+end SimpleModel;

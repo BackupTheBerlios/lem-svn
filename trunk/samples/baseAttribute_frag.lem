@@ -1,0 +1,34 @@
+// Model for a chess game
+//
+// Steven Ring, October 2004
+//
+// $Id$
+//==================================================================================
+
+
+model ChessGame is "concerned with the game of Chess"
+   domain Board is "the domain of players, the board and chess pieces"
+
+	type PieceValue is ( Pawn, QueensRook, KingsRook, QueensKnight, KingsKnight,
+						      QueensBishop, KingsBishop, Queen or King );
+	type Colour is ( Black or White );
+	type File "the vertical columns of the chess board"
+				is numeric range: [1,8] precision: 1;
+	type Rank "the horizontal rows of the chess board"
+				is ( A, B, C, D, E, F, G or H);
+	
+	subsystem Pieces is 
+
+		object ChessPiece is "a represention of a piece on the chess board" 
+			
+			attribute value "the status and power" is PieceValue;
+			attribute colour "defines who owns the piece" is PlayerColour;
+			attribute startRank is Rank;
+			attribute startFile is File;
+			attribute currentRank "current position on the board" is Rank;
+			attribute currentFile "current position on the board" is File;
+
+		end ChessPiece;
+       end Pieces;
+   end Board;
+end ChessGame;

@@ -1,0 +1,60 @@
+// An example of multiple generalisation 
+//
+
+model Generalisation_multiple is 
+  "an example of multiple Generalisation"
+  
+  domain Banking is
+    "a very simple domain"
+
+    type Currency "a value of money in cents" is numeric units: "cents" range: [0.,] precision: 1;
+
+    subsystem AccountKeeping is
+        "concerned with bank accounts"
+
+        object Account is "the concept of a depositors account"
+            attribute name is string;
+        end Account;
+
+        generalisation R1 is
+            Account is CheckingAccount or SavingsAccount;
+        end R1;
+
+        
+        object CheckingAccount specialisation of Account
+            is "an accounts upon which cheques can be drawn"
+
+        end CheckingAccount;
+
+        generalisation R2 is
+            CheckingAccount is RegularCheckingAccount or InterestCheckingAccount;
+        end R2;
+
+        object RegularCheckingAccount specialisation of CheckingAccount
+            is "a check account which earns no interest"
+
+        end RegularCheckingAccount;
+
+        object InterestCheckingAccount specialisation of CheckingAccount and InterestBearingAccount
+            is "a check account which earns interest"
+
+        end InterestCheckingAccount;
+
+        object SavingsAccount specialisation of Account and InterestBearingAccount
+            is "an account with a passbook"
+
+        end SavingsAccount;
+
+        object InterestBearingAccount 
+            is "a an account which earns interest"
+
+        end InterestBearingAccount;
+
+        generalisation R3 is 
+            InterestBearingAccount is InterestCheckingAccount or SavingsAccount;
+        end R3;
+
+    end AccountKeeping;
+
+  end Banking;
+end Generalisation_multiple;

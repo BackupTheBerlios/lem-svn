@@ -1,0 +1,47 @@
+// A simple example of LEM with just the bare framework 
+//
+
+model Generalisation_simple is 
+  "a very simple example of Generalisation"
+  
+  domain PublicationWholesaler is
+    "a very simple domain"
+
+    type ISBN "a numbering system for books" is string;
+
+    subsystem Inventory is
+        "a very simple subsystem"
+
+        object Product is "all products sold by the bookstore"
+            attribute title is string;
+        end Product;
+
+        generalisation R11 is
+            Product is BookProduct, RecordingProduct or SoftwareProduct;
+        end R11;
+
+        object BookProduct specialisation of Product
+            is "a paper-based publication"
+
+            attribute id is string;
+            attribute bookNumber is ISBN;
+
+        end BookProduct;
+
+        object SoftwareProduct specialisation of Product
+            is "is a publication that is delivered on computer disk"
+
+            attribute version is string;
+        end SoftwareProduct;
+
+        object RecordingProduct specialisation of Product
+            
+            is "is a sound recording"
+            attribute performer is string;
+            attribute runningTime is numeric;
+        end RecordingProduct;
+
+    end Inventory;
+
+  end PublicationWholesaler;
+end Generalisation_simple;
