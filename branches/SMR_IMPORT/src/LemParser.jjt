@@ -1,0 +1,1437 @@
+/*
+# $Id$
+# $Log$
+# Revision 1.1  2005/03/15 12:17:16  u3957053
+# Initial revision
+#
+# Revision 1.49  2005/01/31 17:05:17  u2550921
+# Remove "description" as a keyword
+#
+# Revision 1.48  2005/01/09 05:23:40  u2550921
+# date re-established as a core data type
+#
+# Revision 1.47  2005/01/09 04:21:53  u2550921
+# assign base types to DomainSpecificType
+# Enumeration is treated as integer type
+#
+# Revision 1.46  2005/01/03 06:18:27  u2550921
+# Make Identifier a described entity
+#
+# Revision 1.45  2005/01/03 01:34:19  u2550921
+# Derived and referential attributes
+# Add identifier declarations
+#
+# Revision 1.44  2004/12/27 18:09:23  u2550921
+# Major coding for Referential Attributes
+#
+# Revision 1.43  2004/11/09 15:16:01  u2550921
+# COLON required in Length and Pattern specs to be consistent with units, range
+# and precision
+#
+# Revision 1.42  2004/11/08 14:44:26  u2550921
+# Define referential attributes
+#
+# Revision 1.41  2004/11/07 09:03:39  u2550921
+# Add support for range, enumeration, units, size and precision specification in
+# DomainSpecificDataType
+#
+# Revision 1.40  2004/11/06 04:29:31  u2550921
+# Refactor the parser to allow integration with other tools
+#
+# Revision 1.39  2004/10/29 05:21:37  u2550921
+# Rename main parser class from Lem to LemParser
+#
+# Revision 1.38  2004/10/21 23:23:18  u2550921
+# fix bug in generalisation spec
+#
+# Revision 1.37  2004/10/17 05:17:23  u2550921
+# Add distinct parameter constraint
+#
+# Revision 1.36  2004/10/03 05:56:34  u2550921
+# Rename the model builders (3 passes are now required)
+#
+# Revision 1.35  2004/10/03 04:48:48  u2550921
+# association constraints.
+# Prepare to add pass3 and rename the classes for the first two passes
+#
+# Revision 1.34  2004/09/29 09:59:30  u2550921
+# Support for new generalisation and specialisation syntax
+# Plus extra constraints added
+# Mapper to keep track of node/model mappings
+#
+# Revision 1.33  2004/09/26 07:39:00  u2550921
+# Additional constraints, some minor refactoring.
+# We need to have multilple build passes
+#
+# Revision 1.32  2004/09/26 00:31:55  u2550921
+# Introduce Behaviour block
+#
+# Revision 1.31  2004/09/21 01:59:04  u2550921
+# Included semantic checks as "constraint:" comments in Lem grammar
+# Speculated on use of Behaviour blocks to provide for separate declaration of a state machine
+# and also provide a means of hinding exclusively self directed events.
+#
+# Revision 1.30  2004/09/20 12:12:55  u2550921
+# Source lines output on parse exception
+#
+# Revision 1.29  2004/09/20 09:42:11  u2550921
+# added -s option (Syntax check only)
+# use SourceBuffer object to preload source (so source line can be quoted in the event of an error)
+#
+# Revision 1.28  2004/09/18 03:19:50  u2550921
+# Preparing to introduce Visitor for object graph construction
+#
+# Revision 1.27  2004/09/17 22:31:20  u2550921
+# move jtree and javacc generated parser files to package "parser"
+#
+# Revision 1.26  2004/09/17 21:57:11  u2550921
+# Adopt Ada style expressions.
+#
+# Revision 1.25  2004/09/12 03:34:48  u2550921
+# Control logic and some tidy up
+#
+# Revision 1.24  2004/09/11 02:22:49  u2550921
+# Various new statements in action language (relate, unrelate, select, create, delete, reclassify)
+#
+# Revision 1.23  2004/09/08 21:54:43  u2550921
+# Insert signal delay expressions and fix minor syntax errors
+#
+# Revision 1.22  2004/09/07 00:55:11  u2550921
+# Added basic grammar for signal generation
+#
+# Revision 1.21  2004/08/23 12:45:42  u2550921
+# Revise the state machine syntax
+#
+# Revision 1.20  2004/08/21 23:59:28  u2550921
+# use lower case initial character for all keywords
+# fixed bug in parser code
+#
+# Revision 1.19  2004/08/21 02:58:42  u2550921
+# so as to conform to JavaCC standards,
+# included the parser class in the JJT file
+#
+# consider:
+#	NODE_FACTORY = "true";
+#
+# Last constraint used: LEM_E_01023
+*/
+
+options {
+    STATIC = false;
+    LOOKAHEAD = 4;
+    FORCE_LA_CHECK = true;
+    VISITOR = true;
+    MULTI = true;
+    NODE_USES_PARSER=true;
+	NODE_PREFIX = "LEM";
+	NODE_PACKAGE = "parser";
+    VISITOR_EXCEPTION = "metamodel.LemException";
+}
+
+PARSER_BEGIN(LemParser)
+package parser;
+
+import metamodel.*;
+import verifier.*;
+import util.*;
+import java.io.*;
+
+
+/**
+ * LEM, a Language for Executable Models. 
+ * <p>
+ * This file is part of the author's Master by Coursework project. The project involves developing a
+ * a text-based language to define xtUML models together with a language parser and validator. The
+ * latter is a JAVA program which parses the LEM input file (according to the formal grammar) and builds
+ * an in-memory graph representing the xtUML model defined by the LEM input file. This software is 
+ * designed to form the basis of a suite of Open Source tools supporting xtUML.
+ * <p>
+ * Copyright (c) 2004, Steven Ring; steven@southsky.com.au.<br>All rights reserved pending release
+ * under a suitable Open Source license.
+ * <p>
+ * <h2>Acknowledgements</h2>
+ * <ol>
+ * <li>Emma Margaret Walker, <i>A language for the specificatio of Shlaer-Mellor object-oriented
+ * analysis models</i><br>ANU, BSEng Honours thesis, November 2002 </li>
+ * <li>Leon Starr, <i>Metamodel for xtUML, 2002;</i> upon which much of the JAVA object model is based</li>
+ * <li>Shayne Flint, instrumental in providing ongoing support and direction</li>
+ * </ol>
+ *
+ *
+ * <p>
+ * Usage:<br>
+ * <pre>
+ * java Lem modelFile
+ * </pre>
+ *
+ * @author  Steven Ring
+ */
+public class LemParser {
+
+    private static final String id = "$Id$";
+    private static final String revision = "$Revision$";
+    private static final String release = "Release_1";
+
+    /**
+     * Return the id string for the parser
+     *
+     * @return the id string for the parser
+     */
+    public static String getId() {
+        return id;
+    }
+
+    /**
+     * Return the revision string for the parser
+     *
+     * @return the revision string for the parser
+     */
+    public static String getRevision() {
+        return revision;
+    }
+
+    /**
+     * Return the release string for the parser
+     *
+     * @return the release string for the parser
+     */
+    public static String getRelease() {
+        return release;
+    }
+
+    /**
+     * Return a parsed model based on the LEM input stream supplied to the constructor
+     *
+     * @return the model as an instatiated graph of metamodel object instances
+     * @throws Throwable in the event of an error. A ParseException is thrown
+     * if parsing fails, a LemException is thrown if the model fails is semantic
+     * checking fails. Any Throwable may be thrown in the event of a program bug (this
+     * is a "work in progress" after all!)
+     */
+     public Model parse() throws Throwable {
+
+        Model model = null;
+        Visitor visitor = null;
+        
+        
+        // parse the input file to generate a parse tree
+        // (exceptions at this point are fatal)
+            
+        LEMModelDeclaration md = this.ModelDeclaration();
+
+        // Allow the ModelBuilder to build an in-memory object graph
+        // representing the structure of the xtUML model
+
+        model = new Model();
+
+        // pass 1
+
+        visitor = new BuilderPass1();
+        md.jjtAccept(visitor, model);
+
+        // pass 2
+
+        visitor = new BuilderPass2( visitor.getMapper() );
+        md.jjtAccept(visitor, model);
+
+        // pass 3
+
+        visitor = new BuilderPass3( visitor.getMapper() );
+        md.jjtAccept(visitor, model);
+
+        // return the constructed model
+
+        return model;
+    }
+}
+
+PARSER_END(LemParser)
+
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+| <"//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
+| <"/*" (~["*"])* "*" (~["/"] (~["*"])* "*")* "/">
+}
+
+TOKEN : /* LITERALS */
+{
+ 
+  < DECIMAL_LITERAL: ["1"-"9"] (["0"-"9"])* >
+|
+  < REAL_LITERAL:
+        (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)? (["f","F","d","D"])?
+      | "." (["0"-"9"])+ (<EXPONENT>)? (["f","F","d","D"])?
+      | (["0"-"9"])+ <EXPONENT> (["f","F","d","D"])?
+      | (["0"-"9"])+ (<EXPONENT>)? ["f","F","d","D"]
+  >
+|
+  < FLOATING_POINT_LITERAL:
+        (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)? (["f","F","d","D"])?
+      | "." (["0"-"9"])+ (<EXPONENT>)? (["f","F","d","D"])?
+      | (["0"-"9"])+ <EXPONENT> (["f","F","d","D"])?
+      | (["0"-"9"])+ (<EXPONENT>)? ["f","F","d","D"]
+  >
+|
+  < #EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
+|
+  < STRING_LITERAL:
+      "\""
+      (   (~["\"","\\"])
+        | ("\\"
+            ( ["n","t","b","r","f","\\","'","\""]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )*
+      "\""
+  >
+}
+
+/* RESERVED WORDS AND LITERALS */
+
+TOKEN :
+{
+  < ARBITRARY_ID: "arbitrary_id" >
+| < BOOLEAN: "boolean" >
+| < DATE: "date" >
+| < INTEGER: "integer" >
+| < REAL: "real" >
+| < STRING: "string">
+| < TIMESTAMP: "timestamp" >
+| < UNIQUE_ID: "unique_id" >
+| < ARRAY: "array">
+
+}
+
+
+TOKEN : /* IDENTIFIERS */
+{
+  <ASSOCIATION: "association">
+| <GENERALISATION: "generalisation">
+| <SPECIALISATION: "specialisation">
+| <ATTRIBUTE: "attribute">
+| <END: "end">
+| <ABS: "abs">
+| <REM: "rem">
+| <MOD: "mod">
+| <AND: "and">
+| <NOT: "not">
+| <BETWEEN: "between">
+| <BRIDGE: "bridge">
+| <OBJECT: "object">
+| <IS: "is">
+| <OR: "or">
+| <XOR: "xor">
+| <TRUE: "true">
+| <FALSE: "false">
+| <DOMAIN: "domain">
+| <SUBSYSTEM: "subsystem">
+| <MODEL: "model">
+| <TYPE: "type">
+| <STATE: "state">
+| <TRANSITION: "transition">
+| <EVENT: "event">
+| <BEHAVIOUR: "behaviour">
+| <TO: "to">
+| <FROM: "from">
+| <BY: "by">
+| <AT: "at">
+| <ON: "on">
+| <NULL: "null">
+| <CARRIES: "carries">
+| <CREATION: "creation">
+| <DELETION: "deletion">
+| <SELF: "self">
+| <GENERATE: "generate">
+| <DELAY: "delay">
+| <DECLARE: "declare">
+| <CANCEL: "cancel">
+| <RELATED: "related">
+| <RELATE: "relate">
+| <UNRELATE: "unrelate">
+| <WHERE: "where">
+| <THAT: "that">
+| <RELATES: "relates">
+| <ACROSS: "across">
+| <INSTANCES: "instances">
+| <INSTANCE: "instance">
+| <OF: "of">
+| <ONE: "one">
+| <MANY: "many">
+| <ANY: "any">
+| <SET: "set">
+| <SELECT: "select">
+| <CREATING: "creating">
+| <CREATE: "create">
+| <RECLASSIFY: "reclassify">
+| <DELETE: "delete">
+| <FOR: "for">
+| <EACH: "each">
+| <WHILE: "while">
+| <IN: "in">
+| <IF: "if">
+| <ELSE: "else">
+| <ELSEIF: "elseif">
+| <RANGE: "range">
+| <PATTERN: "pattern" >
+| <NUMERIC: "numeric" >
+| <UNITS: "units" >
+| <LENGTH: "length" >
+| <PRECISION: "precision" >
+| <REFERS: "refers" >
+| <ACTIVE: "active" >
+| <PASSIVE: "passive" >
+| <RETURN: "return" >
+| <CALCULATION: "calculation" >
+| <DERIVED: "derived" >
+| <REFERENTIAL: "referential" >
+| <IDENTIFIER: "identifier" >
+| < SIMPLE_IDENTIFIER: <LETTER> (<LETTER>|<DIGIT>)* >
+| < #LETTER: ["_","a"-"z","A"-"Z"] >
+| < #UPPER_LETTER: ["A" - "Z"] >
+| < #LOWER_LETTER: ["a" - "z"] >
+| < #DIGIT: ["0"-"9"] >
+| <SEMI: ";">
+| <LBRACKET: "[">
+| <RBRACKET: "]">
+| <LPAREN: "(">
+| <RPAREN: ")">
+| <COMMA: ",">
+| <COLON: ":">
+| <DOT: ".">
+| <DOT_DOT: "..">
+| <RIGHT_ARROW: "->">
+| <IS_ASSIGNED: ":=">
+| <EQUAL: "=" >
+|	<NE:		"/="	>
+|	<LT:		"<"	>
+|	<LT_EQ:		"<="	>
+|	<GT:		">"	>
+|	<GE:		">="	>
+|	<PLUS:		"+"	>
+|	<DASH:		"-"	>
+|	<AMPERSAND:	"&"	>
+|	<STAR:		"*"	>
+|	<SLASH:		"/"	>
+|	<EXPON:		"^"	>
+
+}
+
+/* <h1>LEM language specification $Revision$ ($Name$)</h1>
+
+ 
+ */
+LEMModelDeclaration ModelDeclaration() : { 
+// constraint: LEM_E_01001=The <identifier> at the end of a model, subsystem, domain or class block must match the <identifier> at the beginning of the block.
+}
+{
+  <MODEL> ModelIdentifier() <IS> [Description()] ModelBody() <END> [ModelEndIdentifier()] <SEMI> 
+  { return jjtThis; }
+}
+
+void ModelIdentifier() : { }
+{
+  <SIMPLE_IDENTIFIER>
+}
+void ModelEndIdentifier() : { }
+{
+  <SIMPLE_IDENTIFIER>
+}
+
+/* Documentation for Model Body */
+void ModelBody() : {}
+{
+  ( DomainDeclaration() )+ ( BridgeDeclaration() )*
+}
+
+void BridgeDeclaration() : {
+// constraint: LEM_E_01001
+}
+{
+  <BRIDGE> BridgeIdentifier() <IS>
+		  [Description()]
+		  BridgeBody() 
+  <END> [BridgeEndIdentifier()] <SEMI>
+}
+
+
+void BridgeBody() : {
+// constraint: LEM_E_01002=<DomainIdentifier>s in <BridgeBody> must be distinct. You cannot bridge a domain to itself.
+// constraint: LEM_E_01003=Each domain in a in a <BridgeBody> must be previously defined.
+}
+{
+  <BETWEEN> DomainIdentifier() <AND> DomainIdentifier() [ Description() ]
+}
+
+void BridgeIdentifier() : {} {
+  <SIMPLE_IDENTIFIER> 
+}
+void BridgeEndIdentifier() : {} {
+  <SIMPLE_IDENTIFIER> 
+}
+
+void IdentifierDeclaration() : {}
+{
+        <IDENTIFIER> [ Description() ] <IS> 
+             IdentifyingAttribute() [("," IdentifyingAttribute())* <AND> IdentifyingAttribute()]  
+        <SEMI>
+}
+
+void IdentifyingAttribute() : {} {
+  <SIMPLE_IDENTIFIER> 
+}
+
+void AttributeDeclaration() : {}
+{
+       
+       ( BaseAttribute() | ReferentialAttribute() | DerivedAttribute() )
+}
+
+void BaseAttribute() : {}
+{
+	<ATTRIBUTE> AttributeIdentifier() 
+	[Description()]
+         <IS> (PrimitiveType() | DomainSpecificType()) 
+	[ <IS_ASSIGNED> Literal() ]
+	<SEMI>
+}
+
+void ReferentialAttribute() : {}
+{
+        <REFERENTIAL> <ATTRIBUTE> AttributeIdentifier() 
+	[Description()]
+         <REFERS> <TO> AttributeReference()
+	<SEMI>
+}
+
+
+void DerivedAttribute() : {}
+{
+        <DERIVED> <ATTRIBUTE> AttributeIdentifier() 
+	[Description()]
+         <IS> (PrimitiveType() | DomainSpecificType())
+         <CALCULATION> <IS> 
+            AttributeCalculationProcedure()
+         <END> <CALCULATION>
+	<SEMI>
+}
+
+void AttributeCalculationProcedure() : {}
+{ 	Procedure() }
+
+void ReferredClass() : {} {
+  <SIMPLE_IDENTIFIER> 
+}
+
+void ReferredAttribute() : {} {
+  <SIMPLE_IDENTIFIER> 
+}
+
+void ReferredAssociation() : {} {
+  <SIMPLE_IDENTIFIER> 
+}
+
+void AttributeReference() : {}
+{
+    [ <ACTIVE> | <PASSIVE> ] ReferredClass() <DOT> ReferredAttribute() <ACROSS> ReferredAssociation()
+}
+
+void Literal() : {} 
+{  	
+		<DECIMAL_LITERAL> 
+	| 	<REAL_LITERAL> 
+	| 	<STRING_LITERAL> 
+	| 	BooleanLiteral() 
+	| 	EnumerationMember() 
+	|	<FLOATING_POINT_LITERAL>
+	|	<NULL>
+}
+
+
+void AttributeIdentifier() : {}
+{ <SIMPLE_IDENTIFIER> }
+
+
+void DomainSpecificType() : {}
+{ <SIMPLE_IDENTIFIER> }
+
+void DomainDeclaration() : {
+// constraint: LEM_E_01004=Each domain must have a unique <DomainIdentifier>.
+}
+{
+  <DOMAIN> DomainIdentifier() <IS> 
+  	[ Description() ]
+  	( TypeDeclaration() )* 
+  	( SubSystemDeclaration() )+ 
+  <END> [DomainEndIdentifier()] <SEMI>
+}
+
+void DomainIdentifier() : {}
+{ <SIMPLE_IDENTIFIER> }
+
+void DomainEndIdentifier() : {}
+{ <SIMPLE_IDENTIFIER> }
+
+void TypeDeclaration() : {
+// constraint: LEM_E_01005=Each <TypeIdentifer> must be unique within the domain.
+}
+{ 
+	<TYPE> TypeIdentifier()
+	[Description()]
+	<IS> TypeSpecification()
+	<SEMI>
+}
+
+void PrimitiveType() : {}
+{ "arbitrary_id" | "numeric" | "string" | "boolean" | "date" }
+
+void TypeSpecification() : {}
+{
+	(   ArbitraryIdTypeSpecification() 
+	  | EnumeratedList() 
+	  | BooleanTypeSpecification() 
+	  | NumericTypeSpecification() 
+	  | StringTypeSpecification() 
+          | DateTypeSpecification()
+	)
+}
+
+void StringTypeSpecification() : {}
+{
+	<STRING> [ LengthSpec() ] [ PatternSpec() ]
+}
+
+void DateTypeSpecification() : {}
+{
+	<DATE> 
+}
+
+void BooleanTypeSpecification() : {}
+{
+	<BOOLEAN>
+}
+
+void ArbitraryIdTypeSpecification() : {}
+{
+	<ARBITRARY_ID>
+}
+
+void LengthSpec() : {}
+{
+	<LENGTH> <COLON> <DECIMAL_LITERAL>
+}
+
+void PatternSpec() : {}
+{
+	<PATTERN> <COLON> <STRING_LITERAL>
+}
+
+
+
+void NumericTypeSpecification() : {}
+{
+	<NUMERIC> ( UnitsSpec() )? ( RangeSpec() )? ( PrecisionSpec() )?
+}
+
+void UnitsSpec() : {}
+{
+	<UNITS> <COLON> <STRING_LITERAL>
+}
+
+void RangeSpec() : {
+
+// constraint: LowRangeValue() and/or HighRangeValue() is required
+// constraint: LowRangeValue() must be less that HighRangeValue() where both are specified
+
+}
+{
+	<RANGE> <COLON> 
+			<LBRACKET>
+				[ LowRangeValue() ]  <COMMA>  [ HighRangeValue() ] 
+			<RBRACKET>
+}
+
+void LowRangeValue() : {}
+{
+	simple_expression()
+}
+
+void HighRangeValue() : {}
+{
+	simple_expression()
+}
+
+
+void PrecisionSpec() : {}
+{
+	<PRECISION> <COLON> PrecisionValue()
+}
+
+void PrecisionValue() : {}
+{
+	<REAL_LITERAL> | <DECIMAL_LITERAL>
+}
+
+void EnumeratedList() : {}
+{	"(" EnumerationMember() ("," EnumerationMember())* <OR> EnumerationMember()  ")"
+}
+
+void EnumerationMember() : {
+}
+{	<SIMPLE_IDENTIFIER> } 
+
+
+void BooleanLiteral() : {}
+{ 
+	<TRUE> | <FALSE>
+}
+
+void TypeIdentifier() : {}
+{ <SIMPLE_IDENTIFIER> }
+
+/*
+    @TODO - subsystems are currently specified as mandatory. They should define an <b>optional</b>
+            grouping of domain elements. One approach is to have a Domain automatically declare a
+            <b>Default</b> subsystem to act if the modeller omits a specific subsystem.
+            
+*/
+
+void SubSystemDeclaration() : {
+// constraint: LEM_E_01004=Each subsystem must have a unique <SubSystemIdentifier>
+// constraint: LEM_E_01001
+}
+{ 
+	<SUBSYSTEM> SubSystemIdentifier() <IS>
+		[Description()] 
+		SubSystemBody() 
+	<END> [SubSystemEndIdentifier()] <SEMI>
+}
+
+void SubSystemIdentifier() : {}
+{ <SIMPLE_IDENTIFIER> }
+
+void SubSystemEndIdentifier() : {}
+{ <SIMPLE_IDENTIFIER> }
+
+void Description() : {}
+{ <STRING_LITERAL> }
+
+/*
+    @TODO - check elsewhere that we have at least one class specified
+*/
+
+void SubSystemBody() : {}
+{ ( ClassDeclaration() | Relationship() )* }
+
+void ClassDeclaration() : {}
+{ 
+	<OBJECT> ClassIdentifier() 
+                [<SPECIALISATION> <OF> SpecialisationList() ]
+                <IS>
+		[Description()]
+		ClassBody() 
+	<END> [ClassEndIdentifier()] <SEMI>
+}
+
+void SpecialisationList() : {}
+{
+    SuperClassIdentifier() ( "," SuperClassIdentifier() )* ( <AND> SuperClassIdentifier() )? 
+}
+
+
+void ClassEndIdentifier() : {}
+{ <SIMPLE_IDENTIFIER> }
+
+void ClassIdentifier() : {
+// constraint: LEM_E_01013=Duplicate class identifier. Each class must be unique within a domain
+}
+{ <SIMPLE_IDENTIFIER> }
+
+
+/*
+<h2>RELATIONSHIPS</h2>
+<hr>
+*/
+
+void Relationship() : {}
+{
+    ( Association() | Generalisation() )
+}
+
+/*
+
+Example :
+
+    Association R1 is "relationship between a Publisher and a Book"
+        Publisher "produces and markets" 0..* Book;
+        Book "is produced and marketed by" 1..1 Publisher;
+    End R1;
+
+@TODO - Improvements in readability could be achieved without loss of syntactic precision:
+
+    Association R1 "represents publishing arrangements in respect of books."
+        A Publisher "produces and markets" many Book;
+        A Book "is produced and marketed by" one Publisher;
+    End R1;
+
+@TODO - It would be nice if we could cast the object noun to its plural form...
+        
+        A Publisher "produces and markets" many Books;
+    
+*/
+void Association() :
+{
+// constraint: LEM_E_01016=Each relationship must have a unique ID within the domain
+// constraint: LEM_E_01021=In an association, the active subject of each perspective must be the same class.
+// constraint: LEM_E_01022=In an association, the active object of each perspective must be the same class.
+}
+{
+	<ASSOCIATION> RelationshipIdentifier() <IS> 
+		[ Description() ] 
+        ActivePerspective() ";"
+        PassivePerspective() ";"
+        [ AssociationClassDeclaration() ]
+	<END> [RelationshipEndIdentifier()] ";"
+}
+
+void ActivePerspective() : {
+// constraint: LEM_E_01017=In an association, the subject of an active perspective must be a class defined in the domain.
+// constraint: LEM_E_01018=In an association, the object of an active perspective must be a class defined in the domain.
+}
+{ ActiveSubject() ActiveVerbClause() Multiplicity() ActiveObject() }
+
+void PassivePerspective() : {
+// constraint: LEM_E_01019=In an association, the subject of an passive perspective must be a class defined in the domain.
+// constraint: LEM_E_01020=In an association, the object of an passive perspective must be a class defined in the domain.
+}
+{ ActiveObject() ActiveVerbClause() Multiplicity() ActiveSubject() }
+
+void ActiveSubject() : {}
+{ <SIMPLE_IDENTIFIER> }
+
+void ActiveObject() : {}
+{ <SIMPLE_IDENTIFIER> }
+
+void ActiveVerbClause() : {}
+{ VerbClause() }
+
+void PassiveVerbClause() : {}
+{ VerbClause() }
+
+void VerbClause() : {}
+{ <STRING_LITERAL> }
+
+/*
+void ClassBody() : {}
+{
+	( AttributeDeclaration() )*
+	( EventDeclaration() )*
+	( StateDeclaration() )*
+	( TransitionDeclaration() )*
+}
+
+
+   Consider declaring the behaviour of a class in a distinct block. 
+   This alters the syntax of ClassBody() to ...
+*/
+
+void ClassBody() : {}
+{
+	( AttributeDeclaration() )*
+        ( IdentifierDeclaration() )*
+	( EventDeclaration() )*
+	[ Behaviour() ]
+}
+
+
+void Behaviour() : {}
+{
+	<BEHAVIOUR> <IS>
+		[ Description() ]
+		( SelfEventDeclaration() )*
+		( StateDeclaration() )*
+		( TransitionDeclaration() )*
+	<END> <BEHAVIOUR> <SEMI>
+}
+
+void SelfEventDeclaration() : {}
+{
+    EventDeclaration()
+}
+
+/*
+	Note that it allows for the declaration of SelfEvents  which are
+	private to the Behaviour block (i.e. not part of the class' public Events
+
+*/
+
+
+void Generalisation() : {
+//constraint: LEM_E_01016=Each relationship must have a unique ID within the domain
+}
+{
+	<GENERALISATION> RelationshipIdentifier() <IS>
+		[ Description() ] 
+        GeneralisationBody() 
+	<END> [RelationshipEndIdentifier()] ";"
+}
+
+/*
+    @TODO - the term "is a" is preferable to "is" ...
+*/
+void GeneralisationBody() : {}
+{
+	SuperClassIdentifier() "is" 
+		SubClassIdentifier() ( "," SubClassIdentifier() )* "or" SubClassIdentifier()  ";"
+}
+
+void RelationshipIdentifier() : {}
+{ <SIMPLE_IDENTIFIER> }
+
+void RelationshipEndIdentifier() : {}
+{ <SIMPLE_IDENTIFIER> }
+
+void SuperClassIdentifier() : {
+// constraint:LEM_E_01014=The superclass in a generalisation relationship must be an existing class defined in the current domain
+}
+{ <SIMPLE_IDENTIFIER> }
+
+void SubClassIdentifier() : {
+// constraint:LEM_E_01015=All subclasses in a generalisation relationship must be existing classes defined in the current domain
+}
+{ <SIMPLE_IDENTIFIER> }
+
+void AssociationClassDeclaration() : {}
+{ ClassDeclaration() }
+
+/*
+
+@TODO - think about using natural language phrases to represent multiplicities:
+
+    "1..1"  -> one
+    "0..1"  -> zero or one
+    "0..*"  -> many
+    "1..*"  -> at least one
+
+*/
+void Multiplicity() : {}
+{ ( "1..1" | "0..1" | "0..*" | "1..*" ) }
+
+
+
+/***********************************************************************************
+ * Event declarations
+ ***********************************************************************************/
+
+void EventDeclaration() : {}
+{
+	[ <SELF> ] <EVENT> EventIdentifier() 
+		[Description()] 
+		[ <CARRIES> EventSignature()] <SEMI>
+}
+
+/*
+
+   We may need:
+
+void SelfEventDeclaration() : {}
+{
+	EventDeclaration()
+}
+
+*/
+
+void EventIdentifier() : {
+// constraint: LEM_E_01007=Duplicate event identifier. %1% is already defined. Each event must be unique within a specialisation tree.
+}
+{ <SIMPLE_IDENTIFIER> }
+
+
+void StateSignature() : {}
+{ Signature() }
+
+void EventSignature() : {}
+{ Signature() }
+
+void Signature() : {}
+{ "(" ParameterDeclaration() ( "," ParameterDeclaration() )* ")" }
+
+void ParameterDeclaration() : {
+// constraint: LEM_E_01023=In a parameter declaration, the domain specific data type must be defined in the domain
+}
+{ 	ParameterIdentifier() [Description()] <IS> (PrimitiveType() | DomainSpecificType()) }
+
+void ParameterIdentifier() : {
+// constraint: LEM_E_01008=Duplicate parameter identifier. Each parameter must be unique within a signature.
+}
+{ <SIMPLE_IDENTIFIER> }
+
+/****************************************************************************************
+ * State declarations
+ ****************************************************************************************/
+
+void StateDeclaration() : {}
+{
+    [<DELETION>] <STATE> StateIdentifier()
+		[Description()] 
+		[StateSignature()] <IS>
+        StateProcedureDeclaration() 
+    <END> [ StateEndIdentifier() ] ";"
+}
+
+void StateIdentifier() : {
+// constraint: LEM_E_01009=Duplicate state identifier. Each state must be unique within a behaviour block.
+}
+{ <SIMPLE_IDENTIFIER> }
+
+void StateEndIdentifier() : {}
+{ <SIMPLE_IDENTIFIER> }
+
+/*****************************************************************************************
+ * State transition definitions
+ *****************************************************************************************/
+
+void StateProcedureDeclaration() : {}
+{ 	Procedure() }
+
+void Procedure() : {}
+{ 	( Action() )* }
+
+void TransitionDeclaration() : {}
+{ 	
+	<ON> TransitionEventIdentifier()
+		[ Description() ]
+		<TRANSITION> 
+		<FROM> [ <CREATION> <STATE> | FromStateIdentifier() ]
+		<TO> ToStateIdentifier() <SEMI>
+}
+
+void FromStateIdentifier() : {
+// constraint: LEM_E_01010=Transition 'from' State must be defined in enclosing behaviour block.
+// constraint: LEM_E_01012=Transition 'from' State must be a non deletion state.
+}
+{ <SIMPLE_IDENTIFIER> }
+
+void ToStateIdentifier() : {
+// constraint: LEM_E_01011=Transition 'to' State must be defined in enclosing behaviour block.
+}
+{ <SIMPLE_IDENTIFIER> }
+
+void TransitionEventIdentifier() : {}
+{ <SIMPLE_IDENTIFIER> }
+
+/*****************************************************************************************
+ * Action Language defined here
+ *****************************************************************************************/
+
+void Action() : {}
+{ 	
+	  AssignmentStatement()
+	| CancelStatement()
+	| CreateStatement()
+	| DeleteStatement()
+	| ForEachStatement()
+	| GenerateStatement()
+	| IfStatement()
+	| LocalVariableDeclaration()
+	| ReclassifyStatement()
+	| RelateStatement()
+	| SelectStatement()
+	| UnrelateStatement()
+	| WhileStatement()
+}
+
+void AssignmentStatement() : {}
+{
+	<SET> Name() <IS_ASSIGNED> Expression() <SEMI> 
+}
+	
+
+void Name() : {}
+{ [ ObjectReference() "." ] AttributeIdentifier() }
+
+void ObjectReference() : {}
+{ 	"self" | <SIMPLE_IDENTIFIER> }
+
+void Expression() : {}
+{ 
+// things start to get complicated here
+// look at JAVA grammar to get some tips
+
+	expression()
+}
+
+
+//-----------------------------------------------------------------------------
+// Expressions 
+//-----------------------------------------------------------------------------
+
+void expression() :
+{}
+{
+	relation()
+	(	(	<AND>
+		|	<OR> 
+		|	<XOR>
+		)
+		relation()
+	)*
+}
+
+void relation() :
+{}
+{
+	simple_expression()
+	( relational() simple_expression()
+	| membership() range()
+	)?
+}
+                 
+void relational() :
+{}
+{
+	<EQUAL>
+//	Revisit: does this go here?!?
+// |	<DOT_DOT>
+|	<NE>
+|	<LT>
+|	<LT_EQ>
+|	<GT>
+|	<GE>
+}
+
+void membership() :
+{}
+{
+	<IN>
+|	<NOT> <IN>
+}
+
+void simple_expression() :
+{}
+{
+	unary() term()
+|	term() ( adding() term() )*
+}
+
+void unary() :
+{}
+{
+	<PLUS>
+|	<DASH>
+}
+
+void adding() :
+{}
+{
+	<PLUS>
+|	<DASH>
+|	<AMPERSAND>
+}
+
+void term() :
+{}
+{
+	factor() ( multiplying() factor() )*
+}
+
+void multiplying() :
+{}
+{
+	<STAR>
+|	<SLASH>
+|	<MOD>
+|	<REM>
+}
+
+void factor() :
+{}
+{
+	primary() ( <EXPON> primary() )?
+|	<NOT> primary()
+|	<ABS> primary()
+}
+
+void primary() :
+{}
+{
+	Literal()
+|	Name()
+|	parenthesized_primary()
+}
+
+void parenthesized_primary() :
+{}
+{
+	aggregate()
+	// REVISIT Covered by aggregate
+	//  | LPAREN expression RPAREN
+}
+
+void qualified() :
+{}
+{
+	Name()
+	// REVISIT: SEMANTICS
+	// demands "TIC parenthesized_primary"
+	// is part of the name
+}
+
+void aggregate() :
+{}
+{
+	<LPAREN>
+	expression()
+	<RPAREN>
+}
+
+void range_constraint() :
+{}
+{
+	<RANGE> range()
+}
+
+void range() :
+{}
+{
+	simple_expression() ( <DOT_DOT> simple_expression() )?
+	    // REVISIT: ADDED OPTIONAL CONSTRUCT ABOVE AND
+	    // REMOVED name PRODUCTION BELOW, because name
+	    // is reachable via a call to simple_expression.
+	    // Note that the caveat below applies.
+	    // | name // REVISIT SEMANTICS
+           // demands that
+	   // <TIC> <RANGE> ( LPAREN expression RPAREN )?
+	   // is part of the name
+}
+
+/**************************************************
+ * Event generation and cancellation
+ **************************************************/
+
+void GenerateStatement() : {}
+{
+	<GENERATE> Signal() [ ActualParameters() ] 
+		<TO> ObjectReference()
+		[ ( DelaySpec()  | ExactTimeSpec() ) ]  <SEMI>
+}
+
+void DelaySpec() : {}
+{
+	<DELAY> Duration()
+}
+
+void ExactTimeSpec() : {}
+{
+	<AT> ExactTime()
+}
+
+
+void CancelStatement() : {}
+{
+	<CANCEL> Signal() 
+		<FROM> ObjectReference() 
+		<TO> ObjectReference() <SEMI>
+}
+
+void Signal() : {}
+{ 
+	SignalIdentifier()
+}
+
+void SignalIdentifier() : {}
+{
+    <SIMPLE_IDENTIFIER>
+}
+
+void ActualParameters() : {}
+{
+
+ "(" ActualParameter() ( <COMMA> ActualParameter() )* ")" 
+}
+
+void ActualParameter() : {}
+{
+
+ Expression() <COLON> Expression()  
+}
+
+void Duration()  : {}
+{
+	NumericExpression() 
+}
+
+void ExactTime() : {}
+{
+	TimeExpression()
+}
+
+void TimeExpression() : {}
+{
+	Expression()
+}
+
+void NumericExpression() : {}
+{
+	Expression()
+}
+
+void BooleanExpression() : {}
+{
+	Expression()
+}
+
+/**************************************************
+ * Relationship creation, deletion and navigation
+ **************************************************/
+
+void RelateStatement() : {}
+{
+	<RELATE> ObjectReference() <TO> ObjectReference()
+		<ACROSS> AssociationEndIdentifier() 
+		[ <CREATING> ObjectReference() ]  <SEMI>
+}
+
+void UnrelateStatement() : {}
+{
+	<UNRELATE> ObjectReference() <TO> ObjectReference()
+		<ACROSS> AssociationEndIdentifier() <SEMI>
+}
+
+void AssociationEndIdentifier() : {} 
+{
+	RelationshipIdentifier() [ <DOT> VerbClause() ]
+}
+
+void SelectStatement() : {}
+{
+	<SELECT> SelectionMultiplicityIndicator() ObjectReference()
+		(   SelectInstancesClause() 
+	  	  | SelectRelatedInstancesClause()
+	  	  | SelectAssociativeInstanceClause()
+		) [ WhereClause() ] <SEMI>
+}
+
+void SelectionMultiplicityIndicator() : {}
+{
+	( <ONE> | <ANY> | <MANY> )
+}
+
+void SelectInstancesClause() : {}
+{
+	<FROM> <INSTANCES> <OF> ClassIdentifier()
+}
+	
+void SelectAssociativeInstanceClause() : {}
+{
+	// constraint: this clause will only return ONE instance
+	// should not be used in conjunction with <ONE> SelectMultiplicityIndicator()
+
+	<THAT> <RELATES> ObjectReference() 
+		<TO> ObjectReference() 
+		<ACROSS> RelationshipIdentifier()
+}
+
+void SelectRelatedInstancesClause() : {}
+{
+	<RELATED> <BY> ObjectReference() ( RelationDereference() )+
+}
+
+void RelationDereference() : {}
+{
+	<RIGHT_ARROW> ClassIdentifier() <LBRACKET> AssociationEndIdentifier() <RBRACKET>
+}
+
+void WhereClause() : {}
+{
+	<WHERE> BooleanExpression()
+}
+
+/**********************************************************
+ * Object creation, deletion and reclassification
+ **********************************************************/
+
+void CreateStatement() : {}
+{
+	<CREATE> <INSTANCE> ObjectReference() <OF> ClassList() <SEMI>
+}
+
+void ReclassifyStatement() : {}
+{
+	<RECLASSIFY> <INSTANCE> ObjectReference() 
+		<FROM> OldClass() 
+		<TO> NewClass() <SEMI>
+}
+
+void DeleteStatement() : {}
+{
+	<DELETE> <INSTANCE> ObjectReference() <SEMI>
+}
+
+void ClassList() : {}
+{
+	ClassIdentifier()  (<COMMA> ClassIdentifier())* 
+}
+
+void OldClass() : {}
+{
+	ClassIdentifier()
+}
+
+void NewClass() : {}
+{
+	ClassIdentifier()
+}
+
+void LocalVariableDeclaration() : {}
+{
+	<DECLARE>
+		AttributeIdentifier() 
+		[Description()] 
+		<IS> (PrimitiveType() | DomainSpecificType()) 
+		[ <IS_ASSIGNED> Expression() ]
+		<SEMI>
+}
+
+
+/*****************************************************************************
+ * Control logic
+ *****************************************************************************/
+
+void ForEachStatement() : {}
+{
+	<FOR> <EACH> ObjectReference() <IN> TargetSet()
+		( Action() )?
+	<END> <FOR> <SEMI>
+}
+
+void TargetSet() : {}
+{
+	ObjectReference()
+}
+
+void WhileStatement() : {}
+{
+	<WHILE> BooleanExpression()
+		( Action() )?
+	<END> <WHILE> <SEMI>
+}
+
+void IfStatement() : {}
+{
+	<IF> BooleanExpression()
+		( Action() )?
+	[<ELSEIF> BooleanExpression()
+		( Action() )? ]
+	[<ELSE> 
+		( Action() )? ]
+	<END> <IF> <SEMI>
+}
+
+

@@ -1,0 +1,12 @@
+object Product is
+
+   ...
+
+   referential attribute publishGroupCode 
+       refers to Publisher.groupCode across R1;
+   referential attribute publisherCode
+       refers to Publisher.publisherCode across R1;
+
+   ...
+
+end Product;

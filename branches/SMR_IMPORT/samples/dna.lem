@@ -1,0 +1,32 @@
+// A simple example  demonstrating 1 to 1 associations
+//
+model DNAProfiling is "Demonstrates the declaration of domain specific data type"
+	domain People is "a domain with three domain specific data types"
+	
+		subsystem SimpleSubSystem is "a demonstration subsystem"
+
+			object Person is
+				"the subject of DNA profiling"
+
+				attribute personId is arbitrary_id;
+				attribute name is string;
+				identifier is personId;
+			end Person;
+
+			object DNAProfile is
+				"a full and complete description of a strand of DNA"
+
+				attribute profileId is string;
+				attribute classifier "the description of the DNA"
+					is string;
+				identifier is profileId;
+			end DNAProfile;
+
+			association R1 is
+				"reflects the fact that a Person has a unique profile"
+				DNAProfile "characterises" 1..1 Person;
+				Person "is characterised by" 1..1 DNAProfile;
+			end R1;
+		end SimpleSubSystem;
+	end People;
+end DNAProfiling;

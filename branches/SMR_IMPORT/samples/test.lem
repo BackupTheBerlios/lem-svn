@@ -1,0 +1,103 @@
+Model RealEstateApplication is 
+    "a demonstration of the current capabilities of the LEM language"
+    Domain RealEstate is 
+        "a collection of classes, relationships, states, actions and rules relating to the real estate industry"
+
+        Type UniqueIdentifier is arbitrary_id;
+        Type Money is real;
+        Type PostCode is integer;
+
+        Subsystem Locale is "concerned with the geographical objects involved in the real estate industry. It provides an ideal opportunity to demonstrate an xtUML information model"
+
+			
+            Class State is "a division of a country controlled by its own government (for want of a better description)"
+                id : UniqueIdentifier;
+		name "the name of the state" : string;
+            End State;
+
+			Class Region is "a geographic region within a state comprising of a number of Suburbs"
+                                id 		: UniqueIdentifier;
+				name		: string;
+			End Region;
+
+			Class Suburb is "a community comprising streets, sections and building blocks"
+				id "uniquely identifies the Suburb"		: arbitrary_id;
+				name		: string;
+				postCode	: PostCode;
+			End Suburb;
+
+                        Class Section is "an aggregation of contiguous building blocks usually bounded by streets or the suburb boundary"
+                                id              : arbitrary_id;
+                                number "uniquely identifies the section within the suburb"      : integer;
+                        End Section;
+
+                        Class Block is "a block of land upon which a building is usually erected" 
+                                id              : arbitrary_id;
+                                number "uniquely identifies the block within the section"      : integer;
+                        End Block;
+
+			Association R1 is
+				Class R1Thing is
+					whatever: arbitrary_id;
+				End R1Thing;
+				Suburb "is located in" 1..1 Region;
+				Region "contains" 1..* Suburb;
+			End R1;
+
+                        Association R2 is
+                          
+                          State "contains" 1..* Region;
+                          Region "is contained within" 1..1 State;
+                        End R2;
+
+		End Locale;
+
+                Subsystem Structures is "concerned with the types of buildings that are encountered in the Real Estate Industry"
+                        
+                    Class Building is "a construction erected on a block for the purpose of accommodating people and/or equipment"
+                        description : string;
+                        maxOccupants : integer;
+                    End Building;
+
+                    Generalisation R3 is "a definition of the type of buildings recognised in the Real Estate industry"
+                        Building is CommercialBuilding, ResidentialBuilding or PublicBuilding;
+                    End R3;
+
+                    Class CommercialBuilding is "a building for the purpose of accommodating a commercial activity"
+                        commercialActivity : string;
+                    End CommercialBuilding;
+
+                    Class ResidentialBuilding is "housing for people"
+                        
+                    End ResidentialBuilding;
+
+                    Class PublicBuilding is "a government building providing services to the public"
+                        purpose : string;
+                    End PublicBuilding;
+
+                    Generalisation R4 is "a definition of the type of residential buildings"
+                        ResidentialBuilding is House, Townhouse, Flat, Unit or Bedsitter;
+                    End R4;
+
+                    Class House is
+                    End House;
+                    
+                    Class Townhouse is
+                    End Townhouse;
+
+                    Class Flat is
+                    End Flat;
+
+                    Class Unit is
+                    End Unit;
+
+                    Class Bedsitter is
+                    End Bedsitter;
+
+                 End Structures;
+
+	End RealEstate;
+
+// Bridges not yet implemented	
+// Bridge LondonBridge is between OneSideOfTheRiver and Another End LondonBridge;
+End;

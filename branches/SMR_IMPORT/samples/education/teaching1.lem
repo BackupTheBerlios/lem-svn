@@ -1,0 +1,89 @@
+// An exploration of associations and identities
+//
+// Steven Ring (based on a dissertation by Lynette Johns-Boast)
+//
+// $Id$
+//----------------------------------------------------------------
+
+model Education is 
+  "an exploration of associations and identities"
+  
+  domain CourseWork is
+  
+    "concerned with subjects, courses, teachers and students.
+	 In this version, the identification information has been omitted.
+	 The purpose is to explore the construction of a simple infomation
+	 model using LEM. I have also omitted events and dynamic behavious.
+	 This is strictly a static information model"
+
+
+	// every domain should have some domain specific types
+	// they add to the richness of the vocabulary and provide important 
+	// data constraints
+
+	type PersonIdentifier "is used to uniquely identify individuals" is string length: 8;
+	type Mark "quantifies a students performance in a course" is numeric range: [0.,100] precision: 1;
+	type Grade "rates a students performance in a course" is ( F, P, CR, D or HD);
+	
+    subsystem UndergraduateTeaching is
+        "the guts of the problem"
+
+		object Teacher is "the pervaor of all knowledge"
+
+			attribute staffNo "uniquely identifies the teacher" is PersonIdentifier;
+			attribute name is string;
+
+		end Teacher;
+
+		object Student is "the person being educated"
+
+			attribute id "uniquely identifies the student" is PersonIdentifier;
+			attribute name is string;
+
+		end Student;
+
+		object Course is "the subject under study"
+
+			attribute id "uniquely identifies the course" is string;
+			attribute name is string;
+
+		end Course;
+
+
+		//
+		// now for the relationships (the fun bits)
+		//
+
+		association R1 is "the teacher/course relationship"
+
+			Teacher "teaches" 1..* Course;		// the ACTIVE perspective
+			Course "is taught by" 1..1 Teacher;	// the PASSIVE perspective
+		
+		end R1;
+
+		association R2 is "about courses and enrolled students"
+
+			Student "enrols in" 1..* Course;
+			Course "has, as enrolees" 0..* Student;
+
+			//
+			// an association class to capture student/course relationship info
+			//
+
+			object Enrolment is 
+				"captures infomation concerning the student/course relationship"
+
+				attribute score is Mark;
+				attribute result is Grade;
+
+                                attribute courseId refers to Course.id across R2;
+				attribute studentId refers to Student.id across R2;
+
+			end Enrolment;
+		end R2;
+
+
+    end UndergraduateTeaching;
+
+  end CourseWork;
+end Education;

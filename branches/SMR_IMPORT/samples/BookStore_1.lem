@@ -1,0 +1,130 @@
+// Bookstore example from Mellor & Balcer, pg 83
+//
+// This file is an Executable UML model expressed in the text-based language
+// known as LEM (Language for Executable Models)
+//
+// $Id$
+// 
+// $Log$
+// Revision 1.1  2005/03/15 12:17:16  u3957053
+// Initial revision
+//
+// Revision 1.2  2004/08/23 04:52:54  u2550921
+// fix spelling errors
+//
+// Revision 1.1  2004/08/22 00:11:53  u2550921
+// a test model
+//
+//
+
+model BookStoreModel is
+
+	"an Executable UML model of the operation of a bookstore.
+	
+	 This model defines the static objects such as Book, publisher, author and customer
+	 and the relationships that exist between these objects.
+	 The model does not contain any specification of the dynamic behaviour of the domain.
+	 The model currently consists of a single domain know as 'Publications'."
+	 
+	domain Publications is "concerned with publishers, books, authors and customers"
+	
+		// declare some domain specific types...
+		// by using domain specific data types we allow the domain experts to feel more comfortable
+		// with the subject matter being described
+
+		type Money "the root of all evil" is real;
+		type IDBN "is used to uniquely identify books" is string;
+		type PrintStatus "describes the status of a publication" is (inprint, discontinued);
+		
+		subsystem Sales is "concerned with the selling of books to customers"
+
+			///////////////////////////////////////////////////////////////////////
+			// CLASSES															 //
+			///////////////////////////////////////////////////////////////////////
+
+			/*
+			 * PUBLISHER
+			 * =========
+			 */
+			object Publisher is "a representation of an arbitrary book publisher"
+				name "identifies the publisher" is string;
+				address "for service of notices and deliveries" is string;
+				website "allows us to place orders online and to 
+						lookup stock status and prices" is string;
+			end Publisher;
+			
+			/*
+			 * BOOK
+			 * ====
+			 */
+			object Book is "a representation of a book"
+				bookNumber "uniquely identifies the book" is ISBN;
+				title "appears on the cover of the book" is string;
+				subtitle "provides additional information for some books.
+						  We regard the subtitle as a simple extension of the 
+						  name of the book" is string := "NO SUBTITLE";
+				copyright "a notice detailing the owner of the copyright for 
+						   the book" is string;
+				unitPrice "the price of one copy of the book" is Money;
+			end Book;
+
+			/*
+			 * AUTHOR
+			 * ======
+			 */
+			object Author is "the writer of one or more books (titles)" 
+				authorId "a unique identifier for the author" is arbitrary_id;
+				name "identifies the author" is string;
+				website "provides useful details about the author. Of course,
+						 not all authors have a website" is string;
+				email "allows use to communicate via electronic mail" is string;
+			end Author;
+
+			/*
+			 * CUSTOMER
+			 * ========
+			 */
+			object Customer is "the important person to whom we sell books.
+								Customers may be individuals or organisations but
+								we do not treat them differently" 
+				customerId "a unique identifier for the customer" is arbitrary_id;
+				name "identifies the customer" is string;
+				email "provides a convenient means of communication with the customer" is string;
+			end Customer;
+
+			/////////////////////////////////////////////////////////////////
+			// RELATIONSHIPS                                               //  
+			/////////////////////////////////////////////////////////////////
+			
+			association R1 is "a record of the fact that each book has a publisher" 
+				Publisher "produces and markets" 0..* Book;
+				Book "is produced and marketed by" 1..1 Publisher;
+			end R1;
+			
+			association R2 is "a record of the author's special relationship with the book" 
+				Author "writes" 1..* Book;
+				Book "is written by" 1..1 Publisher;
+			end R2;
+			
+			association R3 is "a record of the fact that customer's buy books" 
+				Customer "buys" 0..* Book;
+				Book "is sold to" 0..* Customer;
+
+				//
+				// we use an "association class" to record information about a purchase
+				//
+				
+				object Sale is "a record of the sale of a book to a customer"
+					saleDate "records the date of the transaction" is date;
+					quantity "of this title (book) sold to the customer" is integer;
+					unitPrice "of the book" is Money;
+					value "of this sale" is Money;
+				end Sale;
+				
+			end R3;
+
+
+			
+		end Sales;
+	end Publications;
+end BookStoreModel;

@@ -1,0 +1,222 @@
+// Model for Customer Relationship Management.
+//
+// Inspired by the requirments of a favourite customer or ours.
+//
+
+model SomeClient is 
+
+	"SomeClient is involved in the business of managing multi-unit residential
+	 properties on behalf of the building owners. The building owners  are 
+	 corportate entities (so called 'Body Corportate') comprising all of the
+	 unit holders within the residential building block."
+
+	domain CRM is 
+		"Customer relationship management is ..."
+
+		// Domain specific data types
+
+		type ConvenientPartyIdentifier
+
+			"staff may allocate meaningful, short and descriptive identifiers
+			 to a party. These allow customers and other parties with which 
+			 SomeClient staff have dealing to be conveniently identified.
+
+			 These identifiers can be up to 10 alphanumeric characters but they 
+			 must not contain spaces"
+
+			 is string length: 10 pattern: "XXXXXXXXXX";
+
+		type URL 
+
+			"a string used to identify a resource on the internet. A URL is
+			 made up of a number of components in the following form
+
+			 	<protocol>://<hostname>/<resource path>?<parameters>
+
+			 for the purpose of the CRM domain, this breakdown is not important.
+			 URLs (especially those used a web page addresses) are simply 
+			 treated as a string."
+
+			 is string;
+
+		type ISOCountryCode
+
+			"The International Stardards Organisation have standardised the
+			 names of all countries and have allocated a two character code
+			 for each country. The relevant standard is ISO 3166 and is
+			 available at www.iso.org along with a downloadable file
+			 containing the current codes."
+
+			 is string length: 2;
+
+		type ISOCountryName
+
+			"The International Stardards Organisation have standardised the
+			 names of all countries and have allocated a two character code
+			 for each country. The relevant standard is ISO 3166 and is
+			 available at www.iso.org along with a downloadable file
+			 containing the current codes."
+
+			 is string length: 40;
+
+
+		subsystem Parties is
+
+			"concerned with the identification of parties (individuals and 
+			 organisations) with which SomeClient has dealing of one kind or
+			 another.
+
+			 The careful management of the its client relationships is of
+			 critical importance to SomeClient. A client may have many facets;
+			 They may be owners of multiple units in one or more plans; our
+			 painting contractor may also be a unit owner; a Real Estate Agent
+			 my also be a unit owner, tennant and developer.
+
+			 It is critical to SomeClient that we remain abrest of all of the
+			 diverse roles or our clients. Its is critical that we treat each
+			 and every person we deal with as a valued customer and not just a
+			 number.
+
+			 The Parties subsytem reflects this goal by representing a single
+			 company or individual as a 'Party'. Our practice is to record all
+			 information against the relevant Party records so that we may
+			 maintain a comprehensive profile of all of our business dealings
+			 with each Party."
+
+			 object Party is
+
+			 	"Formally, a Party represents an identifiable, addressable
+				 entity that may have a legal status and that normally has
+				 autonomous control over (at least some) of its actions.
+
+				 In this context, a Party is a representation of an individual,
+				 group or organisation with which SomeClient has dealings."
+
+				 attribute partyId
+
+				 	"Each party is allocated a unique identifier that allows
+					 that party to be referred to conveniently when working with
+					 the system. 
+
+					 This identifier is a short string that is allocated by the
+					 system automatically when a new party is added. Staff are
+					 permitted to change this identifier to anything they like
+					 provided that it is unique within the system.
+
+					 It is important to note that, behind the scenes, the system
+					 will allocate a hidden identifier that will never change.
+					 The system uses *that* identifier to ensure that it keeps
+					 track of each Party no matter what name the staff may
+					 choose to give them."
+
+					 is ConvenientPartyIdentifier;
+					 
+			 end Party;
+
+		end Parties;
+
+		subsystem PartyAddressability is
+
+			object Address is
+
+			end Address;
+
+			object WebPageAddress specialisation of Address is
+
+				attribute url
+
+					"a reference to a web page" 
+					is URL;
+
+			end WebPageAddress;
+
+			object EmailAddress specialisation of Address is
+
+				attribute emailAddress
+
+					"an address used for the delivery of internet email"
+					is string;
+
+			end EmailAddress;
+
+			object TelecomAddress specialisation of Address is
+
+			end TelecomAddress;
+
+			object GeographicAddress specialisation of Address is
+
+			end GeographicAddress;
+
+			object Country is 
+				
+				"A country where Parties reside or maintain offices. The
+				 International Stardards Organisation have standardised the
+				 names of all countries and have allocated a two character code
+				 for each country. The relevent standard is ISO 3166 and is
+				 available at www.iso.org along with a downloadable file
+				 containing the current codes."
+
+				 attribute code is 
+				 	"a two character code defined in ISO 3166"
+					is ISOCountryCode;
+
+				 attribute name is 
+				 	"the name of the country as defined by ISO 3166"
+					is ISOCountryName;
+
+				 identifier 
+				 	"a country may can be uniquely identified by its
+				 	 code"
+					 is code;
+
+			end Country;
+			
+
+			association R1 is 
+
+				"Parties may be contacted using an address. Contacts with a
+				 party may be establised by physical mail (sending a letter),
+				 telephone (voice call), sending a FAX, sending an email,
+				 visiting the Party's website or simply paying them a visit at
+				 their office.
+
+				 A Party my have zero or more associated addresses. Similarly, a
+				 single address may be the contact point for many different
+				 parties."
+
+				 Party "may be contacted at" 0..* Address;
+				 Address "is contact point for" 1..* Party;
+
+			end R1;
+
+			generalisation R2 is 
+			
+				"Parties may be addressed in many different ways depending on how
+				 you want to find them. Their internet mailing address will
+				 facilitate the deliver of email, the telecom address will allow
+				 one to send fax messages or make voice calls, the web address will
+				 allow the party's webpage to be found and a geographical address
+				 will allow physical mail to be delivered to the party or you may
+				 actually visit the party at that address.
+
+				 These various types of addressies have been generalised (or abstracted)
+				 into the basic concept of address."
+
+				 Address is WebPageAddress, EmailAddress, TelecomAddress or
+				 			GeographicAddress;
+			end R2;
+
+			association R3 is
+
+				"A geographic address is alway located in a particular contry"
+
+				GeographicAddress "is located in" 1..1 Country;
+				Country "is the location of" 0..* GeographicAddress;
+
+			end R3;
+		end Addressability;
+
+
+	end CRM;
+
+end SomeClient;

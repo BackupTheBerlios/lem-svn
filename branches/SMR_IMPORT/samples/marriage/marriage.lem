@@ -1,0 +1,64 @@
+// Model of the ideal marriage
+// 
+// Source: http://xtuml.jdns.org/samples/marriage/marriage.lem
+//==================================================================================
+
+model HumanSociety is 
+	"concerned with many aspects of human life"
+	
+	domain Marriage is 
+	   "describes the concept of matramony as practiced in most 
+	    (but not all) parts of the world."
+
+	subsystem People is
+		"concerned with people and the concept of marriage"
+
+		object Person is 
+		   "a human being"
+
+			attribute name 
+				"the name by which a individual is known for legal purposes"
+				is string;
+			attribute birthdate
+				"the day on which the person was born"
+				is date;
+		end Person;
+
+		object Male specialisation of Person is 
+		   "a person of the male gender"
+		end Male;
+
+		object Female specialisation of Person is 
+		   "a person of the female gender"
+		end Female;
+
+		// generalisation and associations
+
+		generalisation R1 is 
+		   "the common notion that each person is either a male or a female"
+		    Person is Male or Female;
+		end R1;
+
+		association R2 is 
+		   "the concept that a man and woman may marry.
+		    Some men do not marry and, likewise some women choose not to marry.
+			In most societies, marriage is an exclusive arrangement. For the
+			sake of a peaceful life a person should only be married to at most 
+			one person at any one point in time"
+
+			Male "has, as wife" 0..1 Female;
+			Female "has, as husband" 0..1 Male;
+
+			object Marriage is
+			   "the union of a man and a woman"
+
+			   attribute startDate "the date of the wedding" is date;
+			   attribute endDate "the date of the divorce" is date;
+			   attribute celebrantName "the name of the celebrant" is string;
+			   attribute location "where the marriage took place" is string;
+			end Marriage;
+		end R2;
+
+	end People;
+   end Marriage;
+end HumanSociety;

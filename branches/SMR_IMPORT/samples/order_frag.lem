@@ -1,0 +1,8 @@
+	association R5
+		"each order is made up of a number of line items 
+		 each of which represents a product selection 
+		 by the customer" is
+
+		 Order "has, as line items" 1..* ProductSelection;
+		 ProductSelection "is line item for" 1..1 Order;
+	end R5;

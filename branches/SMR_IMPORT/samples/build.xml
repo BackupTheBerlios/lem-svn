@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<project name="samples" default="doc" basedir=".">
+    <target name="init">
+    </target>
+
+	<target name="postscript">
+		<apply executable="./geneps.pl" parallel="false" >
+			<fileset dir="." includes="*.lem"/>
+		</apply>
+	</target>
+
+</project>

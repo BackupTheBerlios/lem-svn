@@ -1,0 +1,102 @@
+model RealEstateApplication is "a demonstration of the current capabilities of the LEM language"
+	domain RealEstate is "a collection of classes, relationships, states, actions and rules relating to the real estate industry"
+
+
+		type UniqueIdentifier is arbitrary_id;
+                type Money is real;
+                type PostCode is integer;
+
+		subsystem Locale is "concerned with the geographical objects involved in the real estate industry. It provides an ideal opportunity to demonstrate an xtUML information model"
+
+			
+                        object State is "a division of a country controlled by its own government (for want of a better description)"
+				attribute id 		is UniqueIdentifier;
+				attribute name "the name of the state"	is string;
+			end State;
+
+			object Region is "a geographic region within a state comprising of a number of Suburbs"
+                                attribute id 		is UniqueIdentifier;
+				attribute name		is string;
+			end Region;
+
+			object Suburb is "a community comprising streets, sections and building blocks"
+				attribute id "uniquely identifies the Suburb"		is arbitrary_id;
+				attribute name		is string;
+				attribute postCode	is PostCode;
+			end Suburb;
+
+                        object Section is "an aggregation of contiguous building blocks usually bounded by streets or the suburb boundary"
+                                attribute id              is arbitrary_id;
+                                attribute number "uniquely identifies the section within the suburb"      is integer;
+                        end Section;
+
+                        object Block is "a block of land upon which a building is usually erected" 
+                                attribute id              is arbitrary_id;
+                                attribute number "uniquely identifies the block within the section"      is integer;
+                        end Block;
+
+			association R1 is
+                                Suburb "is located in" 1..1 Region;
+				Region "contains" 1..* Suburb;
+				object R1Thing is
+					attribute whatever is arbitrary_id;
+				end R1Thing;
+			end R1;
+
+                        association R2 is
+                          
+                          State "contains" 1..* Region;
+                          Region "is contained within" 1..1 State;
+                        end R2;
+
+		end Locale;
+
+                subsystem Structures is "concerned with the types of buildings that are encountered in the Real Estate Industry"
+                        
+                    object Building is "a construction erected on a block for the purpose of accommodating people and/or equipment"
+                        attribute bildingDescription is string;
+                        attribute maxOccupants is integer;
+                    end Building;
+
+                    generalisation R3 is "a definition of the type of buildings recognised in the Real Estate industry"
+                        Building is CommercialBuilding, ResidentialBuilding or PublicBuilding;
+                    end R3;
+
+                    object CommercialBuilding is "a building for the purpose of accommodating a commercial activity"
+                        attribute commercialActivity is string;
+                    end CommercialBuilding;
+
+                    object ResidentialBuilding is "housing for people"
+                        
+                    end ResidentialBuilding;
+
+                    object PublicBuilding is "a government building providing services to the public"
+                        attribute purpose is string;
+                    end PublicBuilding;
+
+                    generalisation R4 is "a definition of the type of residential buildings"
+                        ResidentialBuilding is House, Townhouse, Flat, Unit or Bedsitter;
+                    end R4;
+
+                    object House is
+                    end House;
+                    
+                    object Townhouse is
+                    end Townhouse;
+
+                    object Flat is
+                    end Flat;
+
+                    object Unit is
+                    end Unit;
+
+                    object Bedsitter is
+                    end Bedsitter;
+
+                 end Structures;
+
+	end RealEstate;
+
+// Bridges not yet implemented	
+// Bridge LondonBridge is between OneSideOfTheRiver and Another end LondonBridge;
+end;
