@@ -1,6 +1,9 @@
 /*
 # $Id$
 # $Log$
+# Revision 1.3  2005/04/24 13:38:00  u3957053
+# Merge the expression and Expression non-terminals together.
+#
 # Revision 1.2  2005/04/24 06:13:15  u3957053
 # Explicitly declare which exceptions we throw
 #
@@ -1059,22 +1062,14 @@ void Name() : {}
 void ObjectReference() : {}
 { 	"self" | <SIMPLE_IDENTIFIER> }
 
-void Expression() : {}
-{ 
-// things start to get complicated here
-// look at JAVA grammar to get some tips
-
-	expression()
-}
-
-
 //-----------------------------------------------------------------------------
 // Expressions 
 //-----------------------------------------------------------------------------
 
-void expression() :
-{}
-{
+void Expression() : {}
+{ 
+// things start to get complicated here
+// look at JAVA grammar to get some tips
 	relation()
 	(	(	<AND>
 		|	<OR> 
@@ -1187,7 +1182,7 @@ void aggregate() :
 {}
 {
 	<LPAREN>
-	expression()
+	Expression()
 	<RPAREN>
 }
 
