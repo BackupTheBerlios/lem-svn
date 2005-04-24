@@ -18,17 +18,16 @@
         <property name="cgi.dir" value="${www.dir}/cgi-bin"/>
         <property name="classes.dir" value="${build.dir}/classes"/>
         <property name="etc.dir" value="etc"/>
-        <property name="javacchome" value="/usr/java/javacc"/>
+        <property name="javacchome" value="/usr/java/javacc-3.2"/>
         <property name="deploy.name" value="${name}.jar"/>
         <property name="ssh.keyfile" value="/home/smr/.ssh/id_dsa"/>
-        <property name="lemSourceFile" value="file:///home/sjr/xtuml/samples/productSpecification.lem"/>
     </target>
 
     <target name="prepare" depends="generate">
         <mkdir dir="${classes.dir}"/>
     </target>
 
-    <target name="clean" depends="init">
+    <target name="clean" depends="init"> 
         <delete dir="${classes.dir}"/>
 		<delete file="${src.dir}/LemParser.jj"/>
 		<delete>
@@ -216,9 +215,8 @@
 	</target>
        
         <target name="run" depends="init">
-                <java jar="${build.dir}/lem.jar" fork="true">
-					<arg line="${lemSourceFile}"/>
-				</java>
+                <java classname="verifier.Eleminator" fork="true"
+                        classpath="${build.dir}/classes"/>
         </target>
        
         <target name="debug" depends="init">
@@ -227,16 +225,6 @@
 					classpath="${build.dir}/classes">
 					<jvmarg line="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=y"/>
 					<arg line="${lemSourceFile}"/>
-				</java>
-        </target>
-        
-        
-        <target name="debugDB" depends="init">
-                <java classname="tools.dbmapping.SQLMapper" 
-					fork="true"
-					classpath="${build.dir}/classes">
-					<jvmarg line="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=y"/>
-					<arg line="Default"/>
 				</java>
         </target>
         
