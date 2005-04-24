@@ -121,7 +121,7 @@ public class Lem {
      * checking fails. Any Throwable may be thrown in the event of a program bug (this
      * is a "work in progress" after all!)
      */
-    public Model parse( InputStream lemStream ) throws Throwable {
+    public Model parse( InputStream lemStream ) throws ParseException, LemException, IOException {
         
         // read the source into a SourceBuffer
         
