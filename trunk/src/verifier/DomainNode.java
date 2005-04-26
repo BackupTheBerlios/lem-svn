@@ -22,10 +22,26 @@ public class DomainNode extends DefaultMutableTreeNode {
     public DomainNode( Domain d ) {
         this.domain = d;
         
+        DefaultMutableTreeNode classLevel = new DefaultMutableTreeNode( "Classes" );
+        
         Iterator i = d.getClasses().values().iterator();
         while( i.hasNext() ) {
-            add( new ClassNode( (metamodel.Class)i.next() ));
+            classLevel.add( new ClassNode( (metamodel.Class)i.next() ));
         }
+        
+        add( classLevel );
+        
+        
+        DefaultMutableTreeNode relationshipLevel = new DefaultMutableTreeNode( "Relationships" );
+        
+        i = d.getRelationships().values().iterator();
+        while( i.hasNext() ) {
+            relationshipLevel.add( new RelationshipNode( (metamodel.Relationship) i.next() ));
+        }
+        
+        add( relationshipLevel );
+        
+        add( new DefaultMutableTreeNode("Hello, world" ));
     }
     
     public String toString() {
