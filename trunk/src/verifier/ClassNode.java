@@ -6,7 +6,9 @@
 
 package verifier;
 
+import java.util.Iterator;
 import javax.swing.tree.DefaultMutableTreeNode;
+import metamodel.StateMachine;
 
 /**
  *
@@ -19,6 +21,17 @@ public class ClassNode extends DefaultMutableTreeNode {
     /** Creates a new instance of ClassNode */
     public ClassNode( metamodel.Class c ) {
         this.thisClass = c;
+        
+        Iterator i = c.getAllAttributes().values().iterator();
+        
+        while( i.hasNext() ) {
+            add( new AttributeNode( (metamodel.Attribute) i.next() ));
+        }
+        
+        StateMachine m = thisClass.getStateMachine();
+        if( m != null ) {
+            add( new StateMachineNode( m ));
+        }
     }
     
     public String toString() {
