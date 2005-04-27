@@ -108,7 +108,7 @@ public class ValueObjectGenerator {
             // create the file for the output source
             
             String className = theClass.getName();
-            
+           /* 
             
             PrintWriter out = new PrintWriter( outDir.getAbsolutePath() + "/" + className + ".pm" );
             
@@ -150,6 +150,7 @@ public class ValueObjectGenerator {
             
             out.flush();
             out.close();
+	    */
         }
-
+	
 }
