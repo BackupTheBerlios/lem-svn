@@ -7,6 +7,8 @@
 package verifier;
 
 import java.awt.BorderLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -35,6 +37,10 @@ public class Eleminator extends javax.swing.JFrame {
         initComponents();
         setBounds(0,0,640,480);
         setTitle("eLEMinator");
+        Image lem = Toolkit.getDefaultToolkit().getImage("c:/xtuml/src/img/lem.jpg");
+        setIconImage(lem);
+        
+               
         try{
         String nativeLook = UIManager.getSystemLookAndFeelClassName();
         UIManager.setLookAndFeel(nativeLook);
