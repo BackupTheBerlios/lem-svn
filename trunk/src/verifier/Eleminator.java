@@ -39,7 +39,7 @@ public class Eleminator extends javax.swing.JFrame {
         String nativeLook = UIManager.getSystemLookAndFeelClassName();
         UIManager.setLookAndFeel(nativeLook);
         }
-        catch(Exception e){System.out.println(e);}
+        catch(Exception e){}
     }
     
     /** This method is called from within the constructor to
