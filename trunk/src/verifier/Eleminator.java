@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import metamodel.LemException;
 import metamodel.Model;
@@ -33,6 +34,12 @@ public class Eleminator extends javax.swing.JFrame {
     public Eleminator() {
         initComponents();
         setBounds(0,0,640,480);
+        setTitle("eLEMinator");
+        try{
+        String nativeLook = UIManager.getSystemLookAndFeelClassName();
+        UIManager.setLookAndFeel(nativeLook);
+        }
+        catch(Exception e){System.out.println(e);}
     }
     
     /** This method is called from within the constructor to
@@ -134,7 +141,7 @@ public class Eleminator extends javax.swing.JFrame {
         }
         
         getContentPane().add( new ModelTreePanel( m ), BorderLayout.CENTER );
-        this.show();
+        show();
     }//GEN-LAST:event_openItemActionPerformed
     
     public Model loadModel( File modelFile ) throws FileNotFoundException, ParseException, LemException, IOException {
