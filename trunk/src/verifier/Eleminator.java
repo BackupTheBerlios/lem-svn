@@ -141,7 +141,7 @@ public class Eleminator extends javax.swing.JFrame {
         }
         
         getContentPane().add( new ModelTreePanel( m ), BorderLayout.CENTER );
-        show();
+        setVisible(true);
     }//GEN-LAST:event_openItemActionPerformed
     
     public Model loadModel( File modelFile ) throws FileNotFoundException, ParseException, LemException, IOException {
