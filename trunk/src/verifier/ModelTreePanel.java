@@ -29,11 +29,18 @@ public class ModelTreePanel extends javax.swing.JPanel {
      */
     private void initComponents() {//GEN-BEGIN:initComponents
         treeScrollPane = new javax.swing.JScrollPane();
+        SplitPanel = new javax.swing.JSplitPane();
         modelTree = new javax.swing.JTree();
+        DescriptionArea = new javax.swing.JTextArea();
 
         setLayout(new java.awt.BorderLayout());
 
-        treeScrollPane.setViewportView(modelTree);
+        SplitPanel.setLeftComponent(modelTree);
+
+        DescriptionArea.setEditable(false);
+        SplitPanel.setRightComponent(DescriptionArea);
+
+        treeScrollPane.setViewportView(SplitPanel);
 
         add(treeScrollPane, java.awt.BorderLayout.CENTER);
 
@@ -41,6 +48,8 @@ public class ModelTreePanel extends javax.swing.JPanel {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea DescriptionArea;
+    private javax.swing.JSplitPane SplitPanel;
     private javax.swing.JTree modelTree;
     private javax.swing.JScrollPane treeScrollPane;
     // End of variables declaration//GEN-END:variables
