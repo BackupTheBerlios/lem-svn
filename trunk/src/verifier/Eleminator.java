@@ -32,15 +32,18 @@ public class Eleminator extends javax.swing.JFrame {
     
     Vector models = new Vector();
     File workingDirectory = null;
+    ModelTreePanel MTP = new ModelTreePanel(new Model());
     
     /** Creates new form Eleminator */
     public Eleminator() {
+        getContentPane().add( MTP, BorderLayout.CENTER );
         try{
         String nativeLook = UIManager.getSystemLookAndFeelClassName();
         UIManager.setLookAndFeel(nativeLook);
         SwingUtilities.updateComponentTreeUI(this);
         }
         catch(Exception e){}
+        
         initComponents();
         setBounds(0,0,640,480);
         setTitle("eLEMinator");
@@ -183,7 +186,11 @@ public class Eleminator extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog( this, "Model loaded successfully.", "Success!", 
                             JOptionPane.INFORMATION_MESSAGE );
                     workingDirectory = jfc.getSelectedFile().getParentFile();
-                    getContentPane().add( new ModelTreePanel( m ), BorderLayout.CENTER );
+                    getContentPane().remove(MTP);
+                    MTP = new ModelTreePanel(m);
+                    getContentPane().add(MTP, BorderLayout.CENTER);
+                                      
+                    
                 }
             } catch( FileNotFoundException fnfe ) {
                 JOptionPane.showMessageDialog( this, "Could not open the model file: " + fnfe.getMessage(),
