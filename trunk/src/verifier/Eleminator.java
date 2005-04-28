@@ -37,7 +37,7 @@ public class Eleminator extends javax.swing.JFrame {
         initComponents();
         setBounds(0,0,640,480);
         setTitle("eLEMinator");
-        Image lem = Toolkit.getDefaultToolkit().getImage("c:/xtuml/src/img/lem.jpg");
+        Image lem = Toolkit.getDefaultToolkit().getImage("build/classes/verifier/lem.jpg");
         setIconImage(lem);
         
                
