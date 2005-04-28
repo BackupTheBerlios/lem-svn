@@ -16,7 +16,9 @@ import java.io.IOException;
 import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.filechooser.FileFilter;
 import metamodel.LemException;
 import metamodel.Model;
@@ -34,18 +36,22 @@ public class Eleminator extends javax.swing.JFrame {
     
     /** Creates new form Eleminator */
     public Eleminator() {
+        try{
+        String nativeLook = UIManager.getSystemLookAndFeelClassName();
+        UIManager.setLookAndFeel(nativeLook);
+        SwingUtilities.updateComponentTreeUI(this);
+        }
+        catch(Exception e){}
         initComponents();
         setBounds(0,0,640,480);
         setTitle("eLEMinator");
         Image lem = Toolkit.getDefaultToolkit().getImage("build/classes/verifier/lem.jpg");
         setIconImage(lem);
+       /* LookAndFeelInfo[] li = UIManager.getInstalledLookAndFeels();
+        for(int i=0;li.length>i;i++){  //For more themes
+             System.out.println(li[i].getName());}*/
+                   
         
-               
-        try{
-        String nativeLook = UIManager.getSystemLookAndFeelClassName();
-        UIManager.setLookAndFeel(nativeLook);
-        }
-        catch(Exception e){}
     }
     
     /** This method is called from within the constructor to
@@ -60,6 +66,9 @@ public class Eleminator extends javax.swing.JFrame {
         fileMenu = new javax.swing.JMenu();
         openItem = new javax.swing.JMenuItem();
         quitItem = new javax.swing.JMenuItem();
+        themeMenu = new javax.swing.JMenu();
+        defaultItem = new javax.swing.JMenuItem();
+        nativeItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("eLEMinator");
@@ -92,10 +101,56 @@ public class Eleminator extends javax.swing.JFrame {
 
         menubar.add(fileMenu);
 
+        themeMenu.setMnemonic('T');
+        themeMenu.setText("Themes");
+        defaultItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
+        defaultItem.setMnemonic('D');
+        defaultItem.setText("Default Look");
+        defaultItem.setToolTipText("Default Look and Feel");
+        defaultItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                defaultItemActionPerformed(evt);
+            }
+        });
+
+        themeMenu.add(defaultItem);
+
+        nativeItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        nativeItem.setMnemonic('N');
+        nativeItem.setText("Native Look");
+        nativeItem.setToolTipText("Native Look and Feel");
+        nativeItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nativeItemActionPerformed(evt);
+            }
+        });
+
+        themeMenu.add(nativeItem);
+
+        menubar.add(themeMenu);
+
         setJMenuBar(menubar);
 
         pack();
     }//GEN-END:initComponents
+
+    private void nativeItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nativeItemActionPerformed
+        try{
+        String nativeLook = UIManager.getSystemLookAndFeelClassName();
+        UIManager.setLookAndFeel(nativeLook);
+        SwingUtilities.updateComponentTreeUI(this);
+        }
+        catch(Exception e){}
+    }//GEN-LAST:event_nativeItemActionPerformed
+
+    private void defaultItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_defaultItemActionPerformed
+        try{
+        String defaultLook = UIManager.getCrossPlatformLookAndFeelClassName();
+        UIManager.setLookAndFeel(defaultLook);
+        SwingUtilities.updateComponentTreeUI(this);}
+        
+        catch (Exception e){}
+    }//GEN-LAST:event_defaultItemActionPerformed
     
     private void quitItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitItemActionPerformed
         System.exit( 1 );
@@ -128,6 +183,8 @@ public class Eleminator extends javax.swing.JFrame {
                     models.add( loadModel( selectedFile ));
                     JOptionPane.showMessageDialog( this, "Model loaded successfully.", "Success!", 
                             JOptionPane.INFORMATION_MESSAGE );
+                    workingDirectory = jfc.getSelectedFile().getParentFile();
+                    getContentPane().add( new ModelTreePanel( m ), BorderLayout.CENTER );
                 }
             } catch( FileNotFoundException fnfe ) {
                 JOptionPane.showMessageDialog( this, "Could not open the model file: " + fnfe.getMessage(),
@@ -143,11 +200,10 @@ public class Eleminator extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog( this, "An input/output error occured while trying to read the model: " + ioe.getMessage(),
                         "Read error", JOptionPane.ERROR_MESSAGE );                
             }
-            workingDirectory = jfc.getSelectedFile().getParentFile();
+
         }
         
-        getContentPane().add( new ModelTreePanel( m ), BorderLayout.CENTER );
-        setVisible(true);
+         setVisible(true);
     }//GEN-LAST:event_openItemActionPerformed
     
     public Model loadModel( File modelFile ) throws FileNotFoundException, ParseException, LemException, IOException {
@@ -169,12 +225,15 @@ public class Eleminator extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem defaultItem;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar menubar;
+    private javax.swing.JMenuItem nativeItem;
     private javax.swing.JMenuItem openItem;
     private javax.swing.JMenuItem quitItem;
     private javax.swing.JPanel statusPanel;
+    private javax.swing.JMenu themeMenu;
     // End of variables declaration//GEN-END:variables
     
 }
