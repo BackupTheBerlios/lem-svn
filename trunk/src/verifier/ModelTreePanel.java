@@ -16,10 +16,10 @@ import metamodel.Model;
 public class ModelTreePanel extends javax.swing.JPanel {
     
     /** Creates new form ModelTreePanel */
-    public ModelTreePanel( Model m ) {
+    public ModelTreePanel(Model m) {
         initComponents();
-        
         modelTree.setModel( new DefaultTreeModel( new ModelTreeNode( m )));
+        DescriptionArea.setText(m.getDescription());
     }
     
     /** This method is called from within the constructor to
