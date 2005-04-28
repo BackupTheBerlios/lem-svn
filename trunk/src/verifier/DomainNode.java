@@ -41,7 +41,7 @@ public class DomainNode extends DefaultMutableTreeNode {
         
         add( relationshipLevel );
         
-        add( new DefaultMutableTreeNode("Hello, world" ));
+        //add( new DefaultMutableTreeNode("Hello, world" ));
     }
     
     public String toString() {
