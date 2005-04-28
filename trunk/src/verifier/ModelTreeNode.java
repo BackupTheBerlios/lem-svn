@@ -32,4 +32,8 @@ public class ModelTreeNode extends DefaultMutableTreeNode {
     public String toString() {
         return "Model " + model.getName();
     }
+    
+    public String getDescription(){
+        return model.getDescription();
+    }
 }
