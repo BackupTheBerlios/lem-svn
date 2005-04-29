@@ -14,7 +14,7 @@ import metamodel.Domain;
  *
  * @author sjr
  */
-public class DomainNode extends DefaultMutableTreeNode {
+public class DomainNode extends AbstractDescriptionNode {
     
     Domain domain;
     
@@ -47,4 +47,9 @@ public class DomainNode extends DefaultMutableTreeNode {
     public String toString() {
         return "Domain " + domain.getName();
     }
+    
+    public String getDescription(){
+        return domain.getDescription();
+    }
+    
 }

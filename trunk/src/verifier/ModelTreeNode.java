@@ -7,7 +7,6 @@
 package verifier;
 
 import java.util.Iterator;
-import javax.swing.tree.DefaultMutableTreeNode;
 import metamodel.Domain;
 import metamodel.Model;
 
@@ -15,7 +14,7 @@ import metamodel.Model;
  *
  * @author sjr
  */
-public class ModelTreeNode extends DefaultMutableTreeNode {
+public class ModelTreeNode extends AbstractDescriptionNode {
     Model model;
     
     /** Creates a new instance of ModelTreeNode */

@@ -7,14 +7,13 @@
 package verifier;
 
 import java.util.Iterator;
-import javax.swing.tree.DefaultMutableTreeNode;
 import metamodel.StateMachine;
 
 /**
  *
  * @author sjr
  */
-public class ClassNode extends DefaultMutableTreeNode {
+public class ClassNode extends AbstractDescriptionNode {
     
     metamodel.Class thisClass;
     
@@ -36,5 +35,9 @@ public class ClassNode extends DefaultMutableTreeNode {
     
     public String toString() {
         return "Class " + thisClass.getName();
+    }
+    
+    public String getDescription(){
+        return thisClass.getDescription();
     }
 }

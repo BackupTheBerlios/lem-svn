@@ -7,6 +7,7 @@
 package verifier;
 
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import metamodel.Model;
 
 /**
@@ -19,6 +20,9 @@ public class ModelTreePanel extends javax.swing.JPanel {
     public ModelTreePanel(Model m) {
         initComponents();
         modelTree.setModel( new DefaultTreeModel( new ModelTreeNode( m )));
+        modelTree.setSelectionInterval(0,0);
+        displayDescription();
+        /*
         if((m.getDescription()!=null)&&(m.getDescription()!=""))
         {
             DescriptionArea.setText(m.getDescription());    
@@ -26,7 +30,7 @@ public class ModelTreePanel extends javax.swing.JPanel {
         else
         {
             DescriptionArea.setText("No Description");
-        }
+        }*/
     }
     
     /** This method is called from within the constructor to
@@ -42,9 +46,9 @@ public class ModelTreePanel extends javax.swing.JPanel {
 
         setLayout(new java.awt.BorderLayout());
 
-        modelTree.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                modelTreeMouseClicked(evt);
+        modelTree.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                modelTreePropertyChange(evt);
             }
         });
 
@@ -59,12 +63,26 @@ public class ModelTreePanel extends javax.swing.JPanel {
 
     }//GEN-END:initComponents
 
-    private void modelTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modelTreeMouseClicked
-        try{DescriptionArea.setText(modelTree.getSelectionPath().getLastPathComponent().toString());}
+    private void modelTreePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_modelTreePropertyChange
+        displayDescription();
+    }//GEN-LAST:event_modelTreePropertyChange
+    public void displayDescription()
+    {
+        String Description="";
+        try{
+        Object p =modelTree.getSelectionPath().getLastPathComponent();
+        if (p instanceof AbstractDescriptionNode){
+            AbstractDescriptionNode ADN = (AbstractDescriptionNode)p;
+            Description = ADN.getDescription();
+        }
+        if(Description==""){
+            Description="No Description";
+        }
+        DescriptionArea.setText(Description);
+        }
         catch(NullPointerException e)
         {}
-    }//GEN-LAST:event_modelTreeMouseClicked
-    
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea DescriptionArea;

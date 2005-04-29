@@ -16,7 +16,7 @@ import metamodel.Transition;
  *
  * @author sjr
  */
-public class StateMachineNode extends DefaultMutableTreeNode {
+public class StateMachineNode extends AbstractDescriptionNode {
     
     StateMachine machine = null;
     
@@ -51,6 +51,12 @@ public class StateMachineNode extends DefaultMutableTreeNode {
     }
     
     public String toString() {
+        
         return "State machine";
+    }
+    
+    public String getDescription()
+    {
+        return machine.getDescription();
     }
 }

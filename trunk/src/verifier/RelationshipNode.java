@@ -6,14 +6,13 @@
 
 package verifier;
 
-import javax.swing.tree.DefaultMutableTreeNode;
 import metamodel.Relationship;
 
 /**
  *
  * @author sjr
  */
-public class RelationshipNode extends DefaultMutableTreeNode {
+public class RelationshipNode extends AbstractDescriptionNode{
     
     Relationship relationship = null;
     
@@ -24,5 +23,10 @@ public class RelationshipNode extends DefaultMutableTreeNode {
     
     public String toString() {
         return "Relationship " + relationship.getName(); 
+    }
+    
+    public String getDescription()
+    {
+        return relationship.getDescription();
     }
 }
