@@ -21,7 +21,6 @@ public class ModelTreeNode extends DefaultMutableTreeNode {
     /** Creates a new instance of ModelTreeNode */
     public ModelTreeNode( Model m ) {
         this.model = m;
-        
         Iterator i = m.getDomains().values().iterator();
         
         while( i.hasNext() ) {

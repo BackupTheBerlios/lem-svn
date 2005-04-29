@@ -19,7 +19,14 @@ public class ModelTreePanel extends javax.swing.JPanel {
     public ModelTreePanel(Model m) {
         initComponents();
         modelTree.setModel( new DefaultTreeModel( new ModelTreeNode( m )));
-        DescriptionArea.setText(m.getDescription());
+        if((m.getDescription()!=null)&&(m.getDescription()!=""))
+        {
+            DescriptionArea.setText(m.getDescription());    
+        }
+        else
+        {
+            DescriptionArea.setText("No Description");
+        }
     }
     
     /** This method is called from within the constructor to
@@ -35,6 +42,12 @@ public class ModelTreePanel extends javax.swing.JPanel {
 
         setLayout(new java.awt.BorderLayout());
 
+        modelTree.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                modelTreeMouseClicked(evt);
+            }
+        });
+
         SplitPanel.setLeftComponent(modelTree);
 
         DescriptionArea.setEditable(false);
@@ -45,6 +58,12 @@ public class ModelTreePanel extends javax.swing.JPanel {
         add(treeScrollPane, java.awt.BorderLayout.CENTER);
 
     }//GEN-END:initComponents
+
+    private void modelTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modelTreeMouseClicked
+        try{DescriptionArea.setText(modelTree.getSelectionPath().getLastPathComponent().toString());}
+        catch(NullPointerException e)
+        {}
+    }//GEN-LAST:event_modelTreeMouseClicked
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
