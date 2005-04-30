@@ -51,7 +51,7 @@ public class Eleminator extends javax.swing.JFrame {
         setIconImage(lem);
        /* LookAndFeelInfo[] li = UIManager.getInstalledLookAndFeels();
         for(int i=0;li.length>i;i++){  //For more themes
-             System.out.println(li[i].getName());}*/
+             System.out.println(li[i].getName());} */
                    
         
     }
