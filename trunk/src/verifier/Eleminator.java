@@ -74,6 +74,7 @@ public class Eleminator extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("eLEMinator");
+        statusPanel.setMaximumSize(new java.awt.Dimension(10, 10));
         getContentPane().add(statusPanel, java.awt.BorderLayout.SOUTH);
 
         fileMenu.setMnemonic('F');
