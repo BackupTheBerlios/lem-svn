@@ -12,6 +12,7 @@ import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JWindow;
@@ -24,7 +25,8 @@ import javax.swing.SwingUtilities;
 class SplashWindow extends JWindow {
     public SplashWindow(String filename, Frame f, int waitTime) {
         super(f);
-        JLabel l = new JLabel(new ImageIcon(filename));
+        URL imageURL = getClass().getClassLoader().getResource(filename);
+        JLabel l = new JLabel(new ImageIcon(imageURL));
         getContentPane().add(l, BorderLayout.CENTER);
         pack();
         Dimension screenSize =
