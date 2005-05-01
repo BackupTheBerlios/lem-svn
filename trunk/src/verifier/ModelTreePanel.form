@@ -40,6 +40,7 @@
           <SubComponents>
             <Component class="javax.swing.JTextPane" name="descriptionArea">
               <Properties>
+                <Property name="editable" type="boolean" value="false"/>
                 <Property name="editorKit" type="javax.swing.text.EditorKit" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection component="descriptionArea" name="getEditorKit" type="method"/>
                 </Property>

@@ -59,6 +59,7 @@ public class ModelTreePanel extends javax.swing.JPanel {
 
         SplitPanel.setLeftComponent(treeScrollPane);
 
+        descriptionArea.setEditable(false);
         descriptionArea.setEditorKit(descriptionArea.getEditorKit());
         descriptionScrollPane.setViewportView(descriptionArea);
 
