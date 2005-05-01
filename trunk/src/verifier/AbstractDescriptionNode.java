@@ -6,6 +6,7 @@
 
 package verifier;
 
+import javax.swing.text.SimpleAttributeSet;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -20,5 +21,5 @@ public abstract class AbstractDescriptionNode extends DefaultMutableTreeNode{
     
     public abstract String getDescription();
     
-    
+    public abstract StyledDocument getStyledDocument() ;
 }
