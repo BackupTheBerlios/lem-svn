@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -47,7 +48,8 @@ public class Eleminator extends javax.swing.JFrame {
         initComponents();
         setBounds(0,0,640,480);
         setTitle("eLEMinator");
-        Image lem = Toolkit.getDefaultToolkit().getImage("build/classes/verifier/lem.jpg");
+        URL imageURL = getClass().getClassLoader().getResource("verifier/lem.jpg");
+        Image lem = Toolkit.getDefaultToolkit().getImage(imageURL);
         setIconImage(lem);
        /* LookAndFeelInfo[] li = UIManager.getInstalledLookAndFeels();
         for(int i=0;li.length>i;i++){  //For more themes
