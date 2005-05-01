@@ -61,7 +61,7 @@
         <delete dir="${classes.dir}"/>
 
 		<delete file="${src.dir}/LemParser.jj"/>
-
+                <mkdir dir ="${doc.dir}/javadoc"/>
 		<delete>
 
 			<fileset dir="${doc.dir}/javadoc">
@@ -431,8 +431,6 @@
 
 	</target>
 
-        
-
         <target name="run" depends="init">
 
                 <java classname="splash.Splasher" fork="true"
@@ -441,7 +439,11 @@
 
         </target>
 
-       
+        <target name="runjar" depends="jarfile">
+
+                <java jar="build/lem.jar" fork="true"/>
+
+        </target>
 
         <target name="debug" depends="init">
 
