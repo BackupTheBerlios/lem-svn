@@ -6,7 +6,10 @@
 
 package verifier;
 
+import java.awt.Color;
 import java.util.Iterator;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 import metamodel.Domain;
 
@@ -52,4 +55,24 @@ public class DomainNode extends AbstractDescriptionNode {
         return domain.getDescription();
     }
     
+     public StyledDocument getStyledDocument() {
+        StyledDocument doc = new StyledDocument() ;
+        SimpleAttributeSet s = new SimpleAttributeSet();
+        StyleConstants.setFontFamily(s, "Times New Roman");
+        StyleConstants.setFontSize(s, 14);
+        StyleConstants.setBold(s, true);
+        StyleConstants.setForeground(s, Color.blue);       
+        StyledElement element = new StyledElement(toString()+"\n" , s) ;
+        doc.addStyle(element) ; 
+        
+        SimpleAttributeSet s1 = new SimpleAttributeSet();        
+        StyleConstants.setFontFamily(s1, "Times New Roman");
+        StyleConstants.setFontSize(s1, 14);
+        StyleConstants.setBold(s1, false);
+        StyleConstants.setForeground(s1, Color.black);       
+        StyledElement element1 = new StyledElement(getDescription() , s1) ;
+        doc.addStyle(element1) ; 
+        
+        return doc ;
+    }
 }

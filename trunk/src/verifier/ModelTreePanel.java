@@ -6,8 +6,9 @@
 
 package verifier;
 
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.html.HTMLDocument;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
 import metamodel.Model;
 
 /**
@@ -44,7 +45,7 @@ public class ModelTreePanel extends javax.swing.JPanel {
         treeScrollPane = new javax.swing.JScrollPane();
         modelTree = new javax.swing.JTree();
         descriptionScrollPane = new javax.swing.JScrollPane();
-        DescriptionArea = new javax.swing.JTextArea();
+        descriptionArea = new javax.swing.JTextPane();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -58,8 +59,8 @@ public class ModelTreePanel extends javax.swing.JPanel {
 
         SplitPanel.setLeftComponent(treeScrollPane);
 
-        DescriptionArea.setEditable(false);
-        descriptionScrollPane.setViewportView(DescriptionArea);
+        descriptionArea.setEditorKit(descriptionArea.getEditorKit());
+        descriptionScrollPane.setViewportView(descriptionArea);
 
         SplitPanel.setRightComponent(descriptionScrollPane);
 
@@ -72,25 +73,31 @@ public class ModelTreePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_modelTreePropertyChange
     public void displayDescription()
     {
-        String Description="";
+        StyledDocument doc = null ;
         try{
         Object p =modelTree.getSelectionPath().getLastPathComponent();
         if (p instanceof AbstractDescriptionNode){
             AbstractDescriptionNode ADN = (AbstractDescriptionNode)p;
-            Description = ADN.getDescription();
+            //Description = ADN.getDescription();
+            doc = ADN.getStyledDocument();
+        }               
+        try {            
+            descriptionArea.getDocument().remove ( 0 , descriptionArea.getDocument().getLength() ) ; 
+            for ( int i = 0 ; i < doc.getLength() ; i++ ) {
+                descriptionArea.getDocument().insertString(descriptionArea.getDocument().getLength() ,doc.getStyledElement(i).getContent() + "\n", doc.getStyledElement(i).getAttributeSet()) ;
+            }
         }
-        if(Description==""){
-            Description="No Description";
-        }
-        DescriptionArea.setText(Description);
+        catch(Exception e) {}
+
+//        descriptionArea.setText(Description);
         }
         catch(NullPointerException e)
         {}
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea DescriptionArea;
     private javax.swing.JSplitPane SplitPanel;
+    private javax.swing.JTextPane descriptionArea;
     private javax.swing.JScrollPane descriptionScrollPane;
     private javax.swing.JTree modelTree;
     private javax.swing.JScrollPane treeScrollPane;
