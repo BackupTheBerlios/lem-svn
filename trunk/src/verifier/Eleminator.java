@@ -12,7 +12,10 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.Vector;
 import javax.swing.JFileChooser;
@@ -45,6 +48,15 @@ public class Eleminator extends javax.swing.JFrame {
         }
         catch(Exception e){}
         
+        try{
+         File custDir = new File(System.getProperty("user.home")+"/"+"WorkSpace.dat");
+         ObjectInputStream In = new ObjectInputStream (new FileInputStream
+         (custDir));
+         workingDirectory = new File( ((WorkSpace)In.readObject()).getWorkSpace());
+        }
+    catch (Exception ex){
+        workingDirectory = new File(System.getProperty("user.home"));}
+    
         initComponents();
         setBounds(0,0,640,480);
         setTitle("eLEMinator");
@@ -177,6 +189,8 @@ public class Eleminator extends javax.swing.JFrame {
                 return "LEM model files (*.lem)";
             }
         } );
+      
+        jfc.setCurrentDirectory(workingDirectory);
         
         jfc.showDialog(this, "Load");
         
@@ -192,7 +206,13 @@ public class Eleminator extends javax.swing.JFrame {
                     getContentPane().remove(MTP);
                     MTP = new ModelTreePanel(m);
                     getContentPane().add(MTP, BorderLayout.CENTER);
-                                      
+                    try{
+                     ObjectOutputStream Out = new ObjectOutputStream(new FileOutputStream(System.getProperty("user.home")+"/"+"WorkSpace.dat"));
+               Out.writeObject(new WorkSpace(workingDirectory.getAbsolutePath()));
+               Out.close();
+                     }
+                    catch (FileNotFoundException ex){
+                    }
                     
                 }
             } catch( FileNotFoundException fnfe ) {
