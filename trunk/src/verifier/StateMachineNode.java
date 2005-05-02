@@ -47,7 +47,7 @@ public class StateMachineNode extends AbstractDescriptionNode {
                 name = t.getFromState().getName() + " -> " + t.getToState().getName();
             }
             
-            transitionLevel.add( new TransitionNode( (metamodel.Transition)i.next() , name ));
+            transitionLevel.add( new TransitionNode( t , name ));
         }
         
         add( stateLevel );
