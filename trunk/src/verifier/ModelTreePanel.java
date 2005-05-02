@@ -6,8 +6,6 @@
 
 package verifier;
 
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.html.HTMLDocument;
 import javax.swing.tree.DefaultTreeModel;
 import metamodel.Model;
 
@@ -24,6 +22,8 @@ public class ModelTreePanel extends javax.swing.JPanel {
         modelTree.setSelectionInterval(0,0);
         displayDescription();
         SplitPanel.setDividerLocation(175);
+        CustomTreeRenderer render = new CustomTreeRenderer();
+        modelTree.setCellRenderer(render);
         /*
         if((m.getDescription()!=null)&&(m.getDescription()!=""))
         {
