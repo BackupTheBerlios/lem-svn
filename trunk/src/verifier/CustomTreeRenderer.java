@@ -65,12 +65,12 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
         else if (value instanceof StateMachineNode){
             setIcon(StateMachine);
         }
-        /*else if (value instanceof StateNode){
+        else if (value instanceof StateNode){
             setIcon(State);
         }
         else if (value instanceof TransitionNode){
             setIcon(Transition);
-        }*/
+        }
         
         return this;
         }
