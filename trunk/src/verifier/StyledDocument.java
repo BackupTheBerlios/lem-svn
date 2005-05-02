@@ -16,8 +16,7 @@ import java.util.ArrayList;
 public class StyledDocument {
     
     private ArrayList elements;     
-    
-    
+        
     /** Creates a new instance of DisplayElement */
     public StyledDocument() {
         elements = new ArrayList() ;        
@@ -26,6 +25,7 @@ public class StyledDocument {
     public int getLength() {
         return elements.size(); 
     }
+    
     public void addStyle(StyledElement element) {        
         elements.add(element) ;
     }
@@ -36,7 +36,13 @@ public class StyledDocument {
        else {
            StyledElement s = null ;
            return s; 
-       }
-           
-    }                
+       }           
+    }   
+    
+    public void append (StyledDocument doc) {      
+      for (int i = 0 ; i < doc.getLength() ; i++) {
+         elements.add( (StyledElement) doc.getStyledElement(i)) ;
+      }         
+    }
+    
 }
