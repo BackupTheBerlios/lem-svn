@@ -19,15 +19,19 @@ import metamodel.StateMachine;
 public class ClassNode extends AbstractDescriptionNode {
     
     metamodel.Class thisClass;
+    private StyledDocument attributeListing ; 
     
     /** Creates a new instance of ClassNode */
     public ClassNode( metamodel.Class c ) {
         this.thisClass = c;
+        attributeListing = new StyledDocument() ; 
         
         Iterator i = c.getAllAttributes().values().iterator();
         
         while( i.hasNext() ) {
-            add( new AttributeNode( (metamodel.Attribute) i.next() ));
+            AttributeNode attribute =  new AttributeNode ( (metamodel.Attribute) i.next() ) ; 
+            add( attribute);
+            attributeListing.append(attribute.getStyledDocument() ) ; 
         }
         
         StateMachine m = thisClass.getStateMachine();
@@ -61,7 +65,11 @@ public class ClassNode extends AbstractDescriptionNode {
         StyleConstants.setForeground(s1, Color.black);       
         StyledElement element1 = new StyledElement(getDescription() , s1) ;
         doc.addStyle(element1) ; 
+                
+        StyledElement element2 = new StyledElement("\n-------------- Attributes ----------------\n" , s1) ;
+        doc.addStyle(element2) ; 
         
+        doc.append(attributeListing) ;         
         return doc ;
     }
 }
