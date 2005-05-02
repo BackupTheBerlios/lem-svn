@@ -154,6 +154,12 @@
 
     <target name="compile" depends="prepare">
         <copy file ="${src.dir}/verifier/lem.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
+        <copy file ="${src.dir}/verifier/class.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
+        <copy file ="${src.dir}/verifier/relationship.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
+        <copy file ="${src.dir}/verifier/state.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
+        <copy file ="${src.dir}/verifier/transition.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
+        <copy file ="${src.dir}/verifier/attribute.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
+        <copy file ="${src.dir}/verifier/statemachine.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
         <copy file ="${src.dir}/splash/eLEMinator.jpg" todir="${classes.dir}/splash" overwrite="false"/>
         <javac srcdir="${src.dir}" 
 
