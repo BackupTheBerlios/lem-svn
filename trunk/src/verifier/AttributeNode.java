@@ -38,7 +38,7 @@ public class AttributeNode extends AbstractDescriptionNode {
         StyleConstants.setFontFamily(s, "Times New Roman");
         StyleConstants.setFontSize(s, 14);
         StyleConstants.setBold(s, true);
-        StyleConstants.setForeground(s, Color.blue);       
+        StyleConstants.setForeground(s, Color.green);       
         StyledElement element = new StyledElement(toString()+"\n" , s) ;
         doc.addStyle(element) ; 
         
