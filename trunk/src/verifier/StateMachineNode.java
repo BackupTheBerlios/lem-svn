@@ -33,8 +33,8 @@ public class StateMachineNode extends AbstractDescriptionNode {
         DefaultMutableTreeNode transitionLevel = new DefaultMutableTreeNode( "Transitions" );
         
         Iterator i = machine.getStateList().listIterator();
-        while( i.hasNext() ) {
-            stateLevel.add( new DefaultMutableTreeNode( ((metamodel.State)i.next()).getName() ));
+        while( i.hasNext() ) {          
+            stateLevel.add( new StateNode((metamodel.State) i.next()) ) ;                                
         }
         
         i = machine.getTransitionList().listIterator();
@@ -46,7 +46,8 @@ public class StateMachineNode extends AbstractDescriptionNode {
             } else {
                 name = t.getFromState().getName() + " -> " + t.getToState().getName();
             }
-            transitionLevel.add( new DefaultMutableTreeNode( name ));
+            
+            transitionLevel.add( new TransitionNode( (metamodel.Transition)i.next() , name ));
         }
         
         add( stateLevel );
