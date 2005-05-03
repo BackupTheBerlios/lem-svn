@@ -81,19 +81,22 @@ public class ModelTreePanel extends javax.swing.JPanel {
             AbstractDescriptionNode ADN = (AbstractDescriptionNode)p;
             //Description = ADN.getDescription();
             doc = ADN.getStyledDocument();
-        }               
+                       
         try {            
             descriptionArea.getDocument().remove ( 0 , descriptionArea.getDocument().getLength() ) ; 
             for ( int i = 0 ; i < doc.getLength() ; i++ ) {
                 descriptionArea.getDocument().insertString(descriptionArea.getDocument().getLength() ,doc.getStyledElement(i).getContent() + "\n", doc.getStyledElement(i).getAttributeSet()) ;
             }
         }
+        
         catch(Exception e) {}
-
-//        descriptionArea.setText(Description);
         }
+        }
+//        descriptionArea.setText(Description);
+        
         catch(NullPointerException e)
         {}
+        
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
