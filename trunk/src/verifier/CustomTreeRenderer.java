@@ -21,9 +21,12 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
     ImageIcon State = new ImageIcon();
     ImageIcon Transition = new ImageIcon();
     ImageIcon Relationship = new ImageIcon();
-    ImageIcon Class = new ImageIcon();    
     ImageIcon Attribute = new ImageIcon();    
     ImageIcon StateMachine = new ImageIcon();
+    ImageIcon Open = new ImageIcon();
+    ImageIcon Closed = new ImageIcon();
+    ImageIcon Event = new ImageIcon();
+    ImageIcon Class = new ImageIcon();
     
     /** Creates a new instance of CustomTreeRenderer */
     public CustomTreeRenderer() {
@@ -31,14 +34,20 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
         State.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/transition.jpg");
         Transition.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
-        imageURL = getClass().getClassLoader().getResource("verifier/class.jpg");
-        Class.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/relationship.jpg");
         Relationship.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/attribute.jpg");
         Attribute.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/statemachine.jpg");
         StateMachine.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        imageURL = getClass().getClassLoader().getResource("verifier/open.jpg");
+        Open.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        imageURL = getClass().getClassLoader().getResource("verifier/closed.jpg");
+        Closed.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        imageURL = getClass().getClassLoader().getResource("verifier/event.jpg");
+        Event.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        imageURL = getClass().getClassLoader().getResource("verifier/class.jpg");
+        Class.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
     }
     public Component getTreeCellRendererComponent(
                         JTree tree,
@@ -53,8 +62,12 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
                         tree, value, sel,
                         expanded, leaf, row,
                         hasFocus);
+        setOpenIcon(Open);
+        setClosedIcon(Closed);
+        
         if (value instanceof ClassNode) {
             setIcon(Class);
+            
         }
         else if (leaf && value instanceof RelationshipNode){
             setIcon(Relationship);
@@ -71,6 +84,10 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
         else if (value instanceof TransitionNode){
             setIcon(Transition);
         }
+        /*else if (value instanceof EventNode)
+        {
+            setIcon(Event);
+        }*/
         
         return this;
         }
