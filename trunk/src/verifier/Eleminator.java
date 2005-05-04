@@ -19,9 +19,11 @@ import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.Vector;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.filechooser.FileFilter;
 import metamodel.LemException;
 import metamodel.Model;
@@ -42,7 +44,7 @@ public class Eleminator extends javax.swing.JFrame {
     public Eleminator() {
         getContentPane().add( MTP, BorderLayout.CENTER );
         try{
-        String nativeLook = UIManager.getSystemLookAndFeelClassName();
+         String nativeLook = UIManager.getSystemLookAndFeelClassName();
         UIManager.setLookAndFeel(nativeLook);
         SwingUtilities.updateComponentTreeUI(this);
         }
@@ -58,15 +60,18 @@ public class Eleminator extends javax.swing.JFrame {
         workingDirectory = new File(System.getProperty("user.home"));}
     
         initComponents();
+        LookAndFeelInfo[] li = UIManager.getInstalledLookAndFeels();
+     
+        for(int i=0;li.length>i;i++){  //For more themes
+           
+            ThemeComboBox.addItem(new ThemeItem(li[i].getName(),li[i].getClassName()));
+        } 
         setBounds(0,0,640,480);
         setTitle("eLEMinator");
         URL imageURL = getClass().getClassLoader().getResource("verifier/lem.jpg");
         Image lem = Toolkit.getDefaultToolkit().getImage(imageURL);
         setIconImage(lem);
-       /* LookAndFeelInfo[] li = UIManager.getInstalledLookAndFeels();
-        for(int i=0;li.length>i;i++){  //For more themes
-             System.out.println(li[i].getName());} */
-                   
+                         
         
     }
     
@@ -78,18 +83,33 @@ public class Eleminator extends javax.swing.JFrame {
     private void initComponents() {//GEN-BEGIN:initComponents
         desktopPane = new javax.swing.JDesktopPane();
         statusPanel = new javax.swing.JPanel();
+        LemToolBar = new javax.swing.JToolBar();
+        ThemeLabel = new javax.swing.JLabel();
+        ThemeComboBox = new javax.swing.JComboBox();
         menubar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openItem = new javax.swing.JMenuItem();
         quitItem = new javax.swing.JMenuItem();
-        themeMenu = new javax.swing.JMenu();
-        defaultItem = new javax.swing.JMenuItem();
-        nativeItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("eLEMinator");
         statusPanel.setMaximumSize(new java.awt.Dimension(10, 10));
         getContentPane().add(statusPanel, java.awt.BorderLayout.SOUTH);
+
+        LemToolBar.setFloatable(false);
+        ThemeLabel.setText("Themes");
+        LemToolBar.add(ThemeLabel);
+
+        ThemeComboBox.setMaximumSize(new java.awt.Dimension(150, 150));
+        ThemeComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                ThemeComboBoxItemStateChanged(evt);
+            }
+        });
+
+        LemToolBar.add(ThemeComboBox);
+
+        getContentPane().add(LemToolBar, java.awt.BorderLayout.NORTH);
 
         fileMenu.setMnemonic('F');
         fileMenu.setText("File");
@@ -118,56 +138,19 @@ public class Eleminator extends javax.swing.JFrame {
 
         menubar.add(fileMenu);
 
-        themeMenu.setMnemonic('T');
-        themeMenu.setText("Themes");
-        defaultItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
-        defaultItem.setMnemonic('D');
-        defaultItem.setText("Default Look");
-        defaultItem.setToolTipText("Default Look and Feel");
-        defaultItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                defaultItemActionPerformed(evt);
-            }
-        });
-
-        themeMenu.add(defaultItem);
-
-        nativeItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
-        nativeItem.setMnemonic('N');
-        nativeItem.setText("Native Look");
-        nativeItem.setToolTipText("Native Look and Feel");
-        nativeItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nativeItemActionPerformed(evt);
-            }
-        });
-
-        themeMenu.add(nativeItem);
-
-        menubar.add(themeMenu);
-
         setJMenuBar(menubar);
 
         pack();
     }//GEN-END:initComponents
 
-    private void nativeItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nativeItemActionPerformed
+    private void ThemeComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ThemeComboBoxItemStateChanged
         try{
-        String nativeLook = UIManager.getSystemLookAndFeelClassName();
-        UIManager.setLookAndFeel(nativeLook);
+        ThemeItem newLook = (ThemeItem)ThemeComboBox.getSelectedItem();
+        UIManager.setLookAndFeel(newLook.getClassName());
         SwingUtilities.updateComponentTreeUI(this);
         }
         catch(Exception e){}
-    }//GEN-LAST:event_nativeItemActionPerformed
-
-    private void defaultItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_defaultItemActionPerformed
-        try{
-        String defaultLook = UIManager.getCrossPlatformLookAndFeelClassName();
-        UIManager.setLookAndFeel(defaultLook);
-        SwingUtilities.updateComponentTreeUI(this);}
-        
-        catch (Exception e){}
-    }//GEN-LAST:event_defaultItemActionPerformed
+    }//GEN-LAST:event_ThemeComboBoxItemStateChanged
     
     private void quitItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitItemActionPerformed
         System.exit( 1 );
@@ -254,15 +237,15 @@ public class Eleminator extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem defaultItem;
+    private javax.swing.JToolBar LemToolBar;
+    private javax.swing.JComboBox ThemeComboBox;
+    private javax.swing.JLabel ThemeLabel;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar menubar;
-    private javax.swing.JMenuItem nativeItem;
     private javax.swing.JMenuItem openItem;
     private javax.swing.JMenuItem quitItem;
     private javax.swing.JPanel statusPanel;
-    private javax.swing.JMenu themeMenu;
     // End of variables declaration//GEN-END:variables
     
 }
