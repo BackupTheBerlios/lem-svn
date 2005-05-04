@@ -19,7 +19,6 @@ import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.Vector;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -61,11 +60,12 @@ public class Eleminator extends javax.swing.JFrame {
     
         initComponents();
         LookAndFeelInfo[] li = UIManager.getInstalledLookAndFeels();
-     
+        
         for(int i=0;li.length>i;i++){  //For more themes
            
             ThemeComboBox.addItem(new ThemeItem(li[i].getName(),li[i].getClassName()));
         } 
+
         setBounds(0,0,640,480);
         setTitle("eLEMinator");
         URL imageURL = getClass().getClassLoader().getResource("verifier/lem.jpg");
