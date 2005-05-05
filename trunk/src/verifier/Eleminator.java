@@ -83,7 +83,7 @@ public class Eleminator extends javax.swing.JFrame {
     private void initComponents() {//GEN-BEGIN:initComponents
         desktopPane = new javax.swing.JDesktopPane();
         statusPanel = new javax.swing.JPanel();
-        LemToolBar = new javax.swing.JToolBar();
+        lemToolBar = new javax.swing.JToolBar();
         ThemeLabel = new javax.swing.JLabel();
         ThemeComboBox = new javax.swing.JComboBox();
         menubar = new javax.swing.JMenuBar();
@@ -96,9 +96,8 @@ public class Eleminator extends javax.swing.JFrame {
         statusPanel.setMaximumSize(new java.awt.Dimension(10, 10));
         getContentPane().add(statusPanel, java.awt.BorderLayout.SOUTH);
 
-        LemToolBar.setFloatable(false);
         ThemeLabel.setText("Themes");
-        LemToolBar.add(ThemeLabel);
+        lemToolBar.add(ThemeLabel);
 
         ThemeComboBox.setMaximumSize(new java.awt.Dimension(150, 150));
         ThemeComboBox.addItemListener(new java.awt.event.ItemListener() {
@@ -107,9 +106,9 @@ public class Eleminator extends javax.swing.JFrame {
             }
         });
 
-        LemToolBar.add(ThemeComboBox);
+        lemToolBar.add(ThemeComboBox);
 
-        getContentPane().add(LemToolBar, java.awt.BorderLayout.NORTH);
+        getContentPane().add(lemToolBar, java.awt.BorderLayout.NORTH);
 
         fileMenu.setMnemonic('F');
         fileMenu.setText("File");
@@ -237,11 +236,11 @@ public class Eleminator extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToolBar LemToolBar;
     private javax.swing.JComboBox ThemeComboBox;
     private javax.swing.JLabel ThemeLabel;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JToolBar lemToolBar;
     private javax.swing.JMenuBar menubar;
     private javax.swing.JMenuItem openItem;
     private javax.swing.JMenuItem quitItem;
