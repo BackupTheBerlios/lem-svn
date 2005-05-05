@@ -43,8 +43,7 @@ public abstract class AbstractDescriptionNode extends DefaultMutableTreeNode{
                trimmed += "\n\n" ; 
            else
                trimmed += t.trim() + " ";
-        }
-        System.out.print(trimmed) ; 
+        }        
         return trimmed ;                
     }
     
