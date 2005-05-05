@@ -96,6 +96,7 @@ public class Eleminator extends javax.swing.JFrame {
         statusPanel.setMaximumSize(new java.awt.Dimension(10, 10));
         getContentPane().add(statusPanel, java.awt.BorderLayout.SOUTH);
 
+        lemToolBar.setName("Standard");
         ThemeLabel.setText("Themes");
         lemToolBar.add(ThemeLabel);
 
