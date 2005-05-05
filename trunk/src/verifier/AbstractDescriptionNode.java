@@ -7,6 +7,7 @@
 package verifier;
 
 import java.awt.Color;
+import java.util.StringTokenizer;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -22,8 +23,32 @@ public abstract class AbstractDescriptionNode extends DefaultMutableTreeNode{
     }
     
     public abstract String getDescription();
+
+    /**
+     * Takes empty extra white spaces out of String
+     * but preserves the NewLines after end of sentences. */
+    public String trim(String text) {
+        String tmp = "" , trimmed = "" ;         
+        String[] words = text.split("\n"); 
+        for (int i = 0 ; i < words.length; i++) {
+            if ( words[i].length() > 0 && words[i].trim().charAt( words[i].trim().length() - 1 ) == '.')
+                tmp += words[i] + " <LEM_DESC_LINE_BREAK> " ; 
+            else 
+                tmp += words[i]; 
+        }
+        StringTokenizer st = new StringTokenizer(tmp) ;
+        while (st.hasMoreElements()) {
+           String t = st.nextToken();
+           if (t.compareTo("<LEM_DESC_LINE_BREAK>") == 0)
+               trimmed += "\n\n" ; 
+           else
+               trimmed += t.trim() + " ";
+        }
+        System.out.print(trimmed) ; 
+        return trimmed ;                
+    }
     
-         public StyledDocument getStyledDocument() {
+    public StyledDocument getStyledDocument() {
         StyledDocument doc = new StyledDocument() ;
         SimpleAttributeSet s = new SimpleAttributeSet();
         StyleConstants.setFontFamily(s, "Times New Roman");
