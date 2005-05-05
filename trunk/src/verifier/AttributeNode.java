@@ -25,8 +25,11 @@ public class AttributeNode extends AbstractDescriptionNode {
         return attribute.getName() + " : " + attribute.getType().getName();
     }
  
-    public String getDescription() {
-        return attribute.getDescription() ;         
+    public String getDescription() {        
+        if (attribute.getDescription() != null)
+            return trim(attribute.getDescription() );        
+        else
+            return "" ;                         
     }
     
 }

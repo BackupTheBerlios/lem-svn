@@ -49,7 +49,10 @@ public class DomainNode extends AbstractDescriptionNode {
     }
     
     public String getDescription(){
-        return domain.getDescription();
+        if (domain.getDescription() != null)
+            return trim(domain.getDescription()); 
+        else
+            return "" ; 
     }
     
 

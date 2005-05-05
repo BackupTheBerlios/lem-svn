@@ -58,7 +58,10 @@ public class StateMachineNode extends AbstractDescriptionNode {
     
     public String getDescription()
     {
-        return machine.getDescription();
+        if (machine.getDescription() != null)
+            return trim(machine.getDescription());
+        else 
+            return "" ; 
     }
 
 }

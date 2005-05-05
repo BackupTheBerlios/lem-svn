@@ -27,8 +27,11 @@ public class TransitionNode extends AbstractDescriptionNode {
         return name ; 
     }
     
-    public String getDescription()  {        
-        return transition.getDescription() ; 
+    public String getDescription()  { 
+        if (transition.getDescription() != null)
+            return trim(transition.getDescription()) ;
+        else
+            return "" ;
     }
     
     

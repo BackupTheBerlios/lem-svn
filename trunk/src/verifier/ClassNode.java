@@ -45,7 +45,10 @@ public class ClassNode extends AbstractDescriptionNode {
     }
     
     public String getDescription(){
-        return thisClass.getDescription();
+        if (thisClass.getDescription() != null ) 
+            return trim(thisClass.getDescription());   
+        else 
+            return "" ; 
     }
     
     public StyledDocument getStyledDocument() {

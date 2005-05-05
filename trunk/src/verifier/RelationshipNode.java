@@ -27,7 +27,10 @@ public class RelationshipNode extends AbstractDescriptionNode{
     
     public String getDescription()
     {
-        return relationship.getDescription();
+        if (relationship.getDescription() != null)
+            return trim(relationship.getDescription());
+        else 
+            return "" ; 
     }
     
 }

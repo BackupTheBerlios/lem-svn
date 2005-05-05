@@ -24,8 +24,11 @@ public class StateNode extends AbstractDescriptionNode {
         return "State : " + state.getName() ; 
     }
     
-    public String getDescription()  {        
-        return state.getDescription() ; 
+    public String getDescription()  {
+        if (state.getDescription() != null)
+            return trim(state.getDescription()) ; 
+        else 
+            return "" ; 
     }
     
     
