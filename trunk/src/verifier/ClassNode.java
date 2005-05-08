@@ -11,6 +11,7 @@ import java.util.Iterator;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import metamodel.StateMachine;
+import metamodel.Event ;
 
 /**
  *
@@ -37,6 +38,11 @@ public class ClassNode extends AbstractDescriptionNode {
         StateMachine m = thisClass.getStateMachine();
         if( m != null ) {
             add( new StateMachineNode( m ));
+        }
+        
+        Event[] e = thisClass.getEvents() ; 
+        if (e != null) {
+            add ( new EventsTreeNode (e)) ;
         }
     }
     
