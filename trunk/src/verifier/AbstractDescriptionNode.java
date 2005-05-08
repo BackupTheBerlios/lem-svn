@@ -23,28 +23,28 @@ public abstract class AbstractDescriptionNode extends DefaultMutableTreeNode{
     }
     
     public abstract String getDescription();
-
+    
     /**
      * Takes empty extra white spaces out of String
      * but preserves the NewLines after end of sentences. */
     public String trim(String text) {
-        String tmp = "" , trimmed = "" ;         
-        String[] words = text.split("\n"); 
+        String tmp = "" , trimmed = "" ;        
+        String[] words = text.split("\n");
         for (int i = 0 ; i < words.length; i++) {
-            if ( words[i].length() > 0 && words[i].trim().charAt( words[i].trim().length() - 1 ) == '.')
-                tmp += words[i] + " <LEM_DESC_LINE_BREAK> " ; 
-            else 
-                tmp += words[i]; 
+            if ( words[i].trim().length() > 0 && words[i].trim().charAt( words[i].trim().length() - 1 ) == '.')
+                tmp += words[i] + " <LEM_DESC_LINE_BREAK> " ;
+            else
+                tmp += words[i];
         }
         StringTokenizer st = new StringTokenizer(tmp) ;
         while (st.hasMoreElements()) {
-           String t = st.nextToken();
-           if (t.compareTo("<LEM_DESC_LINE_BREAK>") == 0)
-               trimmed += "\n\n" ; 
-           else
-               trimmed += t.trim() + " ";
-        }        
-        return trimmed ;                
+            String t = st.nextToken();
+            if (t.compareTo("<LEM_DESC_LINE_BREAK>") == 0)
+                trimmed += "\n\n" ;
+            else
+                trimmed += t.trim() + " ";
+        }
+        return trimmed ;
     }
     
     public StyledDocument getStyledDocument() {
@@ -53,27 +53,25 @@ public abstract class AbstractDescriptionNode extends DefaultMutableTreeNode{
         StyleConstants.setFontFamily(s, "Times New Roman");
         StyleConstants.setFontSize(s, 14);
         StyleConstants.setBold(s, true);
-        StyleConstants.setForeground(s, Color.blue);       
+        StyleConstants.setForeground(s, Color.blue);
         StyledElement element = new StyledElement(toString()+"\n" , s) ;
-        doc.addStyle(element) ; 
+        doc.addStyle(element) ;
         
-        SimpleAttributeSet s1 = new SimpleAttributeSet();        
+        SimpleAttributeSet s1 = new SimpleAttributeSet();
         StyleConstants.setFontFamily(s1, "Times New Roman");
         StyleConstants.setFontSize(s1, 14);
         StyleConstants.setBold(s1, false);
-        StyleConstants.setForeground(s1, Color.black);       
+        StyleConstants.setForeground(s1, Color.black);
         String Description;
         if(getDescription()==""||getDescription()==null){
-           Description="<No Description>";
-        }
-        else
-        {
+            Description="<No Description>";
+        } else {
             Description=getDescription();
         }
         
         StyledElement element1 = new StyledElement(Description , s1) ;
         
-        doc.addStyle(element1) ;                 
+        doc.addStyle(element1) ;
         return doc ;
     }
 }
