@@ -38,7 +38,7 @@
 
         <property name="etc.dir" value="etc"/>
 
-        <property name="javacchome" value="c:/javacc-3.2"/>
+        <property name="javacchome" value="C:\Program Files\Java\javacc-3.2\javacc-3.2\bin\lib"/>
 
         <property name="deploy.name" value="${name}.jar"/>
 
@@ -158,12 +158,13 @@
         <copy file ="${src.dir}/verifier/closed.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
         <copy file ="${src.dir}/verifier/class.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
         <copy file ="${src.dir}/verifier/event.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
+        <copy file ="${src.dir}/verifier/events.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
         <copy file ="${src.dir}/verifier/relationship.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
         <copy file ="${src.dir}/verifier/state.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
         <copy file ="${src.dir}/verifier/transition.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
         <copy file ="${src.dir}/verifier/attribute.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
         <copy file ="${src.dir}/verifier/statemachine.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
-        <copy file ="${src.dir}/splash/eLEMinator.jpg" todir="${classes.dir}/splash" overwrite="false"/>
+        <copy file ="${src.dir}/splash/eLEMinator.jpg" todir="${classes.dir}/splash" overwrite="false"/>        
         <javac srcdir="${src.dir}" 
 
                destdir="${classes.dir}"
