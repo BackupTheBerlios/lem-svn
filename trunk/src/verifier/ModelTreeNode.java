@@ -35,7 +35,7 @@ public class ModelTreeNode extends AbstractDescriptionNode {
     }
     
     public String getDescription(){
-        return model.getDescription();
+        return trim(model.getDescription());
     }
     
 }
