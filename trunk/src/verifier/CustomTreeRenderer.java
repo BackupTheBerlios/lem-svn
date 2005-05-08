@@ -26,6 +26,7 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
     ImageIcon Open = new ImageIcon();
     ImageIcon Closed = new ImageIcon();
     ImageIcon Event = new ImageIcon();
+    ImageIcon Events = new ImageIcon();
     ImageIcon Class = new ImageIcon();
     
     /** Creates a new instance of CustomTreeRenderer */
@@ -46,6 +47,8 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
         Closed.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/event.jpg");
         Event.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        imageURL = getClass().getClassLoader().getResource("verifier/events.jpg");
+        Events.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/class.jpg");
         Class.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
     }
@@ -66,8 +69,7 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
         setClosedIcon(Closed);
         
         if (value instanceof ClassNode) {
-            setIcon(Class);
-            
+            setIcon(Class);            
         }
         else if (leaf && value instanceof RelationshipNode){
             setIcon(Relationship);
@@ -84,10 +86,12 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
         else if (value instanceof TransitionNode){
             setIcon(Transition);
         }
-        /*else if (value instanceof EventNode)
-        {
+        else if (value instanceof EventsTreeNode){
+            setIcon(Events);
+        }
+        else if (value instanceof EventNode){
             setIcon(Event);
-        }*/
+        }
         
         return this;
         }
