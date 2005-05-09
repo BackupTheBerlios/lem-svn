@@ -8,6 +8,7 @@ package verifier;
 
 import java.awt.Color;
 import java.util.Iterator;
+import javax.swing.JPopupMenu;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import metamodel.StateMachine;
@@ -80,5 +81,10 @@ public class ClassNode extends AbstractDescriptionNode {
         
         doc.append(attributeListing) ;         
         return doc ;
+    }
+    public JPopupMenu getContextMenu()
+    {
+        JPopupMenu ContextMenu = new JPopupMenu();
+        return ContextMenu;
     }
 }

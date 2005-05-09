@@ -6,6 +6,7 @@
 
 package verifier;
 
+import javax.swing.JPopupMenu;
 import metamodel.Relationship;
 
 /**
@@ -33,4 +34,9 @@ public class RelationshipNode extends AbstractDescriptionNode{
             return "" ; 
     }
     
+    public JPopupMenu getContextMenu()
+    {
+        JPopupMenu ContextMenu = new JPopupMenu();
+        return ContextMenu;
+    }
 }

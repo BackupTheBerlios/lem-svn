@@ -6,6 +6,7 @@
 
 package verifier;
 
+import javax.swing.JPopupMenu;
 import metamodel.State;
 
 /**
@@ -29,6 +30,12 @@ public class StateNode extends AbstractDescriptionNode {
             return trim(state.getDescription()) ; 
         else 
             return "" ; 
+    }
+    
+    public JPopupMenu getContextMenu()
+    {
+        JPopupMenu ContextMenu = new JPopupMenu();
+        return ContextMenu;
     }
     
     

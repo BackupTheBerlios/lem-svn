@@ -74,4 +74,6 @@ public abstract class AbstractDescriptionNode extends DefaultMutableTreeNode{
         doc.addStyle(element1) ;
         return doc ;
     }
+    public abstract javax.swing.JPopupMenu getContextMenu();
+    
 }

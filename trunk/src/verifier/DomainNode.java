@@ -7,6 +7,7 @@
 package verifier;
 
 import java.util.Iterator;
+import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
 import metamodel.Domain;
 
@@ -54,6 +55,9 @@ public class DomainNode extends AbstractDescriptionNode {
         else
             return "" ; 
     }
-    
-
+    public JPopupMenu getContextMenu()
+    {
+        JPopupMenu ContextMenu = new JPopupMenu();
+        return ContextMenu;
+    }
 }

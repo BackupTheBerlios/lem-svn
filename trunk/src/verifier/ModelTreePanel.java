@@ -6,6 +6,7 @@
 
 package verifier;
 
+import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultTreeModel;
 import metamodel.Model;
 
@@ -54,6 +55,11 @@ public class ModelTreePanel extends javax.swing.JPanel {
                 modelTreePropertyChange(evt);
             }
         });
+        modelTree.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                modelTreeMouseClicked(evt);
+            }
+        });
 
         treeScrollPane.setViewportView(modelTree);
 
@@ -68,6 +74,29 @@ public class ModelTreePanel extends javax.swing.JPanel {
         add(SplitPanel, java.awt.BorderLayout.CENTER);
 
     }//GEN-END:initComponents
+
+    private void modelTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modelTreeMouseClicked
+
+        if (evt.BUTTON3 == evt.getButton())
+        {
+          try{
+            Object p =modelTree.getSelectionPath().getLastPathComponent();
+            if (p instanceof AbstractDescriptionNode){
+               AbstractDescriptionNode ADN = (AbstractDescriptionNode)p;
+               JPopupMenu ContextMenu = ADN.getContextMenu();
+               ContextMenu.add("Hello!");
+               
+               ContextMenu.setVisible(true);
+            }
+          }
+          catch(Exception e){System.out.println(e);}
+        }
+        else
+        {
+            displayDescription();
+        }
+        
+    }//GEN-LAST:event_modelTreeMouseClicked
 
     private void modelTreePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_modelTreePropertyChange
         displayDescription();

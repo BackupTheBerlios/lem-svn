@@ -6,6 +6,7 @@
 
 package verifier;
 
+import javax.swing.JPopupMenu;
 import metamodel.Attribute;
 
 /**
@@ -31,5 +32,9 @@ public class AttributeNode extends AbstractDescriptionNode {
         else
             return "" ;                         
     }
-    
+    public JPopupMenu getContextMenu()
+    {
+        JPopupMenu ContextMenu = new JPopupMenu();
+        return ContextMenu;
+    }
 }

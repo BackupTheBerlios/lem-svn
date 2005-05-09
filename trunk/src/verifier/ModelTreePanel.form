@@ -25,6 +25,7 @@
             <Component class="javax.swing.JTree" name="modelTree">
               <Events>
                 <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="modelTreePropertyChange"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="modelTreeMouseClicked"/>
               </Events>
             </Component>
           </SubComponents>

@@ -6,6 +6,7 @@
 
 package verifier;
 
+import javax.swing.JPopupMenu;
 import metamodel.Event ;
 /**
  *
@@ -28,5 +29,10 @@ public class EventNode extends AbstractDescriptionNode {
             return trim(event.getDescription());   
         else 
             return "" ;         
+    }
+    public JPopupMenu getContextMenu()
+    {
+        JPopupMenu ContextMenu = new JPopupMenu();
+        return ContextMenu;
     }
 }

@@ -6,10 +6,8 @@
 
 package verifier;
 
-import java.awt.Color;
 import java.util.Iterator;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
+import javax.swing.JPopupMenu;
 import metamodel.Domain;
 import metamodel.Model;
 
@@ -37,5 +35,9 @@ public class ModelTreeNode extends AbstractDescriptionNode {
     public String getDescription(){
         return trim(model.getDescription());
     }
-    
+    public JPopupMenu getContextMenu()
+    {
+        JPopupMenu ContextMenu = new JPopupMenu();
+        return ContextMenu;
+    }
 }
