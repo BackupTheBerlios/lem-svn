@@ -77,7 +77,7 @@ public class ModelTreePanel extends javax.swing.JPanel {
 
     private void modelTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modelTreeMouseClicked
 
-        if (evt.BUTTON3 == evt.getButton())
+        if (evt.BUTTON3 == evt.getButton()||evt.BUTTON2 == evt.getButton())
         {
           try{
             Object p =modelTree.getSelectionPath().getLastPathComponent();
