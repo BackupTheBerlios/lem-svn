@@ -1,6 +1,9 @@
 /*
 # $Id$
 # $Log$
+# Revision 1.4  2005/05/14 03:20:45  u3958283
+# added a bit of action grammer
+#
 # Revision 1.3  2005/04/24 13:38:00  u3957053
 # Merge the expression and Expression non-terminals together.
 #
@@ -557,6 +560,8 @@ void Literal() : {}
 }
 
 
+
+
 void AttributeIdentifier() : {}
 { <SIMPLE_IDENTIFIER> }
 
@@ -1031,402 +1036,46 @@ void TransitionEventIdentifier() : {}
 
 /*****************************************************************************************
  * Action Language defined here
- *****************************************************************************************/
+ *****************************************************************************************
+TOKEN : 
+{
+ <WITH: "with">
+ <CREATE_UNIQUE : "create unique">
+ <LBRACE : "{">
+ <RBRACE : "}">
+}
+
 
 void Action() : {}
-{ 	
-	  AssignmentStatement()
-	| CancelStatement()
-	| CreateStatement()
-	| DeleteStatement()
-	| ForEachStatement()
-	| GenerateStatement()
-	| IfStatement()
-	| LocalVariableDeclaration()
-	| ReclassifyStatement()
-	| RelateStatement()
-	| SelectStatement()
-	| UnrelateStatement()
-	| WhileStatement()
-}
-
-void AssignmentStatement() : {}
 {
-	<SET> Name() <IS_ASSIGNED> Expression() <SEMI> 
-}
+   ObjectManipulation()  
 	
-
-void Name() : {}
-{ [ ObjectReference() "." ] AttributeIdentifier() }
-
-void ObjectReference() : {}
-{ 	"self" | <SIMPLE_IDENTIFIER> }
-
-//-----------------------------------------------------------------------------
-// Expressions 
-//-----------------------------------------------------------------------------
-
-void Expression() : {}
-{ 
-// things start to get complicated here
-// look at JAVA grammar to get some tips
-	relation()
-	(	(	<AND>
-		|	<OR> 
-		|	<XOR>
-		)
-		relation()
-	)*
 }
 
-void relation() :
-{}
+void ObjectManipulation() : {}
 {
-	simple_expression()
-	( relational() simple_expression()
-	| membership() range()
-	)?
+( ObjectCreation()| ObjectDeletion() | ReadAttributes() | WriteAttributes() ) 
 }
-                 
-void relational() :
-{}
+
+
+void ObjectCreation() : {}  
 {
-	<EQUAL>
-//	Revisit: does this go here?!?
-// |	<DOT_DOT>
-|	<NE>
-|	<LT>
-|	<LT_EQ>
-|	<GT>
-|	<GE>
+(<SIMPLE_IDENTIFIER> <IS_ASSIGNED> <CREATE> <SIMPLE_IDENTIFIER> <WITH>  (AttributeAssignments()*) ) |
+(<SIMPLE_IDENTIFIER> <IS_ASSIGNED> <CREATE_UNIQUE> <SIMPLE_IDENTIFIER> [<WITH>  (AttributeAssignments()*)] )
 }
 
-void membership() :
-{}
+
+<VALUE 
+
+void AttributeAssignments() : {}
 {
-	<IN>
-|	<NOT> <IN>
+<SIMPLE_IDENTIFIER> <IS_ASSIGNED> Literal() (<COMMA> <SIMPLE_IDENTIFIER> <IS_ASSIGNED> <LITERAL> )*
 }
 
-void simple_expression() :
-{}
+void ObjectDeletion() : {}
 {
-	unary() term()
-|	term() ( adding() term() )*
+(<DELETE><SIMPLE_IDENTIFIER> <WHERE> ) |
+(<DELETE><SIMPLE_IDENTIFIER> ) |
+(<DELETE> <LBRACE> <SIMPLE_IDENTIFIER> <RBRACE> )
 }
-
-void unary() :
-{}
-{
-	<PLUS>
-|	<DASH>
-}
-
-void adding() :
-{}
-{
-	<PLUS>
-|	<DASH>
-|	<AMPERSAND>
-}
-
-void term() :
-{}
-{
-	factor() ( multiplying() factor() )*
-}
-
-void multiplying() :
-{}
-{
-	<STAR>
-|	<SLASH>
-|	<MOD>
-|	<REM>
-}
-
-void factor() :
-{}
-{
-	primary() ( <EXPON> primary() )?
-|	<NOT> primary()
-|	<ABS> primary()
-}
-
-void primary() :
-{}
-{
-	Literal()
-|	Name()
-|	parenthesized_primary()
-}
-
-void parenthesized_primary() :
-{}
-{
-	aggregate()
-	// REVISIT Covered by aggregate
-	//  | LPAREN expression RPAREN
-}
-
-void qualified() :
-{}
-{
-	Name()
-	// REVISIT: SEMANTICS
-	// demands "TIC parenthesized_primary"
-	// is part of the name
-}
-
-void aggregate() :
-{}
-{
-	<LPAREN>
-	Expression()
-	<RPAREN>
-}
-
-void range_constraint() :
-{}
-{
-	<RANGE> range()
-}
-
-void range() :
-{}
-{
-	simple_expression() ( <DOT_DOT> simple_expression() )?
-	    // REVISIT: ADDED OPTIONAL CONSTRUCT ABOVE AND
-	    // REMOVED name PRODUCTION BELOW, because name
-	    // is reachable via a call to simple_expression.
-	    // Note that the caveat below applies.
-	    // | name // REVISIT SEMANTICS
-           // demands that
-	   // <TIC> <RANGE> ( LPAREN expression RPAREN )?
-	   // is part of the name
-}
-
-/**************************************************
- * Event generation and cancellation
- **************************************************/
-
-void GenerateStatement() : {}
-{
-	<GENERATE> Signal() [ ActualParameters() ] 
-		<TO> ObjectReference()
-		[ ( DelaySpec()  | ExactTimeSpec() ) ]  <SEMI>
-}
-
-void DelaySpec() : {}
-{
-	<DELAY> Duration()
-}
-
-void ExactTimeSpec() : {}
-{
-	<AT> ExactTime()
-}
-
-
-void CancelStatement() : {}
-{
-	<CANCEL> Signal() 
-		<FROM> ObjectReference() 
-		<TO> ObjectReference() <SEMI>
-}
-
-void Signal() : {}
-{ 
-	SignalIdentifier()
-}
-
-void SignalIdentifier() : {}
-{
-    <SIMPLE_IDENTIFIER>
-}
-
-void ActualParameters() : {}
-{
-
- "(" ActualParameter() ( <COMMA> ActualParameter() )* ")" 
-}
-
-void ActualParameter() : {}
-{
-
- Expression() <COLON> Expression()  
-}
-
-void Duration()  : {}
-{
-	NumericExpression() 
-}
-
-void ExactTime() : {}
-{
-	TimeExpression()
-}
-
-void TimeExpression() : {}
-{
-	Expression()
-}
-
-void NumericExpression() : {}
-{
-	Expression()
-}
-
-void BooleanExpression() : {}
-{
-	Expression()
-}
-
-/**************************************************
- * Relationship creation, deletion and navigation
- **************************************************/
-
-void RelateStatement() : {}
-{
-	<RELATE> ObjectReference() <TO> ObjectReference()
-		<ACROSS> AssociationEndIdentifier() 
-		[ <CREATING> ObjectReference() ]  <SEMI>
-}
-
-void UnrelateStatement() : {}
-{
-	<UNRELATE> ObjectReference() <TO> ObjectReference()
-		<ACROSS> AssociationEndIdentifier() <SEMI>
-}
-
-void AssociationEndIdentifier() : {} 
-{
-	RelationshipIdentifier() [ <DOT> VerbClause() ]
-}
-
-void SelectStatement() : {}
-{
-	<SELECT> SelectionMultiplicityIndicator() ObjectReference()
-		(   SelectInstancesClause() 
-	  	  | SelectRelatedInstancesClause()
-	  	  | SelectAssociativeInstanceClause()
-		) [ WhereClause() ] <SEMI>
-}
-
-void SelectionMultiplicityIndicator() : {}
-{
-	( <ONE> | <ANY> | <MANY> )
-}
-
-void SelectInstancesClause() : {}
-{
-	<FROM> <INSTANCES> <OF> ClassIdentifier()
-}
-	
-void SelectAssociativeInstanceClause() : {}
-{
-	// constraint: this clause will only return ONE instance
-	// should not be used in conjunction with <ONE> SelectMultiplicityIndicator()
-
-	<THAT> <RELATES> ObjectReference() 
-		<TO> ObjectReference() 
-		<ACROSS> RelationshipIdentifier()
-}
-
-void SelectRelatedInstancesClause() : {}
-{
-	<RELATED> <BY> ObjectReference() ( RelationDereference() )+
-}
-
-void RelationDereference() : {}
-{
-	<RIGHT_ARROW> ClassIdentifier() <LBRACKET> AssociationEndIdentifier() <RBRACKET>
-}
-
-void WhereClause() : {}
-{
-	<WHERE> BooleanExpression()
-}
-
-/**********************************************************
- * Object creation, deletion and reclassification
- **********************************************************/
-
-void CreateStatement() : {}
-{
-	<CREATE> <INSTANCE> ObjectReference() <OF> ClassList() <SEMI>
-}
-
-void ReclassifyStatement() : {}
-{
-	<RECLASSIFY> <INSTANCE> ObjectReference() 
-		<FROM> OldClass() 
-		<TO> NewClass() <SEMI>
-}
-
-void DeleteStatement() : {}
-{
-	<DELETE> <INSTANCE> ObjectReference() <SEMI>
-}
-
-void ClassList() : {}
-{
-	ClassIdentifier()  (<COMMA> ClassIdentifier())* 
-}
-
-void OldClass() : {}
-{
-	ClassIdentifier()
-}
-
-void NewClass() : {}
-{
-	ClassIdentifier()
-}
-
-void LocalVariableDeclaration() : {}
-{
-	<DECLARE>
-		AttributeIdentifier() 
-		[Description()] 
-		<IS> (PrimitiveType() | DomainSpecificType()) 
-		[ <IS_ASSIGNED> Expression() ]
-		<SEMI>
-}
-
-
-/*****************************************************************************
- * Control logic
- *****************************************************************************/
-
-void ForEachStatement() : {}
-{
-	<FOR> <EACH> ObjectReference() <IN> TargetSet()
-		( Action() )?
-	<END> <FOR> <SEMI>
-}
-
-void TargetSet() : {}
-{
-	ObjectReference()
-}
-
-void WhileStatement() : {}
-{
-	<WHILE> BooleanExpression()
-		( Action() )?
-	<END> <WHILE> <SEMI>
-}
-
-void IfStatement() : {}
-{
-	<IF> BooleanExpression()
-		( Action() )?
-	[<ELSEIF> BooleanExpression()
-		( Action() )? ]
-	[<ELSE> 
-		( Action() )? ]
-	<END> <IF> <SEMI>
-}
-
 
