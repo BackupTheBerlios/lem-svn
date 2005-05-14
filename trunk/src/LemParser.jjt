@@ -1,8 +1,8 @@
 /*
 # $Id$
 # $Log$
-# Revision 1.4  2005/05/14 03:20:45  u3958283
-# added a bit of action grammer
+# Revision 1.5  2005/05/14 04:27:24  u3958283
+# object creation added.
 #
 # Revision 1.3  2005/04/24 13:38:00  u3957053
 # Merge the expression and Expression non-terminals together.
@@ -1036,14 +1036,29 @@ void TransitionEventIdentifier() : {}
 
 /*****************************************************************************************
  * Action Language defined here
- *****************************************************************************************
+ *****************************************************************************************/
+
+
+void simple_expression() :
+{}
+{
+     <WITH><WITH><WITH>
+
+}
+
+ 
+
+
 TOKEN : 
 {
  <WITH: "with">
- <CREATE_UNIQUE : "create unique">
- <LBRACE : "{">
- <RBRACE : "}">
+ |<CREATE_UNIQUE : "create unique">
+ |<LBRACE : "{">
+ |<RBRACE : "}">
 }
+
+
+
 
 
 void Action() : {}
@@ -1054,28 +1069,25 @@ void Action() : {}
 
 void ObjectManipulation() : {}
 {
-( ObjectCreation()| ObjectDeletion() | ReadAttributes() | WriteAttributes() ) 
+( ObjectCreation()| ObjectDeletion() /*| ReadAttributes() | WriteAttributes()*/ ) 
 }
 
 
 void ObjectCreation() : {}  
 {
-(<SIMPLE_IDENTIFIER> <IS_ASSIGNED> <CREATE> <SIMPLE_IDENTIFIER> <WITH>  (AttributeAssignments()*) ) |
-(<SIMPLE_IDENTIFIER> <IS_ASSIGNED> <CREATE_UNIQUE> <SIMPLE_IDENTIFIER> [<WITH>  (AttributeAssignments()*)] )
-}
-
-
-<VALUE 
+(<SIMPLE_IDENTIFIER> <IS_ASSIGNED> <CREATE> <SIMPLE_IDENTIFIER> <WITH>  (AttributeAssignments())* ) |
+(<SIMPLE_IDENTIFIER> <IS_ASSIGNED> <CREATE_UNIQUE> <SIMPLE_IDENTIFIER> [<WITH>  (AttributeAssignments())*] )
+}	
 
 void AttributeAssignments() : {}
 {
-<SIMPLE_IDENTIFIER> <IS_ASSIGNED> Literal() (<COMMA> <SIMPLE_IDENTIFIER> <IS_ASSIGNED> <LITERAL> )*
+	(<SIMPLE_IDENTIFIER> <IS_ASSIGNED> Literal() ) (<COMMA> <SIMPLE_IDENTIFIER> <IS_ASSIGNED> Literal() )*
 }
+
 
 void ObjectDeletion() : {}
 {
-(<DELETE><SIMPLE_IDENTIFIER> <WHERE> ) |
-(<DELETE><SIMPLE_IDENTIFIER> ) |
-(<DELETE> <LBRACE> <SIMPLE_IDENTIFIER> <RBRACE> )
+	(<DELETE><SIMPLE_IDENTIFIER> <WHERE> ) |
+	(<DELETE><SIMPLE_IDENTIFIER> ) |
+	(<DELETE> <LBRACE> <SIMPLE_IDENTIFIER> <RBRACE> )
 }
-
