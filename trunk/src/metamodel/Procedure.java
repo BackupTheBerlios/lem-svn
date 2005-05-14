@@ -6,6 +6,8 @@
 
 package metamodel;
 
+import metamodel.Action;
+
 /**
  * A procedure is a collection of actions executed upon entry to a state.
  *
@@ -16,9 +18,14 @@ public class Procedure {
     /** the state to which this procuedure belongs */
     private State state = null;
     
+    /** A list of actions which are executed by this procedure.
+     * May be empty, but non-null.
+     */
+    java.util.LinkedList actions = null;
     
     /** Creates a new instance of Procedure */
     public Procedure() {
+        actions = new java.util.LinkedList();
     }
 
     /**
@@ -37,6 +44,16 @@ public class Procedure {
      */
     public void setState(State theState) {
         this.state = theState;
+    }
+    
+    /**
+     * Append the given action to the list of actions executed
+     * by this procedure.
+     *
+     * @param a The action to append
+     */
+    public void addAction( Action a ) {
+        actions.add(a);
     }
     
 }
