@@ -7,13 +7,14 @@
 package verifier;
 import metamodel.*;
 import parser.*;
+import metamodel.CreateAction;
 
 /**
- * Populates the basic object graph representing the subject model and builds a map between 
- * the parse tree (returned by the LemParser) and the metamodel instances. This map is used in later passes of the 
- * parse tree. 
+ * Populates the basic object graph representing the subject model and builds a map between
+ * the parse tree (returned by the LemParser) and the metamodel instances. This map is used in later passes of the
+ * parse tree.
  *
- * This class implements the Visitor pattern. Each node in the parse tree is "visited" by executing the 
+ * This class implements the Visitor pattern. Each node in the parse tree is "visited" by executing the
  * corresponding <emph>visit</emph> method in this class.
  *
  * @author  smr
@@ -41,7 +42,6 @@ public class BuilderPass1 extends Visitor {
         
     }
     
-    
     /**
      * Process a Domain declaration by creating a Domain instance for use by this visitor
      */
@@ -61,7 +61,6 @@ public class BuilderPass1 extends Visitor {
         return data;
         
     }
-    
     
     /**
      * Process the identifier for a Domain
@@ -103,7 +102,6 @@ public class BuilderPass1 extends Visitor {
         
     }
     
-    
     /**
      * Process the identifier for a Domain
      */
@@ -117,9 +115,9 @@ public class BuilderPass1 extends Visitor {
         
         if ( null != subsystem.getDomain().getSubsystem( name )) {
             throw new LemException(
-            "Subsystem " + name + " is already defined",
-            node.getFirstToken(),
-            "LEM_E_01004" );
+                    "Subsystem " + name + " is already defined",
+                    node.getFirstToken(),
+                    "LEM_E_01004" );
         }
         getMapper().add( node, name );
         if ( ! checkIdentity( subsystem.getName(), name, node.getLastToken() ) ) {
@@ -129,8 +127,6 @@ public class BuilderPass1 extends Visitor {
         return data;
         
     }
-    
-    
     
     /**
      * Process a Class declaration by creating a Class instance for use by this visitor.
@@ -169,9 +165,9 @@ public class BuilderPass1 extends Visitor {
         String name = theClass.getName();
         if ( null != domain.getClass( name ) ) {
             throw new LemException(
-            "Class " + name + " is already defined.",
-            node.getFirstToken(),
-            "LEM_E_01013" );
+                    "Class " + name + " is already defined.",
+                    node.getFirstToken(),
+                    "LEM_E_01013" );
             
         }
         
@@ -189,23 +185,59 @@ public class BuilderPass1 extends Visitor {
         
     }
     
-    
     /**
-     * Process the identifier for a Class
+     * Visit a procedure node. Procedures always occur in the context of a State.
      */
-    public Object visit(LEMClassIdentifier node, Object data)   throws LemException {
-        super.visit( node, data );
+    public Object visit(LEMProcedure node, Object data) throws LemException {
+        Procedure p = new Procedure();
+        State s = (metamodel.State)data;
         
-        metamodel.Class theClass = (metamodel.Class) data;
-        String name =  node.getFirstToken().image;
-        getMapper().add( node, name );
+        getMapper().add(node, p);
+        s.setProcedure( p );
         
-        theClass.setName( name );
+        super.visit( node, p );
         
-        return theClass;
+        return p;
         
     }
     
+    /**
+     * Visit a LEMObjectCreation node. This node occurs when the action language
+     * contains a "create instance" statement.
+     */
+    
+    public Object visit(LEMObjectCreation node, Object data ) throws LemException {
+        Procedure p = (Procedure)data;
+        CreateAction a = new CreateAction();
+        
+        p.addAction(a);
+        getMapper().add( node, a );
+        
+        super.visit( node, a );
+        
+        return a;
+    }
+    
+    /**
+     * Process the identifier for a Class.
+     */
+    public Object visit(LEMClassIdentifier node, Object data)   throws LemException {
+        
+        if( data instanceof metamodel.Class ) {
+            super.visit( node, data );
+            
+            metamodel.Class theClass = (metamodel.Class) data;
+            String name =  node.getFirstToken().image;
+            getMapper().add( node, name );
+            
+            theClass.setName( name );
+            
+            return theClass;
+        } else {
+            super.visit(node, data);
+            return data;
+        }
+    }
     
     /**
      * Process the END identifier for a Class by checking for a match
@@ -256,9 +288,9 @@ public class BuilderPass1 extends Visitor {
         
         if ( null != domain.getType( type.getName() )) {
             throw new LemException(
-            "Type " + type.getName() + " is already defined",
-            node.getFirstToken(),
-            "LEM_E_01005" );
+                    "Type " + type.getName() + " is already defined",
+                    node.getFirstToken(),
+                    "LEM_E_01005" );
         }
         
         // add the type to the domain
@@ -463,9 +495,9 @@ public class BuilderPass1 extends Visitor {
         
         if ( null != domain.getRelationship( generalisation.getName() )) {
             throw new LemException(
-            "Relation " + generalisation.getName() + " is already defined",
-            node.getFirstToken(),
-            "LEM_E_01016" );
+                    "Relation " + generalisation.getName() + " is already defined",
+                    node.getFirstToken(),
+                    "LEM_E_01016" );
         }
         
         // add it
@@ -521,9 +553,9 @@ public class BuilderPass1 extends Visitor {
         
         if ( null != domain.getRelationship( association.getName() )) {
             throw new LemException(
-            "Relation " + association.getName() + " is already defined",
-            node.getFirstToken(),
-            "LEM_E_01016" );
+                    "Relation " + association.getName() + " is already defined",
+                    node.getFirstToken(),
+                    "LEM_E_01016" );
         }
         
         // add it
@@ -673,9 +705,9 @@ public class BuilderPass1 extends Visitor {
         if ( name1.equals(name2) ) return true;
         
         throw new LemException(
-        "Expecting identifier '" + name1 + "' got '" + name2 + "'",
-        token,
-        "LEM_E_01001" );
+                "Expecting identifier '" + name1 + "' got '" + name2 + "'",
+                token,
+                "LEM_E_01001" );
     }
     
     
@@ -723,9 +755,9 @@ public class BuilderPass1 extends Visitor {
         if ( data instanceof metamodel.Class ) {
             if ( null != theClass.getEvent( event.getName() )) {
                 throw new LemException(
-                "Event " + event.getName() + " is already defined",
-                node.getFirstToken(),
-                "LEM_E_01007" );
+                        "Event " + event.getName() + " is already defined",
+                        node.getFirstToken(),
+                        "LEM_E_01007" );
                 
             } else {
                 
@@ -736,9 +768,9 @@ public class BuilderPass1 extends Visitor {
         } else {
             if ( null != stateMachine.getEvent( event.getName() )) {
                 throw new LemException(
-                "Event " + event.getName() + " is already defined",
-                node.getFirstToken(),
-                "LEM_E_01007" );
+                        "Event " + event.getName() + " is already defined",
+                        node.getFirstToken(),
+                        "LEM_E_01007" );
                 
             } else {
                 
@@ -852,9 +884,9 @@ public class BuilderPass1 extends Visitor {
         
         if ( null != stateMachine.getState( state.getName() )) {
             throw new LemException(
-            "State " + state.getName() + " is already defined.",
-            node.getFirstToken(),
-            "LEM_E_01009" );
+                    "State " + state.getName() + " is already defined.",
+                    node.getFirstToken(),
+                    "LEM_E_01009" );
             
         } else {
             stateMachine.add( state );
@@ -896,9 +928,9 @@ public class BuilderPass1 extends Visitor {
         
         if ( null != signature.getParameter( parameter.getName() )) {
             throw new LemException(
-            "Parameter " + parameter.getName() + " is already defined.",
-            node.getFirstToken(),
-            "LEM_E_01008" );
+                    "Parameter " + parameter.getName() + " is already defined.",
+                    node.getFirstToken(),
+                    "LEM_E_01008" );
             
         } else {
             signature.add( parameter );
@@ -971,18 +1003,18 @@ public class BuilderPass1 extends Visitor {
         
         if ( null == state ) {
             throw new LemException(
-            "State " + name + " not defined.",
-            node.getFirstToken(),
-            "LEM_E_01010" );
+                    "State " + name + " not defined.",
+                    node.getFirstToken(),
+                    "LEM_E_01010" );
         }
         
         // From state must be a non-deletion state
         
         if ( ! ( state instanceof NonDeletionState ) ) {
             throw new LemException(
-            "State " + name + " is a deletion state.",
-            node.getFirstToken(),
-            "LEM_E_01012" );
+                    "State " + name + " is a deletion state.",
+                    node.getFirstToken(),
+                    "LEM_E_01012" );
         }
         
         // all ok
@@ -1010,9 +1042,9 @@ public class BuilderPass1 extends Visitor {
         
         if ( null == state ) {
             throw new LemException(
-            "State " + name + " not defined.",
-            node.getFirstToken(),
-            "LEM_E_01011" );
+                    "State " + name + " not defined.",
+                    node.getFirstToken(),
+                    "LEM_E_01011" );
         }
         
         
@@ -1104,19 +1136,19 @@ public class BuilderPass1 extends Visitor {
             type.addIdentifier( identifier );
         } catch ( LemException e ) {
             throw new LemException(
-            "Duplicate name: " + identifier + " already exists in enumeration.",
-            node.getFirstToken(),
-            "LEM_E_01006" );
+                    "Duplicate name: " + identifier + " already exists in enumeration.",
+                    node.getFirstToken(),
+                    "LEM_E_01006" );
         }
         
         return data;
     }
     
     /**
-     * Process a length specification in a DomainSpecificDataType 
+     * Process a length specification in a DomainSpecificDataType
      */
     public Object visit(LEMLengthSpec node, Object data) throws metamodel.LemException {
-       
+        
         DomainSpecificDataType type = (DomainSpecificDataType) data;
         super.visit( node, data );
         
@@ -1126,11 +1158,11 @@ public class BuilderPass1 extends Visitor {
         try {
             len = Integer.parseInt( lenSpec );
             type.setLength( len );
-         } catch ( NumberFormatException e ) {
+        } catch ( NumberFormatException e ) {
             throw new LemException(
-            "Integer required in length specification",
-            node.getLastToken(),
-            "LEM_E_01024" );
+                    "Integer required in length specification",
+                    node.getLastToken(),
+                    "LEM_E_01024" );
         }
         
         
@@ -1138,10 +1170,10 @@ public class BuilderPass1 extends Visitor {
     }
     
     /**
-     * Process a pattern specification in a DomainSpecificDataType 
+     * Process a pattern specification in a DomainSpecificDataType
      */
     public Object visit(LEMPatternSpec node, Object data) throws metamodel.LemException {
-       
+        
         DomainSpecificDataType type = (DomainSpecificDataType) data;
         super.visit( node, data );
         
@@ -1153,10 +1185,10 @@ public class BuilderPass1 extends Visitor {
     }
     
     /**
-     * Process a units specification in a DomainSpecificDataType 
+     * Process a units specification in a DomainSpecificDataType
      */
     public Object visit(LEMUnitsSpec node, Object data) throws metamodel.LemException {
-       
+        
         DomainSpecificDataType type = (DomainSpecificDataType) data;
         super.visit( node, data );
         
@@ -1168,10 +1200,10 @@ public class BuilderPass1 extends Visitor {
     }
     
     /**
-     * Process a precision specification in a DomainSpecificDataType 
+     * Process a precision specification in a DomainSpecificDataType
      */
     public Object visit(LEMPrecisionSpec node, Object data) throws metamodel.LemException {
-       
+        
         DomainSpecificDataType type = (DomainSpecificDataType) data;
         super.visit( node, data );
         
@@ -1181,11 +1213,11 @@ public class BuilderPass1 extends Visitor {
         try {
             precision = Double.parseDouble( precisionSpec );
             type.setPrecision( precision );
-         } catch ( NumberFormatException e ) {
+        } catch ( NumberFormatException e ) {
             throw new LemException(
-            "Bad number format.",
-            node.getLastToken(),
-            "LEM_E_01025" );
+                    "Bad number format.",
+                    node.getLastToken(),
+                    "LEM_E_01025" );
         }
         
         
@@ -1193,10 +1225,10 @@ public class BuilderPass1 extends Visitor {
     }
     
     /**
-     * Process a precision specification in a DomainSpecificDataType 
+     * Process a precision specification in a DomainSpecificDataType
      */
     public Object visit(LEMRangeSpec node, Object data) throws metamodel.LemException {
-       
+        
         DomainSpecificDataType type = (DomainSpecificDataType) data;
         Range range = new Range();
         getMapper().add( node, range );
@@ -1210,10 +1242,10 @@ public class BuilderPass1 extends Visitor {
     
     
     /**
-     * Process a the low value of a range specification in a DomainSpecificDataType 
+     * Process a the low value of a range specification in a DomainSpecificDataType
      */
     public Object visit(LEMLowRangeValue node, Object data) throws metamodel.LemException {
-       
+        
         Range range = (Range) data;
         super.visit( node, data );
         
@@ -1223,11 +1255,11 @@ public class BuilderPass1 extends Visitor {
         try {
             lowValue = Double.parseDouble( lowValueString );
             
-         } catch ( NumberFormatException e ) {
+        } catch ( NumberFormatException e ) {
             throw new LemException(
-            "Bad number format.",
-            node.getLastToken(),
-            "LEM_E_01026" );
+                    "Bad number format.",
+                    node.getLastToken(),
+                    "LEM_E_01026" );
         }
         
         if ( node.getFirstToken().image.equals( "-" ))
@@ -1237,10 +1269,10 @@ public class BuilderPass1 extends Visitor {
     }
     
     /**
-     * Process a the high value of a range specification in a DomainSpecificDataType 
+     * Process a the high value of a range specification in a DomainSpecificDataType
      */
     public Object visit(LEMHighRangeValue node, Object data) throws metamodel.LemException {
-       
+        
         Range range = (Range) data;
         super.visit( node, data );
         
@@ -1249,11 +1281,11 @@ public class BuilderPass1 extends Visitor {
         
         try {
             highValue = Double.parseDouble( highValueString );
-         } catch ( NumberFormatException e ) {
+        } catch ( NumberFormatException e ) {
             throw new LemException(
-            "Bad number format.",
-            node.getLastToken(),
-            "LEM_E_01027" );
+                    "Bad number format.",
+                    node.getLastToken(),
+                    "LEM_E_01027" );
         }
         
         if ( node.getFirstToken().image.equals( "-" ))
