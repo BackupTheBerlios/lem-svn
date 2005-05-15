@@ -6,6 +6,7 @@
 
 package verifier;
 
+import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultTreeModel;
 import metamodel.Model;
@@ -15,13 +16,14 @@ import metamodel.Model;
  * @author  sjr
  */
 public class ModelTreePanel extends javax.swing.JPanel {
-    
+    private JPopupMenu ContextMenu = new JPopupMenu();
+    private Object currentContextObject = null;
     /** Creates new form ModelTreePanel */
     public ModelTreePanel(Model m) {
         initComponents();
         modelTree.setModel( new DefaultTreeModel( new ModelTreeNode( m )));
         modelTree.setSelectionInterval(0,0);
-        displayDescription();
+        displayDescription(modelTree.getSelectionPath().getLastPathComponent());
         SplitPanel.setDividerLocation(175);
         CustomTreeRenderer render = new CustomTreeRenderer();
         modelTree.setCellRenderer(render);
@@ -80,32 +82,50 @@ public class ModelTreePanel extends javax.swing.JPanel {
         if (evt.BUTTON3 == evt.getButton()||evt.BUTTON2 == evt.getButton())
         {
           try{
-            Object p =modelTree.getSelectionPath().getLastPathComponent();
+            //Object p =modelTree.getSelectionPath().getLastPathComponent();
+            Object p = modelTree.getClosestPathForLocation(evt.getX(), evt.getY()).getLastPathComponent();
             if (p instanceof AbstractDescriptionNode){
                AbstractDescriptionNode ADN = (AbstractDescriptionNode)p;
-               JPopupMenu ContextMenu = ADN.getContextMenu();
-               ContextMenu.add("Hello!");
-               
+               currentContextObject=p;
+               ContextMenu = ADN.getContextMenu();
+               JMenuItem Desc = new JMenuItem();
+               Desc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                DescriptionMenuClicked(evt);
+            }
+            });
+               Desc.setText("Description");
+               ContextMenu.add(Desc);
+               ContextMenu.setLocation(evt.getPoint());
                ContextMenu.setVisible(true);
+                              
             }
           }
           catch(Exception e){System.out.println(e);}
         }
         else
         {
-            displayDescription();
+            displayDescription(modelTree.getSelectionPath().getLastPathComponent());
         }
         
     }//GEN-LAST:event_modelTreeMouseClicked
-
+    private void DescriptionMenuClicked(java.awt.event.MouseEvent evt)
+    {
+        displayDescription(currentContextObject);
+        ContextMenu.setVisible(false);
+        currentContextObject=null;
+    }
     private void modelTreePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_modelTreePropertyChange
-        displayDescription();
+        try{
+        displayDescription(modelTree.getSelectionPath().getLastPathComponent());
+        }
+        catch(Exception e){}
     }//GEN-LAST:event_modelTreePropertyChange
-    public void displayDescription()
+    public void displayDescription(Object p)
     {
         StyledDocument doc = null ;
         try{
-        Object p =modelTree.getSelectionPath().getLastPathComponent();
+        
         if (p instanceof AbstractDescriptionNode){
             AbstractDescriptionNode ADN = (AbstractDescriptionNode)p;
             //Description = ADN.getDescription();
