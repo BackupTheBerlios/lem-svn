@@ -298,12 +298,12 @@ public class Eleminator extends javax.swing.JFrame {
         return l.parse( fis );
     }
 		
-		public Model importModel( File importFile ) throws FileNotFoundException, ParseException, LemException, IOException {
-			Lem l = new Lem();
+		//public Model importModel( File importFile ) throws FileNotFoundException, ParseException, LemException, IOException {
+			//Lem l = new Lem();
 			// TODO: Insert XMI function here (should return String)
 			// similar to String s = import(filename);
-			//return l.parse(BufferedInputStream(s))
-		}
+			//return l.parse(BufferedInputStream(s));
+		//}
     
     /**
      * @param args the command line arguments
