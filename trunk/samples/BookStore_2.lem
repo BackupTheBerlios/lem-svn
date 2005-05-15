@@ -9,6 +9,9 @@
 // $Id$
 // 
 // $Log$
+// Revision 1.4  2005/05/15 00:52:42  u3957053
+// Whoops... shouldn't have committed my test condition for errors
+//
 // Revision 1.3  2005/05/15 00:43:27  u3957053
 // Demonstrate new object creation statement
 //
@@ -118,7 +121,7 @@ model BookStoreModel is
 					state Adding 
 						"the manuscript is incomplete and is subject to regular
 						additions by the author" ( newText is string ) is
-							a := create Manuscripta;	
+							a := create Manuscript;	
 							// action language goes here
 							// action language goes here
 							// action language goes here
