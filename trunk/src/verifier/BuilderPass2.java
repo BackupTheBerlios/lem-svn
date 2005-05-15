@@ -22,6 +22,11 @@ import parser.*;
 public class BuilderPass2 extends Visitor {
     
     /**
+     * A reference to the domain in which we're currently visiting nodes
+     */
+    private Domain currentDomain = null;
+    
+    /**
      * Creates a new instance of ModelFitout
      *
      * @param aMapper from a previous BuilderPass2
@@ -29,6 +34,41 @@ public class BuilderPass2 extends Visitor {
     public BuilderPass2( Mapper aMapper ) {
         super();
         super.setMapper( aMapper );
+    }
+    
+    public Object visit( LEMDomainDeclaration node, Object data ) throws LemException {
+        currentDomain = (Domain)(getMapper().getObject(node));
+        
+        super.visit(node, data);
+        return data;
+    }
+    
+    public Object visit( LEMObjectCreation node, Object data ) throws LemException {
+        CreateAction a = (CreateAction)(getMapper().getObject(node));
+        
+        super.visit( node, a );
+        return a;
+    }
+    
+    public Object visit( LEMClassIdentifier node, Object data ) throws LemException {
+        metamodel.Class c = currentDomain.getClass( node.getFirstToken().image );
+        
+        if( c == null ) {
+            throw new LemException(
+                    "Class " + node.getFirstToken().image + " does not exist.",
+                    node.getFirstToken(),
+                    "LEM_E_01015" );
+        }
+        
+        if( data instanceof CreateAction ) {
+            CreateAction a = (CreateAction) data;
+            
+            a.setClass(c);
+            
+        }
+        
+        super.visit( node, data );
+        return data;
     }
     
     /**
@@ -104,9 +144,9 @@ public class BuilderPass2 extends Visitor {
         
         if ( null == subclass ) {
             throw new LemException(
-            "Class " + subclassName + " does not exist.",
-            node.getFirstToken(),
-            "LEM_E_01015" );
+                    "Class " + subclassName + " does not exist.",
+                    node.getFirstToken(),
+                    "LEM_E_01015" );
         }
         
         // now create the Generalisation role that has been defined
@@ -170,9 +210,9 @@ public class BuilderPass2 extends Visitor {
             metamodel.Class subjectClass = domain.getClass( name );
             if ( null == subjectClass ) {
                 throw new LemException(
-                "Class " + subjectClass + " does not exist.",
-                node.getFirstToken(),
-                "LEM_E_01017" );
+                        "Class " + subjectClass + " does not exist.",
+                        node.getFirstToken(),
+                        "LEM_E_01017" );
             }
             
             // create a ParticipatingClassRole to represent the classes involvement in this
@@ -216,9 +256,9 @@ public class BuilderPass2 extends Visitor {
             metamodel.Class objectClass = domain.getClass( name );
             if ( null == objectClass ) {
                 throw new LemException(
-                "Class " + objectClass + " does not exist.",
-                node.getFirstToken(),
-                "LEM_E_01020" );
+                        "Class " + objectClass + " does not exist.",
+                        node.getFirstToken(),
+                        "LEM_E_01020" );
             }
             
             // create a ParticipatingClassRole to represent the classes involvement in this
@@ -301,9 +341,9 @@ public class BuilderPass2 extends Visitor {
         DomainSpecificDataType type = domain.getType( name );
         if ( null == type ) {
             throw new LemException(
-            "Domain specific data type " + name + " does not exist.",
-            node.getFirstToken(),
-            "LEM_E_01023" );
+                    "Domain specific data type " + name + " does not exist.",
+                    node.getFirstToken(),
+                    "LEM_E_01023" );
         }
         
         // set the type and discard the proxy
@@ -349,9 +389,9 @@ public class BuilderPass2 extends Visitor {
         
         if ( ! range.isValid() ) {
             throw new LemException(
-            "Range specification is invalid",
-            node.getLastToken(),
-            "LEM_E_01028" );
+                    "Range specification is invalid",
+                    node.getLastToken(),
+                    "LEM_E_01028" );
         }
         
         
@@ -393,9 +433,9 @@ public class BuilderPass2 extends Visitor {
         Attribute attribute = domainClass.getAttribute( attributeName );
         if ( null == attribute ) {
             throw new LemException(
-            "Attribute " + attributeName + " is not defined in class " + domainClass.getName(),
-            node.getLastToken(),
-            "LEM_E_01035" );
+                    "Attribute " + attributeName + " is not defined in class " + domainClass.getName(),
+                    node.getLastToken(),
+                    "LEM_E_01035" );
         }
         
         // add the attribute and handle any exception
@@ -405,9 +445,9 @@ public class BuilderPass2 extends Visitor {
             
         } catch ( Exception e ) {
             throw new LemException(
-            e.getMessage(),
-            node.getLastToken(),
-            "LEM_E_01036" );
+                    e.getMessage(),
+                    node.getLastToken(),
+                    "LEM_E_01036" );
         }
         
         return data;
