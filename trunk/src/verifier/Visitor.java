@@ -502,272 +502,37 @@ public class Visitor implements LemParserVisitor {
 		node.childrenAccept( this, data );
 		return data;
 	}
-	  public Object visit(LEMAction node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMAssignmentStatement node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMName node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMObjectReference node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMExpression node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMrelation node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMrelational node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMmembership node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
 	  public Object visit(LEMsimple_expression node, Object data) throws metamodel.LemException { 
 		logVisit( node, data );
 		node.childrenAccept( this, data );
 		return data;
 	}
-	  public Object visit(LEMunary node, Object data) throws metamodel.LemException { 
+	  public Object visit(LEMInstanceReference node, Object data) throws metamodel.LemException { 
 		logVisit( node, data );
 		node.childrenAccept( this, data );
 		return data;
 	}
-	  public Object visit(LEMadding node, Object data) throws metamodel.LemException { 
+	  public Object visit(LEMAction node, Object data) throws metamodel.LemException { 
 		logVisit( node, data );
 		node.childrenAccept( this, data );
 		return data;
 	}
-	  public Object visit(LEMterm node, Object data) throws metamodel.LemException { 
+	  public Object visit(LEMObjectManipulation node, Object data) throws metamodel.LemException { 
 		logVisit( node, data );
 		node.childrenAccept( this, data );
 		return data;
 	}
-	  public Object visit(LEMmultiplying node, Object data) throws metamodel.LemException { 
+	  public Object visit(LEMObjectCreation node, Object data) throws metamodel.LemException { 
 		logVisit( node, data );
 		node.childrenAccept( this, data );
 		return data;
 	}
-	  public Object visit(LEMfactor node, Object data) throws metamodel.LemException { 
+	  public Object visit(LEMAttributeAssignments node, Object data) throws metamodel.LemException { 
 		logVisit( node, data );
 		node.childrenAccept( this, data );
 		return data;
 	}
-	  public Object visit(LEMprimary node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMparenthesized_primary node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMqualified node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMaggregate node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMrange_constraint node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMrange node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMGenerateStatement node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMDelaySpec node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMExactTimeSpec node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMCancelStatement node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMSignal node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMSignalIdentifier node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMActualParameters node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMActualParameter node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMDuration node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMExactTime node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMTimeExpression node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMNumericExpression node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMBooleanExpression node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMRelateStatement node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMUnrelateStatement node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMAssociationEndIdentifier node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMSelectStatement node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMSelectionMultiplicityIndicator node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMSelectInstancesClause node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMSelectAssociativeInstanceClause node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMSelectRelatedInstancesClause node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMRelationDereference node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMWhereClause node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMCreateStatement node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMReclassifyStatement node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMDeleteStatement node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMClassList node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMOldClass node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMNewClass node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMLocalVariableDeclaration node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMForEachStatement node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMTargetSet node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMWhileStatement node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMIfStatement node, Object data) throws metamodel.LemException { 
+	  public Object visit(LEMObjectDeletion node, Object data) throws metamodel.LemException { 
 		logVisit( node, data );
 		node.childrenAccept( this, data );
 		return data;
