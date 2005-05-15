@@ -1,6 +1,9 @@
 /*
 # $Id$
 # $Log$
+# Revision 1.8  2005/05/15 01:43:53  u2567446
+# Changed the object creation statement to allow create unique with no attribute assignment.
+#
 # Revision 1.7  2005/05/15 01:40:00  u2567446
 # Changed the object creation statement to allow create unique with no attribute assignment.
 #
@@ -1076,9 +1079,9 @@ void ObjectManipulation() : {}
 void ObjectCreation() : {}  
 {
 	InstanceReference() <IS_ASSIGNED> 
-		<CREATE> ClassIdentifier()  <WITH>  (AttributeAssignments())*  |
+		<CREATE> ClassIdentifier()  <WITH>  AttributeAssignments()  |
 	InstanceReference() <IS_ASSIGNED> 
-		<CREATE> <UNIQUE> ClassIdentifier()  [<WITH>  (AttributeAssignments())* ]
+		<CREATE> <UNIQUE> ClassIdentifier()  [<WITH>  AttributeAssignments() ]
 }	
 
 void AttributeAssignments() : {}
