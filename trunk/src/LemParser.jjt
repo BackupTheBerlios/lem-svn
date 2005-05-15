@@ -1,6 +1,9 @@
 /*
 # $Id$
 # $Log$
+# Revision 1.6  2005/05/15 00:42:49  u3957053
+# Split out CREATE_UNIQUE token, move new tokens up, add InstanceReference non-terminal, used in ObjectCreation
+#
 # Revision 1.5  2005/05/14 04:27:24  u3958283
 # object creation added.
 #
@@ -426,7 +429,10 @@ TOKEN : /* IDENTIFIERS */
 |	<STAR:		"*"	>
 |	<SLASH:		"/"	>
 |	<EXPON:		"^"	>
-
+| <WITH: "with">
+| <UNIQUE : "unique">
+| <LBRACE : "{">
+| <RBRACE : "}">
 }
 
 /* <h1>LEM language specification $Revision$ ($Name$)</h1>
@@ -1038,45 +1044,36 @@ void TransitionEventIdentifier() : {}
  * Action Language defined here
  *****************************************************************************************/
 
-
 void simple_expression() :
 {}
 {
-     <WITH><WITH><WITH>
-
+     <SEMI>
 }
 
- 
 
 
-TOKEN : 
+void InstanceReference() : {}
 {
- <WITH: "with">
- |<CREATE_UNIQUE : "create unique">
- |<LBRACE : "{">
- |<RBRACE : "}">
+   <SIMPLE_IDENTIFIER>
 }
-
-
-
 
 
 void Action() : {}
 {
-   ObjectManipulation()  
+   ObjectManipulation() <SEMI> 
 	
 }
 
 void ObjectManipulation() : {}
 {
-( ObjectCreation()| ObjectDeletion() /*| ReadAttributes() | WriteAttributes()*/ ) 
+( ObjectCreation() | ObjectDeletion() /*| ReadAttributes() | WriteAttributes()*/ ) 
 }
 
 
 void ObjectCreation() : {}  
 {
-(<SIMPLE_IDENTIFIER> <IS_ASSIGNED> <CREATE> <SIMPLE_IDENTIFIER> <WITH>  (AttributeAssignments())* ) |
-(<SIMPLE_IDENTIFIER> <IS_ASSIGNED> <CREATE_UNIQUE> <SIMPLE_IDENTIFIER> [<WITH>  (AttributeAssignments())*] )
+	InstanceReference() <IS_ASSIGNED> 
+		<CREATE> [<UNIQUE>] ClassIdentifier() /* [<WITH>  (AttributeAssignments())* ] */
 }	
 
 void AttributeAssignments() : {}
