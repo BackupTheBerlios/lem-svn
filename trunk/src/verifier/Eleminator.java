@@ -261,9 +261,8 @@ public class Eleminator extends javax.swing.JFrame {
             try {
                 m = loadModel( selectedFile );
                 if( m != null ) {
-                    // TODO: Change the call here to importModel()
-                    models.add( loadModel( selectedFile ));
-                    JOptionPane.showMessageDialog( this, "Model loaded successfully.", "Success!",
+                    models.add( m );
+                    JOptionPane.showMessageDialog( this, "Model loaded successfully.", "Success!", 
                             JOptionPane.INFORMATION_MESSAGE );
                     workingDirectory = jfc.getSelectedFile().getParentFile();
                     getContentPane().remove(MTP);
