@@ -49,35 +49,33 @@ public class Eleminator extends javax.swing.JFrame {
     public Eleminator() {
         getContentPane().add( MTP, BorderLayout.CENTER );
         try{
-         String nativeLook = UIManager.getSystemLookAndFeelClassName();
-        UIManager.setLookAndFeel(nativeLook);
-        SwingUtilities.updateComponentTreeUI(this);
-        }
-        catch(Exception e){}
+            String nativeLook = UIManager.getSystemLookAndFeelClassName();
+            UIManager.setLookAndFeel(nativeLook);
+            SwingUtilities.updateComponentTreeUI(this);
+        } catch(Exception e){}
         
         try{
-         File custDir = new File(System.getProperty("user.home")+"/"+"WorkSpace.dat");
-         ObjectInputStream In = new ObjectInputStream (new FileInputStream
-         (custDir));
-         workingDirectory = new File( ((WorkSpace)In.readObject()).getWorkSpace());
-        }
-    catch (Exception ex){
-        workingDirectory = new File(System.getProperty("user.home"));}
-    
+            File custDir = new File(System.getProperty("user.home")+"/"+"WorkSpace.dat");
+            ObjectInputStream In = new ObjectInputStream(new FileInputStream
+                    (custDir));
+            workingDirectory = new File( ((WorkSpace)In.readObject()).getWorkSpace());
+        } catch (Exception ex){
+            workingDirectory = new File(System.getProperty("user.home"));}
+        
         initComponents();
         LookAndFeelInfo[] li = UIManager.getInstalledLookAndFeels();
         
         for(int i=0;li.length>i;i++){  //For more themes
-           
+            
             ThemeComboBox.addItem(new ThemeItem(li[i].getName(),li[i].getClassName()));
-        } 
-
+        }
+        
         setBounds(0,0,640,480);
         setTitle("eLEMinator");
         URL imageURL = getClass().getClassLoader().getResource("verifier/lem.jpg");
         Image lem = Toolkit.getDefaultToolkit().getImage(imageURL);
         setIconImage(lem);
-                         
+        
         
     }
     
@@ -160,76 +158,77 @@ public class Eleminator extends javax.swing.JFrame {
 
         pack();
     }//GEN-END:initComponents
-
+    
 	private void importItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importItemActionPerformed
-		// Display a file chooser
-		
-		File selectedFile;
-		Model m = null;
-		
-		JFileChooser jfc = new JFileChooser( workingDirectory );
-		jfc.setFileFilter( new FileFilter() {
-			public boolean accept( File f ) {
-				return f.isDirectory() || f.getName().endsWith( ".xmi" );
-			}
-			
-			public String getDescription() {
-				return "XMI UML files (*.xmi)";
-			}
-		} );
-		
-		jfc.setCurrentDirectory( workingDirectory );
-		
-		jfc.showDialog( this, "Import" );
-		
-		selectedFile = jfc.getSelectedFile();
-		if (selectedFile != null) {
-			try {
-				m = loadModel( selectedFile );
-				if (m != null) {
-					models.add(loadModel( selectedFile ));
-					 JOptionPane.showMessageDialog( this, "Model loaded successfully.", "Success!", 
-                            JOptionPane.INFORMATION_MESSAGE );
-                    workingDirectory = jfc.getSelectedFile().getParentFile();
-                    getContentPane().remove(MTP);
-                    MTP = new ModelTreePanel(m);
-                    getContentPane().add(MTP, BorderLayout.CENTER);
-                    try{
-                     ObjectOutputStream Out = new ObjectOutputStream(new FileOutputStream(System.getProperty("user.home")+"/"+"WorkSpace.dat"));
-               Out.writeObject(new WorkSpace(workingDirectory.getAbsolutePath()));
-               Out.close();
-                     }
-                    catch (FileNotFoundException ex){
-                    }
-                    
+            // Display a file chooser
+            
+            File selectedFile;
+            Model m = null;
+            
+            JFileChooser jfc = new JFileChooser( workingDirectory );
+            jfc.setFileFilter( new FileFilter() {
+                public boolean accept( File f ) {
+                    return f.isDirectory() || f.getName().endsWith( ".xmi" );
                 }
-            } catch( FileNotFoundException fnfe ) {
-                JOptionPane.showMessageDialog( this, "Could not open the model file: " + fnfe.getMessage(),
-                        "File not found", JOptionPane.ERROR_MESSAGE );
-            } catch( ParseException pe ) {
-                JOptionPane.showMessageDialog( this, "There was an error in parsing the given model: " + pe.getMessage(),
-                        "Parse error", JOptionPane.ERROR_MESSAGE );
-              
-            } catch( LemException le ) {
-                JOptionPane.showMessageDialog( this, "There was an error in parsing the given model: " + le.getMessage(),
-                        "Parse error", JOptionPane.ERROR_MESSAGE );                
-            } catch( IOException ioe ) {
-                JOptionPane.showMessageDialog( this, "An input/output error occured while trying to read the model: " + ioe.getMessage(),
-                        "Read error", JOptionPane.ERROR_MESSAGE );                
+                
+                public String getDescription() {
+                    return "XMI UML files (*.xmi)";
+                }
+            } );
+            
+            jfc.setCurrentDirectory( workingDirectory );
+            
+            jfc.showDialog( this, "Import" );
+            
+            selectedFile = jfc.getSelectedFile();
+            if (selectedFile != null) {
+                try {
+                    m = importModel( selectedFile );
+                    if (m != null) {
+                        models.add(m);
+                        JOptionPane.showMessageDialog( this, "Model loaded successfully.", "Success!",
+                                JOptionPane.INFORMATION_MESSAGE );
+                        workingDirectory = jfc.getSelectedFile().getParentFile();
+                        getContentPane().remove(MTP);
+                        MTP = new ModelTreePanel(m);
+                        getContentPane().add(MTP, BorderLayout.CENTER);
+                        try{
+                            ObjectOutputStream Out = new ObjectOutputStream(new FileOutputStream(System.getProperty("user.home")+"/"+"WorkSpace.dat"));
+                            Out.writeObject(new WorkSpace(workingDirectory.getAbsolutePath()));
+                            Out.close();
+                        } catch (Exception ex){
+                            ex.printStackTrace();
+                        }
+                        
+                    }
+                } catch( FileNotFoundException fnfe ) {
+                    JOptionPane.showMessageDialog( this, "Could not open the model file: " + fnfe.getMessage(),
+                            "File not found", JOptionPane.ERROR_MESSAGE );
+                } catch( ParseException pe ) {
+                    JOptionPane.showMessageDialog( this, "There was an error in parsing the given model: " + pe.getMessage(),
+                            "Parse error", JOptionPane.ERROR_MESSAGE );
+                    
+                } catch( LemException le ) {
+                    JOptionPane.showMessageDialog( this, "There was an error in parsing the given model: " + le.getMessage(),
+                            "Parse error", JOptionPane.ERROR_MESSAGE );
+                } catch( IOException ioe ) {
+                    JOptionPane.showMessageDialog( this, "An input/output error occured while trying to read the model: " + ioe.getMessage(),
+                            "Read error", JOptionPane.ERROR_MESSAGE );
+                } catch( Exception e ) {
+                    e.printStackTrace();
+                }
+                
             }
-
-        }
-        
-         setVisible(true);
+            
+            setVisible(true);
 	}//GEN-LAST:event_importItemActionPerformed
-
+        
     private void ThemeComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ThemeComboBoxItemStateChanged
         try{
-        ThemeItem newLook = (ThemeItem)ThemeComboBox.getSelectedItem();
-        UIManager.setLookAndFeel(newLook.getClassName());
-        SwingUtilities.updateComponentTreeUI(this);
-        }
-        catch(Exception e){}
+            ThemeItem newLook = (ThemeItem)ThemeComboBox.getSelectedItem();
+            UIManager.setLookAndFeel(newLook.getClassName());
+            SwingUtilities.updateComponentTreeUI(this);
+        } catch(Exception e){}
     }//GEN-LAST:event_ThemeComboBoxItemStateChanged
     
     private void quitItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitItemActionPerformed
@@ -252,7 +251,7 @@ public class Eleminator extends javax.swing.JFrame {
                 return "LEM model files (*.lem)";
             }
         } );
-      
+        
         jfc.setCurrentDirectory(workingDirectory);
         
         jfc.showDialog(this, "Load");
@@ -262,20 +261,19 @@ public class Eleminator extends javax.swing.JFrame {
             try {
                 m = loadModel( selectedFile );
                 if( m != null ) {
-										// TODO: Change the call here to importModel()
+                    // TODO: Change the call here to importModel()
                     models.add( loadModel( selectedFile ));
-                    JOptionPane.showMessageDialog( this, "Model loaded successfully.", "Success!", 
+                    JOptionPane.showMessageDialog( this, "Model loaded successfully.", "Success!",
                             JOptionPane.INFORMATION_MESSAGE );
                     workingDirectory = jfc.getSelectedFile().getParentFile();
                     getContentPane().remove(MTP);
                     MTP = new ModelTreePanel(m);
                     getContentPane().add(MTP, BorderLayout.CENTER);
                     try{
-                     ObjectOutputStream Out = new ObjectOutputStream(new FileOutputStream(System.getProperty("user.home")+"/"+"WorkSpace.dat"));
-               Out.writeObject(new WorkSpace(workingDirectory.getAbsolutePath()));
-               Out.close();
-                     }
-                    catch (FileNotFoundException ex){
+                        ObjectOutputStream Out = new ObjectOutputStream(new FileOutputStream(System.getProperty("user.home")+"/"+"WorkSpace.dat"));
+                        Out.writeObject(new WorkSpace(workingDirectory.getAbsolutePath()));
+                        Out.close();
+                    } catch (FileNotFoundException ex){
                     }
                     
                 }
@@ -285,18 +283,18 @@ public class Eleminator extends javax.swing.JFrame {
             } catch( ParseException pe ) {
                 JOptionPane.showMessageDialog( this, "There was an error in parsing the given model: " + pe.getMessage(),
                         "Parse error", JOptionPane.ERROR_MESSAGE );
-              
+                
             } catch( LemException le ) {
                 JOptionPane.showMessageDialog( this, "There was an error in parsing the given model: " + le.getMessage(),
-                        "Parse error", JOptionPane.ERROR_MESSAGE );                
+                        "Parse error", JOptionPane.ERROR_MESSAGE );
             } catch( IOException ioe ) {
                 JOptionPane.showMessageDialog( this, "An input/output error occured while trying to read the model: " + ioe.getMessage(),
-                        "Read error", JOptionPane.ERROR_MESSAGE );                
+                        "Read error", JOptionPane.ERROR_MESSAGE );
             }
-
+            
         }
         
-         setVisible(true);
+        setVisible(true);
     }//GEN-LAST:event_openItemActionPerformed
     
     public Model loadModel( File modelFile ) throws FileNotFoundException, ParseException, LemException, IOException {
@@ -305,38 +303,42 @@ public class Eleminator extends javax.swing.JFrame {
         
         return l.parse( fis );
     }
-		
-
-    public Model importModel( File importFile ) throws FileNotFoundException, ParseException, LemException, IOException {
-	Lem l = new Lem();
+    
+    
+    public Model importModel( File importFile ) throws TransformerException, TransformerConfigurationException,
+            FileNotFoundException, ParseException, LemException, IOException {
+        Lem l = new Lem();
         String s = importXMI(importFile);
         return l.parse(new StringBufferInputStream(s));
     }
-
     
-    private String importXMI (File sourceFile) throws Exception{
-                
-                BufferedReader styledata;
-                StreamSource sourcedata;
-                Templates stylesheet;
-                Transformer trans;
-                
-                // Get the stylesheet file stream
-                styledata = new BufferedReader(new FileReader(new File("xmi2lem.xsl")));
-                sourcedata = new StreamSource(new FileReader(sourceFile));
-                
-                // Initialize Saxon
-                TransformerFactory factory = TransformerFactoryImpl.newInstance();
-                stylesheet = factory.newTemplates(new StreamSource(styledata));
-
-                // Apply the transformation
-                trans = stylesheet.newTransformer();
-                StringWriter sw = new StringWriter();
-                trans.transform(sourcedata, new StreamResult(sw));
-                
-                return sw.toString();                
-        }
-
+    
+    private String importXMI(File sourceFile) throws FileNotFoundException, TransformerConfigurationException, TransformerException {
+        
+        BufferedReader styledata;
+        StreamSource sourcedata;
+        Templates stylesheet;
+        Transformer trans;
+        
+        // Get the stylesheet file stream
+        
+        
+        styledata = new BufferedReader(new FileReader(new File(getClass().getClassLoader().getResource("verifier/xmi2lem.xsl").getFile())));
+        sourcedata = new StreamSource(new FileReader(sourceFile));
+        
+        
+        // Initialize Saxon
+        TransformerFactory factory = TransformerFactoryImpl.newInstance();
+        stylesheet = factory.newTemplates(new StreamSource(styledata));
+        
+        // Apply the transformation
+        trans = stylesheet.newTransformer();
+        StringWriter sw = new StringWriter();
+        trans.transform(sourcedata, new StreamResult(sw));
+        
+        return sw.toString();
+    }
+    
     /**
      * @param args the command line arguments
      */
