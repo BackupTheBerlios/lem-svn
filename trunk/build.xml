@@ -1,493 +1,232 @@
 <?xml version="1.0"?>
-
-
-
 <project name="lem" default="jarfile" basedir=".">
-
-    <target name="init">
-
-        <property name="name" value="lem"/>
-
-        <property name="src.dir" value="src"/>
-
-        <property name="model.dir" value="model"/>
-
-        <property name="doc.dir" value="doc"/>
-
-        <property name="samples.dir" value="samples"/>
-
-        <property name="build.dir" value="build"/>
-
-        <property name="www.dir" value="www"/>
-
-        <property name="www.host" value="jdns.org"/>
-
-        <property name="www.host.user" value="u2550921"/>
-
-        <property name="www.host.path"
-
-				  value="/var/lib/gforge/chroot/home/groups/xtuml/"/>
-
-        <property name="enscript.path"
-
-				  value="/usr/share/enscript/hl/"/>                          
-
-        <property name="cgi.dir" value="${www.dir}/cgi-bin"/>
-
-        <property name="classes.dir" value="${build.dir}/classes"/>
-
-        <property name="etc.dir" value="etc"/>
-
-        <property name="javacchome" value="C:\Program Files\Java\javacc-3.2\javacc-3.2\bin\lib"/>
-
-        <property name="deploy.name" value="${name}.jar"/>
-
-        <property name="ssh.keyfile" value="/home/smr/.ssh/id_dsa"/>
-
-    </target>
-
-
-
-    <target name="prepare" depends="generate">
-
-        <mkdir dir="${classes.dir}"/>
-
-    </target>
-
-
-
-    <target name="clean" depends="init"> 
-
-        <delete dir="${classes.dir}"/>
-
-		<delete file="${src.dir}/LemParser.jj"/>
-                <mkdir dir ="${doc.dir}/javadoc"/>
-		<delete>
-
-			<fileset dir="${doc.dir}/javadoc">
-
-				<include name="*.*" />
-
-			</fileset>
-
-		</delete>
-
-		<delete>
-
-			<fileset dir="${src.dir}/parser">
-
-				<include name="*.*" />
-
-				<exclude name="LemNode.java" />
-
-				<exclude name="SimpleNode.java" />
-
-				<exclude name="package.html" />
-
-			</fileset>
-
-		</delete>
-
-    </target>
-
-
-
-	<target name="generate" depends="init,clean" >
-
-		<jjtree
-
-			target="${src.dir}/LemParser.jjt"
-
-			javacchome="${javacchome}"
-
-			outputdirectory="${src.dir}/parser"/>
-
-
-
-		<javacc
-
-			target="${src.dir}/parser/LemParser.jj"
-
-			javacchome="${javacchome}"
-
-			outputdirectory="${src.dir}/parser"/>
-
-
-
-                <!--
-
-		<exec
-
-			executable="perl"
-
-			output="${src.dir}/verifier/Visitor.java">
-
-			<arg line="${src.dir}/util/generateVisitor.pl
-
-			${src.dir}/parser/LemParserVisitor.java"/>
-
-		</exec>
-
-		-->	
-
-	</target>
-
-
-
-    <target name="compile_one" depends="init" >
-
-        <javac srcdir="${src.dir}" 
-
-               destdir="${classes.dir}"
-
-               debug="true"
-
-			   includes="${filename}"
-
-               deprecation="true"
-
-               optimize="false"/>
-
-    </target>
-
-
-
-    <target name="compile" depends="prepare">
-        <copy file ="${src.dir}/verifier/lem.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
-        <copy file ="${src.dir}/verifier/open.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
-        <copy file ="${src.dir}/verifier/closed.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
-        <copy file ="${src.dir}/verifier/class.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
-        <copy file ="${src.dir}/verifier/event.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
-        <copy file ="${src.dir}/verifier/events.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
-        <copy file ="${src.dir}/verifier/relationship.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
-        <copy file ="${src.dir}/verifier/state.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
-        <copy file ="${src.dir}/verifier/transition.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
-        <copy file ="${src.dir}/verifier/attribute.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
-        <copy file ="${src.dir}/verifier/statemachine.jpg" todir="${classes.dir}/verifier" overwrite="false"/>
-        <copy file ="${src.dir}/splash/eLEMinator.jpg" todir="${classes.dir}/splash" overwrite="false"/>        
-        <javac srcdir="${src.dir}" 
-
-               destdir="${classes.dir}"
-
-               debug="true"
-
-               deprecation="true"
-
-               optimize="false"/>
-
-    </target>
-
-
-
-    <target name="jarfile" depends="compile">
-
-        <copy  file="${etc.dir}/SemanticChecks.properties" todir="${classes.dir}" overwrite="true"/>
-
-        <jar destfile="${build.dir}/${name}.jar"
-
-             basedir="${classes.dir}"
-
-             manifest="${etc.dir}/MANIFEST.MF"/>
-
-    </target>
-
-
-
-	<target name="docs" depends="init">
-
-		<javadoc sourcepath="${src.dir}" 
-
-			destdir="${doc.dir}/javadoc"
-
-			author="true" version="true" use="true"
-
-                        private="true"
-
-			windowtitle="LEM Documentation">
-
-			<fileset dir="${src.dir}" includes="*.java"/>
-
-			<fileset dir="${src.dir}/parser" includes="*.java"/>
-
-			<fileset dir="${src.dir}/verifier" includes="*.java"/>
-
-			<fileset dir="${src.dir}/metamodel" includes="*.java"/>
-
-			<fileset dir="${src.dir}/util" includes="*.java"/>
-
-			<fileset dir="${src.dir}/test" includes="*.java"/>
-
-			<fileset dir="${src.dir}/tools" includes="*.java"/>
-
-			<bottom><![CDATA[<em>Copyright &copy; 2004</em></div>]]></bottom>
-
-			<link href="http://java.sun.com/products/jdk/1.4/docs/api"/>
-
-		</javadoc>
-
-
-
-		<jjdoc
-
-			target="${src.dir}/parser/LemParser.jj"
-
-			javacchome="${javacchome}"
-
-			outputfile="${doc.dir}/jjdoc/LemParser.html"
-
-			onetable="false"/>
-
-	</target>
-
-
-
-	<target name="samples" depends="init">
-
-		<copy 
-
-			todir="${www.dir}/htdocs/samples">
-
-    		<fileset dir="${samples.dir}">
-
-      			<include name="*"/>
-
-      			<include name="*/*"/>
-
-				<exclude name="CVS" />
-
-    		</fileset>
-
-		</copy>
-
-		<scp 
-
-			todir="${www.host.user}@${www.host}:${www.host.path}/htdocs/samples/"
-
-			keyfile="${ssh.keyfile}" 
-
-			passphrase="" >
-
-    			<fileset dir="${www.dir}/htdocs/samples/">
-
-      				<include name="*"/>
-
-      				<include name="*/*"/>
-
-    			</fileset>
-
-  		</scp>
-
-	</target>
-
-
-
-	<target name="www" depends="jarfile,docs">
-
-		<copy 
-
-			file="${build.dir}/lem.jar"
-
-			todir="${cgi.dir}" />
-
-		<copy 
-
-			file="${doc.dir}/jjdoc/LemParser.html"
-
-			todir="${www.dir}/htdocs" />
-
-		<copy 
-
-			todir="${www.dir}/htdocs/samples">
-
-    		<fileset dir="${samples.dir}">
-
-      			<include name="*"/>
-
-      			<include name="*/*"/>
-
-				<exclude name="CVS" />
-
-    		</fileset>
-
-		</copy>
-
-		<copy 
-
-			todir="${www.dir}/htdocs">
-
-    		<fileset dir="${model.dir}">
-
-      			<include name="*.png"/>
-
-				<exclude name="CVS" />
-
-    		</fileset>
-
-		</copy>
-
-
-
-		<scp 
-
-			todir="${www.host.user}@${www.host}:${www.host.path}/htdocs"
-
-			keyfile="${ssh.keyfile}" 
-
-			passphrase="" >
-
-    			<fileset dir="${www.dir}/htdocs">
-
-      				<include name="*"/>
-
-					<exclude name="CVS" />
-
-    			</fileset>
-
-  		</scp>
-
-
-
-		<scp 
-
-			todir="${www.host.user}@${www.host}:${www.host.path}/htdocs/samples/"
-
-			keyfile="${ssh.keyfile}" 
-
-			passphrase="" >
-
-    			<fileset dir="${www.dir}/htdocs/samples/">
-
-      				<include name="*"/>
-
-      				<include name="*/*"/>
-
-    			</fileset>
-
-  		</scp>
-
-		<scp 
-
-			todir="${www.host.user}@${www.host}:${www.host.path}/htdocs/javadoc"
-
-			keyfile="${ssh.keyfile}" 
-
-			passphrase="" >
-
-    			<fileset dir="${doc.dir}/javadoc"/>
-
-  		</scp>
-
-                
-
-                <scp 
-
-			todir="${www.host.user}@${www.host}:${enscript.path}"
-
-			keyfile="${ssh.keyfile}" 
-
-			passphrase="" >
-
-    			<fileset dir="${www.dir}/cgi-bin">
-
-      				<include name="lem.st"/>
-
-    			</fileset>
-
-  		</scp>
-
-		
-
-
-
-
-
-		<scp 
-
-			todir="${www.host.user}@${www.host}:${www.host.path}/cgi-bin"
-
-			keyfile="${ssh.keyfile}" 
-
-			passphrase="" >
-
-    			<fileset dir="${www.dir}/cgi-bin">
-
-      				<include name="*"/>
-
-					<exclude name="CVS" />
-
-    			</fileset>
-
-  		</scp>
-
-                <scp 
-
-			todir="${www.host.user}@${www.host}:${www.host.path}/htdocs"
-
-			keyfile="${ssh.keyfile}" 
-
-			passphrase="" >
-
-    			<fileset dir="${doc.dir}/">
-
-      				<include name="howto/*"/>
-
-                                <include name="howto/latex/*"/>
-
-					<exclude name="CVS" />
-
-    			</fileset>
-
-  		</scp>
-
-	</target>
-
-        <target name="run" depends="init">
-
-                <java classname="splash.Splasher" fork="true"
-
-                        classpath="${build.dir}/classes"/>
-
-        </target>
-
-        <target name="runjar" depends="init">
-
-                <java jar="build/lem.jar" fork="true"/>
-
-        </target>
-
-        <target name="debug" depends="init">
-
-                <java classname="verifier.Eleminator" 
-
-					fork="true"
-
-					classpath="${build.dir}/classes">
-
-					<jvmarg line="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=y"/>
-
-					<arg line="${lemSourceFile}"/>
-
-				</java>
-
-        </target>
-
-        
-
-        <target name="www_javadoc" depends="init" >
-
-            <scp 
-
-			todir="${www.host.user}@${www.host}:${www.host.path}/htdocs/javadoc"
-
-			keyfile="${ssh.keyfile}" 
-
-			passphrase="" >
-
-    			<fileset dir="${doc.dir}/javadoc"/>
-
-  		</scp>
-
-         </target>
-
+  <target name="init">
+    <property name="name" value="lem" />
+    <property name="src.dir" value="src" />
+    <property name="model.dir" value="model" />
+    <property name="doc.dir" value="doc" />
+    <property name="samples.dir" value="samples" />
+    <property name="build.dir" value="build" />
+    <property name="www.dir" value="www" />
+    <property name="www.host" value="jdns.org" />
+    <property name="www.host.user" value="u2550921" />
+    <property name="www.host.path"
+    value="/var/lib/gforge/chroot/home/groups/xtuml/" />
+    <property name="enscript.path"
+    value="/usr/share/enscript/hl/" />
+    <property name="cgi.dir" value="${www.dir}/cgi-bin" />
+    <property name="classes.dir" value="${build.dir}/classes" />
+    <property name="etc.dir" value="etc" />
+    <property name="javacchome"
+    value="/students/u4128551/javacc-3.2" />
+    <property name="deploy.name" value="${name}.jar" />
+    <property name="ssh.keyfile" value="/home/smr/.ssh/id_dsa" />
+    <property name="lib.dir" value="lib" />
+  </target>
+  
+  <target name="prepare" depends="generate">
+    <mkdir dir="${classes.dir}" />
+  </target>
+  
+  <target name="clean" depends="init">
+    <delete dir="${classes.dir}" />
+    <delete file="${src.dir}/LemParser.jj" />
+    <mkdir dir="${doc.dir}/javadoc" />
+    <delete>
+      <fileset dir="${doc.dir}/javadoc">
+        <include name="*.*" />
+      </fileset>
+    </delete>
+    <delete>
+      <fileset dir="${src.dir}/parser">
+        <include name="*.*" />
+        <exclude name="LemNode.java" />
+        <exclude name="SimpleNode.java" />
+        <exclude name="package.html" />
+      </fileset>
+    </delete>
+  </target>
+  
+  <target name="generate" depends="init,clean">
+    <jjtree target="${src.dir}/LemParser.jjt"
+    javacchome="${javacchome}"
+    outputdirectory="${src.dir}/parser" />
+    <javacc target="${src.dir}/parser/LemParser.jj"
+    javacchome="${javacchome}"
+    outputdirectory="${src.dir}/parser" />
+    <!--
+                <exec
+                        executable="perl"
+                        output="${src.dir}/verifier/Visitor.java">
+                        <arg line="${src.dir}/util/generateVisitor.pl
+                        ${src.dir}/parser/LemParserVisitor.java"/>
+                </exec>
+                -->
+  </target>
+  
+  <target name="compile_one" depends="init">
+    <javac srcdir="${src.dir}" destdir="${classes.dir}"
+    debug="true" includes="${filename}" deprecation="true"
+    optimize="false" />
+  </target>
+  
+  <target name="compile" depends="prepare">
+    <copy file="${src.dir}/verifier/lem.jpg"
+        todir="${classes.dir}/verifier" overwrite="false" />
+    <copy file="${src.dir}/verifier/open.jpg"
+        todir="${classes.dir}/verifier" overwrite="false" />
+    <copy file="${src.dir}/verifier/closed.jpg"
+        todir="${classes.dir}/verifier" overwrite="false" />
+    <copy file="${src.dir}/verifier/class.jpg"
+        todir="${classes.dir}/verifier" overwrite="false" />
+    <copy file="${src.dir}/verifier/event.jpg"
+        todir="${classes.dir}/verifier" overwrite="false" />
+    <copy file="${src.dir}/verifier/events.jpg"
+        todir="${classes.dir}/verifier" overwrite="false" />
+    <copy file="${src.dir}/verifier/relationship.jpg"
+        todir="${classes.dir}/verifier" overwrite="false" />
+    <copy file="${src.dir}/verifier/state.jpg"
+        todir="${classes.dir}/verifier" overwrite="false" />
+    <copy file="${src.dir}/verifier/transition.jpg"
+        todir="${classes.dir}/verifier" overwrite="false" />
+    <copy file="${src.dir}/verifier/attribute.jpg"
+        todir="${classes.dir}/verifier" overwrite="false" />
+    <copy file="${src.dir}/verifier/statemachine.jpg"
+        todir="${classes.dir}/verifier" overwrite="false" />
+    <copy file="${src.dir}/verifier/xmi2lem.xsl"
+        todir="${classes.dir}/verifier" overwrite="false" />
+    <copy file="${src.dir}/splash/eLEMinator.jpg"
+        todir="${classes.dir}/splash" overwrite="false" />
+    <javac srcdir="${src.dir}" destdir="${classes.dir}"
+        classpath="${lib.dir}/saxon8.jar" debug="true"
+        deprecation="true" optimize="false" />
+  </target>
+  
+  <target name="jarfile" depends="compile">
+    <copy file="${etc.dir}/SemanticChecks.properties"
+    todir="${classes.dir}" overwrite="true" />
+    <jar destfile="${build.dir}/${name}.jar"
+    basedir="${classes.dir}" manifest="${etc.dir}/MANIFEST.MF" />
+  </target>
+  
+  <target name="docs" depends="init">
+    <javadoc sourcepath="${src.dir}" destdir="${doc.dir}/javadoc"
+    author="true" version="true" use="true" private="true"
+    windowtitle="LEM Documentation">
+      <fileset dir="${src.dir}" includes="*.java" />
+      <fileset dir="${src.dir}/parser" includes="*.java" />
+      <fileset dir="${src.dir}/verifier" includes="*.java" />
+      <fileset dir="${src.dir}/metamodel" includes="*.java" />
+      <fileset dir="${src.dir}/util" includes="*.java" />
+      <fileset dir="${src.dir}/test" includes="*.java" />
+      <fileset dir="${src.dir}/tools" includes="*.java" />
+      <bottom>
+        <![CDATA[<em>Copyright &copy; 2004</em></div>]]>
+      </bottom>
+      <link href="http://java.sun.com/products/jdk/1.4/docs/api" />
+    </javadoc>
+    <jjdoc target="${src.dir}/parser/LemParser.jj"
+    javacchome="${javacchome}"
+    outputfile="${doc.dir}/jjdoc/LemParser.html"
+    onetable="false" />
+  </target>
+  
+  <target name="samples" depends="init">
+    <copy todir="${www.dir}/htdocs/samples">
+      <fileset dir="${samples.dir}">
+        <include name="*" />
+        <include name="*/*" />
+        <exclude name="CVS" />
+      </fileset>
+    </copy>
+    <scp todir="${www.host.user}@${www.host}:${www.host.path}/htdocs/samples/"
+    keyfile="${ssh.keyfile}" passphrase="">
+      <fileset dir="${www.dir}/htdocs/samples/">
+        <include name="*" />
+        <include name="*/*" />
+      </fileset>
+    </scp>
+  </target>
+  
+  <target name="www" depends="jarfile,docs">
+    <copy file="${build.dir}/lem.jar" todir="${cgi.dir}" />
+    <copy file="${doc.dir}/jjdoc/LemParser.html"
+    todir="${www.dir}/htdocs" />
+    <copy todir="${www.dir}/htdocs/samples">
+      <fileset dir="${samples.dir}">
+        <include name="*" />
+        <include name="*/*" />
+        <exclude name="CVS" />
+      </fileset>
+    </copy>
+    <copy todir="${www.dir}/htdocs">
+      <fileset dir="${model.dir}">
+        <include name="*.png" />
+        <exclude name="CVS" />
+      </fileset>
+    </copy>
+    <scp todir="${www.host.user}@${www.host}:${www.host.path}/htdocs"
+    keyfile="${ssh.keyfile}" passphrase="">
+      <fileset dir="${www.dir}/htdocs">
+        <include name="*" />
+        <exclude name="CVS" />
+      </fileset>
+    </scp>
+    <scp todir="${www.host.user}@${www.host}:${www.host.path}/htdocs/samples/"
+    keyfile="${ssh.keyfile}" passphrase="">
+      <fileset dir="${www.dir}/htdocs/samples/">
+        <include name="*" />
+        <include name="*/*" />
+      </fileset>
+    </scp>
+    <scp todir="${www.host.user}@${www.host}:${www.host.path}/htdocs/javadoc"
+    keyfile="${ssh.keyfile}" passphrase="">
+      <fileset dir="${doc.dir}/javadoc" />
+    </scp>
+    <scp todir="${www.host.user}@${www.host}:${enscript.path}"
+    keyfile="${ssh.keyfile}" passphrase="">
+      <fileset dir="${www.dir}/cgi-bin">
+        <include name="lem.st" />
+      </fileset>
+    </scp>
+    <scp todir="${www.host.user}@${www.host}:${www.host.path}/cgi-bin"
+    keyfile="${ssh.keyfile}" passphrase="">
+      <fileset dir="${www.dir}/cgi-bin">
+        <include name="*" />
+        <exclude name="CVS" />
+      </fileset>
+    </scp>
+    <scp todir="${www.host.user}@${www.host}:${www.host.path}/htdocs"
+    keyfile="${ssh.keyfile}" passphrase="">
+      <fileset dir="${doc.dir}/">
+        <include name="howto/*" />
+        <include name="howto/latex/*" />
+        <exclude name="CVS" />
+      </fileset>
+    </scp>
+  </target>
+  
+  <target name="run" depends="init">
+    <java classname="splash.Splasher" fork="true"
+    classpath="${build.dir}/classes:${lib.dir}/saxon8.jar"  />
+  </target>
+  
+  <target name="runjar" depends="init">
+    <java jar="build/lem.jar" fork="true" />
+  </target>
+  
+  <target name="debug" depends="init">
+    <java classname="verifier.Eleminator" fork="true"
+    classpath="${build.dir}/classes">
+      <jvmarg line="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=y" />
+      <arg line="${lemSourceFile}" />
+    </java>
+  </target>
+  
+  <target name="www_javadoc" depends="init">
+    <scp todir="${www.host.user}@${www.host}:${www.host.path}/htdocs/javadoc"
+    keyfile="${ssh.keyfile}" passphrase="">
+      <fileset dir="${doc.dir}/javadoc" />
+    </scp>
+  </target>
 </project>
-
