@@ -335,7 +335,8 @@ public class Eleminator extends javax.swing.JFrame {
         StringWriter sw = new StringWriter();
         trans.transform(sourcedata, new StreamResult(sw));
         
-        return sw.toString();
+        //return sw.toString();
+        return sw.getBuffer().substring(sw.getBuffer().indexOf("model"));
     }
     
     /**
