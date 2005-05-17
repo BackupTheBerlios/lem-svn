@@ -12,20 +12,15 @@ import java.util.ArrayList;
  * This class represents an instance of a xtUML model.
  * @author u3957053
  */
-public class ModelInstance {
-    
-    ArrayList objectPool = null;
-    
-    /** Creates a new instance of ModelInstance */
+public class ModelInstance extends Context {
     public ModelInstance() {
-        objectPool = new ArrayList();
+        super( null );
     }
     
-    /**
-     * Adds an object to the object pool
-     * @param o The object to insert into the pool
-     */ 
-    public void addObject( runtime.Object o ) {
-        objectPool.add( o );
+    public ArrayList getLocalVariables() {
+        return null;
+    }
+    
+    public void finish() {
     }
 }
