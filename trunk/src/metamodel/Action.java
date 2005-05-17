@@ -20,5 +20,9 @@ public abstract class Action {
     public Action() {
     }
     
-    public abstract void execute();
+    /** Execute the action in the given context.
+     *
+     * @param context The context in which to execute this action
+     */
+    public abstract void execute( runtime.Context context );
 }

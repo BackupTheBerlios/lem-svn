@@ -33,7 +33,7 @@ public class CreateAction extends Action {
         this.theClass = theClass;
     }
     
-    public void execute() {
+    public void execute( Context context ) {
         Instance i = new Instance( theClass );
     }
 }
