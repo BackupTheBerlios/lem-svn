@@ -15,8 +15,10 @@ import java.util.ArrayList;
 public class Context {
     ArrayList objectList = null;
     ArrayList localVariables = null;
+    Context parentContext = null;
     /** Creates a new instance of Context */
-    public Context() {
+    public Context(Context inContext) {
+        parentContext = inContext;
     }
     public void addObject(runtime.Object inObject)
     {}
