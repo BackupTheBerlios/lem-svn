@@ -34,6 +34,7 @@ public class CreateAction extends Action {
     }
     
     public void execute( Context context ) {
-        Instance i = new Instance( theClass );
+        runtime.Object o = new runtime.Object( new metamodel.Class[] {theClass} );
+        context.addObject(o);
     }
 }
