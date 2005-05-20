@@ -13,15 +13,16 @@ import metamodel.DataType;
  * @author u4128551
  */
 public class Object {
-    InstanceAttribute Attributes[] = null;
-    Class Classes[] = null;
+    InstanceAttribute attributes[] = null;
+    metamodel.Class classes[] = null;
+    
     /** Creates a new instance of Object */
-    public Object(Class [] inClasses) {
-        Classes=inClasses;
+    public Object(metamodel.Class [] inClasses) {
+        classes=inClasses;
     }
-    public InstanceAttribute getAttribute(String AttributeName)
-    {
+
+    public InstanceAttribute getAttribute(String attributeName) {
         //insert code here :)
-        return Attributes[0];
+        return attributes[0];
     }
 }
