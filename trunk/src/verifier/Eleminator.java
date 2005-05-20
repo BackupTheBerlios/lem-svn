@@ -67,7 +67,7 @@ public class Eleminator extends javax.swing.JFrame {
         
         for(int i=0;li.length>i;i++){  //For more themes
             
-            ThemeComboBox.addItem(new ThemeItem(li[i].getName(),li[i].getClassName()));
+            themeComboBox.addItem(new ThemeItem(li[i].getName(),li[i].getClassName()));
         }
         
         setBounds(0,0,640,480);
@@ -88,8 +88,8 @@ public class Eleminator extends javax.swing.JFrame {
         desktopPane = new javax.swing.JDesktopPane();
         statusPanel = new javax.swing.JPanel();
         lemToolBar = new javax.swing.JToolBar();
-        ThemeLabel = new javax.swing.JLabel();
-        ThemeComboBox = new javax.swing.JComboBox();
+        themeLabel = new javax.swing.JLabel();
+        themeComboBox = new javax.swing.JComboBox();
         menubar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openItem = new javax.swing.JMenuItem();
@@ -102,17 +102,17 @@ public class Eleminator extends javax.swing.JFrame {
         getContentPane().add(statusPanel, java.awt.BorderLayout.SOUTH);
 
         lemToolBar.setName("Standard");
-        ThemeLabel.setText("Themes");
-        lemToolBar.add(ThemeLabel);
+        themeLabel.setText("Themes");
+        lemToolBar.add(themeLabel);
 
-        ThemeComboBox.setMaximumSize(new java.awt.Dimension(150, 150));
-        ThemeComboBox.addItemListener(new java.awt.event.ItemListener() {
+        themeComboBox.setMaximumSize(new java.awt.Dimension(150, 150));
+        themeComboBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                ThemeComboBoxItemStateChanged(evt);
+                themeComboBoxItemStateChanged(evt);
             }
         });
 
-        lemToolBar.add(ThemeComboBox);
+        lemToolBar.add(themeComboBox);
 
         getContentPane().add(lemToolBar, java.awt.BorderLayout.NORTH);
 
@@ -129,8 +129,6 @@ public class Eleminator extends javax.swing.JFrame {
 
         fileMenu.add(openItem);
 
-        importItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
-        importItem.setMnemonic('I');
         importItem.setText("Import");
         importItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -223,13 +221,13 @@ public class Eleminator extends javax.swing.JFrame {
             setVisible(true);
 	}//GEN-LAST:event_importItemActionPerformed
         
-    private void ThemeComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ThemeComboBoxItemStateChanged
+        private void themeComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_themeComboBoxItemStateChanged
         try{
-            ThemeItem newLook = (ThemeItem)ThemeComboBox.getSelectedItem();
+            ThemeItem newLook = (ThemeItem)themeComboBox.getSelectedItem();
             UIManager.setLookAndFeel(newLook.getClassName());
             SwingUtilities.updateComponentTreeUI(this);
         } catch(Exception e){}
-    }//GEN-LAST:event_ThemeComboBoxItemStateChanged
+        }//GEN-LAST:event_themeComboBoxItemStateChanged
     
     private void quitItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitItemActionPerformed
         System.exit( 1 );
@@ -294,6 +292,13 @@ public class Eleminator extends javax.swing.JFrame {
         }
         
         setVisible(true);
+        
+/*        metamodel.Procedure p = m.getDomain( "Publications" ).getClass( "Manuscript" ).getStateMachine().getState("Adding").getProcedure();
+        runtime.ModelInstance i = new runtime.ModelInstance();
+        
+        p.execute(i); */
+        
+        
     }//GEN-LAST:event_openItemActionPerformed
     
     public Model loadModel( File modelFile ) throws FileNotFoundException, ParseException, LemException, IOException {
@@ -351,8 +356,6 @@ public class Eleminator extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox ThemeComboBox;
-    private javax.swing.JLabel ThemeLabel;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuItem importItem;
@@ -361,6 +364,8 @@ public class Eleminator extends javax.swing.JFrame {
     private javax.swing.JMenuItem openItem;
     private javax.swing.JMenuItem quitItem;
     private javax.swing.JPanel statusPanel;
+    private javax.swing.JComboBox themeComboBox;
+    private javax.swing.JLabel themeLabel;
     // End of variables declaration//GEN-END:variables
     
 }
