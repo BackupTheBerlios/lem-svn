@@ -6,7 +6,8 @@
 
 package metamodel;
 
-import metamodel.Action;
+import java.util.Iterator;
+import runtime.Context;
 
 /**
  * A procedure is a collection of actions executed upon entry to a state.
@@ -54,6 +55,18 @@ public class Procedure {
      */
     public void addAction( Action a ) {
         actions.add(a);
+    }
+    
+    public void execute( Context c ) {
+        Action a;
+        
+        Iterator i = actions.iterator();
+        
+        while( i.hasNext() ) {
+            a = (Action)i.next();
+            
+            a.execute(c);
+        }
     }
     
 }
