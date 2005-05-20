@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author u4128551
  */
 public class Context {
-    ArrayList objectList = null;
+    ArrayList objectList = new ArrayList();
     ArrayList localVariables = null;
     Context parentContext = null;
 
@@ -30,6 +30,7 @@ public class Context {
      * @param inObject the object to add to the context
      */
     public void addObject(runtime.Object inObject) {
+        objectList.add(inObject);
     }
     
     /**
@@ -49,7 +50,7 @@ public class Context {
     }
     
     /**
-     * Tells this context that is about to finish. The context should check
+     * Tells this context that it is about to finish. The context should check
      * all visible objects for participation in all relevant associations,
      * etc.
      */
