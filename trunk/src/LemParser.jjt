@@ -1,6 +1,9 @@
 /*
 # $Id$
 # $Log$
+# Revision 1.10  2005/05/22 04:53:36  u3957053
+# Added Ada expressions to grammar, fixed up ObjectDeletion non-terminal
+#
 # Revision 1.9  2005/05/15 08:16:17  u3957053
 # Modified the ObjectCreation non-terminal
 #
@@ -1053,13 +1056,6 @@ void TransitionEventIdentifier() : {}
  * Action Language defined here
  *****************************************************************************************/
 
-void simple_expression() :
-{}
-{
-     <SEMI>
-}
-
-
 
 void InstanceReference() : {}
 {
@@ -1078,7 +1074,7 @@ void ObjectManipulation() : {}
 ( ObjectCreation() | ObjectDeletion() /*| ReadAttributes() | WriteAttributes()*/ ) 
 }
 
-
+/* TODO: InstanceReference -> ObjectReference */
 void ObjectCreation() : {}  
 {
 	InstanceReference() <IS_ASSIGNED> 
@@ -1095,7 +1091,160 @@ void AttributeAssignments() : {}
 
 void ObjectDeletion() : {}
 {
-	(<DELETE><SIMPLE_IDENTIFIER> <WHERE> ) |
-	(<DELETE><SIMPLE_IDENTIFIER> ) |
-	(<DELETE> <LBRACE> <SIMPLE_IDENTIFIER> <RBRACE> )
+/*	(<DELETE><SIMPLE_IDENTIFIER> <WHERE> ) | */
+	(<DELETE> ObjectReference() ) 
+/*	(<DELETE> [<LBRACE>] <SIMPLE_IDENTIFIER> [<RBRACE>] ) */
 }
+
+/**
+ * Expressions 
+ */
+
+void Name() : {}
+{ [ ObjectReference() "." ] AttributeIdentifier() }
+
+void ObjectReference() : {}
+{ 	"self" | <SIMPLE_IDENTIFIER> }
+
+
+void Expression() : {}
+{ 
+// things start to get complicated here
+// look at JAVA grammar to get some tips
+	relation()
+	(	(	<AND>
+		|	<OR> 
+		|	<XOR>
+		)
+		relation()
+	)*
+}
+
+void relation() :
+{}
+{
+	simple_expression()
+	( relational() simple_expression()
+	| membership() range()
+	)?
+}
+                 
+void relational() :
+{}
+{
+	<EQUAL>
+//	Revisit: does this go here?!?
+// |	<DOT_DOT>
+|	<NE>
+|	<LT>
+|	<LT_EQ>
+|	<GT>
+|	<GE>
+}
+
+void membership() :
+{}
+{
+	<IN>
+|	<NOT> <IN>
+}
+
+void simple_expression() :
+{}
+{
+	unary() term()
+|	term() ( adding() term() )*
+}
+
+void unary() :
+{}
+{
+	<PLUS>
+|	<DASH>
+}
+
+void adding() :
+{}
+{
+	<PLUS>
+|	<DASH>
+|	<AMPERSAND>
+}
+
+void term() :
+{}
+{
+	factor() ( multiplying() factor() )*
+}
+
+void multiplying() :
+{}
+{
+	<STAR>
+|	<SLASH>
+|	<MOD>
+|	<REM>
+}
+
+void factor() :
+{}
+{
+	primary() ( <EXPON> primary() )?
+|	<NOT> primary()
+|	<ABS> primary()
+}
+
+void primary() :
+{}
+{
+	Literal()
+|	Name()
+|	parenthesized_primary()
+}
+
+void parenthesized_primary() :
+{}
+{
+	aggregate()
+	// REVISIT Covered by aggregate
+	//  | LPAREN expression RPAREN
+}
+
+void qualified() :
+{}
+{
+	Name()
+	// REVISIT: SEMANTICS
+	// demands "TIC parenthesized_primary"
+	// is part of the name
+}
+
+void aggregate() :
+{}
+{
+	<LPAREN>
+	Expression()
+	<RPAREN>
+}
+
+void range_constraint() :
+{}
+{
+	<RANGE> range()
+}
+
+void range() :
+{}
+{
+	simple_expression() ( <DOT_DOT> simple_expression() )?
+	    // REVISIT: ADDED OPTIONAL CONSTRUCT ABOVE AND
+	    // REMOVED name PRODUCTION BELOW, because name
+	    // is reachable via a call to simple_expression.
+	    // Note that the caveat below applies.
+	    // | name // REVISIT SEMANTICS
+           // demands that
+	   // <TIC> <RANGE> ( LPAREN expression RPAREN )?
+	   // is part of the name
+}
+
+
