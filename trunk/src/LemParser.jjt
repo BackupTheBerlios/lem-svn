@@ -1,6 +1,9 @@
 /*
 # $Id$
 # $Log$
+# Revision 1.12  2005/05/22 06:59:25  u3957053
+# Make use of (renamed) AttributeAssignment non-terminal, (temporarily?) removed syntactic sugar from ObjectCreation
+#
 # Revision 1.11  2005/05/22 05:49:49  u3293115
 # Generally cleaned up expression non terminals.
 #
@@ -1035,7 +1038,7 @@ void StateProcedureDeclaration() : {}
 { 	Procedure() }
 
 void Procedure() : {}
-{ 	( Action() )* }
+{ 	( Action() <SEMI> )* }
 
 void TransitionDeclaration() : {}
 { 	
@@ -1073,8 +1076,8 @@ void InstanceReference() : {}
 
 void Action() : {}
 {
-   ObjectManipulation() <SEMI> 
-	
+   ObjectManipulation()
+|  AttributeAssignment()    /* This should include local variable assignment */
 }
 
 void ObjectManipulation() : {}
@@ -1086,12 +1089,12 @@ void ObjectManipulation() : {}
 void ObjectCreation() : {}  
 {
 	InstanceReference() <IS_ASSIGNED> 
-		<CREATE> [<UNIQUE>] ClassIdentifier()  [<WITH>  AttributeAssignments()]
+		<CREATE> [<UNIQUE>] ClassIdentifier() /*  [<WITH> AttributeAssignment()] */
 /*	InstanceReference() <IS_ASSIGNED> 
-		<CREATE> <UNIQUE> ClassIdentifier()  [<WITH>  AttributeAssignments() ] */
+		<CREATE> <UNIQUE> ClassIdentifier()  [<WITH>  AttributeAssignment() ] */
 }	
 
-void AttributeAssignments() : {}
+void AttributeAssignment() : {}
 {
 	(AttributeInstanceReference() <IS_ASSIGNED> Expression() )  /* (<COMMA> <SIMPLE_IDENTIFIER> <IS_ASSIGNED> Literal() )* */
 }
