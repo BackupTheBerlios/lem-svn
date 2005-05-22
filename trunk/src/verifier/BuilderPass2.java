@@ -45,30 +45,14 @@ public class BuilderPass2 extends Visitor {
     
     public Object visit( LEMObjectCreation node, Object data ) throws LemException {
         CreateAction a = (CreateAction)(getMapper().getObject(node));
+        String className = (String)visit((LEMClassIdentifier)node.jjtGetChild(1),data);
         
-        super.visit( node, a );
+//        super.visit( node, a );
         return a;
     }
     
     public Object visit( LEMClassIdentifier node, Object data ) throws LemException {
-        metamodel.Class c = currentDomain.getClass( node.getFirstToken().image );
-        
-        if( c == null ) {
-            throw new LemException(
-                    "Class " + node.getFirstToken().image + " does not exist.",
-                    node.getFirstToken(),
-                    "LEM_E_01015" );
-        }
-        
-        if( data instanceof CreateAction ) {
-            CreateAction a = (CreateAction) data;
-            
-            a.setClass(c);
-            
-        }
-        
-        super.visit( node, data );
-        return data;
+        return node.getFirstToken().image;
     }
     
     /**

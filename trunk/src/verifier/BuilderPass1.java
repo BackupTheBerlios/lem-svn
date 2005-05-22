@@ -139,6 +139,7 @@ public class BuilderPass1 extends Visitor {
         Subsystem subsystem = null;
         Association association = null;
         
+        
         // sort out the context
         
         if ( data instanceof Subsystem ) {
@@ -151,6 +152,9 @@ public class BuilderPass1 extends Visitor {
         // now create a new class as a placeholder
         
         metamodel.Class theClass = new metamodel.Class();
+        
+        theClass.setName((String) visit( (LEMClassIdentifier)node.jjtGetChild(0), data ));
+        
         getMapper().add( node, theClass );
         
         // set its subsystem to allow the child elements to get context
@@ -222,21 +226,7 @@ public class BuilderPass1 extends Visitor {
      * Process the identifier for a Class.
      */
     public Object visit(LEMClassIdentifier node, Object data)   throws LemException {
-        
-        if( data instanceof metamodel.Class ) {
-            super.visit( node, data );
-            
-            metamodel.Class theClass = (metamodel.Class) data;
-            String name =  node.getFirstToken().image;
-            getMapper().add( node, name );
-            
-            theClass.setName( name );
-            
-            return theClass;
-        } else {
-            super.visit(node, data);
-            return data;
-        }
+        return node.getFirstToken().image;
     }
     
     /**
@@ -407,9 +397,11 @@ public class BuilderPass1 extends Visitor {
     public Object visit(LEMAttributeIdentifier node, Object data)   throws LemException {
         super.visit( node, data );
         
-        Attribute attribute = (Attribute) data;
-        String name =  node.getFirstToken().image;
-        attribute.setName( name );
+        if( data instanceof Attribute ) {
+            Attribute attribute = (Attribute) data;
+            String name =  node.getFirstToken().image;
+            attribute.setName( name );
+        }
         
         return data;
         
