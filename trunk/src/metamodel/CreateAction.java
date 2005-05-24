@@ -13,7 +13,6 @@ import runtime.*;
 
 /**
  * This Action is responsible for creating new instances of runtime.Object.
- * This action takes a list of
  * @author sjr
  */
 public class CreateAction extends Action {
