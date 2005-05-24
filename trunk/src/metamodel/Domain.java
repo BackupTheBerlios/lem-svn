@@ -103,10 +103,9 @@ public class Domain implements DescribedEntity {
     }
     
     /**
-     * Add a class to the domain 
-     *
+     * Add a class to the domain
      * @param theClass to be added to the domain
-     * @throws LemException in the event of an error
+     * @throws LemException in the case where the Class has already been added to this Domain
      */
     public void add( metamodel.Class theClass ) throws LemException {
         
@@ -127,10 +126,9 @@ public class Domain implements DescribedEntity {
     
        
     /**
-     * Add a Subsystem to the domain 
-     *
+     * Add a Subsystem to the domain
      * @param theSubsystem to be added to the domain
-     * @throws XtUmlException in the event of an error 
+     * @throws LemException in the case where the Subsystem has already been added to this Domain
      */
     public void add( Subsystem theSubsystem ) throws LemException {
         
@@ -164,9 +162,8 @@ public class Domain implements DescribedEntity {
     
     /**
      * Add a DomainSpecificDataType to the domain
-     *
-     * @param theType to add
-     * @throws XtUmlException in the event of an error 
+     * @param theType the type to be added
+     * @throws LemException in the case where the DomainSpecificDataType already exists in this Domain
      */
     public void add( DomainSpecificDataType theType ) throws LemException {
         
@@ -180,10 +177,9 @@ public class Domain implements DescribedEntity {
     }
     
      /**
-     * Add a Relationship to the domain 
-     *
+     * Add a Relationship to the domain
      * @param theRelationship to be added to the domain
-     * @throws XtUmlException in the event of an error (eg Duplicate assocation) 
+     * @throws LemException in the event of an error (eg Duplicate assocation)
      */
     public void add( Relationship theRelationship ) throws LemException {
         
@@ -269,7 +265,6 @@ public class Domain implements DescribedEntity {
         
     /**
      * Return the named DomainSpecificDataType
-     *
      * @param typeName of the DomainSpecificDataType
      * @return the DomainSpecificDataType matching the name
      * @throws XtUmlException if the specified DomainSpecificDataType does not exist
@@ -277,6 +272,10 @@ public class Domain implements DescribedEntity {
     public DomainSpecificDataType findTypeByName( String typeName ) throws LemException {
         
         DomainSpecificDataType result = (DomainSpecificDataType) types.get( typeName );
+     
+        // TODO: Should this really throw an exception in the case where the type can't be found?
+        // I don't think types not found would be an exceptional circumstance
+        
         if ( null == result ) {
             throw new LemException( " Type '" + typeName + "' is not defined in domain '" + name + "'" );
         }
