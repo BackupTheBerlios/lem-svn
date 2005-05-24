@@ -11,6 +11,7 @@
 package metamodel;
 
 /**
+ * This class represents an xtUML action.
  *
  * @author sjr
  */
