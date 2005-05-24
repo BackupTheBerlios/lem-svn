@@ -99,8 +99,7 @@ public abstract class State implements DescribedEntity {
 
     /**
      * Return the signature for this state
-     *
-     * @eturn the signature for this state
+     * @return the signature for this state
      */
     public StateSignature getSignature() {
         return signature;

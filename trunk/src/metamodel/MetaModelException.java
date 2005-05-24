@@ -7,8 +7,9 @@
 package metamodel;
 
 /**
- *
- * @author  smr
+ * Instances of this class are thrown when various "semantic" errors occur. For example,
+ * adding an attribute of type "double" to a class when no type "double" is defined in the domain.
+ * @author smr
  */
 public class MetaModelException extends Exception {
     

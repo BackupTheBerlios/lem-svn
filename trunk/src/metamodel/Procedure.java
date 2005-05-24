@@ -57,6 +57,10 @@ public class Procedure {
         actions.add(a);
     }
     
+    /**
+     * Executes this Procedure in the given Context
+     * @param c The context in which this procedure should execute
+     */
     public void execute( Context c ) {
         Action a;
         

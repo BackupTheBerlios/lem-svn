@@ -38,8 +38,7 @@ public abstract class Attribute extends DataItem {
     /**
      * Add the supplied identifer to the list of identifiers to which this
      * attribute contributes a value.
-     *
-     * @param theIdentifer to which this attribute supplies a value
+     * @param theIdentifier the identifier to add
      */
     public void addIdentifier( Identifier theIdentifier ) {
         identifiers.add( theIdentifier );

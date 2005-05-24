@@ -99,10 +99,9 @@ public class Subsystem implements DescribedEntity {
     
         
     /**
-     * Add a class to the subsystem 
-     *
+     * Add a class to the subsystem
      * @param theClass to be added to the subsystem
-     * @throws XtUmlException in the event of an error 
+     * @throws metamodel.LemException in the event of an error
      */
     public void add( Class theClass ) throws LemException {
         

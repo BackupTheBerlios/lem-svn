@@ -12,7 +12,10 @@ package metamodel;
  */
 public interface DataType {
     
-    /** Return the name of the DataType */
+    /**
+     * Return the name of the DataType
+     * @return the name of the datatype
+     */
     public String getName();
     
     

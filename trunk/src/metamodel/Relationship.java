@@ -110,10 +110,9 @@ public class Relationship extends DomainElement implements SubsystemElement, Des
     /**
      * Parse the relationship number from the supplied relation identifer. The
      * relation identifier must have the form "R999".
-     *
      * @param relationId to be parsed. Must be of the form "R999"
      * @return the relation number
-     * @throws XtUmlException in the event of an error
+     * @throws LemException in the event of an error
      */
     public static int parseNumber( String relationId ) throws LemException {
         

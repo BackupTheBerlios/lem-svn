@@ -31,9 +31,8 @@ public class Generalisation extends Relationship {
     
     /**
      * Add a subclass to the list of subclasses
-     *
      * @param theSubclassRole to be added
-     * @throws XtUmlException if the subclass already exists
+     * @throws LemException if the subclass already exists
      */
     public void add( SubclassRole theSubclassRole ) throws LemException {
         

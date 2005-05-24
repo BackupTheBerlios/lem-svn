@@ -61,6 +61,10 @@ public abstract class Transition implements DescribedEntity {
         this.event=event;
     }
 
+    /**
+     * Returns the StateMachine in which this transition resides
+     * @return the StateMachine in which this transition resides
+     */
     public StateMachine getStateMachine() {
         return stateMachine;
     }

@@ -267,7 +267,7 @@ public class Domain implements DescribedEntity {
      * Return the named DomainSpecificDataType
      * @param typeName of the DomainSpecificDataType
      * @return the DomainSpecificDataType matching the name
-     * @throws XtUmlException if the specified DomainSpecificDataType does not exist
+     * @throws LemException if the specified DomainSpecificDataType does not exist
      */
     public DomainSpecificDataType findTypeByName( String typeName ) throws LemException {
         
@@ -327,10 +327,9 @@ public class Domain implements DescribedEntity {
     }
     
     /**
-     * Retrieve a class given its number 
-     *
+     * Retrieve a class given its number
      * @param classNumber of the class to be retrieved
-     * @throws XtUmlException if the class does not exist
+     * @throws LemException if the class does not exist
      * @return the Class with the specified number
      */
     public Class getClassByNumber( int classNumber ) throws LemException {

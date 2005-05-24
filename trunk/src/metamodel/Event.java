@@ -92,8 +92,7 @@ public class Event implements DescribedEntity {
     
     /**
      * Return the signature for this event
-     *
-     * @eturn the signature for this state
+     * @return the signature for this state
      */
     public EventSignature getSignature() {
         return signature;
