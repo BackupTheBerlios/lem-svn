@@ -268,6 +268,7 @@ public class Domain implements DescribedEntity {
      * @param typeName of the DomainSpecificDataType
      * @return the DomainSpecificDataType matching the name
      * @throws LemException if the specified DomainSpecificDataType does not exist
+     * @todo Should this really throw an exception in the case where the type can't be found?
      */
     public DomainSpecificDataType findTypeByName( String typeName ) throws LemException {
         

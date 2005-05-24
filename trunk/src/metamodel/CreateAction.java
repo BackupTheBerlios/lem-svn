@@ -21,9 +21,9 @@ public class CreateAction extends Action {
      * A new object containing an instance of this class will be created when this CreateAction is
      * executed.
      *
+     * @todo An object may be an instance of multiple classes
      */
     metamodel.Class theClass = null;
-    // TODO: An object may be an instance of multiple classes
     
     
     /** Creates a new instance of CreateAction */
@@ -34,11 +34,11 @@ public class CreateAction extends Action {
      * Sets the class to be instantiated when this action is executed
      *
      * @param theClass the class to be instantiated
+     * @todo An object may be an instance of multiple classes
      */
     public void setClass( metamodel.Class theClass ) {
         this.theClass = theClass;
     }
-    // TODO: An object may be an instance of multiple classes
     
     /**
      * Execute the given action. This will cause a new Object to be created and placed
