@@ -10,20 +10,20 @@ package verifier;
  *
  * @author David Gavin
  */
-public class ThemeItem extends Object {
-    String Name;
-    String ClassName;
+public class ThemeItem {
+    String name;
+    String className;
     /** Creates a new instance of ThemeItem */
     public ThemeItem(String inName, String inClass) {
-        Name = inName;
-        ClassName = inClass;
+        name = inName;
+        className = inClass;
     }
     public String toString()
     {
-        return Name;
+        return name;
     }
     public String getClassName()
     {
-        return ClassName;
+        return className;
     }
 }
