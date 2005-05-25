@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.18  2005/05/25 02:33:46  u3293115
+* Removed the BooleanLiteral non-terminal.
+*
 * Revision 1.17  2005/05/25 02:32:45  u3957053
 * Rolled DomainIdentifier and DomainEndIdentifier into Identifier.
 *
@@ -183,6 +186,11 @@ TOKEN : /* LITERALS */
       )*
       "\""
   >
+|
+  < BOOLEAN_LITERAL:
+	  "true"
+	| "false"
+  >
 }
 
 /* RESERVED WORDS AND LITERALS */
@@ -280,8 +288,6 @@ TOKEN: /* ACTION LANGUAGE IDENTIFIERS */
 | <AND: "and">
 | <NOT: "not">
 | <XOR: "xor">
-| <TRUE: "true">
-| <FALSE: "false">
 | <SELF: "self">
 | <GENERATE: "generate">
 | <DELAY: "delay">
@@ -454,7 +460,7 @@ void Literal() : {}
 		<DECIMAL_LITERAL> 
 	| 	<REAL_LITERAL> 
 	| 	<STRING_LITERAL> 
-	| 	BooleanLiteral() 
+	|	<BOOLEAN_LITERAL>
 	|	<FLOATING_POINT_LITERAL>
 	|	<NULL>
 }
@@ -585,11 +591,6 @@ void EnumerationMember() : {
 }
 {	<SIMPLE_IDENTIFIER> } 
 
-
-void BooleanLiteral() : {}
-{ 
-	<TRUE> | <FALSE>
-}
 
 void TypeIdentifier() : {}
 { <SIMPLE_IDENTIFIER> }
