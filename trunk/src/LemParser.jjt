@@ -1,10 +1,8 @@
 /*
 # $Id$
 # $Log$
-# Revision 1.13  2005/05/25 01:53:27  u3957053
-# Removed Model[End]Identifier non-terminals, added Identifier non-terminal.
-#
-# Implement Identifier non-terminal in BuilderPass1
+# Revision 1.14  2005/05/25 01:59:03  u3957053
+# Alter Description non-terminal to make the node non-optional
 #
 # Revision 1.12  2005/05/22 06:59:25  u3957053
 # Make use of (renamed) AttributeAssignment non-terminal, (temporarily?) removed syntactic sugar from ObjectCreation
@@ -474,7 +472,7 @@ LEMModelDeclaration ModelDeclaration() : {
 // constraint: LEM_E_01001=The <identifier> at the end of a model, subsystem, domain or class block must match the <identifier> at the beginning of the block.
 }
 {
-  <MODEL> Identifier() <IS> [Description()] ModelBody() <END> [Identifier()] <SEMI> 
+  <MODEL> Identifier() <IS> Description() ModelBody() <END> [Identifier()] <SEMI> 
   { return jjtThis; }
 }
 
@@ -494,7 +492,7 @@ void BridgeDeclaration() : {
 }
 {
   <BRIDGE> BridgeIdentifier() <IS>
-		  [Description()]
+		  Description()
 		  BridgeBody() 
   <END> [BridgeEndIdentifier()] <SEMI>
 }
@@ -505,7 +503,7 @@ void BridgeBody() : {
 // constraint: LEM_E_01003=Each domain in a in a <BridgeBody> must be previously defined.
 }
 {
-  <BETWEEN> DomainIdentifier() <AND> DomainIdentifier() [ Description() ]
+  <BETWEEN> DomainIdentifier() <AND> DomainIdentifier() Description()
 }
 
 void BridgeIdentifier() : {} {
@@ -517,7 +515,7 @@ void BridgeEndIdentifier() : {} {
 
 void IdentifierDeclaration() : {}
 {
-        <IDENTIFIER> [ Description() ] <IS> 
+        <IDENTIFIER> Description() <IS> 
              IdentifyingAttribute() [("," IdentifyingAttribute())* <AND> IdentifyingAttribute()]  
         <SEMI>
 }
@@ -535,7 +533,7 @@ void AttributeDeclaration() : {}
 void BaseAttribute() : {}
 {
 	<ATTRIBUTE> AttributeIdentifier() 
-	[Description()]
+	Description()
          <IS> (PrimitiveType() | DomainSpecificType()) 
 	[ <IS_ASSIGNED> Literal() ]
 	<SEMI>
@@ -544,7 +542,7 @@ void BaseAttribute() : {}
 void ReferentialAttribute() : {}
 {
         <REFERENTIAL> <ATTRIBUTE> AttributeIdentifier() 
-	[Description()]
+	Description()
          <REFERS> <TO> AttributeReference()
 	<SEMI>
 }
@@ -553,7 +551,7 @@ void ReferentialAttribute() : {}
 void DerivedAttribute() : {}
 {
         <DERIVED> <ATTRIBUTE> AttributeIdentifier() 
-	[Description()]
+	Description()
          <IS> (PrimitiveType() | DomainSpecificType())
          <CALCULATION> <IS> 
             AttributeCalculationProcedure()
@@ -604,7 +602,7 @@ void DomainDeclaration() : {
 }
 {
   <DOMAIN> DomainIdentifier() <IS> 
-  	[ Description() ]
+  	Description() 
   	( TypeDeclaration() )* 
   	( SubSystemDeclaration() )+ 
   <END> [DomainEndIdentifier()] <SEMI>
@@ -621,7 +619,7 @@ void TypeDeclaration() : {
 }
 { 
 	<TYPE> TypeIdentifier()
-	[Description()]
+	Description()
 	<IS> TypeSpecification()
 	<SEMI>
 }
@@ -746,7 +744,7 @@ void SubSystemDeclaration() : {
 }
 { 
 	<SUBSYSTEM> SubSystemIdentifier() <IS>
-		[Description()] 
+		Description() 
 		SubSystemBody() 
 	<END> [SubSystemEndIdentifier()] <SEMI>
 }
@@ -758,7 +756,7 @@ void SubSystemEndIdentifier() : {}
 { <SIMPLE_IDENTIFIER> }
 
 void Description() : {}
-{ <STRING_LITERAL> }
+{ [<STRING_LITERAL>] }
 
 /*
     @TODO - check elsewhere that we have at least one class specified
@@ -772,7 +770,7 @@ void ClassDeclaration() : {}
 	<OBJECT> ClassIdentifier() 
                 [<SPECIALISATION> <OF> SpecialisationList() ]
                 <IS>
-		[Description()]
+		Description()
 		ClassBody() 
 	<END> [ClassEndIdentifier()] <SEMI>
 }
@@ -831,7 +829,7 @@ void Association() :
 }
 {
 	<ASSOCIATION> RelationshipIdentifier() <IS> 
-		[ Description() ] 
+		Description() 
         ActivePerspective() ";"
         PassivePerspective() ";"
         [ AssociationClassDeclaration() ]
@@ -891,7 +889,7 @@ void ClassBody() : {}
 void Behaviour() : {}
 {
 	<BEHAVIOUR> <IS>
-		[ Description() ]
+		Description()
 		( SelfEventDeclaration() )*
 		( StateDeclaration() )*
 		( TransitionDeclaration() )*
@@ -915,7 +913,7 @@ void Generalisation() : {
 }
 {
 	<GENERALISATION> RelationshipIdentifier() <IS>
-		[ Description() ] 
+		Description() 
         GeneralisationBody() 
 	<END> [RelationshipEndIdentifier()] ";"
 }
@@ -970,7 +968,7 @@ void Multiplicity() : {}
 void EventDeclaration() : {}
 {
 	[ <SELF> ] <EVENT> EventIdentifier() 
-		[Description()] 
+		Description() 
 		[ <CARRIES> EventSignature()] <SEMI>
 }
 
@@ -1003,7 +1001,7 @@ void Signature() : {}
 void ParameterDeclaration() : {
 // constraint: LEM_E_01023=In a parameter declaration, the domain specific data type must be defined in the domain
 }
-{ 	ParameterIdentifier() [Description()] <IS> (PrimitiveType() | DomainSpecificType()) }
+{ 	ParameterIdentifier() Description() <IS> (PrimitiveType() | DomainSpecificType()) }
 
 void ParameterIdentifier() : {
 // constraint: LEM_E_01008=Duplicate parameter identifier. Each parameter must be unique within a signature.
@@ -1017,7 +1015,7 @@ void ParameterIdentifier() : {
 void StateDeclaration() : {}
 {
     [<DELETION>] <STATE> StateIdentifier()
-		[Description()] 
+		Description() 
 		[StateSignature()] <IS>
         StateProcedureDeclaration() 
     <END> [ StateEndIdentifier() ] ";"
@@ -1044,7 +1042,7 @@ void Procedure() : {}
 void TransitionDeclaration() : {}
 { 	
 	<ON> TransitionEventIdentifier()
-		[ Description() ]
+		Description()
 		<TRANSITION> 
 		<FROM> [ <CREATION> <STATE> | FromStateIdentifier() ]
 		<TO> ToStateIdentifier() <SEMI>
