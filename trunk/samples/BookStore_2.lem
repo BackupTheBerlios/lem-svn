@@ -9,6 +9,9 @@
 // $Id$
 // 
 // $Log$
+// Revision 1.6  2005/05/25 03:31:54  u3957053
+// AuthorShip -> Authorship
+//
 // Revision 1.5  2005/05/25 02:53:10  u3293115
 // Fairly large change to action language grammar. Probably won't be
 // a final version but something to work from when we get down to
@@ -38,7 +41,8 @@ model BookStoreModel is
 	 This model defines the static objects such as Book, publisher, author and customer
 	 and the relationships that exist between these objects.
 	 The model does not contain any specification of the dynamic behaviour of the domain.
-	 The model currently consists of a single domain know as 'Publications'."
+	 The model currently consists of a single domain know as
+	 'Publications'."
 	 
 	domain Publications is "concerned with publishers, books, authors and customers"
 	
@@ -201,7 +205,7 @@ model BookStoreModel is
 				Manuscript "is authored by" 1..1 Author;
 			end R4;
 			
-		end AuthorShip;
+		end Authorship;
 
 
 		subsystem Sales is "concerned with book sales"
