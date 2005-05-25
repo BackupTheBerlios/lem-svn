@@ -1,8 +1,8 @@
 /*
 # $Id$
 # $Log$
-# Revision 1.14  2005/05/25 01:59:03  u3957053
-# Alter Description non-terminal to make the node non-optional
+# Revision 1.15  2005/05/25 02:09:33  u3957053
+# Implemented non-optional EndIdentifier, do model end identifier checking
 #
 # Revision 1.12  2005/05/22 06:59:25  u3957053
 # Make use of (renamed) AttributeAssignment non-terminal, (temporarily?) removed syntactic sugar from ObjectCreation
@@ -472,13 +472,18 @@ LEMModelDeclaration ModelDeclaration() : {
 // constraint: LEM_E_01001=The <identifier> at the end of a model, subsystem, domain or class block must match the <identifier> at the beginning of the block.
 }
 {
-  <MODEL> Identifier() <IS> Description() ModelBody() <END> [Identifier()] <SEMI> 
+  <MODEL> Identifier() <IS> Description() ModelBody() EndIdentifier() <SEMI> 
   { return jjtThis; }
 }
 
 void Identifier() : {}
 {
 	<SIMPLE_IDENTIFIER>
+}
+
+void EndIdentifier() : {}
+{
+	<END> [ Identifier() ]
 }
 
 /* Documentation for Model Body */

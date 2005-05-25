@@ -32,6 +32,8 @@ public class BuilderPass1 extends Visitor {
 	Model m = (Model)data;
 	
 	String name = (String)(visit( (LEMIdentifier)node.jjtGetChild( 0 ), null ));
+	String endName = (String)visit( (LEMEndIdentifier)node.jjtGetChild( node.jjtGetNumChildren() - 1 ), null );
+	checkIdentity( name, endName, node.getLastToken() );
 	m.setName( name );
 
 	return m;
@@ -39,6 +41,14 @@ public class BuilderPass1 extends Visitor {
 
     public Object visit(LEMIdentifier node, Object data) throws LemException {
     	return node.getFirstToken().image;
+    }
+
+    public Object visit(LEMEndIdentifier node, Object data) throws LemException {
+        if( node.jjtGetNumChildren() > 0 ) {
+	    return visit((LEMIdentifier)node.jjtGetChild( 0 ), null);
+	}
+
+	return null;
     }
 
     /**
