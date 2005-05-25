@@ -42,16 +42,16 @@ public class BuilderPass2 extends Visitor {
         super.visit(node, data);
         return data;
     }
-    
+   /* 
     public Object visit( LEMObjectCreation node, Object data ) throws LemException {
         CreateAction a = (CreateAction)(getMapper().getObject(node));
         String className = (String)visit((LEMClassIdentifier)node.jjtGetChild(1),data);
         
 //        super.visit( node, a );
         return a;
-    }
+    } */
     
-    public Object visit( LEMClassIdentifier node, Object data ) throws LemException {
+    public Object visit( LEMIdentifier node, Object data ) throws LemException {
         return node.getFirstToken().image;
     }
     
