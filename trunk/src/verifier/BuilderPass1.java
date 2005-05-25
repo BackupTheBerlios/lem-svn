@@ -59,6 +59,10 @@ public class BuilderPass1 extends Visitor {
         // create the new domain to be constructed by this visitor
         
         Domain domain = new Domain();
+	String name = (String)visit((LEMIdentifier)node.jjtGetChild( 0 ), null );
+	String endName = (String)visit((LEMEndIdentifier)node.jjtGetChild( node.jjtGetNumChildren() - 1), null );
+	checkIdentity( name, endName, node.getLastToken() );
+	domain.setName( name );
         getMapper().add( node, domain );
         super.visit( node, domain );
         
@@ -67,27 +71,9 @@ public class BuilderPass1 extends Visitor {
         Model model = (Model) data;
         model.add( domain );
         
-        return data;
+        return domain;
         
     }
-    
-    /**
-     * Process the identifier for a Domain
-     */
-    public Object visit(LEMDomainIdentifier node, Object data)   throws LemException {
-        super.visit( node, data );
-        
-        Domain domain = (Domain) data;
-        String name =  node.getFirstToken().image;
-        getMapper().add( node, name );
-        if ( ! checkIdentity( domain.getName(), name, node.getLastToken() ) ) {
-            domain.setName( name );
-        }
-        
-        return data;
-        
-    }
-    
     
     /**
      * Process a Subsystem declaration by creating a Subsystem instance for use by this visitor

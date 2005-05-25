@@ -1,154 +1,11 @@
 /*
-# $Id$
-# $Log$
-# Revision 1.16  2005/05/25 02:24:07  u3293115
-# Removed one ambiguity in the grammar.
-#
-# Revision 1.15  2005/05/25 02:09:33  u3957053
-# Implemented non-optional EndIdentifier, do model end identifier checking
-#
-# Revision 1.12  2005/05/22 06:59:25  u3957053
-# Make use of (renamed) AttributeAssignment non-terminal, (temporarily?) removed syntactic sugar from ObjectCreation
-#
-# Revision 1.11  2005/05/22 05:49:49  u3293115
-# Generally cleaned up expression non terminals.
-#
-# Started to split "static" language tokens from dynamic (action language) tokens.
-#
-# Revision 1.10  2005/05/22 04:53:36  u3957053
-# Added Ada expressions to grammar, fixed up ObjectDeletion non-terminal
-#
-# Revision 1.9  2005/05/15 08:16:17  u3957053
-# Modified the ObjectCreation non-terminal
-#
-# Revision 1.8  2005/05/15 01:43:53  u2567446
-# Changed the object creation statement to allow create unique with no attribute assignment.
-#
-# Revision 1.7  2005/05/15 01:40:00  u2567446
-# Changed the object creation statement to allow create unique with no attribute assignment.
-#
-# Revision 1.6  2005/05/15 00:42:49  u3957053
-# Split out CREATE_UNIQUE token, move new tokens up, add InstanceReference non-terminal, used in ObjectCreation
-#
-# Revision 1.5  2005/05/14 04:27:24  u3958283
-# object creation added.
-#
-# Revision 1.3  2005/04/24 13:38:00  u3957053
-# Merge the expression and Expression non-terminals together.
-#
-# Revision 1.2  2005/04/24 06:13:15  u3957053
-# Explicitly declare which exceptions we throw
-#
-# Revision 1.49  2005/01/31 17:05:17  u2550921
-# Remove "description" as a keyword
-#
-# Revision 1.48  2005/01/09 05:23:40  u2550921
-# date re-established as a core data type
-#
-# Revision 1.47  2005/01/09 04:21:53  u2550921
-# assign base types to DomainSpecificType
-# Enumeration is treated as integer type
-#
-# Revision 1.46  2005/01/03 06:18:27  u2550921
-# Make Identifier a described entity
-#
-# Revision 1.45  2005/01/03 01:34:19  u2550921
-# Derived and referential attributes
-# Add identifier declarations
-#
-# Revision 1.44  2004/12/27 18:09:23  u2550921
-# Major coding for Referential Attributes
-#
-# Revision 1.43  2004/11/09 15:16:01  u2550921
-# COLON required in Length and Pattern specs to be consistent with units, range
-# and precision
-#
-# Revision 1.42  2004/11/08 14:44:26  u2550921
-# Define referential attributes
-#
-# Revision 1.41  2004/11/07 09:03:39  u2550921
-# Add support for range, enumeration, units, size and precision specification in
-# DomainSpecificDataType
-#
-# Revision 1.40  2004/11/06 04:29:31  u2550921
-# Refactor the parser to allow integration with other tools
-#
-# Revision 1.39  2004/10/29 05:21:37  u2550921
-# Rename main parser class from Lem to LemParser
-#
-# Revision 1.38  2004/10/21 23:23:18  u2550921
-# fix bug in generalisation spec
-#
-# Revision 1.37  2004/10/17 05:17:23  u2550921
-# Add distinct parameter constraint
-#
-# Revision 1.36  2004/10/03 05:56:34  u2550921
-# Rename the model builders (3 passes are now required)
-#
-# Revision 1.35  2004/10/03 04:48:48  u2550921
-# association constraints.
-# Prepare to add pass3 and rename the classes for the first two passes
-#
-# Revision 1.34  2004/09/29 09:59:30  u2550921
-# Support for new generalisation and specialisation syntax
-# Plus extra constraints added
-# Mapper to keep track of node/model mappings
-#
-# Revision 1.33  2004/09/26 07:39:00  u2550921
-# Additional constraints, some minor refactoring.
-# We need to have multilple build passes
-#
-# Revision 1.32  2004/09/26 00:31:55  u2550921
-# Introduce Behaviour block
-#
-# Revision 1.31  2004/09/21 01:59:04  u2550921
-# Included semantic checks as "constraint:" comments in Lem grammar
-# Speculated on use of Behaviour blocks to provide for separate declaration of a state machine
-# and also provide a means of hinding exclusively self directed events.
-#
-# Revision 1.30  2004/09/20 12:12:55  u2550921
-# Source lines output on parse exception
-#
-# Revision 1.29  2004/09/20 09:42:11  u2550921
-# added -s option (Syntax check only)
-# use SourceBuffer object to preload source (so source line can be quoted in the event of an error)
-#
-# Revision 1.28  2004/09/18 03:19:50  u2550921
-# Preparing to introduce Visitor for object graph construction
-#
-# Revision 1.27  2004/09/17 22:31:20  u2550921
-# move jtree and javacc generated parser files to package "parser"
-#
-# Revision 1.26  2004/09/17 21:57:11  u2550921
-# Adopt Ada style expressions.
-#
-# Revision 1.25  2004/09/12 03:34:48  u2550921
-# Control logic and some tidy up
-#
-# Revision 1.24  2004/09/11 02:22:49  u2550921
-# Various new statements in action language (relate, unrelate, select, create, delete, reclassify)
-#
-# Revision 1.23  2004/09/08 21:54:43  u2550921
-# Insert signal delay expressions and fix minor syntax errors
-#
-# Revision 1.22  2004/09/07 00:55:11  u2550921
-# Added basic grammar for signal generation
-#
-# Revision 1.21  2004/08/23 12:45:42  u2550921
-# Revise the state machine syntax
-#
-# Revision 1.20  2004/08/21 23:59:28  u2550921
-# use lower case initial character for all keywords
-# fixed bug in parser code
-#
-# Revision 1.19  2004/08/21 02:58:42  u2550921
-# so as to conform to JavaCC standards,
-# included the parser class in the JJT file
-#
-# consider:
-#	NODE_FACTORY = "true";
-#
-# Last constraint used: LEM_E_01023
+* $Revision$
+* $Log$
+* Revision 1.17  2005/05/25 02:32:45  u3957053
+* Rolled DomainIdentifier and DomainEndIdentifier into Identifier.
+*
+* Implement domain end identifier checking
+*
 */
 
 options {
@@ -511,7 +368,7 @@ void BridgeBody() : {
 // constraint: LEM_E_01003=Each domain in a in a <BridgeBody> must be previously defined.
 }
 {
-  <BETWEEN> DomainIdentifier() <AND> DomainIdentifier() Description()
+  <BETWEEN> Identifier() <AND> Identifier() Description()
 }
 
 void BridgeIdentifier() : {} {
@@ -613,18 +470,12 @@ void DomainDeclaration() : {
 // constraint: LEM_E_01004=Each domain must have a unique <DomainIdentifier>.
 }
 {
-  <DOMAIN> DomainIdentifier() <IS> 
+  <DOMAIN> Identifier() <IS> 
   	Description() 
   	( TypeDeclaration() )* 
   	( SubSystemDeclaration() )+ 
-  <END> [DomainEndIdentifier()] <SEMI>
+  EndIdentifier() <SEMI>
 }
-
-void DomainIdentifier() : {}
-{ <SIMPLE_IDENTIFIER> }
-
-void DomainEndIdentifier() : {}
-{ <SIMPLE_IDENTIFIER> }
 
 void TypeDeclaration() : {
 // constraint: LEM_E_01005=Each <TypeIdentifer> must be unique within the domain.
