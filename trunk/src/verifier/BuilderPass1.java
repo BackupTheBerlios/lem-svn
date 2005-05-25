@@ -51,10 +51,10 @@ public class BuilderPass1 extends Visitor {
 
 
     public Object visit(LEMModelDeclaration node, Object data) throws LemException {
-        super.visit( node, data );
+	Model m = new Model();
 
-	Model m = (Model)data;
-	
+        super.visit( node, m );
+
 	String name = getIdentifier(node.jjtGetChild( 0 ));
 	String endName = getEndIdentifier( node.jjtGetChild( node.jjtGetNumChildren() - 1 ));
 	checkIdentity( name, endName, node.getLastToken() );

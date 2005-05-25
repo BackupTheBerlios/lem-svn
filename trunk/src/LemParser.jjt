@@ -1,6 +1,10 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.23  2005/05/25 03:33:37  u3293115
+* Have BuilderPass1 create the Model metamodel object rather than the
+* parser do it.
+*
 * Revision 1.22  2005/05/25 03:25:08  u3957053
 * Remove SubsystemIdentifier and EndSubsystemIdentifier, remove ClassIdentifier
 * and ClassEndIdentifier. Implement checking for correct start and end subsystem
@@ -133,12 +137,10 @@ public class LemParser {
         // Allow the ModelBuilder to build an in-memory object graph
         // representing the structure of the xtUML model
 
-        model = new Model();
-
         // pass 1
 
         visitor = new BuilderPass1();
-        md.jjtAccept(visitor, model);
+        model = (Model)md.jjtAccept(visitor, null);
 
         // pass 2
 
