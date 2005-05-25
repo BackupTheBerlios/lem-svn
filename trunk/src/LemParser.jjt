@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.19  2005/05/25 02:40:07  u3293115
+* Cleaned up token definitions.
+*
 * Revision 1.18  2005/05/25 02:33:46  u3293115
 * Removed the BooleanLiteral non-terminal.
 *
@@ -222,6 +225,7 @@ TOKEN : /* IDENTIFIERS */
 | <OBJECT: "object">
 | <IS: "is">
 | <OR: "or">
+| <AND: "and">
 | <DOMAIN: "domain">
 | <SUBSYSTEM: "subsystem">
 | <MODEL: "model">
@@ -260,34 +264,16 @@ TOKEN : /* IDENTIFIERS */
 | <COMMA: ",">
 | <COLON: ":">
 | <DOT: ".">
-| <RIGHT_ARROW: "->">
-| <IS_ASSIGNED: ":=">
-| <EQUAL: "=" >
-|	<NE:		"/="	>
-|	<LT:		"<"	>
-|	<LE:		"<="	>
-|	<GT:		">"	>
-|	<GE:		">="	>
-|	<PLUS:		"+"	>
-|	<DASH:		"-"	>
-|	<AMPERSAND:	"&"	>
-|	<STAR:		"*"	>
-|	<SLASH:		"/"	>
-|	<EXPON:		"^"	>
-| <WITH: "with">
-| <UNIQUE : "unique">
-| <LBRACE : "{">
-| <RBRACE : "}">
 }
 
-TOKEN: /* ACTION LANGUAGE IDENTIFIERS */
+TOKEN : /* ACTION LANGUAGE IDENTIFIERS */
 {
   <ABS: "abs">
 | <REM: "rem">
 | <MOD: "mod">
-| <AND: "and">
-| <NOT: "not">
-| <XOR: "xor">
+| <LNOT: "!">
+| <LAND: "&&">
+| <LOR: "||">
 | <SELF: "self">
 | <GENERATE: "generate">
 | <DELAY: "delay">
@@ -318,6 +304,23 @@ TOKEN: /* ACTION LANGUAGE IDENTIFIERS */
 | <IF: "if">
 | <ELSE: "else">
 | <ELSEIF: "elseif">
+| <IS_ASSIGNED:	":="	>
+| <EQUAL:	"="	>
+| <NE:		"/="	>
+| <LT:		"<"	>
+| <LE:		"<="	>
+| <GT:		">"	>
+| <GE:		">="	>
+| <PLUS:	"+"	>
+| <MINUS:	"-"	>
+| <MULT:	"*"	>
+| <DIVIDE:	"/"	>
+| <EXPON:	"^"	>
+| <WITH: "with">
+| <UNIQUE : "unique">
+| <LBRACE : "{">
+| <RBRACE : "}">
+
 }
 
 /* Simple identifier is a catch-all, goes last */
@@ -988,9 +991,8 @@ void ObjectReference() : {}
 void Expression() : {}
 { 
 	Relation()
-	(	(	<AND>
-		|	<OR> 
-		|	<XOR>
+	(	(	<LAND>
+		|	<LOR> 
 		)
 		Relation()
 	)*
@@ -1025,15 +1027,14 @@ void Unary() :
 {}
 {
 	<PLUS>
-|	<DASH>
+|	<MINUS>
 }
 
 void Adding() :
 {}
 {
 	<PLUS>
-|	<DASH>
-|	<AMPERSAND>
+|	<MINUS>
 }
 
 void Term() :
@@ -1045,8 +1046,8 @@ void Term() :
 void Multiplying() :
 {}
 {
-	<STAR>
-|	<SLASH>
+	<MULT>
+|	<DIVIDE>
 |	<MOD>
 |	<REM>
 }
@@ -1055,7 +1056,7 @@ void Factor() :
 {}
 {
 	Primary() ( <EXPON> Primary() )?
-|	<NOT> Primary()
+|	<LNOT> Primary()
 |	<ABS> Primary()
 }
 
