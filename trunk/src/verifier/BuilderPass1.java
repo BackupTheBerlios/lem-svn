@@ -24,24 +24,23 @@ public class BuilderPass1 extends Visitor {
     /** Creates a new instance of BuilderPass1 */
     public BuilderPass1() {
     }
-    
-    /**
-     * Process the identifier for this model by assigning the Model name
-     */
-    public Object visit(LEMModelIdentifier node, Object data)   throws LemException {
+
+
+    public Object visit(LEMModelDeclaration node, Object data) throws LemException {
         super.visit( node, data );
-        
-        Model model = (Model) data;
-        String name =  node.getFirstToken().image;
-        getMapper().add( node, name );
-        if ( ! checkIdentity( model.getName(), name, node.getLastToken() ) ) {
-            model.setName( name );
-        }
-        
-        return data;
-        
+
+	Model m = (Model)data;
+	
+	String name = (String)(visit( (LEMIdentifier)node.jjtGetChild( 0 ), null ));
+	m.setName( name );
+
+	return m;
     }
-    
+
+    public Object visit(LEMIdentifier node, Object data) throws LemException {
+    	return node.getFirstToken().image;
+    }
+
     /**
      * Process a Domain declaration by creating a Domain instance for use by this visitor
      */

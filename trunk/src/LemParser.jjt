@@ -1,6 +1,11 @@
 /*
 # $Id$
 # $Log$
+# Revision 1.13  2005/05/25 01:53:27  u3957053
+# Removed Model[End]Identifier non-terminals, added Identifier non-terminal.
+#
+# Implement Identifier non-terminal in BuilderPass1
+#
 # Revision 1.12  2005/05/22 06:59:25  u3957053
 # Make use of (renamed) AttributeAssignment non-terminal, (temporarily?) removed syntactic sugar from ObjectCreation
 #
@@ -469,17 +474,13 @@ LEMModelDeclaration ModelDeclaration() : {
 // constraint: LEM_E_01001=The <identifier> at the end of a model, subsystem, domain or class block must match the <identifier> at the beginning of the block.
 }
 {
-  <MODEL> ModelIdentifier() <IS> [Description()] ModelBody() <END> [ModelEndIdentifier()] <SEMI> 
+  <MODEL> Identifier() <IS> [Description()] ModelBody() <END> [Identifier()] <SEMI> 
   { return jjtThis; }
 }
 
-void ModelIdentifier() : { }
+void Identifier() : {}
 {
-  <SIMPLE_IDENTIFIER>
-}
-void ModelEndIdentifier() : { }
-{
-  <SIMPLE_IDENTIFIER>
+	<SIMPLE_IDENTIFIER>
 }
 
 /* Documentation for Model Body */
