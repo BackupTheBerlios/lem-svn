@@ -195,23 +195,6 @@ public class BuilderPass1 extends Visitor {
     }
     
     /**
-     * Visit a LEMObjectCreation node. This node occurs when the action language
-     * contains a "create instance" statement.
-     */
-    
-    public Object visit(LEMObjectCreation node, Object data ) throws LemException {
-        Procedure p = (Procedure)data;
-        CreateAction a = new CreateAction();
-        
-        p.addAction(a);
-        getMapper().add( node, a );
-        
-        super.visit( node, a );
-        
-        return a;
-    }
-    
-    /**
      * Process the END identifier for a Relationship by checking for a match
      */
     public Object visit(LEMRelationshipEndIdentifier node, Object data)   throws LemException {
@@ -816,7 +799,6 @@ public class BuilderPass1 extends Visitor {
         return data;
     }
     
-    
     /**
      * Process a state declaration
      */
@@ -838,9 +820,6 @@ public class BuilderPass1 extends Visitor {
         
         // add the state to the state machine
         
-        
-        
-        
         if ( null != stateMachine.getState( state.getName() )) {
             throw new LemException(
                     "State " + state.getName() + " is already defined.",
@@ -852,6 +831,16 @@ public class BuilderPass1 extends Visitor {
         }
         
         return data;
+    }
+    
+    public Object visit (LEMProcedure node, Object data) throws metamodel.LemException {
+	State state = (State)data;
+	Procedure p = new Procedure();
+	getMapper().add(node, p);
+	p.setState(state);
+	state.setProcedure(p);
+
+	return data;
     }
     
     /**

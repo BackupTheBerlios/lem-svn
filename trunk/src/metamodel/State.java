@@ -131,5 +131,4 @@ public abstract class State implements DescribedEntity {
     public void setProcedure(Procedure theProcedure) {
         this.procedure = theProcedure;
     }
-   
 }

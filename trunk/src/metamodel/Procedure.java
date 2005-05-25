@@ -19,14 +19,8 @@ public class Procedure {
     /** the state to which this procuedure belongs */
     private State state = null;
     
-    /** A list of actions which are executed by this procedure.
-     * May be empty, but non-null.
-     */
-    java.util.LinkedList actions = null;
-    
     /** Creates a new instance of Procedure */
     public Procedure() {
-        actions = new java.util.LinkedList();
     }
 
     /**
@@ -46,31 +40,4 @@ public class Procedure {
     public void setState(State theState) {
         this.state = theState;
     }
-    
-    /**
-     * Append the given action to the list of actions executed
-     * by this procedure.
-     *
-     * @param a The action to append
-     */
-    public void addAction( Action a ) {
-        actions.add(a);
-    }
-    
-    /**
-     * Executes this Procedure in the given Context
-     * @param c The context in which this procedure should execute
-     */
-    public void execute( Context c ) {
-        Action a;
-        
-        Iterator i = actions.iterator();
-        
-        while( i.hasNext() ) {
-            a = (Action)i.next();
-            
-            a.execute(c);
-        }
-    }
-    
 }

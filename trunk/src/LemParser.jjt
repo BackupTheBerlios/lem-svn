@@ -1,6 +1,15 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.26  2005/05/25 05:42:54  u3293115
+* Cleaned up a bit of action language related prototyping that got into
+* the builder passes.
+*
+* Re-did the adding of action language procedures to their state machines.
+* We have no metamodel for anything lower than the procedure at the moment,
+* but it would be possible to get an interpreter running on the raw parse
+* tree.
+*
 * Revision 1.25  2005/05/25 04:32:32  u3293115
 * Fix action language blocks, actually include some basic action language
 * in bookstore 2.
@@ -856,7 +865,7 @@ void EventIdentifier() : {
 
 
 void StateSignature() : {}
-{ Signature() }
+{ [ Signature() ] }
 
 void EventSignature() : {}
 { Signature() }
@@ -880,10 +889,11 @@ void ParameterIdentifier() : {
 
 void StateDeclaration() : {}
 {
+	/* TODO: move the <IS> to perhaps after the identifier */
     [<DELETION>] <STATE> StateIdentifier()
 		Description() 
-		[StateSignature()] <IS>
-		[ActionBlock()]
+		StateSignature() <IS>
+		Procedure()
     <END> [ StateEndIdentifier() ] <SEMI>
 }
 
@@ -926,6 +936,11 @@ void TransitionEventIdentifier() : {}
  * Action Language defined here
  *****************************************************************************************/
 
+void Procedure() : {}
+{
+	[ ActionBlock() ]
+}
+
 void ActionBlock() : {}
 {
 	<LBRACE>
@@ -962,7 +977,6 @@ void AttributeInstanceReference() : {}
 |
 	Identifier()
 }
-
 
 void ObjectCreation() : {}  
 {
