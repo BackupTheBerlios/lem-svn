@@ -15,7 +15,7 @@ import parser.*;
  * performed.
  *
  * This class implements the Visitor pattern. Each node in the parse tree is "visited" by executing the
- * corresponding <emph>visit</emph> method in this class.
+ * corresponding <i>visit</i> method in this class.
  *
  * @author  smr
  */
