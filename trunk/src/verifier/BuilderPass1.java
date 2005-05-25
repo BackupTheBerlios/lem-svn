@@ -46,6 +46,10 @@ public class BuilderPass1 extends Visitor {
      * @return the String end identifier represented by the Node
      */
     private String getEndIdentifier( Node identifierNode ) throws LemException {
+	if( identifierNode.jjtGetNumChildren() == 0 ) {
+	    return null;
+	}
+
 	return (String)(visit( (LEMIdentifier)identifierNode.jjtGetChild( 0 ), null ));
     }
 
@@ -671,9 +675,9 @@ public class BuilderPass1 extends Visitor {
     /**
      * Check that the supplied identifiers are identical
      */
-    private boolean checkIdentity( String name1, String name2, Token token )   throws LemException {
-        if ( name1.equals( "" ) ) return false;
-        if ( name1.equals(name2) ) return true;
+    private void checkIdentity( String name1, String name2, Token token )   throws LemException {
+        if ( name2 == null ) return;
+        if ( name1 != null && name1.equals(name2) ) return;
         
         throw new LemException(
                 "Expecting identifier '" + name1 + "' got '" + name2 + "'",
