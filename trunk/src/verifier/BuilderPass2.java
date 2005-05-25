@@ -365,27 +365,6 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     * Process a precision specification in a DomainSpecificDataType
-     */
-    public Object visit(LEMRangeSpec node, Object data) throws metamodel.LemException {
-        
-        Range range = (Range) getMapper().getObject( node );
-        
-        if ( ! range.isValid() ) {
-            throw new LemException(
-                    "Range specification is invalid",
-                    node.getLastToken(),
-                    "LEM_E_01028" );
-        }
-        
-        
-        
-        super.visit( node, range );
-        
-        return data;
-    }
-    
-    /**
      * Process an IdentifierDeclaration
      */
     public Object visit(LEMIdentifierDeclaration node, Object data) throws LemException {

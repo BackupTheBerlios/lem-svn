@@ -18,7 +18,7 @@
     <property name="classes.dir" value="${build.dir}/classes" />
     <property name="etc.dir" value="etc" />
     <property name="javacchome"
-    value="/students/u4128551/javacc-3.2" />
+    value="/students/u3293115/comp3500/javacc-3.2" />
     <property name="deploy.name" value="${name}.jar" />
     <property name="ssh.keyfile" value="/home/smr/.ssh/id_dsa" />
     <property name="lib.dir" value="lib" />
@@ -54,14 +54,12 @@
     <javacc target="${src.dir}/parser/LemParser.jj"
     javacchome="${javacchome}"
     outputdirectory="${src.dir}/parser" />
-    <!--
                 <exec
                         executable="perl"
                         output="${src.dir}/verifier/Visitor.java">
                         <arg line="${src.dir}/util/generateVisitor.pl
                         ${src.dir}/parser/LemParserVisitor.java"/>
                 </exec>
-                -->
   </target>
   
   <target name="compile_one" depends="init">

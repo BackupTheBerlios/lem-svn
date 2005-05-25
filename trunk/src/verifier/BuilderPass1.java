@@ -1245,67 +1245,22 @@ public class BuilderPass1 extends Visitor {
         getMapper().add( node, range );
         type.setRange( range );
         
+	/* TODO: need to get the result of children expressions, and
+	 * do validity checking, setLowValue, setHighValue, etc.
+	 */
+ 
+	/* TODO: also, can probably do the following which has been *cut*
+	 * from pass 2
+	 *
+        if ( ! range.isValid() ) {
+            throw new LemException(
+                    "Range specification is invalid",
+                    node.getLastToken(),
+                    "LEM_E_01028" );
+        }*/
         
         super.visit( node, range );
         
         return data;
     }
-    
-    
-    /**
-     * Process a the low value of a range specification in a DomainSpecificDataType
-     */
-    public Object visit(LEMLowRangeValue node, Object data) throws metamodel.LemException {
-        
-        Range range = (Range) data;
-        super.visit( node, data );
-        
-        String lowValueString = node.getLastToken().image;
-        double lowValue = 0.0;
-        
-        try {
-            lowValue = Double.parseDouble( lowValueString );
-            
-        } catch ( NumberFormatException e ) {
-            throw new LemException(
-                    "Bad number format.",
-                    node.getLastToken(),
-                    "LEM_E_01026" );
-        }
-        
-        if ( node.getFirstToken().image.equals( "-" ))
-            lowValue = -lowValue;
-        range.setLowValue( lowValue );
-        return data;
-    }
-    
-    /**
-     * Process a the high value of a range specification in a DomainSpecificDataType
-     */
-    public Object visit(LEMHighRangeValue node, Object data) throws metamodel.LemException {
-        
-        Range range = (Range) data;
-        super.visit( node, data );
-        
-        String highValueString = node.getLastToken().image;
-        double highValue = 0.0;
-        
-        try {
-            highValue = Double.parseDouble( highValueString );
-        } catch ( NumberFormatException e ) {
-            throw new LemException(
-                    "Bad number format.",
-                    node.getLastToken(),
-                    "LEM_E_01027" );
-        }
-        
-        if ( node.getFirstToken().image.equals( "-" ))
-            highValue = -highValue;
-        range.setHighValue( highValue );
-        
-        return data;
-    }
-    
-    
-    
 }

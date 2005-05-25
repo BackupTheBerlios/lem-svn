@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.21  2005/05/25 03:16:28  u3293115
+* Removed high and low range non terminals.
+*
 * Revision 1.20  2005/05/25 02:53:10  u3293115
 * Fairly large change to action language grammar. Probably won't be
 * a final version but something to work from when we get down to
@@ -558,27 +561,19 @@ void UnitsSpec() : {}
 
 void RangeSpec() : {
 
-// constraint: LowRangeValue() and/or HighRangeValue() is required
-// constraint: LowRangeValue() must be less that HighRangeValue() where both are specified
+// LowRangeValue and HighRangeValue are implemented as Expressions
+// constraint: LowRangeValue and/or HighRangeValue is required
+// constraint: LowRangeValue must be less that HighRangeValue where both are specified
 
 }
 {
 	<RANGE> <COLON> 
 			<LBRACKET>
-				[ LowRangeValue() ]  <COMMA>  [ HighRangeValue() ] 
+				(  (Expression() <COMMA> [Expression()])
+				 | (<COMMA> Expression())
+				)
 			<RBRACKET>
 }
-
-void LowRangeValue() : {}
-{
-	SimpleExpression()
-}
-
-void HighRangeValue() : {}
-{
-	SimpleExpression()
-}
-
 
 void PrecisionSpec() : {}
 {
