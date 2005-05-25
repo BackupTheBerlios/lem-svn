@@ -1,6 +1,9 @@
 /*
 # $Id$
 # $Log$
+# Revision 1.16  2005/05/25 02:24:07  u3293115
+# Removed one ambiguity in the grammar.
+#
 # Revision 1.15  2005/05/25 02:09:33  u3957053
 # Implemented non-optional EndIdentifier, do model end identifier checking
 #
@@ -586,11 +589,15 @@ void AttributeReference() : {}
 
 void Literal() : {} 
 {  	
+/*
+ * TODO: EnumerationMember() here would cause ambiguous grammar.
+ * Must resolve in a builder pass when we have more context.
+ */
+
 		<DECIMAL_LITERAL> 
 	| 	<REAL_LITERAL> 
 	| 	<STRING_LITERAL> 
 	| 	BooleanLiteral() 
-	| 	EnumerationMember() 
 	|	<FLOATING_POINT_LITERAL>
 	|	<NULL>
 }
