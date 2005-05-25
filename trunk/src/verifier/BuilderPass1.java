@@ -195,22 +195,6 @@ public class BuilderPass1 extends Visitor {
     }
     
     /**
-     * Visit a procedure node. Procedures always occur in the context of a State.
-     */
-    public Object visit(LEMProcedure node, Object data) throws LemException {
-        Procedure p = new Procedure();
-        State s = (metamodel.State)data;
-        
-        getMapper().add(node, p);
-        s.setProcedure( p );
-        
-        super.visit( node, p );
-        
-        return p;
-        
-    }
-    
-    /**
      * Visit a LEMObjectCreation node. This node occurs when the action language
      * contains a "create instance" statement.
      */

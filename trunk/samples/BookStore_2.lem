@@ -9,6 +9,13 @@
 // $Id$
 // 
 // $Log$
+// Revision 1.7  2005/05/25 04:32:32  u3293115
+// Fix action language blocks, actually include some basic action language
+// in bookstore 2.
+//
+// Disambiguate the last ambiguous non terminal match with an explicit
+// LOOKAHEAD directive. Remove the global LOOKAHEAD=4 directive.
+//
 // Revision 1.6  2005/05/25 03:31:54  u3957053
 // AuthorShip -> Authorship
 //
@@ -130,10 +137,14 @@ model BookStoreModel is
 					state Adding 
 						"the manuscript is incomplete and is subject to regular
 						additions by the author" ( newText is string ) is
+						{
+							a := blah;
+							a := b.blah;
 							// a := create Manuscript;	
 							// action language goes here
 							// action language goes here
 							// action language goes here
+						}
 
 					end Drafting;
 

@@ -1,6 +1,13 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.25  2005/05/25 04:32:32  u3293115
+* Fix action language blocks, actually include some basic action language
+* in bookstore 2.
+*
+* Disambiguate the last ambiguous non terminal match with an explicit
+* LOOKAHEAD directive. Remove the global LOOKAHEAD=4 directive.
+*
 * Revision 1.24  2005/05/25 03:51:09  u3293115
 * Eliminate passing of the model down into the top level visitors.
 *
@@ -36,7 +43,6 @@
 
 options {
     STATIC = false;
-    LOOKAHEAD = 4;
     FORCE_LA_CHECK = true;
     VISITOR = true;
     MULTI = true;
@@ -451,7 +457,7 @@ void DerivedAttribute() : {}
 }
 
 void AttributeCalculationProcedure() : {}
-{ 	Procedure() }
+{ 	Expression() }
 
 void ReferredClass() : {} {
   <SIMPLE_IDENTIFIER> 
@@ -877,8 +883,8 @@ void StateDeclaration() : {}
     [<DELETION>] <STATE> StateIdentifier()
 		Description() 
 		[StateSignature()] <IS>
-        StateProcedureDeclaration() 
-    <END> [ StateEndIdentifier() ] ";"
+		[ActionBlock()]
+    <END> [ StateEndIdentifier() ] <SEMI>
 }
 
 void StateIdentifier() : {
@@ -892,12 +898,6 @@ void StateEndIdentifier() : {}
 /*****************************************************************************************
  * State transition definitions
  *****************************************************************************************/
-
-void StateProcedureDeclaration() : {}
-{ 	Procedure() }
-
-void Procedure() : {}
-{ 	( Action() <SEMI> )* }
 
 void TransitionDeclaration() : {}
 { 	
@@ -956,7 +956,12 @@ void ObjectReference() : {}
  * attributes of an object.
  */
 void AttributeInstanceReference() : {}
-{	[ ObjectReference() "." ] Identifier() }
+{
+	LOOKAHEAD(2)
+	ObjectReference() <DOT> Identifier()
+|
+	Identifier()
+}
 
 
 void ObjectCreation() : {}  
