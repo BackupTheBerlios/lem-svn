@@ -20,17 +20,24 @@ import parser.*;
  * @author  smr
  */
 public class BuilderPass3 extends Visitor {
+
+    private Model currentModel = null;
     
     /**
      * Creates a new instance of ModelFitout
      *
      * @param aMapper from a previous BuilderPass3
      */
-    public BuilderPass3( Mapper aMapper ) {
-        super();
+    public BuilderPass3( Model model, Mapper aMapper ) {
+	currentModel = model;
         super.setMapper( aMapper );
     }
-    
+
+    public Object visit( LEMModelDeclaration node, Object data ) throws LemException {
+	    super.visit(node, currentModel);
+	    return null;
+    }
+   
     /**
      * Process an ActivePerspective
      */

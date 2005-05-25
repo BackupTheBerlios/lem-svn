@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.24  2005/05/25 03:51:09  u3293115
+* Eliminate passing of the model down into the top level visitors.
+*
 * Revision 1.23  2005/05/25 03:33:37  u3293115
 * Have BuilderPass1 create the Model metamodel object rather than the
 * parser do it.
@@ -144,13 +147,13 @@ public class LemParser {
 
         // pass 2
 
-        visitor = new BuilderPass2( visitor.getMapper() );
-        md.jjtAccept(visitor, model);
+        visitor = new BuilderPass2( model, visitor.getMapper() );
+        md.jjtAccept(visitor, null);
 
         // pass 3
 
-        visitor = new BuilderPass3( visitor.getMapper() );
-        md.jjtAccept(visitor, model);
+        visitor = new BuilderPass3( model, visitor.getMapper() );
+        md.jjtAccept(visitor, null);
 
         // return the constructed model
 

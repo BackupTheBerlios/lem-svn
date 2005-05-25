@@ -21,6 +21,8 @@ import parser.*;
  */
 public class BuilderPass2 extends Visitor {
     
+    private Model currentModel = null;
+
     /**
      * A reference to the domain in which we're currently visiting nodes
      */
@@ -31,9 +33,14 @@ public class BuilderPass2 extends Visitor {
      *
      * @param aMapper from a previous BuilderPass2
      */
-    public BuilderPass2( Mapper aMapper ) {
-        super();
+    public BuilderPass2( Model model, Mapper aMapper ) {
+	currentModel = model;
         super.setMapper( aMapper );
+    }
+
+    public Object visit( LEMModelDeclaration node, Object data ) throws LemException {
+	    super.visit(node, currentModel);
+	    return null;
     }
     
     public Object visit( LEMDomainDeclaration node, Object data ) throws LemException {
