@@ -25,14 +25,38 @@ public class BuilderPass1 extends Visitor {
     public BuilderPass1() {
     }
 
+    /**
+     * Returns the identifier represented by the given Node.
+     *
+     * @param identifierNode the node which represents the identifier. This
+     * parameter must be of type LEMIdentifier
+     *
+     * @return the String identifier represented by the Node
+     */
+    private String getIdentifier( Node identifierNode ) throws LemException {
+	return (String)(visit( (LEMIdentifier)identifierNode, null ));
+    }
+
+    /**
+     * Returns the end identifier represented by the given Node.
+     *
+     * @param endIdentifierNode the node which represents the end identifier. This
+     * parameter must be of type LEMEndIdentifier
+     *
+     * @return the String end identifier represented by the Node
+     */
+    private String getEndIdentifier( Node identifierNode ) throws LemException {
+	return (String)(visit( (LEMIdentifier)identifierNode.jjtGetChild( 0 ), null ));
+    }
+
 
     public Object visit(LEMModelDeclaration node, Object data) throws LemException {
         super.visit( node, data );
 
 	Model m = (Model)data;
 	
-	String name = (String)(visit( (LEMIdentifier)node.jjtGetChild( 0 ), null ));
-	String endName = (String)visit( (LEMEndIdentifier)node.jjtGetChild( node.jjtGetNumChildren() - 1 ), null );
+	String name = getIdentifier(node.jjtGetChild( 0 ));
+	String endName = getEndIdentifier( node.jjtGetChild( node.jjtGetNumChildren() - 1 ));
 	checkIdentity( name, endName, node.getLastToken() );
 	m.setName( name );
 
@@ -59,8 +83,8 @@ public class BuilderPass1 extends Visitor {
         // create the new domain to be constructed by this visitor
         
         Domain domain = new Domain();
-	String name = (String)visit((LEMIdentifier)node.jjtGetChild( 0 ), null );
-	String endName = (String)visit((LEMEndIdentifier)node.jjtGetChild( node.jjtGetNumChildren() - 1), null );
+	String name = getIdentifier( node.jjtGetChild( 0 ));
+	String endName = getEndIdentifier( node.jjtGetChild( node.jjtGetNumChildren() - 1));
 	checkIdentity( name, endName, node.getLastToken() );
 	domain.setName( name );
         getMapper().add( node, domain );
