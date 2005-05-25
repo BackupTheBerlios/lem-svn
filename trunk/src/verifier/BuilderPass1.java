@@ -77,6 +77,8 @@ public class BuilderPass1 extends Visitor {
 
     /**
      * Process a Domain declaration by creating a Domain instance for use by this visitor
+     *
+     * @todo Do we do domain uniqueness checking here?
      */
     public Object visit(LEMDomainDeclaration node, Object data) throws LemException {
         
@@ -87,6 +89,7 @@ public class BuilderPass1 extends Visitor {
 	String endName = getEndIdentifier( node.jjtGetChild( node.jjtGetNumChildren() - 1));
 	checkIdentity( name, endName, node.getLastToken() );
 	domain.setName( name );
+
         getMapper().add( node, domain );
         super.visit( node, domain );
         
@@ -100,53 +103,31 @@ public class BuilderPass1 extends Visitor {
     }
     
     /**
-     * Process a Subsystem declaration by creating a Subsystem instance for use by this visitor
-     */
+    * Process a Subsystem declaration by creating a Subsystem instance for use by this visitor
+    *
+    * @todo Do we do subsystem uniqueness checking here?
+    */
     public Object visit(LEMSubSystemDeclaration node, Object data) throws LemException {
-        
-        // create the new domain to be constructed by this visitor
-        
         Domain domain = (Domain) data;
         Subsystem subsystem = new Subsystem();
+	String name = getIdentifier( node.jjtGetChild( 0 ));
+	String endName = getEndIdentifier( node.jjtGetChild( node.jjtGetNumChildren() - 1 ));
+	checkIdentity( name, endName, node.getLastToken() );
+	subsystem.setName( name );
+
+	System.err.println( "Got subsystem name '" + name + "'" );
+	
         subsystem.setDomain( domain );
         getMapper().add( node, subsystem );
-        
         super.visit( node, subsystem );
-        
+
         // insert the newly constructed subsystem into the domain
-        
         domain.add( subsystem );
-        
+
         return data;
-        
+
     }
-    
-    /**
-     * Process the identifier for a Domain
-     */
-    public Object visit(LEMSubSystemIdentifier node, Object data)   throws LemException {
-        super.visit( node, data );
-        
-        Subsystem subsystem = (Subsystem) data;
-        String name =  node.getFirstToken().image;
-        
-        // check that the subsystem name is not already defined
-        
-        if ( null != subsystem.getDomain().getSubsystem( name )) {
-            throw new LemException(
-                    "Subsystem " + name + " is already defined",
-                    node.getFirstToken(),
-                    "LEM_E_01004" );
-        }
-        getMapper().add( node, name );
-        if ( ! checkIdentity( subsystem.getName(), name, node.getLastToken() ) ) {
-            subsystem.setName( name );
-        }
-        
-        return data;
-        
-    }
-    
+
     /**
      * Process a Class declaration by creating a Class instance for use by this visitor.
      *
@@ -171,8 +152,10 @@ public class BuilderPass1 extends Visitor {
         // now create a new class as a placeholder
         
         metamodel.Class theClass = new metamodel.Class();
-        
-        theClass.setName((String) visit( (LEMClassIdentifier)node.jjtGetChild(0), data ));
+       	String name = getIdentifier( node.jjtGetChild( 0 ));
+	String endName = getEndIdentifier( node.jjtGetChild( node.jjtGetNumChildren() - 1 ));
+	checkIdentity( name, endName, node.getLastToken() );
+        theClass.setName(name);
         
         getMapper().add( node, theClass );
         
@@ -185,7 +168,6 @@ public class BuilderPass1 extends Visitor {
         // check the uniqueness constraint
         
         Domain domain = subsystem.getDomain();
-        String name = theClass.getName();
         if ( null != domain.getClass( name ) ) {
             throw new LemException(
                     "Class " + name + " is already defined.",
@@ -240,28 +222,6 @@ public class BuilderPass1 extends Visitor {
         
         return a;
     }
-    
-    /**
-     * Process the identifier for a Class.
-     */
-    public Object visit(LEMClassIdentifier node, Object data)   throws LemException {
-        return node.getFirstToken().image;
-    }
-    
-    /**
-     * Process the END identifier for a Class by checking for a match
-     */
-    public Object visit(LEMClassEndIdentifier node, Object data)   throws LemException {
-        super.visit( node, data );
-        
-        metamodel.Class theClass = (metamodel.Class) data;
-        String name =  node.getFirstToken().image;
-        checkIdentity(  theClass.getName(), name, node.getLastToken() );
-        
-        return data;
-        
-    }
-    
     
     /**
      * Process the END identifier for a Relationship by checking for a match

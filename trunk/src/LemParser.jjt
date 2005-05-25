@@ -1,6 +1,11 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.22  2005/05/25 03:25:08  u3957053
+* Remove SubsystemIdentifier and EndSubsystemIdentifier, remove ClassIdentifier
+* and ClassEndIdentifier. Implement checking for correct start and end subsystem
+* identifiers.
+*
 * Revision 1.21  2005/05/25 03:16:28  u3293115
 * Removed high and low range non terminals.
 *
@@ -609,17 +614,11 @@ void SubSystemDeclaration() : {
 // constraint: LEM_E_01001
 }
 { 
-	<SUBSYSTEM> SubSystemIdentifier() <IS>
+	<SUBSYSTEM> Identifier() <IS>
 		Description() 
 		SubSystemBody() 
-	<END> [SubSystemEndIdentifier()] <SEMI>
+	EndIdentifier() <SEMI>
 }
-
-void SubSystemIdentifier() : {}
-{ <SIMPLE_IDENTIFIER> }
-
-void SubSystemEndIdentifier() : {}
-{ <SIMPLE_IDENTIFIER> }
 
 void Description() : {}
 { [<STRING_LITERAL>] }
@@ -633,28 +632,18 @@ void SubSystemBody() : {}
 
 void ClassDeclaration() : {}
 { 
-	<OBJECT> ClassIdentifier() 
+	<OBJECT> Identifier() 
                 [<SPECIALISATION> <OF> SpecialisationList() ]
                 <IS>
 		Description()
 		ClassBody() 
-	<END> [ClassEndIdentifier()] <SEMI>
+	EndIdentifier() <SEMI>
 }
 
 void SpecialisationList() : {}
 {
     SuperClassIdentifier() ( "," SuperClassIdentifier() )* ( <AND> SuperClassIdentifier() )? 
 }
-
-
-void ClassEndIdentifier() : {}
-{ <SIMPLE_IDENTIFIER> }
-
-void ClassIdentifier() : {
-// constraint: LEM_E_01013=Duplicate class identifier. Each class must be unique within a domain
-}
-{ <SIMPLE_IDENTIFIER> }
-
 
 /*
 <h2>RELATIONSHIPS</h2>
