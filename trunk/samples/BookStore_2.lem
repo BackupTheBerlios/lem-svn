@@ -9,6 +9,11 @@
 // $Id$
 // 
 // $Log$
+// Revision 1.5  2005/05/25 02:53:10  u3293115
+// Fairly large change to action language grammar. Probably won't be
+// a final version but something to work from when we get down to
+// specifying the final EBNF for the action language soon.
+//
 // Revision 1.4  2005/05/15 00:52:42  u3957053
 // Whoops... shouldn't have committed my test condition for errors
 //
@@ -121,7 +126,7 @@ model BookStoreModel is
 					state Adding 
 						"the manuscript is incomplete and is subject to regular
 						additions by the author" ( newText is string ) is
-							a := create Manuscript;	
+							// a := create Manuscript;	
 							// action language goes here
 							// action language goes here
 							// action language goes here

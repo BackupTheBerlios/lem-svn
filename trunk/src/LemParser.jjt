@@ -1,6 +1,11 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.20  2005/05/25 02:53:10  u3293115
+* Fairly large change to action language grammar. Probably won't be
+* a final version but something to work from when we get down to
+* specifying the final EBNF for the action language soon.
+*
 * Revision 1.19  2005/05/25 02:40:07  u3293115
 * Cleaned up token definitions.
 *
@@ -313,10 +318,9 @@ TOKEN : /* ACTION LANGUAGE IDENTIFIERS */
 | <GE:		">="	>
 | <PLUS:	"+"	>
 | <MINUS:	"-"	>
-| <MULT:	"*"	>
+| <MULTIPLY:	"*"	>
 | <DIVIDE:	"/"	>
 | <EXPON:	"^"	>
-| <WITH: "with">
 | <UNIQUE : "unique">
 | <LBRACE : "{">
 | <RBRACE : "}">
@@ -933,143 +937,220 @@ void TransitionEventIdentifier() : {}
  * Action Language defined here
  *****************************************************************************************/
 
-
-void InstanceReference() : {}
+void ActionBlock() : {}
 {
-   <SIMPLE_IDENTIFIER>
+	<LBRACE>
+	(
+		Action()
+		| IfStatement()
+		| WhileStatement()
+		| ActionBlock()
+	)*
+	<RBRACE>
 }
-
 
 void Action() : {}
 {
-   ObjectManipulation()
-|  AttributeAssignment()    /* This should include local variable assignment */
+	(
+		ObjectCreation()
+		| ObjectDeletion()
+		| AttributeAssignment()
+	)
+	<SEMI>
 }
 
-void ObjectManipulation() : {}
-{
-( ObjectCreation() | ObjectDeletion() /*| ReadAttributes() | WriteAttributes()*/ ) 
-}
-
-/* TODO: InstanceReference -> ObjectReference */
-void ObjectCreation() : {}  
-{
-	InstanceReference() <IS_ASSIGNED> 
-		<CREATE> [<UNIQUE>] ClassIdentifier() /*  [<WITH> AttributeAssignment()] */
-/*	InstanceReference() <IS_ASSIGNED> 
-		<CREATE> <UNIQUE> ClassIdentifier()  [<WITH>  AttributeAssignment() ] */
-}	
-
-void AttributeAssignment() : {}
-{
-	(AttributeInstanceReference() <IS_ASSIGNED> Expression() )  /* (<COMMA> <SIMPLE_IDENTIFIER> <IS_ASSIGNED> Literal() )* */
-}
-
-
-void ObjectDeletion() : {}
-{
-/*	(<DELETE><SIMPLE_IDENTIFIER> <WHERE> ) | */
-	(<DELETE> ObjectReference() ) 
-/*	(<DELETE> [<LBRACE>] <SIMPLE_IDENTIFIER> [<RBRACE>] ) */
-}
-
-/**
- * Expressions 
- */
+void ObjectReference() : {}
+{ 	<SELF> | <SIMPLE_IDENTIFIER> }
 
 /**
  * AttributeInstanceReference covers local variables within a context,
  * attributes of an object.
  */
 void AttributeInstanceReference() : {}
-{ [ ObjectReference() "." ] AttributeIdentifier() }
-
-void ObjectReference() : {}
-{ 	"self" | <SIMPLE_IDENTIFIER> }
+{	[ ObjectReference() "." ] Identifier() }
 
 
+void ObjectCreation() : {}  
+{
+	<CREATE> Identifier()
+}	
+
+void ObjectDeletion() : {}
+{
+	<DELETE> ObjectReference()
+}
+
+/**
+ * Statements returning some value
+ */
+void RValue() : {}
+{
+	Expression()
+	| ObjectCreation()
+}
+
+/**
+ * Statements that can be assigned some value
+ */
+void LValue() : {}
+{
+	AttributeInstanceReference()
+}
+
+void AttributeAssignment() : {}
+{
+	LValue() <IS_ASSIGNED> RValue()
+}
+
+/**
+ * Flow control statements.
+ */
+void IfStatement() : {}
+{
+	<IF>
+	<LPAREN>
+	Expression()
+	<RPAREN>
+	ActionBlock()
+	[
+		ElseIfPart()
+		| ElsePart()
+	]
+}
+
+void ElseIfPart() : {}
+{
+	<ELSEIF>
+	<LPAREN>
+	Expression()
+	<RPAREN>
+	ActionBlock()
+	[
+		ElseIfPart()
+		| ElsePart()
+	]
+}
+
+void ElsePart() : {}
+{
+	<ELSE>
+	ActionBlock()
+}
+
+void WhileStatement() : {}
+{
+	<WHILE>
+	<LPAREN>
+	Expression()
+	<RPAREN>
+	ActionBlock()
+}
+
+/**
+ * Expressions. These are side-effect free statements returning a value.
+ */
 void Expression() : {}
 { 
 	Relation()
-	(	(	<LAND>
-		|	<LOR> 
+	(
+		(
+			<LAND>
+			| <LOR> 
 		)
 		Relation()
 	)*
 }
 
-void Relation() :
-{}
+void Relation() : {}
 {
 	SimpleExpression()
-	( Relational() SimpleExpression() )?
+	(
+		Relational()
+		SimpleExpression()
+	)?
 }
                  
-void Relational() :
-{}
+void Relational() : {}
 {
 	<EQUAL>
-|	<NE>
-|	<LT>
-|	<LE>
-|	<GT>
-|	<GE>
+	| <NE>
+	| <LT>
+	| <LE>
+	| <GT>
+	| <GE>
 }
 
-void SimpleExpression() :
-{}
+void SimpleExpression() : {}
 {
-	Unary() Term()
-|	Term() ( Adding() Term() )*
+	(
+		Unary()
+		Term()
+	)
+	| (
+		Term()
+		(
+			Adding()
+			Term()
+		)*
+	)
 }
 
-void Unary() :
-{}
+void Unary() : {}
 {
 	<PLUS>
-|	<MINUS>
+	| <MINUS>
 }
 
-void Adding() :
-{}
+void Adding() : {}
 {
 	<PLUS>
-|	<MINUS>
+	| <MINUS>
 }
 
-void Term() :
-{}
+void Term() : {}
 {
-	Factor() ( Multiplying() Factor() )*
+	Factor()
+	(
+		Multiplying()
+		Factor()
+	)*
 }
 
-void Multiplying() :
-{}
+void Multiplying() : {}
 {
-	<MULT>
-|	<DIVIDE>
-|	<MOD>
-|	<REM>
+	<MULTIPLY>
+	| <DIVIDE>
+	| <MOD>
+	| <REM>
 }
 
-void Factor() :
-{}
+void Factor() : {}
 {
-	Primary() ( <EXPON> Primary() )?
-|	<LNOT> Primary()
-|	<ABS> Primary()
+	(
+		Primary()
+		(
+			<EXPON>
+			Primary()
+		)?
+	)
+	| (
+		<LNOT>
+		Primary()
+	)
+	| (
+		<ABS>
+		Primary()
+	)
 }
 
-void Primary() :
-{}
+void Primary() : {}
 {
 	Literal()
-|	AttributeInstanceReference()
-|	ParenthesizedPrimary()
+	| AttributeInstanceReference()
+	| ParenthesizedPrimary()
 }
 
-void ParenthesizedPrimary() :
-{}
+void ParenthesizedPrimary() : {}
 {
 	<LPAREN>
 	Expression()
