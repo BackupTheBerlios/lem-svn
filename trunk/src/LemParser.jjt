@@ -1,6 +1,11 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.29  2005/05/27 00:12:47  u3957053
+* Get rid of EventIdentifiers, they're now just Identifiers
+*
+* Removed corresponding visit() method in BuilderPass1
+*
 * Revision 1.28  2005/05/27 00:04:25  u3957053
 * StateIdentifier -> Identifier, StateEndIdentifier -> EndIdentifier.
 *
@@ -850,7 +855,7 @@ void Multiplicity() : {}
 
 void EventDeclaration() : {}
 {
-	[ <SELF> ] <EVENT> EventIdentifier() 
+	[ <SELF> ] <EVENT> Identifier() 
 		Description() 
 		[ <CARRIES> EventSignature()] <SEMI>
 }
@@ -865,11 +870,6 @@ void SelfEventDeclaration() : {}
 }
 
 */
-
-void EventIdentifier() : {
-// constraint: LEM_E_01007=Duplicate event identifier. %1% is already defined. Each event must be unique within a specialisation tree.
-}
-{ <SIMPLE_IDENTIFIER> }
 
 
 void StateSignature() : {}

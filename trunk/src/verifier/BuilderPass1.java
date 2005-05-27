@@ -689,6 +689,8 @@ public class BuilderPass1 extends Visitor {
         Event event = new Event();
         getMapper().add( node, event );
         event.setDomainClass( theClass );
+        event.setName( getIdentifier( node.jjtGetChild( 0 )));
+        
         
         super.visit( node, event );
         
@@ -725,25 +727,6 @@ public class BuilderPass1 extends Visitor {
         
         return data;
         
-    }
-    
-    /**
-     * Process an event identifier. Event identifiers in the context of
-     *
-     * 1. An Event declaration
-     * 2. An action language "generate" statement
-     * 3. An action language "cancel" statement
-     * 4. A transition specification
-     */
-    public Object visit(LEMEventIdentifier node, Object data) throws metamodel.LemException {
-        
-        metamodel.Event event = (metamodel.Event) data;
-        super.visit( node, event );
-        
-        String name = node.getFirstToken().image;
-        event.setName( name );
-        
-        return data;
     }
     
     /**
