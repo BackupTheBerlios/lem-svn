@@ -747,21 +747,6 @@ public class BuilderPass1 extends Visitor {
     }
     
     /**
-     * Process a state identifier
-     */
-    public Object visit(LEMStateIdentifier node, Object data) throws metamodel.LemException {
-        
-        State state = (State) data;
-        super.visit( node, state );
-        
-        String name = node.getFirstToken().image;
-        state.setName( name );
-        
-        return data;
-    }
-    
-    
-    /**
      * Create a signature for the current event
      */
     public Object visit(LEMEventSignature node, Object data) throws metamodel.LemException {
@@ -811,6 +796,11 @@ public class BuilderPass1 extends Visitor {
         } else {
             state = new NonDeletionState();
         }
+        
+        String name = getIdentifier( node.jjtGetChild(0));
+        String endName = getEndIdentifier( node.jjtGetChild( node.jjtGetNumChildren() - 1 ));
+        checkIdentity(name, endName, node.getLastToken());
+        state.setName( name );
         
         getMapper().add( node, state );
         StateMachine stateMachine = (StateMachine) data;

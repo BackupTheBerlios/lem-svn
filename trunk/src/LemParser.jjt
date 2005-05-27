@@ -1,6 +1,11 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.28  2005/05/27 00:04:25  u3957053
+* StateIdentifier -> Identifier, StateEndIdentifier -> EndIdentifier.
+*
+* Implement matching of state end identifiers.
+*
 * Revision 1.27  2005/05/26 07:19:51  u3958283
 * add GenerateSignal
 *
@@ -899,20 +904,12 @@ void ParameterList() : {}
 void StateDeclaration() : {}
 {
 	/* TODO: move the <IS> to perhaps after the identifier */
-    [<DELETION>] <STATE> StateIdentifier()
+    [<DELETION>] <STATE> Identifier()
 		Description() 
 		StateSignature() <IS>
 		Procedure()
-    <END> [ StateEndIdentifier() ] <SEMI>
+    EndIdentifier() <SEMI>
 }
-
-void StateIdentifier() : {
-// constraint: LEM_E_01009=Duplicate state identifier. Each state must be unique within a behaviour block.
-}
-{ <SIMPLE_IDENTIFIER> }
-
-void StateEndIdentifier() : {}
-{ <SIMPLE_IDENTIFIER> }
 
 void SignalIdentifier() : {}
 { <SIMPLE_IDENTIFIER> }

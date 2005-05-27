@@ -412,17 +412,17 @@ public class Visitor implements LemParserVisitor {
 		node.childrenAccept( this, data );
 		return data;
 	}
+	  public Object visit(LEMParameterList node, Object data) throws metamodel.LemException { 
+		logVisit( node, data );
+		node.childrenAccept( this, data );
+		return data;
+	}
 	  public Object visit(LEMStateDeclaration node, Object data) throws metamodel.LemException { 
 		logVisit( node, data );
 		node.childrenAccept( this, data );
 		return data;
 	}
-	  public Object visit(LEMStateIdentifier node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMStateEndIdentifier node, Object data) throws metamodel.LemException { 
+	  public Object visit(LEMSignalIdentifier node, Object data) throws metamodel.LemException { 
 		logVisit( node, data );
 		node.childrenAccept( this, data );
 		return data;
@@ -478,6 +478,11 @@ public class Visitor implements LemParserVisitor {
 		return data;
 	}
 	  public Object visit(LEMObjectDeletion node, Object data) throws metamodel.LemException { 
+		logVisit( node, data );
+		node.childrenAccept( this, data );
+		return data;
+	}
+	  public Object visit(LEMSignalGeneration node, Object data) throws metamodel.LemException { 
 		logVisit( node, data );
 		node.childrenAccept( this, data );
 		return data;
