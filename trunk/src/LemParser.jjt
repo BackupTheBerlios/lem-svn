@@ -1,6 +1,13 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.30  2005/05/30 07:06:42  u3293115
+* Added 'objref' core type to grammar and metamodel.
+*
+* Grammar type declarations and domain specific types, etc. really need
+* to be tightened up. It currently doesn't appear to be able to support a
+* runtime.
+*
 * Revision 1.29  2005/05/27 00:12:47  u3957053
 * Get rid of EventIdentifiers, they're now just Identifiers
 *
@@ -292,6 +299,7 @@ TOKEN : /* IDENTIFIERS */
 | <RANGE: "range">
 | <PATTERN: "pattern" >
 | <NUMERIC: "numeric" >
+| <OBJREF: "objref" >
 | <UNITS: "units" >
 | <LENGTH: "length" >
 | <PRECISION: "precision" >
@@ -585,7 +593,10 @@ void PatternSpec() : {}
 	<PATTERN> <COLON> <STRING_LITERAL>
 }
 
-
+void ObjectReferenceTypeSpecification() : {}
+{
+	<OBJREF>
+}
 
 void NumericTypeSpecification() : {}
 {

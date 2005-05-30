@@ -18,13 +18,10 @@ public interface DataType {
      */
     public String getName();
     
-    
-    
     /**
      * Return the CoreDataType associated with this DataItem
      *
      * @return the CoreDataType associated with this DataItem
      */
     public abstract CoreDataType getCoreDataType();
-    
 }

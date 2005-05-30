@@ -1002,7 +1002,19 @@ public class BuilderPass1 extends Visitor {
         return data;
     }
     
+     /**
+     * Process an ObjectReferenceType associate with a domain specific data type
+     */
+    public Object visit(LEMObjectReferenceTypeSpecification node, Object data) throws metamodel.LemException {
+        
+        DomainSpecificDataType type = (DomainSpecificDataType) data;
+        type.setCoreType( CoreDataType.findByName( "objref" ));
+        super.visit( node, data );
+        
+        return data;
+    }
     
+   
     /**
      * Process a NumericType associate with a domain specific data type
      */

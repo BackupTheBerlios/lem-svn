@@ -23,8 +23,7 @@ public abstract class CoreDataType implements DataType {
     /** Creates a new instance of CoreDataType */
     public CoreDataType() {
     }
-    
-        
+ 
     /** register the single instance of each subclass */
     static {
         register( ArbitraryIdType.getInstance() );
@@ -35,7 +34,7 @@ public abstract class CoreDataType implements DataType {
         register( RealType.getInstance() );
         register( StringType.getInstance() );
         register( TimestampType.getInstance() );
-        
+        register( ObjectReferenceType.getInstance() );
     }
     
     /** Getter for property name.
