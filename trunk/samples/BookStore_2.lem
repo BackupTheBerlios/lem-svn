@@ -9,6 +9,9 @@
 // $Id$
 // 
 // $Log$
+// Revision 1.8  2005/05/30 07:04:00  u3957053
+// Fixed Bookstore_2 so that it doesn't break state end identifier check
+//
 // Revision 1.7  2005/05/25 04:32:32  u3293115
 // Fix action language blocks, actually include some basic action language
 // in bookstore 2.
@@ -146,7 +149,7 @@ model BookStoreModel is
 							// action language goes here
 						}
 
-					end Drafting;
+					end Adding;
 
 					state Amending 
 						"already drafted material is subject to change by the author
