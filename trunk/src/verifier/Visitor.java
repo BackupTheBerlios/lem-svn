@@ -467,7 +467,7 @@ public class Visitor implements LemParserVisitor {
 		node.childrenAccept( this, data );
 		return data;
 	}
-	  public Object visit(LEMAttributeInstanceReference node, Object data) throws metamodel.LemException { 
+	  public Object visit(LEMVariableReference node, Object data) throws metamodel.LemException { 
 		logVisit( node, data );
 		node.childrenAccept( this, data );
 		return data;
@@ -483,6 +483,11 @@ public class Visitor implements LemParserVisitor {
 		return data;
 	}
 	  public Object visit(LEMSignalGeneration node, Object data) throws metamodel.LemException { 
+		logVisit( node, data );
+		node.childrenAccept( this, data );
+		return data;
+	}
+	  public Object visit(LEMWithDelay node, Object data) throws metamodel.LemException { 
 		logVisit( node, data );
 		node.childrenAccept( this, data );
 		return data;

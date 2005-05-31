@@ -18,7 +18,7 @@
     <property name="classes.dir" value="${build.dir}/classes" />
     <property name="etc.dir" value="etc" />
     <property name="javacchome"
-    value="/students/u3293115/comp3500/javacc-3.2" />
+    value="/usr/share/java/" />
     <property name="deploy.name" value="${name}.jar" />
     <property name="ssh.keyfile" value="/home/smr/.ssh/id_dsa" />
     <property name="lib.dir" value="lib" />

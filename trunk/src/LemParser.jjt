@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.32  2005/05/31 12:29:34  u3293115
+* Rename AttributeInstanceReference to VariableReference
+*
 * Revision 1.31  2005/05/31 02:23:02  u3958283
 * :completed the Signal Generation section with delay and parameters.
 *
@@ -989,21 +992,20 @@ void Action() : {}
 }
 
 void ObjectReference() : {}
-{ 	<SELF> | <SIMPLE_IDENTIFIER> }
+{
+	  <SELF>
+	| <SIMPLE_IDENTIFIER>
+}
 
 /**
- * AttributeInstanceReference covers local variables within a context,
+ * VariableReference covers local variables within a context,
  * attributes of an object.
  */
-
-
-
-void AttributeInstanceReference() : {}
+void VariableReference() : {}
 {
 	LOOKAHEAD(2)
-	ObjectReference() <DOT> Identifier()
-|
-	Identifier()
+	  ObjectReference() <DOT> Identifier()
+	| Identifier()
 }
 
 void ObjectCreation() : {}  
@@ -1028,13 +1030,12 @@ void WithDelay() : {}
 }
 
 
-
 /**
  * Statements returning some value
  */
 void RValue() : {}
 {
-	Expression()
+	  Expression()
 	| ObjectCreation()
 }
 
@@ -1043,7 +1044,7 @@ void RValue() : {}
  */
 void LValue() : {}
 {
-	AttributeInstanceReference()
+	VariableReference()
 }
 
 void AttributeAssignment() : {}
@@ -1195,7 +1196,7 @@ void Factor() : {}
 void Primary() : {}
 {
 	Literal()
-	| AttributeInstanceReference()
+	| VariableReference()
 	| ParenthesizedPrimary()
 }
 
