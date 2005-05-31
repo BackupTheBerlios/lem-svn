@@ -331,4 +331,21 @@ public class StateMachine implements DescribedEntity {
     public void setDomainClass( Class aClass ) {
         domainClass = aClass;
     }
+    
+    public void dumpDot() {
+        Iterator i = transitions.iterator();
+        
+        System.out.println( "digraph G {" );
+        while( i.hasNext() ) {
+            Transition t = (Transition)i.next();
+            
+            if( t.getFromState() == null ) {
+                System.out.println( "creation -> " + t.getToState().getName() + ";" );
+            } else {
+                System.out.println( t.getFromState().getName() + " -> " + t.getToState().getName() + ";" );
+            }
+        }
+        
+        System.out.println( "}" );
+    }
 }
