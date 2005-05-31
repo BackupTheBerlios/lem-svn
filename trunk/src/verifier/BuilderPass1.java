@@ -79,6 +79,13 @@ public class BuilderPass1 extends Visitor {
 	return null;
     }
 
+    public Object visit(LEMObjectCreation node, Object data) throws LemException {
+        CreateAction a = new CreateAction();
+        
+        getMapper().add(node, a);
+        return a;
+    }
+    
     /**
      * Process a Domain declaration by creating a Domain instance for use by this visitor
      *
@@ -789,7 +796,14 @@ public class BuilderPass1 extends Visitor {
         StateMachine stateMachine = (StateMachine) data;
         state.setStateMachine(stateMachine);
         
-        super.visit( node, state );
+        // TODO: Hack until we can modify LEMDescription to be more like LEMIdentifier
+        visit( (LEMDescription)node.jjtGetChild(1), state );
+        
+        Procedure p = (Procedure) visit( (LEMProcedure)node.jjtGetChild(3), null );
+        state.setProcedure( p );
+        p.setState(state);
+        
+        StateSignature s = (StateSignature) visit( (LEMStateSignature)node.jjtGetChild(2), null );
         
         // add the state to the state machine
         
@@ -807,13 +821,15 @@ public class BuilderPass1 extends Visitor {
     }
     
     public Object visit (LEMProcedure node, Object data) throws metamodel.LemException {
-	State state = (State)data;
 	Procedure p = new Procedure();
 	getMapper().add(node, p);
-	p.setState(state);
-	state.setProcedure(p);
+//	p.setState(state);
+//	state.setProcedure(p);
+        // TODO: Put the above two statements in the visit(LEMStateDeclaration) thingy
 
-	return data;
+        super.visit( node, p );
+        
+	return p;
     }
     
     /**
@@ -823,12 +839,9 @@ public class BuilderPass1 extends Visitor {
         
         StateSignature stateSignature = new StateSignature();
         
-        State state = (State) data;
-        state.setSignature( stateSignature );
-        
         super.visit( node, stateSignature );
         
-        return data;
+        return stateSignature;
     }
     
     /**
