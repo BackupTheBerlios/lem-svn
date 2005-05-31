@@ -18,83 +18,76 @@ import javax.swing.tree.DefaultTreeCellRenderer;
  * @author Administrator
  */
 public class CustomTreeRenderer extends DefaultTreeCellRenderer{
-    ImageIcon State = new ImageIcon();
-    ImageIcon Transition = new ImageIcon();
-    ImageIcon Relationship = new ImageIcon();
-    ImageIcon Attribute = new ImageIcon();    
-    ImageIcon StateMachine = new ImageIcon();
-    ImageIcon Open = new ImageIcon();
-    ImageIcon Closed = new ImageIcon();
-    ImageIcon Event = new ImageIcon();
-    ImageIcon Events = new ImageIcon();
-    ImageIcon Class = new ImageIcon();
+    ImageIcon stateIcon = new ImageIcon();
+    ImageIcon transitionIcon = new ImageIcon();
+    ImageIcon relationshipIcon = new ImageIcon();
+    ImageIcon attributeIcon = new ImageIcon();
+    ImageIcon stateMachineIcon = new ImageIcon();
+    ImageIcon openIcon = new ImageIcon();
+    ImageIcon closedIcon = new ImageIcon();
+    ImageIcon eventIcon = new ImageIcon();
+    ImageIcon eventsIcon = new ImageIcon();
+    ImageIcon classIcon = new ImageIcon();
     
     /** Creates a new instance of CustomTreeRenderer */
     public CustomTreeRenderer() {
         URL imageURL = getClass().getClassLoader().getResource("verifier/state.jpg");
-        State.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        stateIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/transition.jpg");
-        Transition.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        transitionIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/relationship.jpg");
-        Relationship.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        relationshipIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/attribute.jpg");
-        Attribute.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        attributeIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/statemachine.jpg");
-        StateMachine.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        stateMachineIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/open.jpg");
-        Open.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        openIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/closed.jpg");
-        Closed.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        closedIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/event.jpg");
-        Event.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        eventIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/events.jpg");
-        Events.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        eventsIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/class.jpg");
-        Class.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        classIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
     }
     public Component getTreeCellRendererComponent(
-                        JTree tree,
-                        Object value,
-                        boolean sel,
-                        boolean expanded,
-                        boolean leaf,
-                        int row,
-                        boolean hasFocus) {
-
+            JTree tree,
+            Object value,
+            boolean sel,
+            boolean expanded,
+            boolean leaf,
+            int row,
+            boolean hasFocus) {
+        
         super.getTreeCellRendererComponent(
-                        tree, value, sel,
-                        expanded, leaf, row,
-                        hasFocus);
-        setOpenIcon(Open);
-        setClosedIcon(Closed);
+                tree, value, sel,
+                expanded, leaf, row,
+                hasFocus);
+        setOpenIcon(openIcon);
+        setClosedIcon(closedIcon);
         
         if (value instanceof ClassNode) {
-            setIcon(Class);            
-        }
-        else if (leaf && value instanceof RelationshipNode){
-            setIcon(Relationship);
-        }
-        else if (leaf && value instanceof AttributeNode){
-            setIcon(Attribute);
-        }
-        else if (value instanceof StateMachineNode){
-            setIcon(StateMachine);
-        }
-        else if (value instanceof StateNode){
-            setIcon(State);
-        }
-        else if (value instanceof TransitionNode){
-            setIcon(Transition);
-        }
-        else if (value instanceof EventsTreeNode){
-            setIcon(Events);
-        }
-        else if (value instanceof EventNode){
-            setIcon(Event);
+            setIcon(classIcon);
+        } else if (leaf && value instanceof RelationshipNode){
+            setIcon(relationshipIcon);
+        } else if (leaf && value instanceof AttributeNode){
+            setIcon(attributeIcon);
+        } else if (value instanceof StateMachineNode){
+            setIcon(stateMachineIcon);
+        } else if (value instanceof StateNode){
+            setIcon(stateIcon);
+        } else if (value instanceof TransitionNode){
+            setIcon(transitionIcon);
+        } else if (value instanceof EventsTreeNode){
+            setIcon(eventsIcon);
+        } else if (value instanceof EventNode){
+            setIcon(eventIcon);
         }
         
         return this;
-        }
-        
-        
+    }
+    
+    
 }
