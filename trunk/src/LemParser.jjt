@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.31  2005/05/31 02:23:02  u3958283
+* :completed the Signal Generation section with delay and parameters.
+*
 * Revision 1.30  2005/05/30 07:06:42  u3293115
 * Added 'objref' core type to grammar and metamodel.
 *
@@ -353,6 +356,7 @@ TOKEN : /* ACTION LANGUAGE IDENTIFIERS */
 | <DELETE: "delete">
 | <FOR: "for">
 | <EACH: "each">
+| <WITH: "with">
 | <WHILE: "while">
 | <IN: "in">
 | <IF: "if">
@@ -890,7 +894,7 @@ void EventSignature() : {}
 { Signature() }
 
 void Signature() : {}
-{ "(" ParameterDeclaration() ( "," ParameterDeclaration() )* ")" }
+{ <LPAREN> ParameterDeclaration() ( <COMMA> ParameterDeclaration() )* <RPAREN> }
 
 void ParameterDeclaration() : {
 // constraint: LEM_E_01023=In a parameter declaration, the domain specific data type must be defined in the domain
@@ -904,7 +908,7 @@ void ParameterIdentifier() : {
 
 void ParameterList() : {}
 {
-  ((ParameterIdentifier())? |(ParameterIdentifier())(<COMMA>ParameterIdentifier())*)
+  [<LPAREN>(ParameterIdentifier())(<COMMA>ParameterIdentifier())*<RPAREN>]
 }
 
 
@@ -979,6 +983,7 @@ void Action() : {}
 		ObjectCreation()
 		| ObjectDeletion()
 		| AttributeAssignment()
+		| SignalGeneration()
 	)
 	<SEMI>
 }
@@ -1011,10 +1016,19 @@ void ObjectDeletion() : {}
 	<DELETE> ObjectReference()
 }
 
+/** Signals */
 void SignalGeneration() : {}
 {
-        <GENERATE> SignalIdentifier()<LPAREN>ParameterList()<RPAREN><TO>ObjectReference()
+        <GENERATE> SignalIdentifier()ParameterList()<TO>ObjectReference()WithDelay()
 }
+
+void WithDelay() : {}
+{
+   [<WITH><DELAY><DECIMAL_LITERAL>]
+}
+
+
+
 /**
  * Statements returning some value
  */
