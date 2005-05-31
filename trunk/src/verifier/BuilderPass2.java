@@ -22,7 +22,7 @@ import parser.*;
 public class BuilderPass2 extends Visitor {
     
     private Model currentModel = null;
-
+    
     /**
      * A reference to the domain in which we're currently visiting nodes
      */
@@ -34,13 +34,13 @@ public class BuilderPass2 extends Visitor {
      * @param aMapper from a previous BuilderPass2
      */
     public BuilderPass2( Model model, Mapper aMapper ) {
-	currentModel = model;
+        currentModel = model;
         super.setMapper( aMapper );
     }
-
+    
     public Object visit( LEMModelDeclaration node, Object data ) throws LemException {
-	    super.visit(node, currentModel);
-	    return null;
+        super.visit(node, currentModel);
+        return null;
     }
     
     public Object visit( LEMDomainDeclaration node, Object data ) throws LemException {
@@ -68,6 +68,32 @@ public class BuilderPass2 extends Visitor {
         
         return data;
     }
+    
+    public Object visit( LEMProcedure node, Object data ) throws LemException {
+        Procedure p = (Procedure)getMapper().getObject(node);
+        
+        super.visit( node, p );
+        return p;
+    }
+    
+    public Object visit( LEMObjectCreation node, Object data ) throws LemException {
+        CreateAction a = new CreateAction();
+        String className = getIdentifier( node.jjtGetChild(0));
+        metamodel.Class c = currentDomain.getClass(className);
+        a.setClass(c);
+        Procedure p = (Procedure)data;
+        p.addAction( a );
+        
+        if( c == null ) {
+            throw new LemException(
+                    "Class " + c + " does not exist.",
+                    node.getFirstToken(),
+                    "LEM_E_01017" );
+        }
+        
+        return a;
+    }
+    
     
     /**
      * Process the superclass identifier in a Generalisation
@@ -285,9 +311,6 @@ public class BuilderPass2 extends Visitor {
         
     }
     
-    
-    
-    
     /**
      * Check that the named Domain Sepcific Type is actually in the domain.
      * We can now discard the proxy object.
@@ -411,4 +434,21 @@ public class BuilderPass2 extends Visitor {
         return data;
     }
     
+    public Object visit(LEMIdentifier node, Object data) {
+        return node.getFirstToken().image;
+    }
+    
+    /**
+     * Returns the identifier represented by the given Node.
+     *
+     * @param identifierNode the node which represents the identifier. This
+     * parameter must be of type LEMIdentifier
+     *
+     * @return the String identifier represented by the Node
+     * @todo This is code duplicated from BuilderPass1. Perhaps the Visitor 
+     * class should implement this?
+     */
+    private String getIdentifier( Node identifierNode ) throws LemException {
+        return (String)(visit( (LEMIdentifier)identifierNode, null ));
+    }
 }
