@@ -9,6 +9,7 @@
  */
 
 package metamodel;
+import java.util.ArrayList;
 import runtime.*;
 
 /**
@@ -43,11 +44,18 @@ public class CreateAction extends Action {
     /**
      * Execute the given action. This will cause a new Object to be created and placed
      * in the context's object list
-     * 
+     *
      * @param context The context into which the newly created object should be inserted
      */
     public void execute( Context context ) {
-        runtime.Object o = new runtime.Object( new metamodel.Class[] {theClass} );
+        ArrayList classes = new ArrayList();
+        runtime.Object o = null;
+        classes.add( theClass );
+        try {
+            o = new runtime.Object( classes );
+        } catch( LemRuntimeException e ) {
+            e.printStackTrace();
+        }
         context.addObject(o);
     }
 }
