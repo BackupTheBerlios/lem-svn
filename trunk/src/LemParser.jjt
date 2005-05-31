@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.33  2005/05/31 12:34:40  u3293115
+* Cleaned up 'types' a bit, added some missing bits for "objref" type.
+*
 * Revision 1.32  2005/05/31 12:29:34  u3293115
 * Rename AttributeInstanceReference to VariableReference
 *
@@ -468,7 +471,7 @@ void BaseAttribute() : {}
 {
 	<ATTRIBUTE> AttributeIdentifier() 
 	Description()
-         <IS> (PrimitiveType() | DomainSpecificType()) 
+         <IS> Type() 
 	[ <IS_ASSIGNED> Literal() ]
 	<SEMI>
 }
@@ -486,7 +489,7 @@ void DerivedAttribute() : {}
 {
         <DERIVED> <ATTRIBUTE> AttributeIdentifier() 
 	Description()
-         <IS> (PrimitiveType() | DomainSpecificType())
+         <IS> Type()
          <CALCULATION> <IS> 
             AttributeCalculationProcedure()
          <END> <CALCULATION>
@@ -531,6 +534,11 @@ void Literal() : {}
 void AttributeIdentifier() : {}
 { <SIMPLE_IDENTIFIER> }
 
+void Type() : {}
+{
+	  PrimitiveType()
+	| DomainSpecificType()
+}
 
 void DomainSpecificType() : {}
 { <SIMPLE_IDENTIFIER> }
@@ -557,7 +565,7 @@ void TypeDeclaration() : {
 }
 
 void PrimitiveType() : {}
-{ "arbitrary_id" | "numeric" | "string" | "boolean" | "date" }
+{ "arbitrary_id" | "numeric" | "string" | "boolean" | "date" | "objref" }
 
 void TypeSpecification() : {}
 {
@@ -567,6 +575,7 @@ void TypeSpecification() : {}
 	  | NumericTypeSpecification() 
 	  | StringTypeSpecification() 
           | DateTypeSpecification()
+	  | ObjectReferenceTypeSpecification()
 	)
 }
 
@@ -902,7 +911,7 @@ void Signature() : {}
 void ParameterDeclaration() : {
 // constraint: LEM_E_01023=In a parameter declaration, the domain specific data type must be defined in the domain
 }
-{ 	ParameterIdentifier() Description() <IS> (PrimitiveType() | DomainSpecificType()) }
+{ 	ParameterIdentifier() Description() <IS> Type() }
 
 void ParameterIdentifier() : {
 // constraint: LEM_E_01008=Duplicate parameter identifier. Each parameter must be unique within a signature.
