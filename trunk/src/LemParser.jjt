@@ -1,6 +1,11 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.36  2005/06/01 10:02:58  u3293115
+* Added variable declarations. Variable declarations follow C style:
+* can only be declared at the beginning of each block. Needs some
+* careful LOOKAHEAD.
+*
 * Revision 1.35  2005/06/01 09:58:56  u3964614
 * LemParser.jjt:
 * Commented out the 'description()' part of the bridge grammar. This is because
@@ -995,13 +1000,31 @@ void Procedure() : {}
 void ActionBlock() : {}
 {
 	<LBRACE>
+	VariableDeclarationList()
+	StatementList()
+	<RBRACE>
+}
+
+void VariableDeclarationList() : {}
+{
+	(LOOKAHEAD(VariableDeclaration()) VariableDeclaration())*
+}
+
+void VariableDeclaration() : {}
+{
+	Type()
+	Identifier()
+	<SEMI>
+}
+
+void StatementList() : {}
+{
 	(
 		Action()
 		| IfStatement()
 		| WhileStatement()
 		| ActionBlock()
 	)*
-	<RBRACE>
 }
 
 void Action() : {}
