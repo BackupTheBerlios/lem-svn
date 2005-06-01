@@ -2,6 +2,9 @@
  * $Id$
  *
  * $Log$
+ * Revision 1.3  2005/06/01 14:11:34  u3957053
+ * Added getter for Bridges
+ *
  * Revision 1.2  2005/06/01 09:30:36  u3957053
  * Added the ability to add bridges to the model
  *
@@ -167,5 +170,13 @@ public class Model implements DescribedEntity {
         return (Domain) domains.get( domainName );
     }
    
-    
+    /**
+     * Return the named bridge
+     *
+     * @param bridgeName of the bridge to be returned
+     * @return the named domain or null if the bridge does not exist
+     */
+    public Bridge getBridge( String bridgeName ) {
+        return (Bridge) domains.get( bridgeName );
+    } 
 }
