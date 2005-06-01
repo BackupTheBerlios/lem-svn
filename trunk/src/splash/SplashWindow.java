@@ -19,10 +19,19 @@ import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
 /**
- *
+ * SplashWindow is a borderless JWindow object, with an image painted upon it.
+ * It displays a picture in the foreground while a designated application is 
+ * loaded in the background. 
  * @author  David Gavin
  */
 class SplashWindow extends JWindow {
+    /**
+     * Creates new instance of SplashWindow. A SplashWindow requires 3 parameters:
+     * The image file name, a frame object and an arbitrary time in milliseconds.
+     * @param filename the filename of the image to be displayed.
+     * @param f the frame to contain the Splashwindow.
+     * @param waitTime the time (in milliseconds) to display the splash window. 
+     */
     public SplashWindow(String filename, Frame f, int waitTime) {
         super(f);
         URL imageURL = getClass().getClassLoader().getResource(filename);
@@ -63,6 +72,13 @@ class SplashWindow extends JWindow {
         Thread splashThread = new Thread(waitRunner, "SplashThread");
         splashThread.start();
     }
+    /**
+     * Invokes the main method of an executable java class. Passes any arguments
+     * to the main method of the executable java class. Throws an error if the the
+     * java class is not executable or doesnt exist.
+     * @param className the name of the class to be executed.
+     * @param args any commandline arguments to be passed.
+     */
     public static void invokeMain(String className, String[] args) {
         try {
             Class.forName(className)
