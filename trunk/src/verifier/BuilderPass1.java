@@ -309,7 +309,9 @@ public class BuilderPass1 extends Visitor {
             
             Parameter parameter = (Parameter) data;
             parameter.setType( coreType );
-            
+        
+	} else if ( data instanceof LEMVariableDeclaration ) {
+		/* Hack, see LEMVariableDeclaration */
         } else {
             
             // must be an error
@@ -849,6 +851,16 @@ public class BuilderPass1 extends Visitor {
         super.visit( node, p );
         
 	return p;
+    }
+    
+    /**
+     * Process a variable declaration. Temporary hack.
+     */
+    public Object visit (LEMVariableDeclaration node, Object data) throws metamodel.LemException {
+	    /* Hack to keep LEMPrimitiveType running (see LEMPrimitiveType) */
+	    super.visit (node, node);
+
+	    return data;
     }
     
     /**
