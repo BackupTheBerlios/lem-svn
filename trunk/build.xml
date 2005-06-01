@@ -22,21 +22,17 @@
     <property name="deploy.name" value="${name}.jar" />
     <property name="ssh.keyfile" value="/home/smr/.ssh/id_dsa" />
     <property name="lib.dir" value="lib" />
+    <uptodate property="build.jjtUptodate"
+      srcfile="${src.dir}/LemParser.jjt"
+      targetfile="${src.dir}/parser/.timestamp" />
   </target>
   
   <target name="prepare" depends="generate">
     <mkdir dir="${classes.dir}" />
   </target>
   
-  <target name="clean" depends="init">
-    <delete dir="${classes.dir}" />
+  <target name="cleanjjt" depends="init" unless="build.jjtUptodate">
     <delete file="${src.dir}/LemParser.jj" />
-    <mkdir dir="${doc.dir}/javadoc" />
-    <delete>
-      <fileset dir="${doc.dir}/javadoc">
-        <include name="*.*" />
-      </fileset>
-    </delete>
     <delete>
       <fileset dir="${src.dir}/parser">
         <include name="*.*" />
@@ -45,9 +41,10 @@
         <exclude name="package.html" />
       </fileset>
     </delete>
+    <touch file="${src.dir}/parser/.timestamp" />
   </target>
   
-  <target name="generate" depends="init,clean">
+  <target name="generate" depends="init,cleanjjt">
     <jjtree target="${src.dir}/LemParser.jjt"
     javacchome="${javacchome}"
     outputdirectory="${src.dir}/parser" />
@@ -55,15 +52,14 @@
     <javacc target="${src.dir}/parser/LemParser.jj"
     javacchome="${javacchome}"
     outputdirectory="${src.dir}/parser" />
-
-                <exec
-                        executable="perl"
-                        output="${src.dir}/verifier/Visitor.java">
-                        <arg line="${src.dir}/util/generateVisitor.pl
-                        ${src.dir}/parser/LemParserVisitor.java"/>
-                </exec>
+    
+    <exec executable="perl"
+      output="${src.dir}/verifier/Visitor.java">
+      <arg line="${src.dir}/util/generateVisitor.pl
+      ${src.dir}/parser/LemParserVisitor.java"/>
+    </exec>
   </target>
-  
+
   <target name="compile_one" depends="init">
     <javac srcdir="${src.dir}" destdir="${classes.dir}"
     debug="true" includes="${filename}" deprecation="true"
@@ -108,8 +104,20 @@
     <jar destfile="${build.dir}/${name}.jar"
     basedir="${classes.dir}" manifest="${etc.dir}/MANIFEST.MF" />
   </target>
-  
-  <target name="docs" depends="init">
+
+  <target name="cleandoc" depends="init">
+    <delete dir="${classes.dir}" />
+    <delete>
+      <fileset dir="${doc.dir}/javadoc">
+        <include name="*.*" />
+      </fileset>
+    </delete>
+    <mkdir dir="${doc.dir}/javadoc" />
+  </target>
+
+  <target name="clean" depends="cleandoc,cleanjjt" />
+
+  <target name="docs" depends="init,cleandoc">
     <javadoc sourcepath="${src.dir}" destdir="${doc.dir}/javadoc"
     author="true" version="true" use="true" private="true"
     windowtitle="LEM Documentation">
@@ -223,14 +231,6 @@
     </java>
   </target>
 
-  <target name="cmdline" depends="init">
-    <java classname="verifier.Cmdline" fork="true"
-    classpath="${build.dir}/classes">
-      <jvmarg line="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=y" />
-      <arg line="${lemSourceFile}" />
-    </java>
-  </target>
- 
   <target name="www_javadoc" depends="init">
     <scp todir="${www.host.user}@${www.host}:${www.host.path}/htdocs/javadoc"
     keyfile="${ssh.keyfile}" passphrase="">
