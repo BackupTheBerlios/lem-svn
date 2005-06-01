@@ -51,9 +51,11 @@
     <jjtree target="${src.dir}/LemParser.jjt"
     javacchome="${javacchome}"
     outputdirectory="${src.dir}/parser" />
+
     <javacc target="${src.dir}/parser/LemParser.jj"
     javacchome="${javacchome}"
     outputdirectory="${src.dir}/parser" />
+
                 <exec
                         executable="perl"
                         output="${src.dir}/verifier/Visitor.java">
@@ -220,7 +222,15 @@
       <arg line="${lemSourceFile}" />
     </java>
   </target>
-  
+
+  <target name="cmdline" depends="init">
+    <java classname="verifier.Cmdline" fork="true"
+    classpath="${build.dir}/classes">
+      <jvmarg line="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=y" />
+      <arg line="${lemSourceFile}" />
+    </java>
+  </target>
+ 
   <target name="www_javadoc" depends="init">
     <scp todir="${www.host.user}@${www.host}:${www.host.path}/htdocs/javadoc"
     keyfile="${ssh.keyfile}" passphrase="">
