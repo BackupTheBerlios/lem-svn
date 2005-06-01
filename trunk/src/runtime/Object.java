@@ -15,10 +15,9 @@ import metamodel.*;
  * This class represents a LEM runtime object. When the model is being executed,
  * instances of this class and deleted via the 'create' and 'delete' action
  * language statements.
- *
  * @author u4128551
  * @author u3957053
- * @see http://xtuml.jdns.org/wiki/index.php/Runtime_object
+ * @see the Objects at Runtime description at http://xtuml.jdns.org/wiki/index.php/Runtime_object
  */
 public class Object {
 //    InstanceAttribute attributes[] = null;
@@ -58,11 +57,12 @@ public class Object {
                 throw new LemRuntimeException( "Class '" 
                         + c.getName() + "' shares a common parent with another class" );
             }
-            
         }
     }
     
     /**
+     * Returns the attribute of this object with the given name. All instances
+     * which constitute the object are searched.
      * @param attributeName the attribute to find
      * @return the attribute with the given name, or <code>null</code> if the
      * named attribute doesn't exist
