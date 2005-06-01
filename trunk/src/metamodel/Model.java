@@ -2,8 +2,11 @@
  * $Id$
  *
  * $Log$
- * Revision 1.1  2005/03/15 12:17:17  u3957053
- * Initial revision
+ * Revision 1.2  2005/06/01 09:30:36  u3957053
+ * Added the ability to add bridges to the model
+ *
+ * Revision 1.1.1.1  2005/03/15 12:17:17  u3957053
+ * Import of xtuml.jdns.org source tree into GForge at ANU
  *
  * Revision 1.3  2004/09/20 12:14:45  u2550921
  * Source lines output on parse exception
@@ -46,6 +49,9 @@ public class Model implements DescribedEntity {
     
     /** Description of model */
     private String description = "";
+    
+    /** A collection of Bridges included in this model */
+    private HashMap bridges = new HashMap();
     
     /** Creates a new instance of Model */
     public Model() {
@@ -128,6 +134,27 @@ public class Model implements DescribedEntity {
         // all OK, so add it
         
         domains.put( domainName, theDomain );
+    }
+     
+    /**
+     * Add a new bridge to this model.
+     *
+     * @param theBridge to add
+     * @throws LemException if the supplied bridge name is not unique or unspecified
+     */
+    public void add( Bridge theBridge ) throws LemException {
+        String bridgeName = theBridge.getId();
+        if ( bridgeName == null || bridgeName.equals( "" ) ) {
+            throw new LemException( "empty bridge name" );
+        }
+        
+        if ( null != bridges.get( bridgeName ) ) {
+            throw new LemException( "Duplicate bridge definition. " + bridgeName + " already exists in " + name + " model"  );
+        }
+        
+        // all OK, so add it
+        
+        bridges.put( bridgeName, theBridge );
     }
     
     /**
