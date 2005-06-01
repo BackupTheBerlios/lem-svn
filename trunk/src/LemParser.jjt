@@ -1,6 +1,10 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.34  2005/06/01 08:02:19  u3964614
+* Simplified grammar. Now there is no 'BridgeIdentifier' just Identifier etc.
+* Much the same as the changes that were made to model declaration
+*
 * Revision 1.33  2005/05/31 12:34:40  u3293115
 * Cleaned up 'types' a bit, added some missing bits for "objref" type.
 *
@@ -428,10 +432,7 @@ void BridgeDeclaration() : {
 // constraint: LEM_E_01001
 }
 {
-  <BRIDGE> BridgeIdentifier() <IS>
-		  Description()
-		  BridgeBody() 
-  <END> [BridgeEndIdentifier()] <SEMI>
+  <BRIDGE> Identifier() <IS> Description() BridgeBody() EndIdentifier() <SEMI>
 }
 
 
@@ -443,12 +444,6 @@ void BridgeBody() : {
   <BETWEEN> Identifier() <AND> Identifier() Description()
 }
 
-void BridgeIdentifier() : {} {
-  <SIMPLE_IDENTIFIER> 
-}
-void BridgeEndIdentifier() : {} {
-  <SIMPLE_IDENTIFIER> 
-}
 
 void IdentifierDeclaration() : {}
 {
