@@ -6,6 +6,8 @@
 
 
 package verifier;
+import java.util.Collection;
+import java.util.Vector;
 import metamodel.*;
 import parser.*;
 
@@ -76,20 +78,36 @@ public class BuilderPass2 extends Visitor {
         return p;
     }
     
+    public Object visit( LEMClassList node, Object data ) throws LemException {
+        Vector v = new Vector();
+        
+        for( int i = 0; i < node.jjtGetNumChildren(); i++ ) {
+            String className = getIdentifier( node.jjtGetChild(i));
+            metamodel.Class c = currentDomain.getClass(className);
+            
+            if( c == null ) {
+                throw new LemException(
+                        "Class " + c + " does not exist.",
+                        node.getFirstToken(),
+                        "LEM_E_01017" );
+            }
+            
+            v.add( c );
+            
+        }
+        
+        return v;
+    }
+    
     public Object visit( LEMObjectCreation node, Object data ) throws LemException {
         CreateAction a = new CreateAction();
-        String className = getIdentifier( node.jjtGetChild(0));
-        metamodel.Class c = currentDomain.getClass(className);
-        a.setClass(c);
+        Collection c = (Collection)visit( (LEMClassList)node.jjtGetChild(0), null);
+        
+        
+        a.setClasses(c);
         Procedure p = (Procedure)data;
         p.addAction( a );
         
-        if( c == null ) {
-            throw new LemException(
-                    "Class " + c + " does not exist.",
-                    node.getFirstToken(),
-                    "LEM_E_01017" );
-        }
         
         return a;
     }
@@ -445,7 +463,7 @@ public class BuilderPass2 extends Visitor {
      * parameter must be of type LEMIdentifier
      *
      * @return the String identifier represented by the Node
-     * @todo This is code duplicated from BuilderPass1. Perhaps the Visitor 
+     * @todo This is code duplicated from BuilderPass1. Perhaps the Visitor
      * class should implement this?
      */
     private String getIdentifier( Node identifierNode ) throws LemException {

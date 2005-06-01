@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.37  2005/06/01 14:06:52  u3957053
+* Added a new ClassList() non-terminal and BuilderPass2 code to implement it. The creation action can now take a list of classes
+*
 * Revision 1.36  2005/06/01 10:02:58  u3293115
 * Added variable declarations. Variable declarations follow C style:
 * can only be declared at the beginning of each block. Needs some
@@ -1057,8 +1060,14 @@ void VariableReference() : {}
 
 void ObjectCreation() : {}  
 {
-	<CREATE> Identifier()
+	<CREATE> ClassList()
 }	
+
+// ClassList must match at least one class.. is this what we want?
+void ClassList() : {}
+{
+        Identifier() ( <COMMA> Identifier() )*
+}
 
 void ObjectDeletion() : {}
 {
