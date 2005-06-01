@@ -18,7 +18,7 @@
     <property name="classes.dir" value="${build.dir}/classes" />
     <property name="etc.dir" value="etc" />
     <property name="javacchome"
-    value="/usr/share/java/" />
+    value="C:\Program Files\Java\javacc-3.2"/>
     <property name="deploy.name" value="${name}.jar" />
     <property name="ssh.keyfile" value="/home/smr/.ssh/id_dsa" />
     <property name="lib.dir" value="lib" />
@@ -66,13 +66,13 @@
     <javacc target="${src.dir}/parser/LemParser.jj"
     javacchome="${javacchome}"
     outputdirectory="${src.dir}/parser" />
-    
+    <!--
     <exec executable="perl"
       output="${src.dir}/verifier/Visitor.java">
       <arg line="${src.dir}/util/generateVisitor.pl
       ${src.dir}/parser/LemParserVisitor.java"/>
     </exec>
-    
+    -->
     <touch file="${src.dir}/parser/.timestamp" />
   </target>
 
@@ -144,6 +144,8 @@
       <fileset dir="${src.dir}/util" includes="*.java" />
       <fileset dir="${src.dir}/test" includes="*.java" />
       <fileset dir="${src.dir}/tools" includes="*.java" />
+      <fileset dir="${src.dir}/runtime" includes="*.java" />
+      <fileset dir="${src.dir}/splash" includes="*.java" />
       <bottom>
         <![CDATA[<em>Copyright &copy; 2004</em></div>]]>
       </bottom>
