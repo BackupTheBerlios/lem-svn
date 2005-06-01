@@ -42,9 +42,13 @@ public class Cmdline {
                     models.add( m );
         } catch (FileNotFoundException fnfe) {
 		System.out.println("File not found");
-        } catch (Exception e) {
-		System.out.println("Exception");
-	}
+	} catch( ParseException pe ) {
+                System.out.println("Parse Error: " + pe.getMessage());
+        } catch( LemException le ) {
+                System.out.println("Parse Error: " + le.getMessage());
+        } catch( IOException ioe ) {
+                System.out.println("I/OO Error: " + ioe.getMessage());
+        }
         
 /*        metamodel.Procedure p = m.getDomain( "Publications" ).getClass( "Manuscript" ).getStateMachine().getState("Adding").getProcedure();
         runtime.ModelInstance i = new runtime.ModelInstance();
