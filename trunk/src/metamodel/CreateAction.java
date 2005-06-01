@@ -9,7 +9,7 @@
  */
 
 package metamodel;
-import java.util.ArrayList;
+import java.util.Collection;
 import runtime.*;
 
 /**
@@ -19,12 +19,10 @@ import runtime.*;
 public class CreateAction extends Action {
     
     /**
-     * A new object containing an instance of this class will be created when this CreateAction is
-     * executed.
-     *
-     * @todo An object may be an instance of multiple classes
+     * A new object containing an instance of these classes will be created when 
+     * this CreateAction is executed.
      */
-    metamodel.Class theClass = null;
+    Collection classes = null;
     
     
     /** Creates a new instance of CreateAction */
@@ -37,8 +35,8 @@ public class CreateAction extends Action {
      * @param theClass the class to be instantiated
      * @todo An object may be an instance of multiple classes
      */
-    public void setClass( metamodel.Class theClass ) {
-        this.theClass = theClass;
+    public void setClasses( Collection classes ) {
+        this.classes = classes;
     }
     
     /**
@@ -48,9 +46,7 @@ public class CreateAction extends Action {
      * @param context The context into which the newly created object should be inserted
      */
     public void execute( Context context ) {
-        ArrayList classes = new ArrayList();
         runtime.Object o = null;
-        classes.add( theClass );
         try {
             o = new runtime.Object( classes );
         } catch( LemRuntimeException e ) {
