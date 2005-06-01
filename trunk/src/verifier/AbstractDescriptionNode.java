@@ -26,7 +26,10 @@ public abstract class AbstractDescriptionNode extends DefaultMutableTreeNode{
     
     /**
      * Takes empty extra white spaces out of String
-     * but preserves the NewLines after end of sentences. */
+     * but preserves the NewLines after end of sentences.
+     * @param text the text to trim
+     * @return the trimmed text
+     */
     public String trim(String text) {
         String tmp = "" , trimmed = "" ;        
         String[] words = text.split("\n");
