@@ -10,7 +10,7 @@ package metamodel;
  *
  * @author  smr
  */
-public class Bridge {
+public class Bridge implements DescribedEntity {
     
     /** ID of this Bridge */
     String id = null;
@@ -61,6 +61,7 @@ public class Bridge {
     public void setDescription(java.lang.String description) {
         this.description = description;
     }
+    
     
     /** Getter for property id.
      * @return Value of property id.

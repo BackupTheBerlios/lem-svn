@@ -66,7 +66,26 @@ public class BuilderPass1 extends Visitor {
 
 	return m;
     }
-
+    /**
+     * Returns a bridge when given a LEMBridgeDeclaration
+     * Adds a bridge to the model
+     *
+     * @author James Greenhalgh u3964614
+     * @throws LemRuntimeException if invalid parameters are passed
+     * @return a bridge
+     */
+    public Object visit(LEMBridgeDeclaration node, Object data) throws LemException {
+        Bridge b = new Bridge();
+        super.visit( node, b );
+        String bridgeName = getIdentifier( node.jjtGetChild( 0 ));
+        String bridgeEndName = getEndIdentifier( node.jjtGetChild( 2));
+        checkIdentity( bridgeName, bridgeEndName, node.getLastToken());
+        b.setId( bridgeName );
+        Model m = (Model)data;
+        m.add(b);
+        
+        return b;
+    }
     public Object visit(LEMIdentifier node, Object data) throws LemException {
     	return node.getFirstToken().image;
     }

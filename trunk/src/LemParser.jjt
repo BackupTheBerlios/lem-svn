@@ -1,6 +1,22 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.35  2005/06/01 09:58:56  u3964614
+* LemParser.jjt:
+* Commented out the 'description()' part of the bridge grammar. This is because
+* an issue needs to be resolved with there being two 'descriptions' (model and
+* bridge)
+*
+* Bridge.java:
+* made this implement DescribedEntity so that it could be visited properly
+*
+* BuilderPass1.java:
+* Added visit(LEMBridgeDeclaration) so that bridges can start being worked
+* into the models.
+*
+* Bridges are now a part of the object model. They still need to be worked into
+* the GUI, and the issue with the two descriptions needs to be solved.
+*
 * Revision 1.34  2005/06/01 08:02:19  u3964614
 * Simplified grammar. Now there is no 'BridgeIdentifier' just Identifier etc.
 * Much the same as the changes that were made to model declaration
@@ -428,11 +444,15 @@ void ModelBody() : {}
   ( DomainDeclaration() )+ ( BridgeDeclaration() )*
 }
 
+
+/*
+*@todo Fix description() so that it can differentiate it from the model description
+*/
 void BridgeDeclaration() : {
 // constraint: LEM_E_01001
 }
 {
-  <BRIDGE> Identifier() <IS> Description() BridgeBody() EndIdentifier() <SEMI>
+  <BRIDGE> Identifier() <IS> /*Description()*/ BridgeBody() EndIdentifier() <SEMI>
 }
 
 
