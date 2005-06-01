@@ -31,7 +31,8 @@
     <mkdir dir="${classes.dir}" />
   </target>
   
-  <target name="cleanjjt" depends="init" unless="build.jjtUptodate">
+  <target name="cleanjjt_maybe" depends="init" unless="build.jjtUptodate">
+    <delete file="${src.dir}/parser/.timestamp" />
     <delete file="${src.dir}/LemParser.jj" />
     <delete>
       <fileset dir="${src.dir}/parser">
@@ -41,10 +42,23 @@
         <exclude name="package.html" />
       </fileset>
     </delete>
-    <touch file="${src.dir}/parser/.timestamp" />
+  </target>
+
+  <!-- cleanjjt should be set jjtUptodate to false, call cleanjjt_maybe -->
+  <target name="cleanjjt">
+    <delete file="${src.dir}/parser/.timestamp" />
+    <delete file="${src.dir}/LemParser.jj" />
+    <delete>
+      <fileset dir="${src.dir}/parser">
+        <include name="*.*" />
+        <exclude name="LemNode.java" />
+        <exclude name="SimpleNode.java" />
+        <exclude name="package.html" />
+      </fileset>
+    </delete>
   </target>
   
-  <target name="generate" depends="init,cleanjjt">
+  <target name="generate" depends="init,cleanjjt_maybe">
     <jjtree target="${src.dir}/LemParser.jjt"
     javacchome="${javacchome}"
     outputdirectory="${src.dir}/parser" />
@@ -58,6 +72,8 @@
       <arg line="${src.dir}/util/generateVisitor.pl
       ${src.dir}/parser/LemParserVisitor.java"/>
     </exec>
+    
+    <touch file="${src.dir}/parser/.timestamp" />
   </target>
 
   <target name="compile_one" depends="init">
