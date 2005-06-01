@@ -21,6 +21,9 @@ public class ModelInstance extends Context {
         return null;
     }
     
+    /**
+     * Indicate to this context that it is about to disappear.
+     */
     public void finish() {
     }
 }
