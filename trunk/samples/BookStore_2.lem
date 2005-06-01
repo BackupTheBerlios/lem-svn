@@ -9,6 +9,9 @@
 // $Id$
 // 
 // $Log$
+// Revision 1.9  2005/06/01 07:53:50  u3964614
+// Added a test bridge.
+//
 // Revision 1.8  2005/05/30 07:04:00  u3957053
 // Fixed Bookstore_2 so that it doesn't break state end identifier check
 //
@@ -264,3 +267,9 @@ model BookStoreModel is
 			
 	end Publications;
 end BookStoreModel;
+
+BRIDGE foo IS "a bridge that tests whether James' code changes work"
+
+	BETWEEN foo AND foo2 "This is a test description in the bridge body"
+
+END foo;
