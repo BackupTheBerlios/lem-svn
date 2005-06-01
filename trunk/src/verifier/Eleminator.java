@@ -6,6 +6,7 @@
 
 package verifier;
 
+import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -32,7 +33,7 @@ import tools.Lem;
 import java.io.*;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.*;
-import net.sf.saxon.TransformerFactoryImpl;
+
 
 
 /**
@@ -74,9 +75,7 @@ public class Eleminator extends javax.swing.JFrame {
         setTitle("eLEMinator");
         URL imageURL = getClass().getClassLoader().getResource("verifier/lem.jpg");
         Image lem = Toolkit.getDefaultToolkit().getImage(imageURL);
-        setIconImage(lem);
-        
-        
+        setIconImage(lem);                         
     }
     
     /** This method is called from within the constructor to
@@ -161,8 +160,7 @@ public class Eleminator extends javax.swing.JFrame {
             // Display a file chooser
             
             File selectedFile;
-            Model m = null;
-            
+            Model m = null;          
             JFileChooser jfc = new JFileChooser( workingDirectory );
             jfc.setFileFilter( new FileFilter() {
                 public boolean accept( File f ) {
@@ -176,10 +174,10 @@ public class Eleminator extends javax.swing.JFrame {
             
             jfc.setCurrentDirectory( workingDirectory );
             
-            jfc.showDialog( this, "Import" );
+            int retval = jfc.showDialog( this, "Import" );
             
             selectedFile = jfc.getSelectedFile();
-            if (selectedFile != null) {
+            if (selectedFile != null && (retval == jfc.APPROVE_OPTION)) {
                 try {
                     m = importModel( selectedFile );
                     if (m != null) {
@@ -252,15 +250,15 @@ public class Eleminator extends javax.swing.JFrame {
         
         jfc.setCurrentDirectory(workingDirectory);
         
-        jfc.showDialog(this, "Load");
+        int retval = jfc.showDialog(this, "Load");
         
         selectedFile = jfc.getSelectedFile();
-        if( selectedFile != null ) {
+        if( selectedFile != null && (retval == jfc.APPROVE_OPTION) ) {
             try {
                 m = loadModel( selectedFile );
                 if( m != null ) {
                     models.add( m );
-                    JOptionPane.showMessageDialog( this, "Model loaded successfully.", "Success!", 
+                    JOptionPane.showMessageDialog( this,jfc.getApproveButtonMnemonic()+ "Model loaded successfully.", "Success!", 
                             JOptionPane.INFORMATION_MESSAGE );
                     workingDirectory = jfc.getSelectedFile().getParentFile();
                     getContentPane().remove(MTP);
