@@ -9,6 +9,11 @@
 // $Id$
 // 
 // $Log$
+// Revision 1.12  2005/06/01 12:33:06  u3293115
+// Hack the builder a little so that it handles having PrimitiveType nodes
+// underneath Procedures. The whole type declaration / primitive type /
+// domain specific type / etc. needs to be clarified and probably redesigned.
+//
 // Revision 1.11  2005/06/01 09:50:50  u3964614
 // Took out the comment directly after 'bridge foo is' to reflect a temporary
 // change in the lemparser.jjt file.
@@ -151,6 +156,7 @@ model BookStoreModel is
 						"the manuscript is incomplete and is subject to regular
 						additions by the author" ( newText is string ) is
 						{
+							objref obj;
 							a := blah;
 							a := b.blah;
 							// a := create Manuscript;	
