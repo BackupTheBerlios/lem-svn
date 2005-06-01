@@ -9,6 +9,9 @@
 // $Id$
 // 
 // $Log$
+// Revision 1.10  2005/06/01 08:00:58  u3964614
+// Fixed silly bug. Had bridge declaration outside the entire model. Put it inside
+//
 // Revision 1.9  2005/06/01 07:53:50  u3964614
 // Added a test bridge.
 //
@@ -266,10 +269,10 @@ model BookStoreModel is
 		end Sales;
 			
 	end Publications;
+
+	bridge foo is "a bridge that tests whether James' code changes work"
+
+		between foo and foo2 "This is a test description in the bridge body"
+
+	end foo;
 end BookStoreModel;
-
-BRIDGE foo IS "a bridge that tests whether James' code changes work"
-
-	BETWEEN foo AND foo2 "This is a test description in the bridge body"
-
-END foo;
