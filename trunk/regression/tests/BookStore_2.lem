@@ -1,0 +1,288 @@
+// Bookstore model after the example from Mellor & Balcer, pg 83
+//
+// Reorganise the model to include Sales and Authorship subsystems
+// Start experimenting with syntax for state machines
+//
+// This file is an Executable UML model expressed in the text-based language
+// known as LEM (Language for Executable Models)
+//
+// $Id$
+// 
+// $Log$
+// Revision 1.1  2005/06/01 13:10:52  u3293115
+// First pass at a basic regression tester.
+// Whether or not this is going to be the accepted, well designed regression
+// test that we want, it should at least make life a bit easier while
+// developing the action language and runtime.
+//
+// Revision 1.11  2005/06/01 09:50:50  u3964614
+// Took out the comment directly after 'bridge foo is' to reflect a temporary
+// change in the lemparser.jjt file.
+//
+// Revision 1.10  2005/06/01 08:00:58  u3964614
+// Fixed silly bug. Had bridge declaration outside the entire model. Put it inside
+//
+// Revision 1.9  2005/06/01 07:53:50  u3964614
+// Added a test bridge.
+//
+// Revision 1.8  2005/05/30 07:04:00  u3957053
+// Fixed Bookstore_2 so that it doesn't break state end identifier check
+//
+// Revision 1.7  2005/05/25 04:32:32  u3293115
+// Fix action language blocks, actually include some basic action language
+// in bookstore 2.
+//
+// Disambiguate the last ambiguous non terminal match with an explicit
+// LOOKAHEAD directive. Remove the global LOOKAHEAD=4 directive.
+//
+// Revision 1.6  2005/05/25 03:31:54  u3957053
+// AuthorShip -> Authorship
+//
+// Revision 1.5  2005/05/25 02:53:10  u3293115
+// Fairly large change to action language grammar. Probably won't be
+// a final version but something to work from when we get down to
+// specifying the final EBNF for the action language soon.
+//
+// Revision 1.4  2005/05/15 00:52:42  u3957053
+// Whoops... shouldn't have committed my test condition for errors
+//
+// Revision 1.3  2005/05/15 00:43:27  u3957053
+// Demonstrate new object creation statement
+//
+// Revision 1.2  2005/04/26 11:34:37  u3957053
+// Fixed model to work with updated grammar
+//
+// Revision 1.1.1.1  2005/03/15 12:17:16  u3957053
+// Import of xtuml.jdns.org source tree into GForge at ANU
+//
+// Revision 1.1  2004/08/23 12:44:58  u2550921
+// Sample to demonstrate state machine syntax
+//
+//
+
+model BookStoreModel is
+
+	"an Executable UML model of the operation of a bookstore.
+	
+	 This model defines the static objects such as Book, publisher, author and customer
+	 and the relationships that exist between these objects.
+	 The model does not contain any specification of the dynamic behaviour of the domain.
+	 The model currently consists of a single domain know as
+	 'Publications'."
+	 
+	domain Publications is "concerned with publishers, books, authors and customers"
+	
+		// declare some domain specific types...
+		// by using domain specific data types we allow the domain experts to feel more comfortable
+		// with the subject matter being described
+
+		type Money "the root of all evil" is numeric;
+		type ISBN "is used to uniquely identify books" is string;
+		type PrintStatus "describes the status of a publication" is (inprint or discontinued);
+		
+		subsystem Authorship is "concerned with the writing and publishing of books"
+
+			///////////////////////////////////////////////////////////////////////
+			// CLASSES															 //
+			///////////////////////////////////////////////////////////////////////
+
+			/*
+			 * PUBLISHER
+			 * =========
+			 */
+			object Publisher is "a representation of a book publisher"
+				attribute name "identifies the publisher" is string;
+				attribute address "for service of notices and deliveries" is string;
+				attribute website "allows us to place orders online and to 
+						lookup stock status and prices" is string;
+			end Publisher;
+			
+			/*
+			 * BOOK
+			 * ====
+			 */
+			object Book is "a representation of a book"
+				attribute bookNumber "uniquely identifies the book" is ISBN;
+				attribute title "appears on the cover of the book" is string;
+				attribute subtitle "provides additional information for some books.
+						  We regard the subtitle as a simple extension of the 
+						  name of the book" is string := "NO SUBTITLE";
+				attribute copyright "a notice detailing the owner of the copyright for 
+						   the book" is string;
+				attribute unitPrice "the price of one copy of the book" is Money;
+			end Book;
+
+			/*
+			 * AUTHOR
+			 * ======
+			 */
+			object Author is "the writer of one or more books (titles)" 
+				attribute authorId "a unique identifier for the author" is arbitrary_id;
+				attribute name "identifies the author" is string;
+				attribute website "provides useful details about the author. Of course,
+						 not all authors have a website" is string;
+				attribute email "allows use to communicate via electronic mail" is string;
+			end Author;
+
+			/*
+			 * MANUSCRIPT
+			 * ==========
+			 */
+			object Manuscript is 
+				"a body of written material generated by an author in the hope that
+				it will, one day, be accepted by a publisher and be published as a book"
+
+				attribute title "the name of the work under construction" is string;
+				attribute body "is the text comprising the work" is string;
+
+				///////////////////////////////////////////////////////////
+				// Events
+				//////////////////////////////////////////////////////////
+
+				event Draft "adds new material to the end of the manuscript"
+					carries ( newText is string );
+				event Revise 
+					"makes changes to existing material by changing, deleting or
+					 replacing material" 
+					carries ( startPosition is numeric, revisionLength is numeric, replaceWith is string );
+				event Acceptance "the publisher has accepted the manuscript";
+				event Abandon "the manuscript has been abandoned by the author";
+
+				///////////////////////////////////////////////////////////
+				// States
+				//////////////////////////////////////////////////////////
+
+				behaviour is 
+					state Adding 
+						"the manuscript is incomplete and is subject to regular
+						additions by the author" ( newText is string ) is
+						{
+							objref obj;
+							a := blah;
+							a := b.blah;
+							// a := create Manuscript;	
+							// action language goes here
+							// action language goes here
+							// action language goes here
+						}
+
+					end Adding;
+
+					state Amending 
+						"already drafted material is subject to change by the author
+						 in response to editorial or personal review" 
+						( startPosition is numeric, amendmentLength is numeric, replaceWith is string) is 
+							
+							// action language goes here
+							// action language goes here
+							// action language goes here
+
+					end Amending;
+
+					state Accepted 
+						"the manuscript has been accepted for publication.
+						 No futher work is performed by the author" is
+							
+							// action language goes here
+							// celebration code here
+							// action language goes here
+							// action language goes here
+
+					end Accepted;
+
+					deletion state Abandoned
+						"the manuscript is abandonded by the author. The manuscript is
+						 discarded" is
+
+						//
+						// action language
+						// throw it on the fire
+						//
+
+					end Abandoned;
+					
+					///////////////////////////////////////////////////////////
+					// TRANSITIONS
+					//////////////////////////////////////////////////////////
+
+					on Draft transition from creation state to Adding;
+					on Revise transition from Adding to Amending;
+					on Draft transition from Amending to Adding;
+					on Acceptance transition from Adding to Accepted;
+					on Acceptance transition from Amending to Accepted;
+					on Abandon transition from Adding to Abandoned;
+					on Abandon transition from Amending to Abandoned;
+
+				end behaviour;
+			end Manuscript;
+								
+
+			/////////////////////////////////////////////////////////////////
+			// RELATIONSHIPS                                               //  
+			/////////////////////////////////////////////////////////////////
+			
+			association R1 is "a record of the fact that each book has a publisher" 
+				Publisher "produces and markets" 0..* Book;
+				Book "is produced and marketed by" 1..1 Publisher;
+			end R1;
+			
+			association R2 is "a record of the author's special relationship with the book" 
+				Author "writes" 1..* Book;
+				Book "is written by" 1..1 Author;
+			end R2;
+
+			association R4 is "the relationship between the author and a manuscript"
+				Author "authors" 1..* Manuscript;
+				Manuscript "is authored by" 1..1 Author;
+			end R4;
+			
+		end Authorship;
+
+
+		subsystem Sales is "concerned with book sales"
+
+			///////////////////////////////////////////////////////////////////////
+			// CLASSES															 //
+			///////////////////////////////////////////////////////////////////////
+
+			/*
+			 * CUSTOMER
+			 * ========
+			 */
+			object Customer is "the important person to whom we sell books.
+								Customers may be individuals or organisations but
+								we do not treat them differently" 
+				attribute customerId "a unique identifier for the customer" is arbitrary_id;
+				attribute name "identifies the customer" is string;
+				attribute email "provides a convenient means of communication with the customer" is string;
+			end Customer;
+
+			/////////////////////////////////////////////////////////////////
+			// RELATIONSHIPS                                               //  
+			/////////////////////////////////////////////////////////////////
+
+			association R3 is "a record of the fact that customer's buy books" 
+				Customer "buys" 0..* Book;
+				Book "is sold to" 0..* Customer;
+
+				//
+				// we use an "association class" to record information about a purchase
+				//
+				
+				object Sale is "a record of the sale of a book to a customer"
+					attribute saleDate "records the date of the transaction" is date;
+					attribute quantity "of this title (book) sold to the customer" is numeric;
+					attribute unitPrice "of the book" is Money;
+					attribute value "of this sale" is Money;
+				end Sale;
+				
+			end R3;
+		end Sales;
+			
+	end Publications;
+
+	bridge foo is
+		between foo and foo2 "This is a test description in the bridge body"
+	end foo;
+
+end BookStoreModel;
