@@ -9,6 +9,10 @@
 // $Id$
 // 
 // $Log$
+// Revision 1.11  2005/06/01 09:50:50  u3964614
+// Took out the comment directly after 'bridge foo is' to reflect a temporary
+// change in the lemparser.jjt file.
+//
 // Revision 1.10  2005/06/01 08:00:58  u3964614
 // Fixed silly bug. Had bridge declaration outside the entire model. Put it inside
 //
@@ -270,9 +274,8 @@ model BookStoreModel is
 			
 	end Publications;
 
-	bridge foo is "a bridge that tests whether James' code changes work"
-
+	bridge foo is
 		between foo and foo2 "This is a test description in the bridge body"
-
 	end foo;
+
 end BookStoreModel;
