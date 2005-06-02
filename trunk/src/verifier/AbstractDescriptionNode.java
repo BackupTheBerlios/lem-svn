@@ -13,7 +13,9 @@ import javax.swing.text.StyleConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
- *
+ * Tree node appearing inside a ModelTreePanel or another tree node. Has methods 
+ * for returning a preformatted StyledDocument. Has method for returning a context
+ * menu.
  * @author David Gavin
  */
 public abstract class AbstractDescriptionNode extends DefaultMutableTreeNode{
@@ -21,7 +23,10 @@ public abstract class AbstractDescriptionNode extends DefaultMutableTreeNode{
     /** Creates a new instance of AbstractDescriptionNode */
     public AbstractDescriptionNode() {
     }
-    
+    /**
+     * To be implemented by all children. Will typically return the String 
+     * description of the LEM object held by the particular node.
+     */
     public abstract String getDescription();
     
     /**
@@ -49,7 +54,9 @@ public abstract class AbstractDescriptionNode extends DefaultMutableTreeNode{
         }
         return trimmed ;
     }
-    
+    /**
+     * Returns StyledDocument object containing preformatted LEM object description.
+     */
     public StyledDocument getStyledDocument() {
         StyledDocument doc = new StyledDocument() ;
         SimpleAttributeSet s = new SimpleAttributeSet();
@@ -77,6 +84,10 @@ public abstract class AbstractDescriptionNode extends DefaultMutableTreeNode{
         doc.addStyle(element1) ;
         return doc ;
     }
+    /**
+     * Returns dynamically built contextmenu. Each context menu will be built based
+     * on the LEM object that the node contains. 
+     */
     public abstract javax.swing.JPopupMenu getContextMenu();
     
 }
