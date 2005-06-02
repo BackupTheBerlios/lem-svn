@@ -307,6 +307,12 @@ public class Eleminator extends javax.swing.JFrame {
     }
     
     
+    /**
+     * Converts an XMI file into a LEM model.  Note that this functionality is
+     * experimental, and only works in very limited cases.
+     * @param importFile the XMI file to convert
+     * @return a LEM model created from the XMI file
+     */
     public Model importModel( File importFile ) throws TransformerException, TransformerConfigurationException,
             FileNotFoundException, ParseException, LemException, IOException {
         Lem l = new Lem();

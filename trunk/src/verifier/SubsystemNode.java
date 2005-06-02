@@ -14,6 +14,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import metamodel.Domain;
 import metamodel.Subsystem;
 
+/**
+ * Models Subsystem nodes in the GUI
+ */
 public class SubsystemNode extends AbstractDescriptionNode {
 	
 	Subsystem subsystem;
