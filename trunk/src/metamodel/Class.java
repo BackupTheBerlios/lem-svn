@@ -380,10 +380,11 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
     }
     
     /**
-     * Return a collection of all generalisations in which this class participates. These include
+     * Return a collection of all generalisations in which this class participates as a subclass. These include
      * the generalisations in which this class directly participates as well as all those
      * involving this class's parents.
      * @return all generalisations in which this class participates, including participation by parent and grandparent classes
+     * @todo This method is misnamed: it returns only Generalisations in which this class participates as a subclass
      */
     public HashMap getAllGeneralisations() {
         
@@ -393,6 +394,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
         
         for (Iterator it = generalisationRoles.values().iterator(); it.hasNext(); ) {
             GeneralisationRole role = (GeneralisationRole) it.next();
+            if( role instanceof SuperclassRole ) continue;
             Generalisation g = role.getGeneralisation();
             result.put( g.getName(), g );
         }
@@ -532,7 +534,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
      * @return an ArrayList containing all generalisations in which 
      * this class directly participates as a subclass
      */
-    public HashMap getSubclassParticipation()  {
+    public HashMap getSubclassParticipation() {
         
         HashMap result = new HashMap();
         
