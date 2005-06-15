@@ -75,4 +75,46 @@ public class ObjectTest extends junit.framework.TestCase {
         classList.add( e );
         assertEquals( "B, D and E participate in the same hierarchy", false, runtime.Object.validClasses( classList ));
     }
+    
+    /**
+     * Please refer to the regression/tests/ParentTest.lem
+     */
+    public void testValidClassesComplex() {
+        Lem l = new Lem();
+        Model m = null;
+        
+        try {
+            m = l.parse( new FileInputStream( "regression/tests/ParentTestComplex.lem" ));
+        } catch( FileNotFoundException fnfe ) {
+            fail( "Could not find model file " + fnfe.getMessage() );
+        } catch( IOException e ) {
+            fail( "Could not read model file: " + e.getMessage() );
+        } catch( ParseException e ) {
+            fail( "Could not parse model file: " + e.getMessage() );
+        } catch( LemException e ) {
+            fail( "Some LEMException occurred: " + e.getMessage() );
+        }
+        
+        HashMap classes = m.getDomain("TestDomain").getClasses();
+        HashMap parents = new HashMap();
+        
+        metamodel.Class a = (metamodel.Class)classes.get( "A" );
+        metamodel.Class b = (metamodel.Class)classes.get( "B" );
+        metamodel.Class c = (metamodel.Class)classes.get( "C" );
+        metamodel.Class d = (metamodel.Class)classes.get( "D" );
+        metamodel.Class e = (metamodel.Class)classes.get( "E" );
+        metamodel.Class f = (metamodel.Class)classes.get( "F" );
+        metamodel.Class g = (metamodel.Class)classes.get( "G" );
+        metamodel.Class h = (metamodel.Class)classes.get( "H" );
+        metamodel.Class i = (metamodel.Class)classes.get( "I" );
+        
+        ArrayList classList = new ArrayList();
+        classList.add( b );
+        assertEquals( "B is a valid object in and of itself", true, runtime.Object.validClasses( classList ));
+        classList.add( h );
+        assertEquals( "B,H is a valid object in and of itself", true, runtime.Object.validClasses( classList ));
+        classList.add( f );
+        assertEquals( "F,H participate in the same hierarchy", false, runtime.Object.validClasses( classList ));
+        
+    }
 }
