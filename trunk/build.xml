@@ -78,7 +78,7 @@
   <target name="compile_one" depends="init">
     <javac srcdir="${src.dir}" destdir="${classes.dir}"
     debug="true" includes="${filename}" deprecation="true"
-    optimize="false" />
+    optimize="false"/>
   </target>
   
   
@@ -89,12 +89,12 @@
             <exclude name="eLEMinator.jpg"/>
         </fileset>
     </copy>
-    <copy file="${src.dir}/splash/eLEMinator.jpg"
-        todir="${classes.dir}/splash" overwrite="false" />
+    <copy file="${src.dir}/splash/eLEMinator.jpg" todir="${classes.dir}/splash"/>
     
     <javac srcdir="${src.dir}" destdir="${classes.dir}"
         classpathref="build.classpath" debug="true"
-        deprecation="true" optimize="false" />
+        deprecation="true" optimize="false"
+        excludes="test/**" />
   </target>
   
   <target name="jarfile" depends="compile">
@@ -151,5 +151,26 @@
       <jvmarg line="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=y" />
       <arg line="${lemSourceFile}" />
     </java>
+  </target>
+  
+  <!-- Test related stuff -->
+  
+  <target name="compile_tests" depends="compile">
+    <javac srcdir="${src.dir}/test" destdir="${classes.dir}"
+        classpathref="build.classpath" debug="true"
+        deprecation="true" optimize="false" />
+  </target>
+  
+  <target name="test" depends="compile_tests">
+    <junit fork="yes">
+        <formatter type="plain"/>
+        <classpath path="${build.dir}/classes"/>
+        <batchtest>
+            <fileset dir="${build.dir}/classes">
+                <include name="**/*Test.class"/>
+            </fileset>
+        </batchtest>
+        
+    </junit>
   </target>
 </project>
