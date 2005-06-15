@@ -165,7 +165,7 @@
     <junit fork="yes">
         <formatter type="plain"/>
         <classpath path="${build.dir}/classes"/>
-        <batchtest>
+        <batchtest todir="${build.dir}">
             <fileset dir="${build.dir}/classes">
                 <include name="**/*Test.class"/>
             </fileset>
