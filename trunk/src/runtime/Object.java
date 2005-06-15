@@ -53,10 +53,11 @@ public class Object {
             // collection shares the same parent, we can't instantiate that
             // class
             
-            if( getParents( c, h )) {
+/*            if( getParents( c, h )) {
                 throw new LemRuntimeException( "Class '" 
                         + c.getName() + "' shares a common parent with another class" );
             }
+ */
         }
     }
     
@@ -86,7 +87,10 @@ public class Object {
      * @todo does this method exclude the root of a generalisation hierarchy 
      * in the duplicate check?
      */
-    private boolean getParents( metamodel.Class c, HashMap h ) {
+    /*
+    
+     I don't think we actually use this
+     protected static boolean getParents( metamodel.Class c, HashMap h ) {
         boolean duplicates = false;
         
         HashMap superClasses = c.getSubclassParticipation();
@@ -103,5 +107,38 @@ public class Object {
         }
         
         return duplicates;
+    } */
+    
+    /**
+     * Checks whether the given collection of classes, when instantiated, would
+     * represent a valid Object. Objects may not contain instances of classes
+     * which participate in a common Generalisation hierarchy.
+     *
+     * @param classes the collection of classes to check
+     * @return whether the given collection of classes could be instantiated
+     * into a single object
+     */
+    
+    protected static boolean validClasses( Collection classes ) {
+        // A place to put all the generalisations
+        HashMap h = new HashMap();
+        
+        Iterator i = classes.iterator();
+        while( i.hasNext() ) {
+            metamodel.Class c = (metamodel.Class)i.next();
+            
+            if( c.isAbstract() ) return false;
+            HashMap gens = c.getAllGeneralisations();
+            
+            // Add each generalisation to the big list of generalisations
+            Iterator j = gens.values().iterator();
+            while( j.hasNext () ) {
+                if( h.put( j.next(), "a" ) != null ) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
     }
 }
