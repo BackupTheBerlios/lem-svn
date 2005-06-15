@@ -9,7 +9,7 @@ package runtime;
 import java.util.HashMap;
 import java.util.Collection;
 import java.util.Iterator;
-import metamodel.*;
+import java.util.LinkedList;
 
 /**
  * This class represents a LEM runtime object. When the model is being executed,
@@ -36,28 +36,14 @@ public class Object {
         
         // Do these classes actually participate in the same inheritance
         // hierarchy?
+        if( !validClasses( classes )) {
+            throw new LemRuntimeException( "Specified class list will not produce a valid Object" );
+        }
         
-        Iterator i = classes.iterator();
-        HashMap h = new HashMap();
-        
-        while( i.hasNext() ) {
-            metamodel.Class c = (metamodel.Class)i.next();
-            
-            // If this class is abstract, you can't instantiate it
-            if( c.isAbstract() ) {
-                throw new LemRuntimeException( "Class '" + c.getName() + "' is abstract " +
-                        "and cannot be instantiated" );
-            }
-            
-            // Build up a list of this class' parents. If any class in the
-            // collection shares the same parent, we can't instantiate that
-            // class
-            
-/*            if( getParents( c, h )) {
-                throw new LemRuntimeException( "Class '" 
-                        + c.getName() + "' shares a common parent with another class" );
-            }
- */
+        instances = new LinkedList();
+        // Right... instantiate them!
+        for( Iterator i = classes.iterator(); i.hasNext(); ) {
+            instances.add( new Instance( (metamodel.Class) i.next() ));
         }
     }
     
@@ -68,7 +54,7 @@ public class Object {
      * @return the attribute with the given name, or <code>null</code> if the
      * named attribute doesn't exist
      */
-    public InstanceAttribute getAttribute(String attributeName) {
+    public AttributeInstance getAttribute(String attributeName) {
         //insert code here :)
 //        return attributes[0];
         return null;
@@ -133,7 +119,7 @@ public class Object {
             // Add each generalisation to the big list of generalisations
             Iterator j = gens.values().iterator();
             while( j.hasNext () ) {
-                if( h.put( j.next(), "a" ) != null ) {
+                if( h.put( j.next(), "" ) != null ) {
                     return false;
                 }
             }
@@ -141,4 +127,13 @@ public class Object {
         
         return true;
     }
+    
+    /**
+     * Adds an instance to this object.
+     * 
+     * @param i the instance to add
+     */
+    protected void addInstance( Instance i ) {
+        instances.add( i );
+    } 
 }
