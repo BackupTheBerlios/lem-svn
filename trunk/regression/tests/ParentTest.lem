@@ -1,0 +1,58 @@
+/**
+ * This model sets up the hierarchy
+ *
+ *            +---+
+ *            | A |
+ *            +---+
+ *              ^
+ *              |
+ *       +------+------+
+ *       |             |
+ *     +---+         +---+
+ *     | B |         | C |
+ *     +---+         +---+
+ *                     ^
+ *                     |
+ *              +------+------+
+ *              |             |
+ *            +---+         +---+
+ *            | D |         | E |
+ *            +---+         +---+
+ *
+ * The only valid objects are B, D and E.
+ */
+
+
+model TestModel is
+	domain TestDomain is
+		subsystem TestSubsystem is
+			object A is
+				// empty
+			end;
+
+			object B specialisation of A is 
+				// empty
+			end;
+
+			object C specialisation of A is
+				// empty
+			end;
+
+			object D specialisation of C is
+				// empty
+			end;
+
+			object E specialisation of C is
+				// empty
+			end;
+
+			generalisation R1 is
+				A is B or C;
+			end;
+
+			generalisation R2 is
+				C is D or E;
+			end;
+		end TestSubsystem;
+	end TestDomain;
+end TestModel;
