@@ -162,7 +162,7 @@
   </target>
   
   <target name="test" depends="compile_tests">
-    <junit fork="yes">
+    <junit fork="no">
         <formatter type="plain"/>
         <classpath path="${build.dir}/classes"/>
         <batchtest todir="${build.dir}">
@@ -171,6 +171,17 @@
             </fileset>
         </batchtest>
         
+    </junit>
+  </target>
+  
+  <target name="debug_single_test" depends="compile">
+    <fail message="classname property must be specified" unless="classname"/>
+    <echo message="Debugging ${classname}Test"/>
+    <junit fork="yes">
+        <jvmarg line="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=y" />
+        <formatter usefile="false" type="plain"/>
+        <classpath path="${build.dir}/classes"/>
+        <test todir="${build.dir}" name="${classname}Test" />
     </junit>
   </target>
 </project>
