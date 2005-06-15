@@ -1,0 +1,88 @@
+/**
+ * This model sets up the hierarchy
+ *
+ *                              +---+
+ *                           +--| F |
+ *                           |  +---+
+ *            +---+          |               +---+
+ *            | A |<---------+           +---| H |
+ *            +---+          |           |   +---+
+ *              ^            |  +---+    |
+ *              |            +--| G |<---+
+ *       +------+------+        +---+    |
+ *       |             |                 |   +---+
+ *     +---+         +---+               +---| I |
+ *     | B |         | C |                   +---+
+ *     +---+         +---+
+ *                     ^
+ *                     |
+ *              +------+------+
+ *              |             |
+ *            +---+         +---+
+ *            | D |         | E |
+ *            +---+         +---+
+ *
+ * The valid objects are 
+ * B, D, E, F, H, I
+ * and
+ * (B,D,E)x(F,H,I)
+ */
+
+
+model TestModel is
+	domain TestDomain is
+		subsystem TestSubsystem is
+			object A is
+				// empty
+			end;
+
+			object B specialisation of A is 
+				// empty
+			end;
+
+			object C specialisation of A is
+				// empty
+			end;
+
+			object D specialisation of C is
+				// empty
+			end;
+
+			object E specialisation of C is
+				// empty
+			end;
+
+			object F specialisation of A is
+				// empty
+			end;
+
+			object G specialisation of A is
+				// empty
+			end;
+
+			object H specialisation of G is
+				// empty
+			end;
+
+			object I specialisation of G is
+				// empty
+			end;
+
+			generalisation R1 is
+				A is B or C;
+			end;
+
+			generalisation R2 is
+				C is D or E;
+			end;
+
+			generalisation R3 is
+				A is F or G;
+			end;
+
+			generalisation R4 is
+				G is H or I;
+			end;
+		end TestSubsystem;
+	end TestDomain;
+end TestModel;
