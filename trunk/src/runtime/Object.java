@@ -136,4 +136,13 @@ public class Object {
     protected void addInstance( Instance i ) {
         instances.add( i );
     } 
+    
+    /**
+     * Returns the collection of instances inside this object
+     * 
+     * @returns the collection of instances composing this object
+     */
+    public Collection getInstances() {
+        return instances;
+    }
 }
