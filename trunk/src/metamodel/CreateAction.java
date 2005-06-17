@@ -10,6 +10,7 @@
 
 package metamodel;
 import java.util.Collection;
+import java.util.Iterator;
 import runtime.*;
 
 /**
@@ -48,10 +49,18 @@ public class CreateAction extends Action {
     public void execute( Context context ) {
         runtime.Object o = null;
         try {
+            // Create the new object
             o = new runtime.Object( classes );
+            // Add it to the context
+            context.addObject(o);
+            // Notify listeners that the object has been added
+            LemObjectCreationEvent e = new LemObjectCreationEvent( o, this );
+            for( Iterator i = context.getLemEventListeners().iterator(); i.hasNext(); ) {
+                runtime.LemEventListener l = (runtime.LemEventListener)i.next();
+                l.objectCreated(e);
+            }
         } catch( LemRuntimeException e ) {
             e.printStackTrace();
         }
-        context.addObject(o);
     }
 }
