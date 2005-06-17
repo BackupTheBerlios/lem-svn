@@ -70,4 +70,13 @@ public class Instance {
             attributeInstances.put( a.getName(), new AttributeInstance(a));
         }
     }
+    
+    /** 
+     * Return the Class of which this Instance is an instance
+     *
+     * @return the Class of which this Instance is an instance
+     */
+    public metamodel.Class getInstanceClass() {
+        return instanceOfClass;
+    }
 }
