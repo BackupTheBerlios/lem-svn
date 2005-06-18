@@ -2,22 +2,33 @@
 <project name="lem" default="jarfile" basedir=".">
 
     <property name="name" value="lem" />
-    <property name="src.dir" value="src" />
-    <property name="model.dir" value="model" />
-    <property name="doc.dir" value="doc" />
-    <property name="samples.dir" value="samples" />
-    <property name="build.dir" value="build" />
+    <property name="src.dir" value="${basedir}/src" />
+    <property name="model.dir" value="${basedir}/model" />
+    <property name="doc.dir" value="${basedir}/doc" />
+    <property name="samples.dir" value="${basedir}/samples" />
+    <property name="build.dir" value="${basedir}/build" />
     <property name="classes.dir" value="${build.dir}/classes" />
-    <property name="etc.dir" value="etc" />
+    <property name="etc.dir" value="${basedir}/etc" />
     <property name="javacchome"
         value="/usr/java/javacc-3.2" />
     <property name="deploy.name" value="${name}.jar" />
-    <property name="lib.dir" value="lib" />
+    <property name="lib.dir" value="${basedir}/lib" />
 
 
   <!-- The classpath for compile the eLEMinator -->
   <path id="build.classpath" description="Classpath for compiling the eLEMinator">
     <pathelement location="${lib.dir}"/>
+    <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+    </fileset>
+  </path>
+  
+  <path id="run.classpath" description="Classpath for running the eLEMinator">
+    <pathelement location="${lib.dir}"/>
+    <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+    </fileset>
+    <pathelement location="${build.dir}/classes"/>
   </path>
 
   <target name="init">
@@ -138,11 +149,11 @@
   
   <target name="run" depends="init">
     <java classname="splash.Splasher" fork="true"
-    classpath="${build.dir}/classes:${lib.dir}/saxon8.jar"  />
+    classpathref="run.classpath"/>
   </target>
   
   <target name="runjar" depends="init">
-    <java jar="build/lem.jar" fork="true" />
+    <java jar="build/lem.jar" fork="true" classpathref="build.classpath" />
   </target>
   
   <target name="debug" depends="init">
@@ -162,9 +173,9 @@
   </target>
   
   <target name="test" depends="compile_tests">
-    <junit fork="no">
+    <junit fork="yes" dir="${basedir}">
         <formatter type="plain"/>
-        <classpath path="${build.dir}/classes"/>
+        <classpath refid="run.classpath"/>
         <batchtest todir="${build.dir}">
             <fileset dir="${build.dir}/classes">
                 <include name="**/*Test.class"/>
@@ -177,9 +188,9 @@
   <target name="debug_single_test" depends="compile">
     <fail message="classname property must be specified" unless="classname"/>
     <echo message="Debugging ${classname}Test"/>
-    <junit fork="yes">
+    <junit fork="yes" dir="${basedir}">
         <jvmarg line="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=y" />
-        <formatter usefile="false" type="plain"/>
+        <formatter type="plain"/>
         <classpath path="${build.dir}/classes"/>
         <test todir="${build.dir}" name="${classname}Test" />
     </junit>
