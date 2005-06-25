@@ -6,10 +6,12 @@
 
 package runtime;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import metamodel.Generalisation;
 
 /**
  * This class represents a LEM runtime object. When the model is being executed,
@@ -21,7 +23,7 @@ import java.util.LinkedList;
  */
 public class Object {
 //    InstanceAttribute attributes[] = null;
-    Collection instances = null;
+    Collection instances = new LinkedList();
     
     /**
      * Creates a new instance of Object. The object will contain instances
@@ -40,10 +42,34 @@ public class Object {
             throw new LemRuntimeException( "Specified class list will not produce a valid Object" );
         }
         
-        instances = new LinkedList();
-        // Right... instantiate them!
+        // Maintain a list of classes already instantiated
+        ArrayList instantiatedClasses = new ArrayList();
+        
         for( Iterator i = classes.iterator(); i.hasNext(); ) {
-            instances.add( new Instance( (metamodel.Class) i.next() ));
+            metamodel.Class theClass = (metamodel.Class)i.next();
+            Instance inst = new Instance( theClass );
+            
+            // Instantiate all parent classes as well
+            Collection gens = theClass.getAllGeneralisations().values();
+            
+            for( Iterator j = gens.iterator(); j.hasNext() ; ) {
+                Generalisation g = (Generalisation)j.next();
+                
+                metamodel.Class superClass = g.getSuperclass();
+                /* The root class of a generalisation hierarchy can
+                 * appear in more than one call to "getAllGeneraliations",
+                 * but we don't want to instantiate it again
+                 */
+                if( instantiatedClasses.contains(superClass)) {
+                    continue;
+                }
+                
+                instantiatedClasses.add( superClass );
+                Instance superInst = new Instance( superClass );
+                addInstance( superInst );
+            }
+            
+            addInstance( inst );
         }
     }
     
@@ -60,7 +86,6 @@ public class Object {
         return null;
     }
     
-    
     /**
      * Place all the parents of the given class into the given hashmap. This
      * method traverses all subclass participation roles, including grandparent
@@ -70,20 +95,20 @@ public class Object {
      * @param h the hash into which to insert the parent names
      *
      * @todo this is not the place for this method...
-     * @todo does this method exclude the root of a generalisation hierarchy 
+     * @todo does this method exclude the root of a generalisation hierarchy
      * in the duplicate check?
      */
     /*
-    
+     
      I don't think we actually use this
      protected static boolean getParents( metamodel.Class c, HashMap h ) {
         boolean duplicates = false;
-        
+     
         HashMap superClasses = c.getSubclassParticipation();
         if( superClasses.isEmpty() ) return duplicates;
-        
+     
         Iterator i = superClasses.values().iterator();
-        
+     
         while( i.hasNext() ) {
             Generalisation g = (Generalisation)i.next();
             metamodel.Class parent = g.getSuperClassRole().getParticipant();
@@ -91,7 +116,7 @@ public class Object {
             h.put( parent.getName(), parent );
             return getParents( parent, h );
         }
-        
+     
         return duplicates;
     } */
     
@@ -118,7 +143,7 @@ public class Object {
             
             // Add each generalisation to the big list of generalisations
             Iterator j = gens.values().iterator();
-            while( j.hasNext () ) {
+            while( j.hasNext() ) {
                 if( h.put( j.next(), "" ) != null ) {
                     return false;
                 }
@@ -130,16 +155,16 @@ public class Object {
     
     /**
      * Adds an instance to this object.
-     * 
+     *
      * @param i the instance to add
      */
     protected void addInstance( Instance i ) {
         instances.add( i );
-    } 
+    }
     
     /**
      * Returns the collection of instances inside this object
-     * 
+     *
      * @returns the collection of instances composing this object
      */
     public Collection getInstances() {
