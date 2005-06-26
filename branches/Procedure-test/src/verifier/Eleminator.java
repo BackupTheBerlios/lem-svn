@@ -61,7 +61,8 @@ public class Eleminator extends javax.swing.JFrame {
                     (custDir));
             workingDirectory = new File( ((WorkSpace)In.readObject()).getWorkSpace());
         } catch (Exception ex){
-            workingDirectory = new File(System.getProperty("user.home"));}
+            workingDirectory = new File(System.getProperty("user.home"));
+        }
         
         initComponents();
         LookAndFeelInfo[] li = UIManager.getInstalledLookAndFeels();
@@ -291,10 +292,11 @@ public class Eleminator extends javax.swing.JFrame {
         
         setVisible(true);
         
-/*        metamodel.Procedure p = m.getDomain( "Publications" ).getClass( "Manuscript" ).getStateMachine().getState("Adding").getProcedure();
-        runtime.ModelInstance i = new runtime.ModelInstance();
+        metamodel.Procedure p = m.getDomain( "Publications" ).getClass( "Manuscript" ).getStateMachine().getState("Adding").getProcedure();
+        runtime.DomainContext d = new runtime.DomainContext();
+        ConsoleLogger l = new ConsoleLogger(d);
         
-        p.execute(i); */
+        p.execute(d);
         
         
     }//GEN-LAST:event_openItemActionPerformed
