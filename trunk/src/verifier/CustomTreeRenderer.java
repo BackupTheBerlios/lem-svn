@@ -62,7 +62,7 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
      * @param value the component to be inspected.
      * @param sel ????
      * @param expanded ????
-     * @param leaf boolean idicator of whether the component has children or not.
+     * @param leaf boolean indicator of whether the component has children or not.
      * @param row ????
      * @param hasFocus ????
      * @return the TreeCellRederer
