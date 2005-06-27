@@ -8,28 +8,43 @@ package verifier;
 
 import javax.swing.JPopupMenu;
 import metamodel.Event ;
+
 /**
- *
+ * Tree node appearing inside a ClassNode. For representing and containing a LEM
+ * Event object. Has no children.
  * @author SHukuBOy
  */
 public class EventNode extends AbstractDescriptionNode {
     
-    Event event ; 
-    /** Creates a new instance of EventNode */
+    Event event; 
+    /** 
+     * Creates a new instance of EventNode.
+     * @param e the LEM Event object to be contained.
+     */
     public EventNode(Event e) {
         event = e ; 
     }
-    
+    /**
+     * Returns name property of LEM Event object.
+     * @return 
+     */
     public String toString() {
         return "Event: " + event.getName() ;  
     }
-    
+    /**
+     * Returns description property of LEM Event object.
+     * @return 
+     */
     public String getDescription() {
          if (event.getDescription() != null ) 
             return trim(event.getDescription());   
         else 
             return "" ;         
     }
+    /**
+     * Returns ContextMenu based on LEM Event object.
+     * @return 
+     */
     public JPopupMenu getContextMenu()
     {
         JPopupMenu ContextMenu = new JPopupMenu();
