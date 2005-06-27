@@ -28,6 +28,7 @@ public class ClassNode extends AbstractDescriptionNode {
     /**
      * Creates a new instance of ClassNode. Examines LEM Class object and creates
      * subtrees based on the objects attributes, state machine and events.
+     * @param c LEM class object to be contained.
      */
     public ClassNode( metamodel.Class c ) {
         this.thisClass = c;
@@ -53,12 +54,14 @@ public class ClassNode extends AbstractDescriptionNode {
     }
     /**
      * Returns Name property of LEM Class object.
+     * @return the name of the Class.
      */
     public String toString() {
         return "Class " + thisClass.getName();
     }
     /**
      * Returns Description property of LEM Class object.
+     * @return the description of the Class.
      */
     public String getDescription(){
         if (thisClass.getDescription() != null ) 
@@ -69,6 +72,7 @@ public class ClassNode extends AbstractDescriptionNode {
     /**
      * Returns StyledDocument object containing preformatted LEM Class description,
      * followed by the list of attributes that the Class has.
+     * @return the StyledDocument of the ClassNode.
      */
     public StyledDocument getStyledDocument() {
         StyledDocument doc = new StyledDocument() ;
@@ -96,6 +100,7 @@ public class ClassNode extends AbstractDescriptionNode {
     }
     /**
      * Creates and returns a JPopupMenu based on the specified Class.
+     * @return the ContextMenu of the ClassNode.
      */
     public JPopupMenu getContextMenu()
     {
