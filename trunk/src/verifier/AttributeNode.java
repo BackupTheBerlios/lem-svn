@@ -19,7 +19,7 @@ public class AttributeNode extends AbstractDescriptionNode {
     Attribute attribute = null;
     
     /** Creates a new instance of AttributeNode
-     * @param Attribute the LEM attribute object.
+     * @param a the LEM attribute object.
      */
     public AttributeNode( Attribute a ) {
         this.attribute = a;
