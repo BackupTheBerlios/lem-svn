@@ -15,7 +15,9 @@ import metamodel.StateMachine;
 import metamodel.Event ;
 
 /**
- *
+ * Tree node appearing inside a "...". For representing and "holding" a
+ * LEM Class object. Has AttributeNode, StateMachineNode and EventsTreeNode as 
+ * children.
  * @author sjr
  */
 public class ClassNode extends AbstractDescriptionNode {
@@ -23,7 +25,10 @@ public class ClassNode extends AbstractDescriptionNode {
     metamodel.Class thisClass;
     private StyledDocument attributeListing ; 
     
-    /** Creates a new instance of ClassNode */
+    /**
+     * Creates a new instance of ClassNode. Examines LEM Class object and creates
+     * subtrees based on the objects attributes, state machine and events.
+     */
     public ClassNode( metamodel.Class c ) {
         this.thisClass = c;
         attributeListing = new StyledDocument() ; 
@@ -46,18 +51,25 @@ public class ClassNode extends AbstractDescriptionNode {
             add ( new EventsTreeNode (e)) ;
         }
     }
-    
+    /**
+     * Returns Name property of LEM Class object.
+     */
     public String toString() {
         return "Class " + thisClass.getName();
     }
-    
+    /**
+     * Returns Description property of LEM Class object.
+     */
     public String getDescription(){
         if (thisClass.getDescription() != null ) 
             return trim(thisClass.getDescription());   
         else 
             return "" ; 
     }
-    
+    /**
+     * Returns StyledDocument object containing preformatted LEM Class description,
+     * followed by the list of attributes that the Class has.
+     */
     public StyledDocument getStyledDocument() {
         StyledDocument doc = new StyledDocument() ;
         SimpleAttributeSet s = new SimpleAttributeSet();
@@ -82,6 +94,9 @@ public class ClassNode extends AbstractDescriptionNode {
         doc.append(attributeListing) ;         
         return doc ;
     }
+    /**
+     * Creates and returns a JPopupMenu based on the specified Class.
+     */
     public JPopupMenu getContextMenu()
     {
         JPopupMenu ContextMenu = new JPopupMenu();
