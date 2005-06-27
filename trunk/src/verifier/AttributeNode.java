@@ -29,6 +29,7 @@ public class AttributeNode extends AbstractDescriptionNode {
     /** 
      * Returns the description of the attribute, will return an empty string if
      * description is null.
+     * @return the Description
      */
     public String getDescription() {        
         if (attribute.getDescription() != null)
@@ -38,6 +39,7 @@ public class AttributeNode extends AbstractDescriptionNode {
     }
     /**
      * Creates and returns a JPopupMenu based on the specified attribute.
+     * @return the ContextMenu.
      */
     public JPopupMenu getContextMenu()
     {
