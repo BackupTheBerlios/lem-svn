@@ -12,14 +12,20 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import metamodel.Domain;
 
 /**
- *
+ * Tree node appearing inside a "..."Node. For graphically representing and 
+ * "holding" LEM Domain objects. Has SubsystemNode and RelationshipNode children.
  * @author sjr
  */
 public class DomainNode extends AbstractDescriptionNode {
 	
 	Domain domain;
 	
-	/** Creates a new instance of DomainNode */
+	/** 
+         * Creates a new instance of DomainNode. Creates SubsystemNode branches 
+         * based on LEM Domain object and lists all RelationshipNodes of Domain 
+         * under a default tree node named relationshipLevel.
+         * @param d the LEM Domain object.
+         */
 	public DomainNode( Domain d ) {
 		this.domain = d;
 		
@@ -36,18 +42,27 @@ public class DomainNode extends AbstractDescriptionNode {
 		
 		add( relationshipLevel );
 	}
-	
+	/**
+         * Returns name property of LEM Domain object.
+         * @return the Domain name.
+         */
 	public String toString() {
 		return "Domain " + domain.getName();
 	}
-	
+	/**
+         * Returns the description property of the LEM Domain object.
+         * @return the Domain description.
+         */
 	public String getDescription(){
 		if (domain.getDescription() != null)
 			return trim(domain.getDescription());
 		else
 			return "" ;
 	}
-	
+	/**
+         * Returns the ContextMenu based on the LEM Domain object.
+         * @return the Domain ContextMenu.
+         */
 	public JPopupMenu getContextMenu() {
 		JPopupMenu ContextMenu = new JPopupMenu();
 		return ContextMenu;
