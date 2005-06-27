@@ -14,8 +14,8 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 /**
- *
- * @author Administrator
+ * Component allowing custom icons to be used in the ModelTreePanel.
+ * @author David Gavin
  */
 public class CustomTreeRenderer extends DefaultTreeCellRenderer{
     ImageIcon stateIcon = new ImageIcon();
@@ -29,7 +29,10 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
     ImageIcon eventsIcon = new ImageIcon();
     ImageIcon classIcon = new ImageIcon();
     
-    /** Creates a new instance of CustomTreeRenderer */
+    /** 
+     * Creates a new instance of CustomTreeRenderer. Contains locations for all
+     * images to be used for icons in the ModelTreePanel.
+     */
     public CustomTreeRenderer() {
         URL imageURL = getClass().getClassLoader().getResource("verifier/state.jpg");
         stateIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
@@ -52,6 +55,18 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
         imageURL = getClass().getClassLoader().getResource("verifier/class.jpg");
         classIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
     }
+    /**
+     * Method for setting the icon of the current JTree component. Recursively 
+     * checks the type of the current tree component and assigns appropriate icon,
+     * @param tree the tree containing the component to be inspected.
+     * @param value the component to be inspected.
+     * @param sel ????
+     * @param expanded ????
+     * @param leaf boolean idicator of whether the component has children or not.
+     * @param row ????
+     * @param hasFocus ????
+     * @return the TreeCellRederer
+     */
     public Component getTreeCellRendererComponent(
             JTree tree,
             Object value,
@@ -87,7 +102,5 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
         }
         
         return this;
-    }
-    
-    
+    }   
 }
