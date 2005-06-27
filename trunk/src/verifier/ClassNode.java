@@ -15,7 +15,7 @@ import metamodel.StateMachine;
 import metamodel.Event ;
 
 /**
- * Tree node appearing inside a "...". For representing and "holding" a
+ * Tree node appearing inside a SubsystemNode. For representing and "holding" a
  * LEM Class object. Has AttributeNode, StateMachineNode and EventsTreeNode as 
  * children.
  * @author sjr
