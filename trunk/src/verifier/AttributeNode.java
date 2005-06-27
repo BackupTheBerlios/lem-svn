@@ -10,7 +10,7 @@ import javax.swing.JPopupMenu;
 import metamodel.Attribute;
 
 /**
- * Tree node appearing appearing inside a Class tree node. For graphically 
+ * Tree node appearing appearing inside a ClassNode. For graphically 
  * representing and "holding" LEM attribute objects. Has no children.
  * @author sjr
  */
