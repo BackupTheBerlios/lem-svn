@@ -12,7 +12,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import metamodel.Domain;
 
 /**
- * Tree node appearing inside a "..."Node. For graphically representing and 
+ * Tree node appearing inside a ModelTreeNode. For graphically representing and 
  * "holding" LEM Domain objects. Has SubsystemNode and RelationshipNode children.
  * @author sjr
  */
