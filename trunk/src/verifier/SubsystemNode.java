@@ -15,13 +15,19 @@ import metamodel.Domain;
 import metamodel.Subsystem;
 
 /**
- * Models Subsystem nodes in the GUI
+ * Tree node appearing inside a DomainNode. For graphically representing and 
+ * "holding" a LEM Subsystem object. Has ClassNodes as children.
+ * @author sjr
  */
 public class SubsystemNode extends AbstractDescriptionNode {
-	
 	Subsystem subsystem;
-	
-	/** Creates a new instance of SubsystemNode */
+	/** 
+         * Creates a new instance of SubsystemNode. Creates sublevel named 
+         * classLevel for containing ClassNodes. Creates ClassNodes based on LEM
+         * Class objects in LEM Subsystem object. If no Class objects in LEM 
+         * Subsystem object then classLevel will display message "[No Classes]". 
+         * @param s LEM Subsystem object to be contained.
+         */
 	public SubsystemNode( Subsystem s ) {
 		this.subsystem = s;
 		
@@ -39,21 +45,30 @@ public class SubsystemNode extends AbstractDescriptionNode {
 			add( classLevel );
 		}
 	}
-	
-	public String toString() {
-		return "Subsystem " + subsystem.getName();
-	}
-	
-	public String getDescription() {
-		if (subsystem.getDescription() != null)
-			return trim(subsystem.getDescription());
-		else
-			return "" ;
-	}
-	
-	public JPopupMenu getContextMenu() {
-		JPopupMenu ContextMenu = new JPopupMenu();
-		return ContextMenu;
-	}
+    /**
+     * Returns name property of LEM Subsystem object.
+     * @return the Subsystem name.
+     */ 
+    public String toString() {
+	return "Subsystem " + subsystem.getName();
+    }
+    /**
+     * Returns the description property of the LEM Subsystem object.
+     * @return the Subsystem description.
+     */	
+    public String getDescription() {
+	if (subsystem.getDescription() != null)
+		return trim(subsystem.getDescription());
+	else
+		return "" ;
+    }
+    /**
+     * Returns the ContextMenu based on the LEM Subsystem object.
+     * @return the Subsystem ContextMenu.
+     */	
+    public JPopupMenu getContextMenu() {
+        JPopupMenu ContextMenu = new JPopupMenu();
+	return ContextMenu;
+    }
 }
 
