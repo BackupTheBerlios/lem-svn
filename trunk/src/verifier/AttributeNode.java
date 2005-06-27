@@ -18,11 +18,15 @@ public class AttributeNode extends AbstractDescriptionNode {
     
     Attribute attribute = null;
     
-    /** Creates a new instance of AttributeNode */
+    /** Creates a new instance of AttributeNode
+     * @param Attribute the LEM attribute object.
+     */
     public AttributeNode( Attribute a ) {
         this.attribute = a;
     }
-    /** Returns the name of the attribute followed by the type of the attribute */
+    /** Returns the name of the attribute followed by the type of the attribute 
+     * @return the name of the attribute.
+     */
     public String toString() {
         return attribute.getName() + " : " + attribute.getType().getName();
     }
