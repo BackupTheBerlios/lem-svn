@@ -14,21 +14,34 @@ import metamodel.StateMachine;
 import metamodel.Transition;
 
 /**
- *
+ * Tree node appearing inside a ClassNode. For graphically representing and 
+ * "holding" a LEM StateMachine object. Has StateNodes and TransitionNodes as 
+ * children.
  * @author sjr
  */
 public class StateMachineNode extends AbstractDescriptionNode {
     
     StateMachine machine = null;
     
-    /** Creates a new instance of StateMachineNode */
+    /** 
+     * Creates a new instance of StateMachineNode. Creates a sublevel containing
+     * only StateNodes called stateLevel and a sublevel containing only 
+     * TransitionNodes called transitionLevel. Creates StateNodes based on LEM 
+     * State objects in LEM StateMachine object and places them in stateLevel. 
+     * Creates TransitionNodes based on LEM Transition objects in LEM 
+     * StateMachine object and places them in transitionLevel. LEM Transition 
+     * objects are checked for LEM InitialisingTransition objects. If a LEM 
+     * InitilisingTransition object is found an additional "Create ->" is placed 
+     * in the name of the corresponding TransitionNode object.
+     * @param m LEM StateMachine object.
+     */
     public StateMachineNode( StateMachine m ) {
         this.machine = m;
                 
         if( m.getStateList() == null ) return;
         
-        DefaultMutableTreeNode stateLevel = new DefaultMutableTreeNode( "States" );
-        DefaultMutableTreeNode transitionLevel = new DefaultMutableTreeNode( "Transitions" );
+        DefaultMutableTreeNode stateLevel = new DefaultMutableTreeNode("States");
+        DefaultMutableTreeNode transitionLevel = new DefaultMutableTreeNode("Transitions");
         
         Iterator i = machine.getStateList().listIterator();
         while( i.hasNext() ) {          
@@ -51,12 +64,18 @@ public class StateMachineNode extends AbstractDescriptionNode {
         add( stateLevel );
         add( transitionLevel );
     }
-    
+    /**
+     * Returns string "State machine".
+     * @return "State machine".
+     */ 
     public String toString() {
         
         return "State machine";
     }
-    
+    /**
+     * Returns the description property of the LEM StateMachine object.
+     * @return the StateMachine description.
+     */
     public String getDescription()
     {
         if (machine.getDescription() != null)
@@ -64,7 +83,10 @@ public class StateMachineNode extends AbstractDescriptionNode {
         else 
             return "" ; 
     }
-    
+    /**
+     * Returns the ContextMenu based on the LEM StateMachine object.
+     * @return the StateMachine ContextMenu.
+     */ 
     public JPopupMenu getContextMenu()
     {
         JPopupMenu ContextMenu = new JPopupMenu();
