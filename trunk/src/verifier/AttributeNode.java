@@ -10,7 +10,8 @@ import javax.swing.JPopupMenu;
 import metamodel.Attribute;
 
 /**
- * Tree node for representing and "holding" LEM attribute objects. Has no children.
+ * Tree node appearing appearing inside a ModelTreePanel or another tree node. 
+ * For graphically representing and "holding" LEM attribute objects. Has no children.
  * @author sjr
  */
 public class AttributeNode extends AbstractDescriptionNode {
