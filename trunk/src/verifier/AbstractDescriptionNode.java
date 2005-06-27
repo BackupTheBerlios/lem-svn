@@ -16,7 +16,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * Tree node appearing inside a ModelTreePanel or another tree node. Has methods 
  * for returning a preformatted StyledDocument. Has method for returning a context
  * menu.
- * @author David Gavin
+ * @author David Gavin 
  */
 public abstract class AbstractDescriptionNode extends DefaultMutableTreeNode{
     
