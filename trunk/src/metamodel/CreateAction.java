@@ -45,6 +45,8 @@ public class CreateAction extends Action {
      * in the context's object list
      *
      * @param context The context into which the newly created object should be inserted
+     * @todo move listener notification code to Context or LemEvent
+     * @todo execute( Context ) should throw LemRuntimeException
      */
     public void execute( Context context ) {
         runtime.Object o = null;
