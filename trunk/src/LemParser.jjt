@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.38  2005/06/28 06:45:59  u2567446
+* Modified the unary non terminal to reflect precedences.
+*
 * Revision 1.37  2005/06/01 14:06:52  u3957053
 * Added a new ClassList() non-terminal and BuilderPass2 code to implement it. The creation action can now take a list of classes
 *
@@ -1187,24 +1190,12 @@ void Relational() : {}
 }
 
 void SimpleExpression() : {}
-{
+{ 
+	Term()
 	(
-		Unary()
+		Adding()
 		Term()
-	)
-	| (
-		Term()
-		(
-			Adding()
-			Term()
-		)*
-	)
-}
-
-void Unary() : {}
-{
-	<PLUS>
-	| <MINUS>
+	)*
 }
 
 void Adding() : {}
@@ -1233,20 +1224,24 @@ void Multiplying() : {}
 void Factor() : {}
 {
 	(
-		Primary()
+		Unary()
 		(
 			<EXPON>
 			Primary()
 		)?
 	)
 	| (
-		<LNOT>
-		Primary()
-	)
-	| (
 		<ABS>
 		Primary()
 	)
+}
+
+void Unary() : {}
+{
+	(<PLUS> 
+	| <MINUS>
+	| <LNOT>)
+	Primary()
 }
 
 void Primary() : {}
