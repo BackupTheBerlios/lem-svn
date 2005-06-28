@@ -26,6 +26,7 @@ public abstract class AbstractDescriptionNode extends DefaultMutableTreeNode{
     /**
      * To be implemented by all children. Will typically return the String 
      * description of the LEM object held by the particular node.
+     * @return The Description
      */
     public abstract String getDescription();
     
@@ -56,6 +57,7 @@ public abstract class AbstractDescriptionNode extends DefaultMutableTreeNode{
     }
     /**
      * Returns StyledDocument object containing preformatted LEM object description.
+     * @return The StyledDocument object.
      */
     public StyledDocument getStyledDocument() {
         StyledDocument doc = new StyledDocument() ;
@@ -87,6 +89,7 @@ public abstract class AbstractDescriptionNode extends DefaultMutableTreeNode{
     /**
      * Returns dynamically built contextmenu. Each context menu will be built based
      * on the LEM object that the node contains. 
+     * @return The Context Menu
      */
     public abstract javax.swing.JPopupMenu getContextMenu();
     

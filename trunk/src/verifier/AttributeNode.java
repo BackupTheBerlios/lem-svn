@@ -15,7 +15,7 @@ import metamodel.Attribute;
  * @author sjr
  */
 public class AttributeNode extends AbstractDescriptionNode {
-    
+    /**The LEM attribute that AttributeNode contains.*/
     Attribute attribute = null;
     
     /** Creates a new instance of AttributeNode

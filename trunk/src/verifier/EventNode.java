@@ -15,7 +15,7 @@ import metamodel.Event ;
  * @author SHukuBOy
  */
 public class EventNode extends AbstractDescriptionNode {
-    
+    /**The LEM Event object that EventNode contains*/
     Event event; 
     /** 
      * Creates a new instance of EventNode.
@@ -26,14 +26,14 @@ public class EventNode extends AbstractDescriptionNode {
     }
     /**
      * Returns name property of LEM Event object.
-     * @return 
+     * @return The Name of the Event
      */
     public String toString() {
         return "Event: " + event.getName() ;  
     }
     /**
      * Returns description property of LEM Event object.
-     * @return 
+     * @return The description of the event.
      */
     public String getDescription() {
          if (event.getDescription() != null ) 
@@ -43,7 +43,7 @@ public class EventNode extends AbstractDescriptionNode {
     }
     /**
      * Returns ContextMenu based on LEM Event object.
-     * @return 
+     * @return The Context menu based on the event.
      */
     public JPopupMenu getContextMenu()
     {

@@ -21,8 +21,9 @@ import metamodel.Event ;
  * @author sjr
  */
 public class ClassNode extends AbstractDescriptionNode {
-    
+    /**The LEM Class object that ClassNode contains*/
     metamodel.Class thisClass;
+    /**The StyledDocument object that ClassNode maintains*/
     private StyledDocument attributeListing ; 
     
     /**

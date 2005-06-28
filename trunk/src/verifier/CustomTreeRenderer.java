@@ -18,16 +18,26 @@ import javax.swing.tree.DefaultTreeCellRenderer;
  * @author David Gavin
  */
 public class CustomTreeRenderer extends DefaultTreeCellRenderer{
-    ImageIcon stateIcon = new ImageIcon();
-    ImageIcon transitionIcon = new ImageIcon();
-    ImageIcon relationshipIcon = new ImageIcon();
-    ImageIcon attributeIcon = new ImageIcon();
-    ImageIcon stateMachineIcon = new ImageIcon();
-    ImageIcon openIcon = new ImageIcon();
-    ImageIcon closedIcon = new ImageIcon();
-    ImageIcon eventIcon = new ImageIcon();
-    ImageIcon eventsIcon = new ImageIcon();
-    ImageIcon classIcon = new ImageIcon();
+    /**Image icon for state objects in model tree*/
+    private ImageIcon stateIcon = new ImageIcon();
+    /**Image icon for transition objects in model tree*/
+    private ImageIcon transitionIcon = new ImageIcon();
+    /**Image icon for relationship objects in model tree*/
+    private ImageIcon relationshipIcon = new ImageIcon();
+    /**Image icon for attribute objects in model tree*/
+    private ImageIcon attributeIcon = new ImageIcon();
+    /**Image icon for statemachine objects in model tree*/
+    private ImageIcon stateMachineIcon = new ImageIcon();
+    /**Image icon for open folders in model tree*/
+    private ImageIcon openIcon = new ImageIcon();
+    /**Image icon for closed folders in model tree*/
+    private ImageIcon closedIcon = new ImageIcon();
+    /**Image icon for event objects in model tree*/
+    private ImageIcon eventIcon = new ImageIcon();
+    /**Image icon for events objects in model tree*/
+    private ImageIcon eventsIcon = new ImageIcon();
+    /**Image icon for class objects in model tree*/
+    private ImageIcon classIcon = new ImageIcon();
     
     /** 
      * Creates a new instance of CustomTreeRenderer. Contains locations for all
@@ -60,11 +70,11 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
      * checks the type of the current tree component and assigns appropriate icon,
      * @param tree the tree containing the component to be inspected.
      * @param value the component to be inspected.
-     * @param sel ????
-     * @param expanded ????
+     * @param sel Not used
+     * @param expanded Not used
      * @param leaf boolean indicator of whether the component has children or not.
-     * @param row ????
-     * @param hasFocus ????
+     * @param row Not used
+     * @param hasFocus Not used
      * @return the TreeCellRederer
      */
     public Component getTreeCellRendererComponent(

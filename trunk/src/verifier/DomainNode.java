@@ -17,7 +17,7 @@ import metamodel.Domain;
  * @author sjr
  */
 public class DomainNode extends AbstractDescriptionNode {
-	
+        /**The LEM domain object that DomainNode contains*/	
 	Domain domain;
 	
 	/** 
