@@ -21,6 +21,8 @@ public class Context {
     
     /**
      * A collection of all variables local to the context
+     *
+     * @todo Should this be a HashMap?
      */
     Collection localVariables = null;
     
