@@ -17,10 +17,6 @@ public class ModelInstance extends Context {
         super( null );
     }
     
-    public ArrayList getLocalVariables() {
-        return null;
-    }
-    
     /**
      * Indicate to this context that it is about to disappear.
      */

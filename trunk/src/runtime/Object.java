@@ -80,7 +80,7 @@ public class Object {
      * @return the attribute with the given name, or <code>null</code> if the
      * named attribute doesn't exist
      */
-    public AttributeInstance getAttribute(String attributeName) {
+    public Variable getAttribute(String attributeName) {
         //insert code here :)
 //        return attributes[0];
         return null;

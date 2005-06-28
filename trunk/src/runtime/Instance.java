@@ -28,7 +28,7 @@ public class Instance {
     State currentState = null;
     
     /**
-     * A map of attribute names to AttributeInstance references
+     * A map of attribute names to Variable references
      */
     Map attributeInstances = null;
     
@@ -67,7 +67,7 @@ public class Instance {
         
         while( i.hasNext() ) {
             Attribute a = (Attribute)i.next();
-            attributeInstances.put( a.getName(), new AttributeInstance(a));
+            attributeInstances.put( a.getName(), new Variable(a.getType()));
         }
     }
     
