@@ -15,8 +15,9 @@ import metamodel.Transition;
  * @author SHukuBOy
  */
 public class TransitionNode extends AbstractDescriptionNode {
-    
+    /**The LEM Transition object that TransitionNode contains*/
     Transition transition ; 
+    /**The name of the LEM Transition object contained.*/
     String name ; 
     
     /** Creates a new instance of TransitionNode.

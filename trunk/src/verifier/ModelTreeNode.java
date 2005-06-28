@@ -17,6 +17,7 @@ import metamodel.Model;
  * @author sjr
  */
 public class ModelTreeNode extends AbstractDescriptionNode {
+    /**LEM Model object that ModelTreeNode contains*/
     Model model;
     
     /** 

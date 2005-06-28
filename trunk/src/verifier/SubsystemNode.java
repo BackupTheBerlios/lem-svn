@@ -20,6 +20,7 @@ import metamodel.Subsystem;
  * @author sjr
  */
 public class SubsystemNode extends AbstractDescriptionNode {
+        /**The LEM Subsystem object that SubsystemNode contains */
 	Subsystem subsystem;
 	/** 
          * Creates a new instance of SubsystemNode. Creates sublevel named 

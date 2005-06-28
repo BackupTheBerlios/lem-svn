@@ -15,7 +15,7 @@ import metamodel.Relationship;
  * @author sjr
  */
 public class RelationshipNode extends AbstractDescriptionNode{
-    
+    /**The LEM Relationship object that RelationshipNode contains.*/
     Relationship relationship = null;
     
     /**

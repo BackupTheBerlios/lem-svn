@@ -20,7 +20,7 @@ import metamodel.Transition;
  * @author sjr
  */
 public class StateMachineNode extends AbstractDescriptionNode {
-    
+    /**The LEM StateMachine object that StateMachineNode contains*/
     StateMachine machine = null;
     
     /** 

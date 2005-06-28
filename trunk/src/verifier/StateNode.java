@@ -15,7 +15,7 @@ import metamodel.State;
  * @author SHukuBOy
  */
 public class StateNode extends AbstractDescriptionNode {
-    
+    /**The LEM State object that StateNode contains.*/
     State state ; 
     /** 
      * Creates a new instance of StateNode.
