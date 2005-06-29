@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.44  2005/06/29 14:15:28  u3293115
+* Added basic signal cancel action + test case.
+*
 * Revision 1.43  2005/06/29 14:06:33  u3293115
 * Parameters to event generation statements should be expressions
 * rather than identifiers
@@ -393,6 +396,7 @@ TOKEN : /* ACTION LANGUAGE IDENTIFIERS */
 | <SELF: "self">
 | <GENERATE: "generate">
 | <DELAY: "delay">
+| <CANCEL: "cancel">
 | <ACROSS: "across">
 | <OF: "of">
 | <ONE: "one">
@@ -1037,6 +1041,7 @@ void Action() : {}
 		| ObjectDeletion()
 		| AttributeAssignment()
 		| SignalGeneration()
+		| SignalCancel()
 	)
 	<SEMI>
 }
@@ -1105,6 +1110,17 @@ void WithDelay() : {}
 		<DELAY>
 		Expression()
 	]
+}
+
+/**
+ * TODO: what kind of signals can we cancel? Ones to self only?
+ */
+void SignalCancel() : {}
+{
+	<CANCEL>
+	SignalIdentifier()
+	<TO>
+	ObjectReference()
 }
 
 /**
