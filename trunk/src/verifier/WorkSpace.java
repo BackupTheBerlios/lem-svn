@@ -18,6 +18,9 @@ public class WorkSpace implements Serializable{
     public WorkSpace(String inWorkspace) {
         CurrentWorkspace = inWorkspace;
     }
+    /**Returns the CurrentWorkspace.
+     *@return String the CurrentWorkspace.
+     */
     public String getWorkSpace()
     {
         return CurrentWorkspace;

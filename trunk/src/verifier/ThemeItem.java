@@ -18,10 +18,18 @@ public class ThemeItem {
         name = inName;
         className = inClass;
     }
+    
+    /** Returns the name of the ThemeItem
+     *@return String name of the ThemeItem.
+     */
     public String toString()
     {
         return name;
     }
+    
+    /**Returns the className of the ThemeItem
+     *@return String the className of the ThemeItem.
+     */
     public String getClassName()
     {
         return className;
