@@ -1,6 +1,11 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.39  2005/06/29 13:23:40  u3293115
+* Prune away a lot of unused terminal strings.
+* Fixed up a slight breakage introduced by the change fixing the Unary
+* operators.
+*
 * Revision 1.38  2005/06/28 06:45:59  u2567446
 * Modified the unary non terminal to reflect precedences.
 *
@@ -362,40 +367,22 @@ TOKEN : /* IDENTIFIERS */
 
 TOKEN : /* ACTION LANGUAGE IDENTIFIERS */
 {
-  <ABS: "abs">
-| <REM: "rem">
-| <MOD: "mod">
+  <MOD: "mod">
 | <LNOT: "!">
 | <LAND: "&&">
 | <LOR: "||">
 | <SELF: "self">
 | <GENERATE: "generate">
 | <DELAY: "delay">
-| <CANCEL: "cancel">
-| <RELATED: "related">
-| <RELATE: "relate">
-| <UNRELATE: "unrelate">
-| <WHERE: "where">
-| <THAT: "that">
-| <RELATES: "relates">
 | <ACROSS: "across">
-| <INSTANCES: "instances">
-| <INSTANCE: "instance">
 | <OF: "of">
 | <ONE: "one">
 | <MANY: "many">
 | <ANY: "any">
-| <SET: "set">
-| <SELECT: "select">
-| <CREATING: "creating">
 | <CREATE: "create">
-| <RECLASSIFY: "reclassify">
 | <DELETE: "delete">
-| <FOR: "for">
-| <EACH: "each">
 | <WITH: "with">
 | <WHILE: "while">
-| <IN: "in">
 | <IF: "if">
 | <ELSE: "else">
 | <ELSEIF: "elseif">
@@ -411,7 +398,6 @@ TOKEN : /* ACTION LANGUAGE IDENTIFIERS */
 | <MULTIPLY:	"*"	>
 | <DIVIDE:	"/"	>
 | <EXPON:	"^"	>
-| <UNIQUE : "unique">
 | <LBRACE : "{">
 | <RBRACE : "}">
 
@@ -1080,12 +1066,21 @@ void ObjectDeletion() : {}
 /** Signals */
 void SignalGeneration() : {}
 {
-        <GENERATE> SignalIdentifier()ParameterList()<TO>ObjectReference()WithDelay()
+        <GENERATE>
+	SignalIdentifier()
+	ParameterList()
+	<TO>
+	ObjectReference()
+	WithDelay()
 }
 
 void WithDelay() : {}
 {
-   [<WITH><DELAY><DECIMAL_LITERAL>]
+	[
+		<WITH>
+		<DELAY>
+		<DECIMAL_LITERAL>
+	]
 }
 
 
@@ -1218,29 +1213,22 @@ void Multiplying() : {}
 	<MULTIPLY>
 	| <DIVIDE>
 	| <MOD>
-	| <REM>
 }
 
 void Factor() : {}
 {
+	Unary()
 	(
+		<EXPON>
 		Unary()
-		(
-			<EXPON>
-			Primary()
-		)?
-	)
-	| (
-		<ABS>
-		Primary()
-	)
+	)?
 }
 
 void Unary() : {}
 {
 	(<PLUS> 
 	| <MINUS>
-	| <LNOT>)
+	| <LNOT>)?
 	Primary()
 }
 
