@@ -1,6 +1,10 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.43  2005/06/29 14:06:33  u3293115
+* Parameters to event generation statements should be expressions
+* rather than identifiers
+*
 * Revision 1.42  2005/06/29 14:02:05  u3293115
 * Allow expressions in signal generation delay specification rather
 * than constant literals. Add a testcase for it.
@@ -943,20 +947,6 @@ void ParameterDeclaration() : {
 	Identifier() Description() <IS> Type()
 }
 
-void ParameterList() : {}
-{
-	[
-		<LPAREN>
-		Identifier()
-		(
-			<COMMA>
-			Identifier()
-		)*
-		<RPAREN>
-	]
-}
-
-
 /****************************************************************************************
  * State declarations
  ****************************************************************************************/
@@ -1095,6 +1085,19 @@ void SignalGeneration() : {}
 	WithDelay()
 }
 
+void ParameterList() : {}
+{
+	[
+		<LPAREN>
+		Expression()
+		(
+			<COMMA>
+			Expression()
+		)*
+		<RPAREN>
+	]
+}
+
 void WithDelay() : {}
 {
 	[
@@ -1103,7 +1106,6 @@ void WithDelay() : {}
 		Expression()
 	]
 }
-
 
 /**
  * Statements returning some value
