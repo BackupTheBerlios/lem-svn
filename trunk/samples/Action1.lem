@@ -6,7 +6,7 @@ model ALModel is
 		type Enum is (tom or dick);
 		
 		subsystem ALSubsystem is
-			object ALClass is 
+			class ALClass is 
 				attribute att1 is string;
 				attribute att2 is Enum;
 

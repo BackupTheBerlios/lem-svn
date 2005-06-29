@@ -1,6 +1,10 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.41  2005/06/29 13:59:28  u3293115
+* Finally changed 'object' keyword to 'class' for class declarations.
+* It would have gotten too confusing when we introduce objects.
+*
 * Revision 1.40  2005/06/29 13:42:51  u3293115
 * Use Identifier instead of ParameterIdentifier, enable parameter lists of
 * events to work correctly.
@@ -327,7 +331,7 @@ TOKEN : /* IDENTIFIERS */
 | <END: "end">
 | <BETWEEN: "between">
 | <BRIDGE: "bridge">
-| <OBJECT: "object">
+| <CLASS: "class">
 | <IS: "is">
 | <OR: "or">
 | <AND: "and">
@@ -711,7 +715,7 @@ void SubSystemBody() : {}
 
 void ClassDeclaration() : {}
 { 
-	<OBJECT> Identifier() 
+	<CLASS> Identifier() 
                 [<SPECIALISATION> <OF> SpecialisationList() ]
                 <IS>
 		Description()
