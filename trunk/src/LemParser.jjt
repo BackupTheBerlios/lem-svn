@@ -1,6 +1,13 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.40  2005/06/29 13:42:51  u3293115
+* Use Identifier instead of ParameterIdentifier, enable parameter lists of
+* events to work correctly.
+*
+* Add action language in sample to exercise this and other action language
+* features.
+*
 * Revision 1.39  2005/06/29 13:23:40  u3293115
 * Prune away a lot of unused terminal strings.
 * Fixed up a slight breakage introduced by the change fixing the Unary
@@ -922,17 +929,23 @@ void Signature() : {}
 
 void ParameterDeclaration() : {
 // constraint: LEM_E_01023=In a parameter declaration, the domain specific data type must be defined in the domain
-}
-{ 	ParameterIdentifier() Description() <IS> Type() }
-
-void ParameterIdentifier() : {
 // constraint: LEM_E_01008=Duplicate parameter identifier. Each parameter must be unique within a signature.
 }
-{ <SIMPLE_IDENTIFIER> }
+{
+	Identifier() Description() <IS> Type()
+}
 
 void ParameterList() : {}
 {
-  [<LPAREN>(ParameterIdentifier())(<COMMA>ParameterIdentifier())*<RPAREN>]
+	[
+		<LPAREN>
+		Identifier()
+		(
+			<COMMA>
+			Identifier()
+		)*
+		<RPAREN>
+	]
 }
 
 

@@ -9,6 +9,13 @@
 // $Id$
 // 
 // $Log$
+// Revision 1.13  2005/06/29 13:42:51  u3293115
+// Use Identifier instead of ParameterIdentifier, enable parameter lists of
+// events to work correctly.
+//
+// Add action language in sample to exercise this and other action language
+// features.
+//
 // Revision 1.12  2005/06/01 12:33:06  u3293115
 // Hack the builder a little so that it handles having PrimitiveType nodes
 // underneath Procedures. The whole type declaration / primitive type /
@@ -159,10 +166,11 @@ model BookStoreModel is
 							objref obj;
 							a := blah;
 							a := b.blah;
-							// a := create Manuscript;	
-							// action language goes here
-							// action language goes here
-							// action language goes here
+							obj := create Manuscript;
+							generate ev1 to obj;
+							generate ev2(a, b, c) to obj with delay 10;
+							delete obj;
+							
 						}
 
 					end Adding;

@@ -889,6 +889,9 @@ public class BuilderPass1 extends Visitor {
         
         super.visit( node, parameter );
         
+	String name = getIdentifier(node.jjtGetChild( 0 ));
+	parameter.setName(name);
+
         // parameter name must be unique within the signature
         
         if ( null != signature.getParameter( parameter.getName() )) {
@@ -900,17 +903,6 @@ public class BuilderPass1 extends Visitor {
         } else {
             signature.add( parameter );
         }
-        
-        return data;
-    }
-    
-    public Object visit(LEMParameterIdentifier node, Object data) throws metamodel.LemException {
-        
-        Parameter parameter = (Parameter) data;
-        super.visit( node, parameter );
-        
-        String name = node.getFirstToken().image;
-        parameter.setName( name );
         
         return data;
     }
