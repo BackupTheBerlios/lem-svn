@@ -21,7 +21,7 @@ model ALModel is
 							a := b.blah;
 							obj := create ALClass;
 							generate ev1 to obj;
-							generate ev2(a, b, c) to obj with delay 10;
+							generate ev2(a, b, c) to obj with delay (a * a + 5);
 							delete obj;
 							
 						}

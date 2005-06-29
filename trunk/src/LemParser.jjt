@@ -1,6 +1,10 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.42  2005/06/29 14:02:05  u3293115
+* Allow expressions in signal generation delay specification rather
+* than constant literals. Add a testcase for it.
+*
 * Revision 1.41  2005/06/29 13:59:28  u3293115
 * Finally changed 'object' keyword to 'class' for class declarations.
 * It would have gotten too confusing when we introduce objects.
@@ -1096,7 +1100,7 @@ void WithDelay() : {}
 	[
 		<WITH>
 		<DELAY>
-		<DECIMAL_LITERAL>
+		Expression()
 	]
 }
 
