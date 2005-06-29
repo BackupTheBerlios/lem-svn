@@ -1,0 +1,34 @@
+// Bare model for action language test cases
+
+model ALModel is
+	domain ALDomain is
+		type Int is numeric;
+		type Enum is (tom or dick);
+		
+		subsystem ALSubsystem is
+			object ALClass is 
+				attribute att1 is string;
+				attribute att2 is Enum;
+
+				event ev1 carries ( num is Int );
+				event ev2;
+
+				behaviour is 
+					state ALState ( newText is string ) is
+						{
+							objref obj;
+							a := blah;
+							a := b.blah;
+							obj := create ALClass;
+							generate ev1 to obj;
+							generate ev2(a, b, c) to obj with delay 10;
+							delete obj;
+							
+						}
+
+					end ALState;
+				end behaviour;
+			end ALClass;
+		end ALSubsystem;
+	end ALDomain;
+end ALModel;
