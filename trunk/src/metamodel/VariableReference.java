@@ -42,8 +42,8 @@ public class VariableReference extends Expression {
      * @param variableName the name of variable to which this VariableReference refers
      */
     public VariableReference( String variableName ) {
-        this.variableName = variableName;
-        this.objectName = null;
+        this.setVariableName(variableName);
+        this.setObjectName(null);
     }
 
     /**
@@ -53,7 +53,40 @@ public class VariableReference extends Expression {
      * @param variableName the name of the variable to which this VariableReference refers
      */
     public VariableReference( String objectName, String variableName ) {
+        this.setVariableName(variableName);
+        this.setObjectName(objectName);
+    }
+
+    /**
+     * Gets the variable name referenced by this VariableReference.
+     * @return the variable name referenced by this VariableReference
+     */
+    public String getVariableName() {
+        return variableName;
+    }
+
+    /**
+     * Sets the variable name referenced by this VariableReference
+     * @param variableName the variable name referenced by this VariableReference
+     */
+    public void setVariableName(String variableName) {
         this.variableName = variableName;
+    }
+
+    /**
+     * Returns the name of the object to which the referenced variable belongs.
+     * This may be null if the variable reference specifies no object.
+     * @return the name of the object to which the referenced variable belongs, or null if there is no such object.
+     */
+    public String getObjectName() {
+        return objectName;
+    }
+
+    /**
+     * Sets the name of the object containing the variable to which this variable reference refers.
+     * @param objectName the object which contains the variable to which this variable reference refers
+     */
+    public void setObjectName(String objectName) {
         this.objectName = objectName;
     }
 }
