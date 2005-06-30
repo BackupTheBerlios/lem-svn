@@ -52,4 +52,7 @@ public class Literal extends Expression {
         return type;
     }
     
+    public String getValue() {
+        return value;
+    }
 }
