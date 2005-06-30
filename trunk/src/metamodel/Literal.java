@@ -24,7 +24,10 @@ public class Literal extends Expression {
      * Creates a new instance of Literal given the literal's String 
      * representation. There is currently no way to determine what
      * type of literal is passed in, so this constructor does some 
-     * pattern matching in order to determine that. 
+     * pattern matching in order to determine that.
+     *
+     *
+     * @todo In LemParser.jjt, split Literal() into StringLiteral(), BooleanLiteral(), etc 
      */
     public Literal( String literal ) throws LemException {
         if( literal == null || literal.length() == 0 ) {
