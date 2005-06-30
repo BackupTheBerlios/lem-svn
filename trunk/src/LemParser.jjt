@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.46  2005/06/30 07:52:04  u3957053
+* Parser now expands expressions such as 2 + 3 + 4 into a tree as opposed to a list
+*
 * Revision 1.45  2005/06/30 07:32:54  u3957053
 * Add getter for root node, split unary operators into their own non-terminal
 *
@@ -1205,19 +1208,19 @@ void WhileStatement() : {}
 void Expression() : {}
 { 
 	Relation()
-	(
+	[
 		Logical()
-		Relation()
-	)*
+		Expression()
+	]
 }
 
 void Relation() : {}
 {
 	SimpleExpression()
-	(
+	[
 		Relational()
-		SimpleExpression()
-	)?
+		Relation()
+	]
 }
 
 void Logical() : {}
@@ -1239,10 +1242,10 @@ void Relational() : {}
 void SimpleExpression() : {}
 { 
 	Term()
-	(
+	[
 		Adding()
-		Term()
-	)*
+		SimpleExpression()
+	]
 }
 
 void Adding() : {}
@@ -1254,10 +1257,10 @@ void Adding() : {}
 void Term() : {}
 {
 	Factor()
-	(
+	[
 		Multiplying()
-		Factor()
-	)*
+		Term()
+	]
 }
 
 void Multiplying() : {}
@@ -1270,10 +1273,10 @@ void Multiplying() : {}
 void Factor() : {}
 {
 	Unary()
-	(
+	[
 		<EXPON>
 		Unary()
-	)?
+	]
 }
 
 void UnaryOperator() : {}
@@ -1285,7 +1288,7 @@ void UnaryOperator() : {}
 
 void Unary() : {}
 {
-	( UnaryOperator() )?
+	[ UnaryOperator() ]
 	Primary()
 }
 
@@ -1294,6 +1297,7 @@ void Primary() : {}
 	Literal()
 	| VariableReference()
 	| ParenthesizedPrimary()
+//	| Expression()
 }
 
 void ParenthesizedPrimary() : {}
