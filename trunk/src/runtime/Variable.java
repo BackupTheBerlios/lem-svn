@@ -26,7 +26,7 @@ public class Variable {
     
     /**
      * Creates a new instance of Variable given the type
-     * 
+     *
      * @param t the type of this variable
      */
     public Variable(DataType t) {
@@ -49,5 +49,9 @@ public class Variable {
      */
     public java.lang.Object getValue(){
         return value;
+    }
+    
+    public DataType getType() {
+        return attribute;
     }
 }
