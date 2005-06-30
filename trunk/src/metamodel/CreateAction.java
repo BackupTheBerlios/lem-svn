@@ -11,10 +11,9 @@
 package metamodel;
 import java.util.Collection;
 import java.util.Iterator;
-import runtime.*;
 
 /**
- * This Action is responsible for creating new instances of runtime.Object.
+ * This is the xtUML object creation action.
  * @author sjr
  */
 public class CreateAction extends Action {
@@ -31,38 +30,22 @@ public class CreateAction extends Action {
     }
     
     /**
-     * Sets the class to be instantiated when this action is executed
+     * Sets the set of classes whose instances participate in the object
+     * created when this action is executed.
      *
-     * @param theClass the class to be instantiated
-     * @todo An object may be an instance of multiple classes
+     * @param classes the set of classes
      */
     public void setClasses( Collection classes ) {
         this.classes = classes;
     }
     
     /**
-     * Execute the given action. This will cause a new Object to be created and placed
-     * in the context's object list
+     * Gets the the set of classes whose instances participate in the object
+     * created when this action is executed.
      *
-     * @param context The context into which the newly created object should be inserted
-     * @todo move listener notification code to Context or LemEvent
-     * @todo execute( Context ) should throw LemRuntimeException
+     * @return the set of classes
      */
-    public void execute( Context context ) {
-        runtime.Object o = null;
-        try {
-            // Create the new object
-            o = new runtime.Object( classes );
-            // Add it to the context
-            context.addObject(o);
-            // Notify listeners that the object has been added
-            LemObjectCreationEvent e = new LemObjectCreationEvent( o, this );
-            for( Iterator i = context.getLemEventListeners().iterator(); i.hasNext(); ) {
-                runtime.LemEventListener l = (runtime.LemEventListener)i.next();
-                l.objectCreated(e);
-            }
-        } catch( LemRuntimeException e ) {
-            e.printStackTrace();
-        }
+    public Collection getClasses() {
+	    return classes;
     }
 }

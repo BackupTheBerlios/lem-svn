@@ -42,16 +42,11 @@ public class Procedure {
         this.state = theState;
     }
     
-    public void execute( runtime.Context c ) {
-        Iterator i = actions.iterator();
-        
-        while( i.hasNext() ) {
-            Action a = (Action)i.next();
-            a.execute( c );
-        }
-    }
-    
     public void addAction( metamodel.Action a ) {
         actions.add(a);
+    }
+
+    public LinkedList getActions() {
+	    return actions;
     }
 }

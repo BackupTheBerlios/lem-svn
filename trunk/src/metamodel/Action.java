@@ -20,10 +20,4 @@ public abstract class Action {
     /** Creates a new instance of Action */
     public Action() {
     }
-    
-    /** Execute the action in the given context.
-     *
-     * @param context The context in which to execute this action
-     */
-    public abstract void execute( runtime.Context context );
 }
