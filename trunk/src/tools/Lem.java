@@ -56,6 +56,8 @@ public class Lem {
     public Throwable errorException = null;
     public String errorMessage = "";
     
+    protected LEMModelDeclaration rootNode;
+    
     public static void main(String args[]) {
         
         
@@ -133,7 +135,7 @@ public class Lem {
         try {
             
             model = parser.parse();
-            
+            rootNode = parser.getRootNode();
             
             
         } catch ( ParseException e) {
@@ -328,5 +330,9 @@ public class Lem {
         System.err.println( "options:" );
         System.err.println( "   -s for syntax only check" );
         System.err.println( "If a model filename is omitted, Lem will read from standard input" );
+    }
+    
+    public LEMModelDeclaration getRootNode() {
+        return rootNode;
     }
 }
