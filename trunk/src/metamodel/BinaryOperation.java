@@ -19,6 +19,9 @@ public class BinaryOperation extends Expression {
     public static int GREATER_THAN = 9;
     public static int GREATER_THAN_OR_EQUAL = 10;
     public static int MODULO = 11;
+    public static int NOT_EQUAL = 12;
+    public static int LOGICAL_AND = 13;
+    public static int LOGICAL_OR = 14;
     
     /**
      * The expression on the left-hand-side of this operation
