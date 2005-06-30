@@ -112,6 +112,35 @@ public class BuilderPass2 extends Visitor {
         return a;
     }
     
+    public Object visit( LEMObjectReference node, Object data ) throws LemException {
+        return node.getFirstToken().image;
+    }
+
+    /**
+     * Visit a LEMVariableReference. Return the instance of metamodel.VariableReference
+     * which represents this LEMVariableReferenceNode.
+     */
+    public Object visit( LEMVariableReference node, Object data ) throws LemException {
+        if( node.jjtGetNumChildren() == 1 ) {
+            // bare variable reference
+            return new VariableReference( getIdentifier(node.jjtGetChild(0) ));
+        } else if( node.jjtGetNumChildren() == 2 ) {
+            // object.variable-style reference, eg. "publisher.name"
+            String objectName = (String)(visit( (LEMObjectReference)node.jjtGetChild(0), null ));
+            String variableName = getIdentifier( node.jjtGetChild(1));
+            return new VariableReference( objectName, variableName );
+        }
+        
+        throw new LemException( "LEMVariableReference has neither 1 nor 2 children" );
+    }
+    
+    /**
+     * Visit a LEMLiteral node. Return the instance of metamodel.Literal representing
+     * this literal.
+     */
+    public Object visit( LEMLiteral node, Object data ) throws LemException {
+        return new Literal( node.getFirstToken().image );
+    }
     
     /**
      * Process the superclass identifier in a Generalisation
