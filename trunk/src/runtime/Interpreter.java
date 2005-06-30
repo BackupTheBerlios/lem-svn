@@ -3,9 +3,9 @@
  */
 
 package runtime;
-import metamodel.*
-import java.util.Collection;
+import metamodel.*;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * This is the main interpreter file.
@@ -16,7 +16,7 @@ public class Interpreter {
     public Interpreter() {
     }
 
-    public void interpret(Procedure p, Context c) {
+    public void interpret(Procedure p, Context c) throws LemRuntimeException {
 	    executeProcedure(p, c);
     }
     
@@ -26,13 +26,13 @@ public class Interpreter {
         
         while( i.hasNext() ) {
             Action a = (Action)i.next();
-	    executeAction(a);
+	    executeAction(a, c);
         }
     }
 
     public void executeAction ( Action a, Context c ) throws LemRuntimeException {
 	if ( a instanceof CreateAction )
-		executeCreateAction((CreateAction)a);
+		executeCreateAction((CreateAction)a, c);
 	else {
 		throw new LemRuntimeException ("executeAction encountered unknown action");
 	}
@@ -40,14 +40,14 @@ public class Interpreter {
 
     public runtime.Object executeCreateAction( CreateAction a, Context c ) throws LemRuntimeException {
 	// Create the new object
-        runtime.Object o = new runtime.Object( a.getClasses );
+        runtime.Object o = new runtime.Object( a.getClasses() );
 	    
         // Add it to the context
-        context.addObject(o);
+        c.addObject(o);
 	    
         // Notify listeners that the object has been added
-        LemObjectCreationEvent e = new LemObjectCreationEvent( o, this );
-        for( Iterator i = context.getLemEventListeners().iterator(); i.hasNext(); ) {
+        LemObjectCreationEvent e = new LemObjectCreationEvent( o, a );
+        for( Iterator i = c.getLemEventListeners().iterator(); i.hasNext(); ) {
         	LemEventListener l = (LemEventListener)i.next();
                 l.objectCreated(e);
          }
