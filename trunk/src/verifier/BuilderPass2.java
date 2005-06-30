@@ -99,17 +99,62 @@ public class BuilderPass2 extends Visitor {
         return v;
     }
     
+    public Object visit( LEMUnaryOperator node, Object data ) throws LemException {
+        String operator = node.getFirstToken().image;
+        
+        if( "-".equals(operator)) {
+            return new UnaryOperation(UnaryOperation.NEGATION);
+        } else if( "+".equals(operator)) {
+            return null;
+        }
+        
+        throw new LemException( "Encountered unknown operator '" + operator + "'" );
+    }
+    
+    public Object visit( LEMUnary node, Object data ) throws LemException {
+        if( node.jjtGetNumChildren() == 2 ) {
+            UnaryOperation o = (UnaryOperation)visit( (LEMUnaryOperator)node.jjtGetChild(0), null );
+            Expression e = (Expression)visit( (LEMPrimary)node.jjtGetChild(1), null);
+            
+            if( o == null ) return e;
+            o.setOperand( e );
+            return o;
+        
+        } else {
+            return visit( (LEMPrimary)node.jjtGetChild(0), null );
+        }        
+    }
+    
+    public Object visit( LEMPrimary node, Object data ) throws LemException {
+        return node.jjtGetChild(0).jjtAccept(this, null);
+    }
+    
     public Object visit( LEMObjectCreation node, Object data ) throws LemException {
         CreateAction a = new CreateAction();
-        Collection c = (Collection)visit( (LEMClassList)node.jjtGetChild(0), null);
+        Collection c = (Collection)(node.jjtGetChild(0).jjtAccept(this, null));
         
         
         a.setClasses(c);
         Procedure p = (Procedure)data;
         p.addAction( a );
         
-        
         return a;
+    }
+    
+    public Object visit( LEMExpression node, Object data ) throws LemException {
+        if( node.jjtGetNumChildren() == 1 ) {
+            return node.jjtGetChild( 0 ).jjtAccept(this, null);
+        } else {
+            Expression left = (Expression)(node.jjtGetChild( 0 ).jjtAccept(this, null));
+            BinaryOperation o = (BinaryOperation)(node.jjtGetChild( 1 ).jjtAccept(this, null));
+            Expression right = (Expression)(node.jjtGetChild( 2 ).jjtAccept(this, null));
+            
+            o.setLeft( left );
+            o.setRight( right );
+        }
+        
+        // TODO
+        return null;
     }
     
     public Object visit( LEMObjectReference node, Object data ) throws LemException {
