@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.45  2005/06/30 07:32:54  u3957053
+* Add getter for root node, split unary operators into their own non-terminal
+*
 * Revision 1.44  2005/06/29 14:15:28  u3293115
 * Added basic signal cancel action + test case.
 *
@@ -171,7 +174,7 @@ import java.io.*;
  * <p>
  * <h2>Acknowledgements</h2>
  * <ol>
- * <li>Emma Margaret Walker, <i>A language for the specificatio of Shlaer-Mellor object-oriented
+ * <li>Emma Margaret Walker, <i>A language for the specification of Shlaer-Mellor object-oriented
  * analysis models</i><br>ANU, BSEng Honours thesis, November 2002 </li>
  * <li>Leon Starr, <i>Metamodel for xtUML, 2002;</i> upon which much of the JAVA object model is based</li>
  * <li>Shayne Flint, instrumental in providing ongoing support and direction</li>
@@ -191,6 +194,8 @@ public class LemParser {
     private static final String id = "$Id$";
     private static final String revision = "$Revision$";
     private static final String release = "Release_1";
+
+    LEMModelDeclaration rootNode = null;
 
     /**
      * Return the id string for the parser
@@ -259,7 +264,12 @@ public class LemParser {
 
         // return the constructed model
 
+	rootNode = md;
         return model;
+    }
+
+    public LEMModelDeclaration getRootNode() {
+        return rootNode;
     }
 }
 
@@ -1196,10 +1206,7 @@ void Expression() : {}
 { 
 	Relation()
 	(
-		(
-			<LAND>
-			| <LOR> 
-		)
+		Logical()
 		Relation()
 	)*
 }
@@ -1212,7 +1219,13 @@ void Relation() : {}
 		SimpleExpression()
 	)?
 }
-                 
+
+void Logical() : {}
+{
+	<LAND>
+	| <LOR>
+}
+
 void Relational() : {}
 {
 	<EQUAL>
@@ -1263,11 +1276,16 @@ void Factor() : {}
 	)?
 }
 
-void Unary() : {}
+void UnaryOperator() : {}
 {
 	(<PLUS> 
 	| <MINUS>
-	| <LNOT>)?
+	| <LNOT>)
+}
+
+void Unary() : {}
+{
+	( UnaryOperator() )?
 	Primary()
 }
 
