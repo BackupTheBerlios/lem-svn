@@ -113,16 +113,28 @@ public class BuilderPass2 extends Visitor {
     
     public Object visit( LEMUnary node, Object data ) throws LemException {
         if( node.jjtGetNumChildren() == 2 ) {
-            UnaryOperation o = (UnaryOperation)visit( (LEMUnaryOperator)node.jjtGetChild(0), null );
-            Expression e = (Expression)visit( (LEMPrimary)node.jjtGetChild(1), null);
+            UnaryOperation o = (UnaryOperation)(node.jjtGetChild(0).jjtAccept( this, null ));
+            Expression e = (Expression)(node.jjtGetChild(1).jjtAccept(this, null));
             
             if( o == null ) return e;
             o.setOperand( e );
             return o;
-        
+            
         } else {
             return visit( (LEMPrimary)node.jjtGetChild(0), null );
-        }        
+        }
+    }
+    
+    public Object visit( LEMFactor node, Object data ) throws LemException {
+        if( node.jjtGetNumChildren() == 1 ) {
+            return node.jjtGetChild(0).jjtAccept(this, null);
+        }
+        
+        BinaryOperation o = new BinaryOperation( BinaryOperation.EXPONENTIATION );
+        o.setLeft( (Expression) node.jjtGetChild( 0 ).jjtAccept( this, null ));
+        o.setRight( (Expression) node.jjtGetChild( 1 ).jjtAccept( this, null ));
+        
+        return o;
     }
     
     public Object visit( LEMPrimary node, Object data ) throws LemException {
@@ -151,16 +163,112 @@ public class BuilderPass2 extends Visitor {
             
             o.setLeft( left );
             o.setRight( right );
+            
+            return o;
+        }
+    }
+    
+    public Object visit( LEMRelation node, Object data ) throws LemException {
+        if( node.jjtGetNumChildren() == 1 ) {
+            return node.jjtGetChild( 0 ).jjtAccept(this, null);
+        } else {
+            Expression left = (Expression)(node.jjtGetChild( 0 ).jjtAccept(this, null));
+            BinaryOperation o = (BinaryOperation)(node.jjtGetChild( 1 ).jjtAccept(this, null));
+            Expression right = (Expression)(node.jjtGetChild( 2 ).jjtAccept(this,null));
+            
+            o.setLeft( left );
+            o.setRight( right );
+            
+            return o;
+        }
+    }
+    
+    public Object visit( LEMSimpleExpression node, Object data ) throws LemException {
+        if( node.jjtGetNumChildren() == 1 ) {
+            return node.jjtGetChild( 0 ).jjtAccept(this, null);
+        } else {
+            Expression left = (Expression)(node.jjtGetChild( 0 ).jjtAccept(this, null));
+            BinaryOperation o = (BinaryOperation)(node.jjtGetChild( 1 ).jjtAccept(this, null));
+            Expression right = (Expression)(node.jjtGetChild( 2 ).jjtAccept(this,null));
+            
+            o.setLeft( left );
+            o.setRight( right );
+            
+            return o;
+        }
+    }
+    
+    public Object visit( LEMTerm node, Object data ) throws LemException {
+        if( node.jjtGetNumChildren() == 1 ) {
+            return node.jjtGetChild( 0 ).jjtAccept(this, null);
+        } else {
+            Expression left = (Expression)(node.jjtGetChild( 0 ).jjtAccept(this, null));
+            BinaryOperation o = (BinaryOperation)(node.jjtGetChild( 1 ).jjtAccept(this, null));
+            Expression right = (Expression)(node.jjtGetChild( 2 ).jjtAccept(this,null));
+            
+            return o;
+        }
+    }
+
+    public Object visit( LEMAdding node, Object data ) throws LemException {
+        switch( node.getFirstToken().kind ) {
+            case LemParserConstants.PLUS:
+                return new BinaryOperation( BinaryOperation.ADDITION );
+            case LemParserConstants.MINUS:
+                return new BinaryOperation( BinaryOperation.SUBTRACTION );
         }
         
-        // TODO
-        return null;
+        throw new LemException( "Unknown operator '" + node.getFirstToken() + "' encountered");
+    }
+    
+    public Object visit( LEMLogical node, Object data ) throws LemException {
+        switch( node.getFirstToken().kind ) {
+            case LemParserConstants.LAND:
+                return new BinaryOperation( BinaryOperation.LOGICAL_AND );
+                
+            case LemParserConstants.LOR:
+                return new BinaryOperation( BinaryOperation.LOGICAL_OR );
+        }
+        
+        throw new LemException( "Unknown operator '" + node.getFirstToken() + "' encountered" );
+    }
+    
+    public Object visit( LEMRelational node, Object data ) throws LemException {
+        switch( node.getFirstToken().kind ) {
+            case LemParserConstants.EQUAL:
+                return new BinaryOperation( BinaryOperation.EQUAL );
+            case LemParserConstants.NE:
+                return new BinaryOperation( BinaryOperation.NOT_EQUAL );
+            case LemParserConstants.LT:
+                return new BinaryOperation( BinaryOperation.LESS_THAN );
+            case LemParserConstants.LE:
+                return new BinaryOperation( BinaryOperation.LESS_THAN_OR_EQUAL );
+            case LemParserConstants.GT:
+                return new BinaryOperation( BinaryOperation.GREATER_THAN );
+            case LemParserConstants.GE:
+                return new BinaryOperation( BinaryOperation.GREATER_THAN_OR_EQUAL );
+        }
+        
+        throw new LemException( "Unknown operator '" + node.getFirstToken() + "' encountered" );
+    }
+    
+    public Object visit( LEMMultiplying node, Object data ) throws LemException {
+        switch( node.getFirstToken().kind ) {
+            case LemParserConstants.MULTIPLY:
+                return new BinaryOperation( BinaryOperation.MULTIPLICATION );
+            case LemParserConstants.DIVIDE:
+                return new BinaryOperation( BinaryOperation.DIVISION );
+            case LemParserConstants.MOD:
+                return new BinaryOperation( BinaryOperation.MODULO );
+        }
+        
+        throw new LemException( "Unknown operator '" + node.getFirstToken() + "' encountered" );
     }
     
     public Object visit( LEMObjectReference node, Object data ) throws LemException {
         return node.getFirstToken().image;
     }
-
+    
     /**
      * Visit a LEMVariableReference. Return the instance of metamodel.VariableReference
      * which represents this LEMVariableReferenceNode.
