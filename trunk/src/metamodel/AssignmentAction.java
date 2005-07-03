@@ -8,7 +8,7 @@ package metamodel;
  *
  * @author sjr
  */
-public class AssignmentAction {
+public class AssignmentAction extends Action {
   
     /**
      * The lvalue of this assignment action
