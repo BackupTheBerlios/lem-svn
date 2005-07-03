@@ -220,6 +220,40 @@ public class BuilderPass2 extends Visitor {
         return a;
     }
     
+    public Object visit( LEMRValue node, Object data ) throws LemException {
+        return node.jjtGetChild( 0 ).jjtAccept( this, data );
+    }
+    
+    public Object visit( LEMAttributeAssignment node, Object data ) throws LemException {
+        Node n = node.jjtGetChild( 1 );
+        
+        VariableReference r = (VariableReference)(node.jjtGetChild( 0 ).jjtAccept( this, null ));
+        
+        // The visiting the RValue (2nd child) can either return a CreateAction (not an expression)
+        // or an Expression...
+        
+        Object o = node.jjtGetChild( 1 ).jjtAccept(this, data);
+        Procedure p = (Procedure)data;
+        
+        if( o instanceof CreateAction ) {
+            ((CreateAction)o).setVariable( r );
+            p.addAction((CreateAction)o);
+            return o;
+        } else {
+            // Otherwise, o is an Expression
+            AssignmentAction a = new AssignmentAction();
+            a.setVariableReference( r );
+            a.setExpression((Expression) o);
+            p.addAction(a);
+            
+            return a;
+        }
+    }
+    
+    public Object visit( LEMLValue node, Object data ) throws LemException {
+        return node.jjtGetChild( 0 ).jjtAccept(this, null);
+    }
+    
     /**
      * 
      * @param node 
