@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.47  2005/07/03 14:41:21  u3958283
+* Added ForLoop statement, also added a break token to the statement list to be used, inside for loop, while loops and possibly If statements.
+*
 * Revision 1.46  2005/06/30 07:52:04  u3957053
 * Parser now expands expressions such as 2 + 3 + 4 into a tree as opposed to a list
 *
@@ -419,6 +422,10 @@ TOKEN : /* ACTION LANGUAGE IDENTIFIERS */
 | <DELETE: "delete">
 | <WITH: "with">
 | <WHILE: "while">
+| <FOR: "for">
+| <EACH: "each">
+| <IN: "in">
+| <BREAK: "break">
 | <IF: "if">
 | <ELSE: "else">
 | <ELSEIF: "elseif">
@@ -1037,6 +1044,7 @@ void VariableDeclaration() : {}
 	<SEMI>
 }
 
+
 void StatementList() : {}
 {
 	(
@@ -1044,6 +1052,8 @@ void StatementList() : {}
 		| IfStatement()
 		| WhileStatement()
 		| ActionBlock()
+		| ForLoop()
+		| Break()
 	)*
 }
 
@@ -1201,6 +1211,28 @@ void WhileStatement() : {}
 	<RPAREN>
 	ActionBlock()
 }
+
+void ForLoop() : {}
+{
+	<FOR><EACH>LoopVariable()<IN>VariableSet()
+	ActionBlock()	
+}
+
+void LoopVariable(): {}
+{
+	<SIMPLE_IDENTIFIER>
+}
+
+void VariableSet() : {}
+{
+	<SIMPLE_IDENTIFIER>
+}
+
+void Break() : {}
+{
+	<BREAK><SEMI>
+}
+
 
 /**
  * Expressions. These are side-effect free statements returning a value.
