@@ -19,30 +19,30 @@
  *            | D |         | E |
  *            +---+         +---+
  *
- * The only valid objects are B, D and E.
+ * The only valid classs are B, D and E.
  */
 
 
 model TestModel is
 	domain TestDomain is
 		subsystem TestSubsystem is
-			object A is
+			class A is
 				// empty
 			end;
 
-			object B specialisation of A is 
+			class B specialisation of A is 
 				// empty
 			end;
 
-			object C specialisation of A is
+			class C specialisation of A is
 				// empty
 			end;
 
-			object D specialisation of C is
+			class D specialisation of C is
 				// empty
 			end;
 
-			object E specialisation of C is
+			class E specialisation of C is
 				// empty
 			end;
 

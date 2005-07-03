@@ -22,7 +22,7 @@
  *            | D |         | E |
  *            +---+         +---+
  *
- * The valid objects are 
+ * The valid classs are 
  * B, D, E, F, H, I
  * and
  * (B,D,E)x(F,H,I)
@@ -32,39 +32,39 @@
 model TestModel is
 	domain TestDomain is
 		subsystem TestSubsystem is
-			object A is
+			class A is
 				// empty
 			end;
 
-			object B specialisation of A is 
+			class B specialisation of A is 
 				// empty
 			end;
 
-			object C specialisation of A is
+			class C specialisation of A is
 				// empty
 			end;
 
-			object D specialisation of C is
+			class D specialisation of C is
 				// empty
 			end;
 
-			object E specialisation of C is
+			class E specialisation of C is
 				// empty
 			end;
 
-			object F specialisation of A is
+			class F specialisation of A is
 				// empty
 			end;
 
-			object G specialisation of A is
+			class G specialisation of A is
 				// empty
 			end;
 
-			object H specialisation of G is
+			class H specialisation of G is
 				// empty
 			end;
 
-			object I specialisation of G is
+			class I specialisation of G is
 				// empty
 			end;
 
