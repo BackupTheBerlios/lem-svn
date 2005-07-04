@@ -9,6 +9,9 @@
 // $Id$
 // 
 // $Log$
+// Revision 1.15  2005/07/04 07:51:08  u3958283
+// Added couple of actions to test for loop and break
+//
 // Revision 1.14  2005/06/29 13:59:28  u3293115
 // Finally changed 'object' keyword to 'class' for class declarations.
 // It would have gotten too confusing when we introduce objects.
@@ -174,6 +177,12 @@ model BookStoreModel is
 							generate ev1 to obj;
 							generate ev2(a, b, c) to obj with delay 10;
 							delete obj;
+							for each x in xs 
+							{
+							    delete x ; 
+						            break ; 
+
+							 }
 							
 						}
 
