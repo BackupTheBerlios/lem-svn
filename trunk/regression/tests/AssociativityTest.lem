@@ -1,0 +1,16 @@
+model TestModel is
+	domain TestDomain is
+		subsystem TestSubsystem is
+			class A is
+				// empty
+				behaviour is
+					state a  is {
+						b := 2 + 3 + 4;
+					}
+
+					end;
+				end behaviour;
+			end;
+		end TestSubsystem;
+	end TestDomain;
+end TestModel;
