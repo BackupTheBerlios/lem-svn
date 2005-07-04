@@ -42,68 +42,86 @@ public class examineState extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
 
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().setLayout(null);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         jList1.setBorder(new javax.swing.border.BevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        getContentPane().add(jList1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 150, 50));
+        getContentPane().add(jList1);
+        jList1.setBounds(20, 140, 150, 50);
 
         jList2.setBorder(new javax.swing.border.BevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        getContentPane().add(jList2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 140, 140, 50));
+        getContentPane().add(jList2);
+        jList2.setBounds(200, 140, 140, 50);
 
         jList3.setBorder(new javax.swing.border.BevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        getContentPane().add(jList3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 150, 50));
+        getContentPane().add(jList3);
+        jList3.setBounds(20, 60, 150, 50);
 
         jLabel1.setText("Attributes:");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, -1, -1));
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(20, 120, 52, 14);
 
         jLabel2.setText("Values:");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 120, -1, -1));
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(200, 120, 35, 14);
 
         jLabel3.setText("Classes:");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, -1, -1));
+        getContentPane().add(jLabel3);
+        jLabel3.setBounds(20, 40, 40, 14);
 
         jLabel4.setText("Instance Name:");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
+        getContentPane().add(jLabel4);
+        jLabel4.setBounds(20, 10, 76, 14);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel5.setText("Airport 5");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 10, -1, -1));
+        getContentPane().add(jLabel5);
+        jLabel5.setBounds(100, 10, 50, 14);
 
         jList4.setBorder(new javax.swing.border.BevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        getContentPane().add(jList4, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 60, 140, 50));
+        getContentPane().add(jList4);
+        jList4.setBounds(200, 60, 140, 50);
 
         jLabel6.setText("Waiting Events:");
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 40, -1, -1));
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(200, 40, 76, 14);
 
         jLabel7.setText("Current Procedure");
-        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 90, -1));
+        getContentPane().add(jLabel7);
+        jLabel7.setBounds(20, 300, 90, 14);
 
         jScrollPane1.setViewportView(jTextArea1);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 320, 70));
+        getContentPane().add(jScrollPane1);
+        jScrollPane1.setBounds(20, 220, 320, 70);
 
         jScrollPane2.setViewportView(jTextArea2);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, 320, 150));
+        getContentPane().add(jScrollPane2);
+        jScrollPane2.setBounds(20, 350, 320, 150);
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 2, 11));
         jLabel8.setText("Do Something");
         jLabel8.setBorder(new javax.swing.border.BevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 300, 220, -1));
+        getContentPane().add(jLabel8);
+        jLabel8.setBounds(120, 300, 220, 18);
 
         jLabel9.setText("Preceeding Procedures");
-        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, -1, 20));
+        getContentPane().add(jLabel9);
+        jLabel9.setBounds(20, 200, 110, 20);
 
         jLabel10.setText("Proceeding Procedures");
-        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 330, -1, -1));
+        getContentPane().add(jLabel10);
+        jLabel10.setBounds(20, 330, 110, 14);
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel11.setText("Directing Traffic");
-        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 10, -1, -1));
+        getContentPane().add(jLabel11);
+        jLabel11.setBounds(250, 10, 90, 14);
 
         jLabel12.setText("Current State:");
-        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 10, -1, -1));
+        getContentPane().add(jLabel12);
+        jLabel12.setBounds(170, 10, 70, 14);
 
         pack();
     }//GEN-END:initComponents
