@@ -65,13 +65,13 @@ public class examineState extends javax.swing.JFrame {
         getContentPane().add(jLabel2);
         jLabel2.setBounds(200, 120, 35, 14);
 
-        jLabel3.setText("Classes:");
+        jLabel3.setText("Class Instances:");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(20, 40, 40, 14);
+        jLabel3.setBounds(20, 40, 150, 14);
 
-        jLabel4.setText("Instance Name:");
+        jLabel4.setText("Object Name:");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(20, 10, 76, 14);
+        jLabel4.setBounds(20, 10, 66, 14);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel5.setText("Airport 5");
@@ -86,7 +86,7 @@ public class examineState extends javax.swing.JFrame {
         getContentPane().add(jLabel6);
         jLabel6.setBounds(200, 40, 76, 14);
 
-        jLabel7.setText("Current Procedure");
+        jLabel7.setText("Current Action");
         getContentPane().add(jLabel7);
         jLabel7.setBounds(20, 300, 90, 14);
 
@@ -104,15 +104,15 @@ public class examineState extends javax.swing.JFrame {
         jLabel8.setText("Do Something");
         jLabel8.setBorder(new javax.swing.border.BevelBorder(javax.swing.border.BevelBorder.LOWERED));
         getContentPane().add(jLabel8);
-        jLabel8.setBounds(120, 300, 220, 18);
+        jLabel8.setBounds(100, 300, 240, 18);
 
-        jLabel9.setText("Preceeding Procedures");
+        jLabel9.setText("Preceeding Actions");
         getContentPane().add(jLabel9);
-        jLabel9.setBounds(20, 200, 110, 20);
+        jLabel9.setBounds(20, 200, 91, 20);
 
-        jLabel10.setText("Proceeding Procedures");
+        jLabel10.setText("Proceeding Actions");
         getContentPane().add(jLabel10);
-        jLabel10.setBounds(20, 330, 110, 14);
+        jLabel10.setBounds(20, 330, 91, 14);
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel11.setText("Directing Traffic");
