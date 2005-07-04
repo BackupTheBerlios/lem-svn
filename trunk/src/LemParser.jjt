@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.49  2005/07/04 18:41:51  u2567446
+* Changed the definition of SimpleExpression to reflect the left associativity of the expression. Tree is flatened so that addition and subtraction can be done as we go through the tree from left to right.
+*
 * Revision 1.48  2005/07/04 15:34:47  u2567446
 * Added link actions and reclassify action.
 *
@@ -1308,12 +1311,12 @@ void Relational() : {}
 }
 
 void SimpleExpression() : {}
-{ 
+{
 	Term()
-	[
+	(
 		Adding()
-		SimpleExpression()
-	]
+		Term()
+	)*
 }
 
 void Adding() : {}
