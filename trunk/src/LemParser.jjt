@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.48  2005/07/04 15:34:47  u2567446
+* Added link actions and reclassify action.
+*
 * Revision 1.47  2005/07/03 14:41:21  u3958283
 * Added ForLoop statement, also added a break token to the statement list to be used, inside for loop, while loops and possibly If statements.
 *
@@ -413,7 +416,11 @@ TOKEN : /* ACTION LANGUAGE IDENTIFIERS */
 | <GENERATE: "generate">
 | <DELAY: "delay">
 | <CANCEL: "cancel">
+| <RELATE: "relate">
+| <UNRELATE: "unrelate">
+| <CREATING: "creating">
 | <ACROSS: "across">
+| <RECLASSIFY: "reclassify"
 | <OF: "of">
 | <ONE: "one">
 | <MANY: "many">
@@ -1100,6 +1107,35 @@ void ClassList() : {}
 void ObjectDeletion() : {}
 {
 	<DELETE> ObjectReference()
+}
+
+void RelationshipReference() : {}
+{
+	LOOKAHEAD(2)
+	  RelationshipIdentifier() <DOT> ActiveVerbClause()
+	| RelationshipIdentifier()
+}
+
+void LinkCreation() : {} 
+{
+	<RELATE> ObjectReference() <TO> ObjectReference() <ACROSS> RelationshipReference() LinkObjectCreation()
+}
+
+// Do we assume the link object is of only one class? I think it's a fair assumption.
+void LinkObjectCreation() : {}
+{
+	[<CREATING> Identifier()]
+}
+
+void LinkDeletion() : {}
+{
+	<UNRELATE> ObjectReference() <FROM> ObjectReference() <ACROSS> RelationshipReference()
+}
+
+// can we reclassify from a multi class to another multi class?
+void ObjectReclassification() : {}
+{
+	<RECLASSIFY> ObjectReference() <FROM> Identifier() <TO> Identifier()
 }
 
 /** Signals */
