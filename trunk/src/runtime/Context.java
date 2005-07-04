@@ -8,6 +8,8 @@ package runtime;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * Every Action in LEM executes in some sort of "context".
@@ -24,7 +26,7 @@ public class Context {
      *
      * @todo Should this be a HashMap?
      */
-    Collection localVariables = null;
+    HashMap localVariables = new HashMap();
     
     /**
      * A collection of LemEventListener instances interested in 
@@ -72,8 +74,35 @@ public class Context {
      * Returns the list of local variables in this context
      * @return the local variables in this context
      */
-    public Collection getLocalVariables() {
+    public HashMap getLocalVariables() {
         return localVariables;
+    }
+ 
+    /**
+     * Gets the named variable from this context or any parent contexts.
+     *
+     * @param name the name of the variable
+     * @return the variable, or null if there is no variable with that name
+     */
+    public Variable getLocalVariable( String name ) {
+        java.lang.Object v = localVariables.get( name );
+        
+        if( v == null && parentContext != null ) {
+            // Search parent contexts
+            return parentContext.getLocalVariable( name );
+        }
+        
+        return (Variable)v;
+    }
+    
+    /**
+     * Adds the given variable to this context with the given identifying name.
+     * 
+     * @param name the identifier of the variable
+     * @param variable the variable to be added
+     */
+    public void addLocalVariable( String name, Variable variable ) {
+        localVariables.put( name, variable );
     }
     
     /**
