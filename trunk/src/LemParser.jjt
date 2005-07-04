@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.50  2005/07/04 23:18:44  u3957053
+* Fixed syntax error
+*
 * Revision 1.49  2005/07/04 18:41:51  u2567446
 * Changed the definition of SimpleExpression to reflect the left associativity of the expression. Tree is flatened so that addition and subtraction can be done as we go through the tree from left to right.
 *
@@ -423,7 +426,7 @@ TOKEN : /* ACTION LANGUAGE IDENTIFIERS */
 | <UNRELATE: "unrelate">
 | <CREATING: "creating">
 | <ACROSS: "across">
-| <RECLASSIFY: "reclassify"
+| <RECLASSIFY: "reclassify">
 | <OF: "of">
 | <ONE: "one">
 | <MANY: "many">
