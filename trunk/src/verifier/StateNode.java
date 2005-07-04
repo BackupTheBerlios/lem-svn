@@ -6,8 +6,12 @@
 
 package verifier;
 
+import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import metamodel.State;
+import runtime.DomainContext;
+import runtime.Interpreter;
+import runtime.LemRuntimeException;
 
 /**
  * Tree node appearing inside a StateMachineNode. For graphically representing 
@@ -48,6 +52,29 @@ public class StateNode extends AbstractDescriptionNode {
     public JPopupMenu getContextMenu()
     {
         JPopupMenu ContextMenu = new JPopupMenu();
-        return ContextMenu;
+        JMenuItem executeProcedure = new JMenuItem();
+        executeProcedure.setText("Execute");
+        executeProcedure.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExecuteProcedure();
+            }
+        });
+        ContextMenu.add(executeProcedure);
+         return ContextMenu;
     }       
+    
+    public void ExecuteProcedure() 
+    {
+        metamodel.Procedure p = this.state.getProcedure();
+        runtime.DomainContext d = new DomainContext();
+        ConsoleLogger c = new ConsoleLogger(d);
+        runtime.Interpreter I = new Interpreter();
+        try{
+        I.interpret(p, d);
+        }
+        catch(LemRuntimeException e)
+        {
+            System.out.println(e);
+        }
+    }
 }
