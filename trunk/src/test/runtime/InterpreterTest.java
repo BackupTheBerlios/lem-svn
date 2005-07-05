@@ -10,7 +10,7 @@ package runtime;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import metamodel.AssignmentAction;
 import metamodel.LemException;
 import metamodel.Model;
@@ -57,9 +57,9 @@ public class InterpreterTest extends junit.framework.TestCase {
         
         try { 
             Variable v = i.executeAssignmentAction(a, c);
-            BigInteger val = (BigInteger)v.getValue();
+            BigDecimal val = (BigDecimal)v.getValue();
             System.out.println( "The answer is " + val );
-            assertEquals( "The result is 2 + 3 + 4 = 9", true, val.equals( new BigInteger( "9" )));
+            assertEquals( "The result is 2 + 3 + 4 = 9", true, val.equals( new BigDecimal( "9.6" )));
         } catch( LemRuntimeException e ) {
             fail( "Runtime exception while executing test: " + e.getMessage() );
         }

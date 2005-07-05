@@ -3,7 +3,7 @@
  */
 
 package runtime;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import metamodel.*;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -164,7 +164,7 @@ public class Interpreter {
             
             // TODO: Testing only
             Variable v = new Variable( l.getType() );
-            v.setValue( new BigInteger( l.getValue() ));
+            v.setValue( new BigDecimal( l.getValue() ));
             
             return v;
         }
@@ -177,9 +177,9 @@ public class Interpreter {
             Variable v = new Variable( left.getType() );
             
             if( o.getType() == BinaryOperation.ADDITION ) 
-                v.setValue( ((BigInteger)left.getValue()).add((BigInteger)right.getValue()));
+                v.setValue( ((BigDecimal)left.getValue()).add((BigDecimal)right.getValue()));
             else
-                v.setValue( ((BigInteger)left.getValue()).subtract((BigInteger)right.getValue()));
+                v.setValue( ((BigDecimal)left.getValue()).subtract((BigDecimal)right.getValue()));
     
             return v;
         }

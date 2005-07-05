@@ -61,14 +61,14 @@ public class AssignmentActionTest extends junit.framework.TestCase {
         Expression e3 = ((BinaryOperation)e2).getLeft();
         assertEquals( "left node is a literal", true, e3 instanceof Literal );
     
-        assertEquals( "leftmost literal is 2", true, ((Literal)e3).getValue().equals("2"));
+        assertEquals( "leftmost literal is 2", true, ((Literal)e3).getValue().equals("2.1"));
         
         Expression e4 = ((BinaryOperation)e2).getRight();
-        assertEquals( "'middle' literal is 3", true, ((Literal)e4).getValue().equals("3"));
+        assertEquals( "'middle' literal is 3", true, ((Literal)e4).getValue().equals("3.2"));
         
         Expression e5 = ((BinaryOperation)e1).getRight();
         assertEquals( "right node is a literal", true, e5 instanceof Literal);
-        assertEquals( "rightmost literal is 4", true, ((Literal)e5).getValue().equals("4"));
+        assertEquals( "rightmost literal is 4", true, ((Literal)e5).getValue().equals("4.3"));
         
         
         
