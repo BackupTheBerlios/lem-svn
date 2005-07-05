@@ -309,15 +309,21 @@ public class BuilderPass2 extends Visitor {
         if( node.jjtGetNumChildren() == 1 ) {
             return node.jjtGetChild( 0 ).jjtAccept(this, null);
         } else {
-            Expression left = (Expression)(node.jjtGetChild( 0 ).jjtAccept(this, null));
-            BinaryOperation o = (BinaryOperation)(node.jjtGetChild( 1 ).jjtAccept(this, null));
-            Expression right = (Expression)(node.jjtGetChild( 2 ).jjtAccept(this,null));
-            
-            o.setLeft( left );
-            o.setRight( right );
-            
-            return o;
+            return listToTree( node, node.jjtGetNumChildren() - 1 );
         }
+    }
+    
+    protected Expression listToTree( SimpleNode n, int index ) throws LemException {
+        if( index == 0 )
+            return (Expression)(n.jjtGetChild(index).jjtAccept( this, null ));
+        
+        Expression right = (Expression)(n.jjtGetChild( index ).jjtAccept( this, null ));
+        BinaryOperation o = (BinaryOperation)(n.jjtGetChild( index - 1 ).jjtAccept( this, null ));
+        Expression left = listToTree( n, index - 2 );
+        
+        o.setLeft( left );
+        o.setRight( right );
+        return o;
     }
     
     /**
