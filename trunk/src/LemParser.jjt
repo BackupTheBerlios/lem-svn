@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.51  2005/07/05 04:54:52  u2567446
+* Modified the multiplication for left-associativity.
+*
 * Revision 1.50  2005/07/04 23:18:44  u3957053
 * Fixed syntax error
 *
@@ -1331,10 +1334,10 @@ void Adding() : {}
 void Term() : {}
 {
 	Factor()
-	[
+	(
 		Multiplying()
-		Term()
-	]
+		Factor()
+	)*
 }
 
 void Multiplying() : {}
