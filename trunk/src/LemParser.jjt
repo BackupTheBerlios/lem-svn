@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.52  2005/07/06 10:00:30  u2567446
+* Modified the grammar for Relation and Expression to reflect left associativity.
+*
 * Revision 1.51  2005/07/05 04:54:52  u2567446
 * Modified the multiplication for left-associativity.
 *
@@ -1285,19 +1288,19 @@ void Break() : {}
 void Expression() : {}
 { 
 	Relation()
-	[
+	(
 		Logical()
-		Expression()
-	]
+		Relation()
+	)*
 }
 
 void Relation() : {}
 {
 	SimpleExpression()
-	[
+	(
 		Relational()
-		Relation()
-	]
+		SimpleExpression()
+	)*
 }
 
 void Logical() : {}
