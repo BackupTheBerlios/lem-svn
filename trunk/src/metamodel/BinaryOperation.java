@@ -8,20 +8,20 @@ package metamodel;
  */
 public class BinaryOperation extends Expression {
     // Types of binary operation
-    public static int ADDITION = 1;
-    public static int SUBTRACTION = 2;
-    public static int MULTIPLICATION = 3;
-    public static int DIVISION = 4;
-    public static int EXPONENTIATION = 5;
-    public static int EQUAL = 6;
-    public static int LESS_THAN = 7;
-    public static int LESS_THAN_OR_EQUAL = 8;
-    public static int GREATER_THAN = 9;
-    public static int GREATER_THAN_OR_EQUAL = 10;
-    public static int MODULO = 11;
-    public static int NOT_EQUAL = 12;
-    public static int LOGICAL_AND = 13;
-    public static int LOGICAL_OR = 14;
+    public static final int ADDITION = 1;
+    public static final int SUBTRACTION = 2;
+    public static final int MULTIPLICATION = 3;
+    public static final int DIVISION = 4;
+    public static final int EXPONENTIATION = 5;
+    public static final int EQUAL = 6;
+    public static final int LESS_THAN = 7;
+    public static final int LESS_THAN_OR_EQUAL = 8;
+    public static final int GREATER_THAN = 9;
+    public static final int GREATER_THAN_OR_EQUAL = 10;
+    public static final int MODULO = 11;
+    public static final int NOT_EQUAL = 12;
+    public static final int LOGICAL_AND = 13;
+    public static final int LOGICAL_OR = 14;
     
     /**
      * The expression on the left-hand-side of this operation
