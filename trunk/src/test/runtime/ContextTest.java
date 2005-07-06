@@ -8,6 +8,8 @@
 package runtime;
 
 import metamodel.StringType;
+import metamodel.DataType;
+import runtime.VariableFactory;
 
 /**
  *
@@ -22,13 +24,18 @@ public class ContextTest extends junit.framework.TestCase {
     public void testGetVariable() {
         Context c = new Context();
         Context d = new Context( c );
-        Variable v = new Variable( StringType.getInstance() );
         
-        c.addLocalVariable( "testVariable", v );
-        
-        // Now, grab that variable from d
-        Variable t = d.getLocalVariable( "testVariable" );
-        
-        assertEquals( "The two variables should be the same", v, t );
+        try {
+            Variable v = VariableFactory.newVariable( StringType.getInstance(), "\"\"" );
+            c.addLocalVariable( "testVariable", v );
+            
+            // Now, grab that variable from d
+            Variable t = d.getLocalVariable( "testVariable" );
+            
+            assertEquals( "The two variables should be the same", v, t );
+            
+        } catch( LemRuntimeException e ) {
+            fail( "Caught LemRuntimeException while creating new variable: " + e.getMessage() );
+        }
     }
 }
