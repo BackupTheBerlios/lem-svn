@@ -5,19 +5,16 @@
  */
 
 package runtime;
-
-import metamodel.Attribute;
+import metamodel.CoreDataType;
 import metamodel.DataType;
+import metamodel.DomainSpecificDataType;
 
 /**
  * This class represents an instance of an Attribute.
  * @author u4128551
  */
 public abstract class Variable {
-    /**
-     * The value associated with this Variable
-     */
-    java.lang.Object value = null;
+
 //    DataType type = null;
     /**
      * The type of this variable
@@ -37,30 +34,29 @@ public abstract class Variable {
     }
     
     /**
-     * Sets the value of this attribute instance
-     *
-     * @param value the new value of the attribute instance
-     */
-    public void setValue(java.lang.Object value) {
-        this.value = value;
-    }
-    
-    /**
      * Gets the value associated with this attribute instance
      *
      * @return the value associated with this attribute instance
      */
-    public java.lang.Object getValue(){
-        return value;
-    }
+    public abstract java.lang.Object getValue();
     
     public DataType getType() {
         return attribute;
     }
     
+    public CoreDataType getCoreDataType() {
+        if( attribute instanceof DomainSpecificDataType ) {
+            return ((DomainSpecificDataType)attribute).getCoreDataType();
+        }
+        
+        return (CoreDataType)attribute;
+    }
+    
     public void setType( DataType t ) {
         attribute = t;
     }
+    
+    public abstract void setValue( java.lang.Object o );
     
     public Variable add( Variable b ) throws LemRuntimeException {
         throw new LemRuntimeException( "Unsupported operation (add) in type " + attribute.getName() );
