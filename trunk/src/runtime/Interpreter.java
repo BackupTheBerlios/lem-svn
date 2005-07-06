@@ -175,14 +175,18 @@ public class Interpreter {
             Variable left = evaluateExpression( o.getLeft(), c );
             Variable right = evaluateExpression( o.getRight(), c );
             
-            Variable v = VariableFactory.newVariable( left.getType() );
+//            Variable v = VariableFactory.newVariable( left.getType() );
             
-            if( o.getType() == BinaryOperation.ADDITION ) 
-                v.setValue( ((BigDecimal)left.getValue()).add((BigDecimal)right.getValue()));
-            else
-                v.setValue( ((BigDecimal)left.getValue()).subtract((BigDecimal)right.getValue()));
-    
-            return v;
+            switch( o.getType() ) {
+                case BinaryOperation.ADDITION:
+                    return left.add( right );
+                case BinaryOperation.SUBTRACTION:
+                    return left.subtract( right );
+                case BinaryOperation.MULTIPLICATION:
+                    return left.multiply( right );
+                case BinaryOperation.DIVISION:
+                    return left.divide( right );
+            }
         }
         
         return null;

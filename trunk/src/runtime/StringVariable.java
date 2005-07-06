@@ -15,12 +15,24 @@ package runtime;
  * @author sjr
  */
 public class StringVariable extends Variable {
+
+    String value;
     
     /** Creates a new instance of StringVariable */
     public StringVariable( String value ) throws LemRuntimeException {
         if( value == null || !value.matches( "^\".*\"$" )) {
             throw new LemRuntimeException( "Malformed value '" + value +"' passed to StringVariable constructor" );
         }
+        
+        this.value = value;
+    }
+    
+    public void setValue( java.lang.Object o ) {
+        this.value = (String)o;
+    }
+    
+    public java.lang.Object getValue() {
+        return value;
     }
     
 }

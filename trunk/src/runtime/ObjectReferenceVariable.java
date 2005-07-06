@@ -21,4 +21,11 @@ public class ObjectReferenceVariable extends Variable {
         setValue( null );
     }
     
+    public void setValue( java.lang.Object o ) {
+//        this.value = (Boolean)o;
+    }
+    
+    public java.lang.Object getValue() {
+        return null;
+    }
 }

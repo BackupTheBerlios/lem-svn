@@ -16,8 +16,22 @@ package runtime;
  */
 public class BooleanVariable extends Variable {
     
+    protected Boolean value;
+    
     /** Creates a new instance of BooleanVariable */
     public BooleanVariable( String value ) throws LemRuntimeException {
         setValue( new Boolean( value ));
+    }
+    
+    public void setValue( Boolean value ) {
+        this.value = value;
+    }
+    
+    public void setValue( java.lang.Object o ) {
+        this.value = (Boolean)o;
+    }
+    
+    public java.lang.Object getValue() {
+        return value;
     }
 }
