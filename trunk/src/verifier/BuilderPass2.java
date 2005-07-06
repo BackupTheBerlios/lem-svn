@@ -287,14 +287,7 @@ public class BuilderPass2 extends Visitor {
         if( node.jjtGetNumChildren() == 1 ) {
             return node.jjtGetChild( 0 ).jjtAccept(this, null);
         } else {
-            Expression left = (Expression)(node.jjtGetChild( 0 ).jjtAccept(this, null));
-            BinaryOperation o = (BinaryOperation)(node.jjtGetChild( 1 ).jjtAccept(this, null));
-            Expression right = (Expression)(node.jjtGetChild( 2 ).jjtAccept(this,null));
-            
-            o.setLeft( left );
-            o.setRight( right );
-            
-            return o;
+            return listToTree( node, node.jjtGetNumChildren() - 1 );
         }
     }
     
@@ -326,6 +319,10 @@ public class BuilderPass2 extends Visitor {
         return o;
     }
     
+    public Object visit( LEMParenthesizedPrimary node, Object data ) throws LemException {
+        return node.jjtGetChild( 0 ).jjtAccept( this, null );
+    }
+    
     /**
      * 
      * @param node 
@@ -337,14 +334,10 @@ public class BuilderPass2 extends Visitor {
         if( node.jjtGetNumChildren() == 1 ) {
             return node.jjtGetChild( 0 ).jjtAccept(this, null);
         } else {
-            Expression left = (Expression)(node.jjtGetChild( 0 ).jjtAccept(this, null));
-            BinaryOperation o = (BinaryOperation)(node.jjtGetChild( 1 ).jjtAccept(this, null));
-            Expression right = (Expression)(node.jjtGetChild( 2 ).jjtAccept(this,null));
-            
-            return o;
+            return listToTree( node, node.jjtGetNumChildren() - 1 );
         }
     }
-
+    
     /**
      * 
      * @param node 
@@ -409,7 +402,7 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     * 
+     *
      * @param node 
      * @param data 
      * @throws metamodel.LemException 
@@ -475,7 +468,7 @@ public class BuilderPass2 extends Visitor {
     
     /**
      * Process the superclass identifier in a Generalisation
-     * 
+     *
      * This node can exist in the context of a generalisation or is a specialisation list
      * @param node 
      * @param data 
@@ -861,7 +854,7 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     * 
+     *
      * @param node 
      * @param data 
      * @return 
