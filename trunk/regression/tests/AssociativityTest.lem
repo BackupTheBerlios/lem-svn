@@ -5,7 +5,7 @@ model TestModel is
 				// empty
 				behaviour is
 					state a  is {
-						b := 2 + 3 + 4;
+						b := 2.1 + 3.2 + 4.3 ;
 					}
 
 					end;
