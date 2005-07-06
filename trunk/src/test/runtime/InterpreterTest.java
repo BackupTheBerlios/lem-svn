@@ -59,7 +59,7 @@ public class InterpreterTest extends junit.framework.TestCase {
             Variable v = i.executeAssignmentAction(a, c);
             BigDecimal val = (BigDecimal)v.getValue();
             System.out.println( "The answer is " + val );
-            assertEquals( "The result is 2 + 3 + 4 = 9", true, val.equals( new BigDecimal( "9.6" )));
+            assertEquals( "The result is 2.1 + 3.2 + 4.3 = 9.6", true, val.equals( new BigDecimal( "9.6" )));
         } catch( LemRuntimeException e ) {
             fail( "Runtime exception while executing test: " + e.getMessage() );
         }
