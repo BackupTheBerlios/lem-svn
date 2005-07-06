@@ -124,6 +124,8 @@ public class Interpreter {
             if( destination == null ) {
                 throw new LemRuntimeException( "Attribute '" + name + "' not defined on object named '" + name + "'");
             }
+        } else {
+            destination = c.getLocalVariable( r.getVariableName () );
         }
         
         // At this point, we evaluate the expression no matter what
@@ -133,7 +135,7 @@ public class Interpreter {
         // create a new Variable and place it in the current context
         // TODO: Variable references are declared anyway. We probably don't need this behaviour.
         if( destination == null ) {
-            destination = new Variable( value.getType() );
+            destination = VariableFactory.newVariable( value.getType() );
             c.addLocalVariable( r.getVariableName(), value );
             destination.setValue( value.getValue() );
             return destination;
@@ -163,8 +165,7 @@ public class Interpreter {
             Literal l = (Literal)e;
             
             // TODO: Testing only
-            Variable v = new Variable( l.getType() );
-            v.setValue( new BigDecimal( l.getValue() ));
+            Variable v = VariableFactory.newVariable(  l.getType(), l.getValue() );
             
             return v;
         }
@@ -174,7 +175,7 @@ public class Interpreter {
             Variable left = evaluateExpression( o.getLeft(), c );
             Variable right = evaluateExpression( o.getRight(), c );
             
-            Variable v = new Variable( left.getType() );
+            Variable v = VariableFactory.newVariable( left.getType() );
             
             if( o.getType() == BinaryOperation.ADDITION ) 
                 v.setValue( ((BigDecimal)left.getValue()).add((BigDecimal)right.getValue()));
