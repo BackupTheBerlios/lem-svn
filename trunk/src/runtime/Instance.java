@@ -42,7 +42,7 @@ public class Instance {
      *
      * @param theClass the class which is instantiated by this instance
      */
-    public Instance(metamodel.Class theClass) {
+    public Instance(metamodel.Class theClass) throws LemRuntimeException {
         instanceOfClass = theClass;
         
         initialiseAttributeInstances();
@@ -54,20 +54,20 @@ public class Instance {
      * @param theClass the class which is instantiated by this instance
      * @param state the state in which this instance should begin
      */
-    public Instance(metamodel.Class theClass, State state) {
+    public Instance(metamodel.Class theClass, State state) throws LemRuntimeException {
         instanceOfClass = theClass;
         currentState = state;
         
         initialiseAttributeInstances();
     }
     
-    private void initialiseAttributeInstances() {
+    private void initialiseAttributeInstances() throws LemRuntimeException {
         Iterator i = instanceOfClass.getAttributes().values().iterator();
         attributeInstances = new HashMap();
         
         while( i.hasNext() ) {
             Attribute a = (Attribute)i.next();
-            attributeInstances.put( a.getName(), new Variable(a.getType()));
+            attributeInstances.put( a.getName(), VariableFactory.newVariable( a.getType() ));
         }
     }
     
