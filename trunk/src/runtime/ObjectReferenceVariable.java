@@ -10,22 +10,31 @@
 
 package runtime;
 
+import metamodel.DataType;
+import metamodel.ObjectReferenceType;
+
 /**
  *
  * @author sjr
  */
 public class ObjectReferenceVariable extends Variable {
     
+    runtime.Object value;
+    
     /** Creates a new instance of ObjectReferenceVariable */
-    public ObjectReferenceVariable( String value ) throws LemRuntimeException {
-        setValue( null );
+    public ObjectReferenceVariable( runtime.Object o ) throws LemRuntimeException {
+        setValue( o );
     }
     
     public void setValue( java.lang.Object o ) {
-//        this.value = (Boolean)o;
+        this.value = (runtime.Object)o;
     }
     
     public java.lang.Object getValue() {
-        return null;
+        return value;
+    }
+    
+    public DataType getType() {
+        return ObjectReferenceType.getInstance();
     }
 }
