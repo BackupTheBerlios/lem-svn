@@ -6,9 +6,14 @@ model TestModel is
 				behaviour is
 					state a  is {
 						b := 2.1 + 3.2 + 4.3 ;
-					}
+					} end;
 
-					end;
+					state evalTest is {
+						a := 4;
+						b := a + 2;
+						c := a > b;
+						d := "hello" + " world";
+					} end;
 				end behaviour;
 			end;
 		end TestSubsystem;
