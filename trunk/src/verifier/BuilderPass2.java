@@ -236,7 +236,6 @@ public class BuilderPass2 extends Visitor {
         
         if( o instanceof CreateAction ) {
             ((CreateAction)o).setVariable( r );
-            p.addAction((CreateAction)o);
             return o;
         } else {
             // Otherwise, o is an Expression
