@@ -167,7 +167,7 @@ public class BuilderPass2 extends Visitor {
             return o;
             
         } else {
-            return visit( (LEMPrimary)node.jjtGetChild(0), null );
+            return node.jjtGetChild( 0 ).jjtAccept( this, null );
         }
     }
     
@@ -306,6 +306,16 @@ public class BuilderPass2 extends Visitor {
         }
     }
     
+    /**
+     * Returns a binary tree representing the left-associative list of terms represented
+     * by the children of the given SimpleNode. For example.
+     *
+     * 2 + 3 + 5 is translated into
+     *
+     *        +
+     *      +   5
+     *    2   3 
+     */
     protected Expression listToTree( SimpleNode n, int index ) throws LemException {
         if( index == 0 )
             return (Expression)(n.jjtGetChild(index).jjtAccept( this, null ));
@@ -463,7 +473,25 @@ public class BuilderPass2 extends Visitor {
      * @return 
      */
     public Object visit( LEMLiteral node, Object data ) throws LemException {
-        return new Literal( node.getFirstToken().image );
+        DataType t = null;
+        switch( node.getFirstToken().kind ) {
+            case LemParserConstants.DECIMAL_LITERAL:
+            case LemParserConstants.REAL_LITERAL:
+            case LemParserConstants.FLOATING_POINT_LITERAL:
+                t = NumericType.getInstance();
+                break;
+            case LemParserConstants.BOOLEAN_LITERAL:
+                t = BooleanType.getInstance();
+                break;
+            case LemParserConstants.STRING_LITERAL:
+                t = StringType.getInstance();
+                break;
+            case LemParserConstants.NULL:
+                // TODO: Need NullType
+                break;
+        }
+        
+        return new Literal( t, node.getFirstToken().image );
     }
     
     /**
