@@ -10,6 +10,9 @@
 
 package runtime;
 
+import metamodel.BooleanType;
+import metamodel.DataType;
+
 /**
  *
  * @author sjr
@@ -23,6 +26,10 @@ public class BooleanVariable extends Variable {
         setValue( new Boolean( value ));
     }
     
+    public BooleanVariable( boolean value ) throws LemRuntimeException {
+        setValue( new Boolean( value ));
+    }
+    
     public void setValue( Boolean value ) {
         this.value = value;
     }
@@ -33,5 +40,13 @@ public class BooleanVariable extends Variable {
     
     public java.lang.Object getValue() {
         return value;
+    }
+    
+    public DataType getType() {
+        return BooleanType.getInstance();
+    }
+    
+    public Variable logicalNot() throws LemRuntimeException {
+        return new BooleanVariable( !value.booleanValue() );
     }
 }
