@@ -79,4 +79,14 @@ public class Instance {
     public metamodel.Class getInstanceClass() {
         return instanceOfClass;
     }
+    
+    /**
+     * Gets the named attribute from this instance.
+     * 
+     * @param name the attribute name
+     * @return the attribute with the given name, or null if it doesn't exist
+     */
+    public Variable getAttribute( String name ) {
+        return (Variable)attributeInstances.get( name );
+    }
 }
