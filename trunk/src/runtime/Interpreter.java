@@ -175,8 +175,6 @@ public class Interpreter {
             Variable left = evaluateExpression( o.getLeft(), c );
             Variable right = evaluateExpression( o.getRight(), c );
             
-//            Variable v = VariableFactory.newVariable( left.getType() );
-            
             switch( o.getType() ) {
                 case BinaryOperation.ADDITION:
                     return left.add( right );
@@ -186,7 +184,43 @@ public class Interpreter {
                     return left.multiply( right );
                 case BinaryOperation.DIVISION:
                     return left.divide( right );
+                case BinaryOperation.EXPONENTIATION:
+                    return left.exp( right );
+                case BinaryOperation.EQUAL:
+                    return left.equal( right );
+                case BinaryOperation.LESS_THAN:
+                    return left.lessThan( right );
+                case BinaryOperation.LESS_THAN_OR_EQUAL:
+                    return left.lessThanOrEqual( right );
+                case BinaryOperation.GREATER_THAN:
+                    return left.greaterThan( right );
+                case BinaryOperation.GREATER_THAN_OR_EQUAL:
+                    return left.greaterThanOrEqual( right );
+                case BinaryOperation.MODULO:
+                    return left.mod( right );
+                case BinaryOperation.NOT_EQUAL:
+                    return left.notEqual( right );
+                case BinaryOperation.LOGICAL_AND:
+                    return left.logicalAnd( right );
+                case BinaryOperation.LOGICAL_OR:
+                    return left.logicalOr( right );
             }
+            
+            throw new LemRuntimeException( "Unknown operation ID: " + o.getType() );
+        }
+        
+        if( e instanceof UnaryOperation ) {
+            UnaryOperation o = (UnaryOperation) e;
+            Variable operand = evaluateExpression( o.getOperand(), c );
+            
+            switch( o.getType() ) {
+                case UnaryOperation.NEGATION:
+                    return operand.negation();
+                case UnaryOperation.LOGICAL_NOT:
+                    return operand.logicalNot();
+            }
+            
+            throw new LemRuntimeException( "Unknown unary operation ID: " + o.getType() );
         }
         
         return null;
