@@ -10,6 +10,9 @@
 
 package runtime;
 
+import metamodel.DataType;
+import metamodel.StringType;
+
 /**
  *
  * @author sjr
@@ -20,10 +23,6 @@ public class StringVariable extends Variable {
     
     /** Creates a new instance of StringVariable */
     public StringVariable( String value ) throws LemRuntimeException {
-        if( value == null || !value.matches( "^\".*\"$" )) {
-            throw new LemRuntimeException( "Malformed value '" + value +"' passed to StringVariable constructor" );
-        }
-        
         this.value = value;
     }
     
@@ -35,4 +34,11 @@ public class StringVariable extends Variable {
         return value;
     }
     
+    public DataType getType() {
+        return StringType.getInstance();
+    }
+    
+    public Variable add( Variable b ) throws LemRuntimeException {
+        return new StringVariable( value + b.getValue().toString() );
+    }
 }
