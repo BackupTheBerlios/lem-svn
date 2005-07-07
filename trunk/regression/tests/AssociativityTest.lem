@@ -1,7 +1,11 @@
 model TestModel is
 	domain TestDomain is
+		type Money is numeric;
+
 		subsystem TestSubsystem is
 			class A is
+				attribute blah is Money;
+
 				// empty
 				behaviour is
 					state a  is {
@@ -13,6 +17,10 @@ model TestModel is
 						b := a + 2;
 						c := a > b;
 						d := "hello" + " world";
+						e := create A;
+						e.blah := 22;
+						e.blah := -(2 * e.blah + 1);
+						f := "hello " + e.blah;
 					} end;
 				end behaviour;
 			end;
