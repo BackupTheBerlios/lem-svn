@@ -113,4 +113,12 @@ public abstract class Variable {
     public Variable logicalOr( Variable b ) throws LemRuntimeException {
         throw new LemRuntimeException( "Unsupported operation (logicalOr) in type " + attribute.getName() );
     }
+    
+    public Variable logicalNot() throws LemRuntimeException {
+        throw new LemRuntimeException( "Unsupported unary operation (logicalNot) in type " + attribute.getName() );
+    }
+    
+    public Variable negation() throws LemRuntimeException {
+        throw new LemRuntimeException( "Unsupported unary operation(negation) in type " + attribute.getName() );
+    }
 }
