@@ -139,15 +139,14 @@ public class BuilderPass2 extends Visitor {
      * @return 
      */
     public Object visit( LEMUnaryOperator node, Object data ) throws LemException {
-        String operator = node.getFirstToken().image;
-        
-        if( "-".equals(operator)) {
-            return new UnaryOperation(UnaryOperation.NEGATION);
-        } else if( "+".equals(operator)) {
-            return null;
+        switch( node.getFirstToken().kind ) {
+            case LemParserConstants.LNOT:
+                return new UnaryOperation( UnaryOperation.LOGICAL_NOT );
+            case LemParserConstants.MINUS:
+                return new UnaryOperation(UnaryOperation.NEGATION);
         }
         
-        throw new LemException( "Encountered unknown operator '" + operator + "'" );
+        throw new LemException( "Encountered unknown operator '" + node.getFirstToken().image + "'" );
     }
     
     /**
