@@ -81,8 +81,11 @@ public class Object {
      * named attribute doesn't exist
      */
     public Variable getAttribute(String attributeName) {
-        //insert code here :)
-//        return attributes[0];
+        for( Iterator i = instances.iterator(); i.hasNext(); ) {
+            Instance in = (Instance)i.next();
+            Variable v = in.getAttribute( attributeName );
+            if( v != null ) return v;
+        }
         return null;
     }
     
