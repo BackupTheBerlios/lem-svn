@@ -48,6 +48,18 @@ public class NumericVariable extends Variable {
         
         throw new LemRuntimeException( "Operation add(numeric, " + right.getType().getName() + "' not supported" );
     }
+
+    public Variable subtract( Variable right ) throws LemRuntimeException {
+        CoreDataType rightType = right.getCoreDataType();
+        if( StringType.getInstance().equals( rightType )) {
+            // Concatenate the left and the right
+            return new StringVariable( value.toString() + right.getValue().toString() );
+        } else if( NumericType.getInstance().equals( rightType )) {
+            return new NumericVariable( value.subtract( (BigDecimal)right.getValue() ));
+        }
+        
+        throw new LemRuntimeException( "Operation subtract(numeric, " + right.getType().getName() + "' not supported" );
+    }
     
     public Variable multiply( Variable right ) throws LemRuntimeException {
         if( NumericType.getInstance().equals( right.getCoreDataType() )) {
@@ -67,6 +79,76 @@ public class NumericVariable extends Variable {
         }
         
         throw new LemRuntimeException( "Operation divide(numeric, " + right.getType().getName() + "' not supported" );
+    }
+    
+    public Variable notEqual(Variable b) throws LemRuntimeException {
+        return equal( b ).logicalNot();
+    }
+    
+    public Variable mod(Variable b) throws LemRuntimeException {
+        if( !NumericType.getInstance().equals( b.getCoreDataType() ))
+            throw new LemRuntimeException( "Operation mod(numeric, " + b.getType().getName() + "' not supported" );
+        BigDecimal right = (BigDecimal)b.getValue();
+        
+        return new NumericVariable( value.remainder( right ));
+    }
+    
+    private int compare( Variable v ) throws LemRuntimeException {
+        if( !NumericType.getInstance().equals( v.getCoreDataType() ))
+            throw new LemRuntimeException( "Operation compare(numeric, " + v.getType().getName() + "' not supported" );
+        
+        BigDecimal right = (BigDecimal)v.getValue();
+        
+        return value.compareTo( right );
+    }
+
+    public Variable equal( Variable b ) throws LemRuntimeException {
+        int cmp = compare( b );
+        
+        if( cmp == 0 )
+            return new BooleanVariable( "true" );
+        else
+            return new BooleanVariable( "false" );
+    }
+    
+    public Variable lessThanOrEqual(Variable b) throws LemRuntimeException {
+        int cmp = compare( b );
+        
+        if( cmp == 0 || cmp == -1 ) 
+            return new BooleanVariable( "true" );
+        else
+            return new BooleanVariable( "false" );
+    }
+    
+    public Variable lessThan(Variable b) throws LemRuntimeException {
+        int cmp = compare( b );
+        
+        if( cmp == -1 ) 
+            return new BooleanVariable( "true" );
+        else
+            return new BooleanVariable( "false" );
+    }
+    
+    public Variable greaterThanOrEqual(Variable b) throws LemRuntimeException {
+        int cmp = compare( b );
+        
+        if( cmp == 0 || cmp == 1 ) 
+            return new BooleanVariable( "true" );
+        else
+            return new BooleanVariable( "false" );
+    }
+    
+    public Variable greaterThan(Variable b) throws LemRuntimeException {
+        int cmp = compare( b );
+        
+        if( cmp == 1 ) 
+            return new BooleanVariable( "true" );
+        else
+            return new BooleanVariable( "false" );
+    }
+    
+    public Variable negation() throws LemRuntimeException {
+        return new NumericVariable( value.negate() );
     }
     
     public void setValue( BigDecimal value ) {
