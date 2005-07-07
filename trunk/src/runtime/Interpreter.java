@@ -54,7 +54,7 @@ public class Interpreter {
     public void executeAction( Action a, Context c ) throws LemRuntimeException {
         if ( a instanceof CreateAction )
             executeCreateAction((CreateAction)a, c);
-        else if( a instanceof AssignmentAction ) 
+        else if( a instanceof AssignmentAction )
             executeAssignmentAction((AssignmentAction)a, c);
         else {
             throw new LemRuntimeException("executeAction encountered unknown action");
@@ -101,8 +101,36 @@ public class Interpreter {
         String name = r.getObjectName();
         runtime.Object o = null;
         
-        Variable destination = null;
-                
+        Variable destination = getVariable( r, c );
+        
+        // At this point, we evaluate the expression no matter what
+        Variable value = evaluateExpression( a.getExpression(), c );
+        System.err.println( "Debug: " + value.getValue() );
+        
+        // If the destination is not defined, then there is no object reference and we should 
+        // create a new Variable and place it in the current context
+        // TODO: Variable references are declared anyway. We probably don't need this behaviour.
+        if( destination == null ) {
+            destination = VariableFactory.newVariable( value.getType() );
+            c.addLocalVariable( r.getVariableName(), value );
+            destination.setValue( value.getValue() );
+            return destination;
+        }
+        
+        // Otherwise, we do a type check. If there's a mismatch, throw an error
+        if( value.getType() != destination.getType() ) {
+            throw new LemRuntimeException( "Type mismatch: evaluated '" + value.getType().getName() + "'" 
+                    + ", expected '" + destination.getType() );
+        }
+        
+        destination.setValue( value.getValue() );
+        return destination;
+    }
+    
+    protected Variable getVariable( VariableReference r, Context c ) throws LemRuntimeException {
+        String name = r.getObjectName();
+        Variable destination;
+        
         if( name != null ) {
             // Look up the object reference in the current context
             Variable v = c.getLocalVariable( name );
@@ -127,27 +155,7 @@ public class Interpreter {
         } else {
             destination = c.getLocalVariable( r.getVariableName () );
         }
-        
-        // At this point, we evaluate the expression no matter what
-        Variable value = evaluateExpression( a.getExpression(), c );
-        
-        // If the destination is not defined, then there is no object reference and we should 
-        // create a new Variable and place it in the current context
-        // TODO: Variable references are declared anyway. We probably don't need this behaviour.
-        if( destination == null ) {
-            destination = VariableFactory.newVariable( value.getType() );
-            c.addLocalVariable( r.getVariableName(), value );
-            destination.setValue( value.getValue() );
-            return destination;
-        }
-        
-        // Otherwise, we do a type check. If there's a mismatch, throw an error
-        if( value.getType() != destination.getType() ) {
-            throw new LemRuntimeException( "Type mismatch: evaluated '" + value.getType().getName() + "'" 
-                    + ", expected '" + destination.getType() );
-        }
-        
-        destination.setValue( value.getValue() );
+
         return destination;
     }
     
@@ -207,6 +215,11 @@ public class Interpreter {
             }
             
             throw new LemRuntimeException( "Unknown operation ID: " + o.getType() );
+        }
+        
+        if( e instanceof VariableReference ) {
+            // Must look up Variable
+            return getVariable( (VariableReference) e, c );
         }
         
         if( e instanceof UnaryOperation ) {
