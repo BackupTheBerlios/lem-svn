@@ -77,6 +77,9 @@ public class Interpreter {
         // Add it to the context
         c.addObject(o);
         
+        // Add the object reference to the context
+        c.addLocalVariable( a.getVariable().getVariableName(), new ObjectReferenceVariable( o ));
+        
         // Notify listeners that the object has been added
         LemObjectCreationEvent e = new LemObjectCreationEvent( o, a );
         for( Iterator i = c.getLemEventListeners().iterator(); i.hasNext(); ) {
@@ -118,7 +121,7 @@ public class Interpreter {
         }
         
         // Otherwise, we do a type check. If there's a mismatch, throw an error
-        if( value.getType() != destination.getType() ) {
+        if( value.getCoreDataType() != destination.getCoreDataType() ) {
             throw new LemRuntimeException( "Type mismatch: evaluated '" + value.getType().getName() + "'" 
                     + ", expected '" + destination.getType() );
         }
@@ -150,7 +153,7 @@ public class Interpreter {
             // Now we've got the target object. We need to get the named attribute from that object.
             destination = source.getAttribute( r.getVariableName() );
             if( destination == null ) {
-                throw new LemRuntimeException( "Attribute '" + name + "' not defined on object named '" + name + "'");
+                throw new LemRuntimeException( "Attribute '" + r.getVariableName() + "' not defined on object named '" + name + "'");
             }
         } else {
             destination = c.getLocalVariable( r.getVariableName () );
