@@ -36,7 +36,7 @@ public class VariableFactory {
         } else if( c.equals( BooleanType.getInstance() )) {
             v = new BooleanVariable( value );
         } else if( c.equals( ObjectReferenceType.getInstance() )) {
-            v = new ObjectReferenceVariable( value );
+            v = new ObjectReferenceVariable( null );
         } else {
             throw new LemRuntimeException( "VariableFactory for type '" + type.getName() + "' unimplemented" );
         }
