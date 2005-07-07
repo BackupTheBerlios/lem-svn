@@ -9,8 +9,9 @@ package metamodel;
  */
 public class UnaryOperation extends Expression {
     // Types of unary operation
-    public static int NEGATION = 1;
-    public static int ABSOLUTE_VALUE = 2;
+    public static final int NEGATION = 1;
+    public static final int ABSOLUTE_VALUE = 2;
+    public static final int LOGICAL_NOT = 3;
     
     /**
      * The expression on which this operation operates
