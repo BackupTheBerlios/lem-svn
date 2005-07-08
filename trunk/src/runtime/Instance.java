@@ -37,10 +37,10 @@ public class Instance {
      */
     metamodel.Class instanceOfClass = null;
     
-    /** 
-     * Creates a new instance of Instance given the template Class 
-     *
+    /**
+     * Creates a new instance of Instance given the template metamodel.Class
      * @param theClass the class which is instantiated by this instance
+     * @throws runtime.LemRuntimeException in case any class attributes could not be initialised to their default values
      */
     public Instance(metamodel.Class theClass) throws LemRuntimeException {
         instanceOfClass = theClass;
@@ -48,11 +48,12 @@ public class Instance {
         initialiseAttributeInstances();
     }
     
-    /** 
+    /**
+     * 
      * Creates a new instance of Instance given the template Class and an initial state
-     *
      * @param theClass the class which is instantiated by this instance
      * @param state the state in which this instance should begin
+     * @throws runtime.LemRuntimeException in case any class attributes could not be initialised to their default values
      */
     public Instance(metamodel.Class theClass, State state) throws LemRuntimeException {
         instanceOfClass = theClass;
