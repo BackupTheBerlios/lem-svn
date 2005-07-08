@@ -22,6 +22,11 @@ model TestModel is
 						e.blah := -(2 * e.blah + 1);
 						f := "hello " + e.blah;
 					} end;
+
+                                        state b is {
+                                            select one player from instances of Player where Player related to Team across R1;
+                                        } end ; 
+
 				end behaviour;
 			end;
 		end TestSubsystem;
