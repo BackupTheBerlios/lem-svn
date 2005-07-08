@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.53  2005/07/08 03:22:38  u3958283
+* Added Select statement to the LemParsers, Where clause is not completed yet, needs discussing with the group.
+*
 * Revision 1.52  2005/07/06 10:00:30  u2567446
 * Modified the grammar for Relation and Expression to reflect left associativity.
 *
@@ -434,9 +437,6 @@ TOKEN : /* ACTION LANGUAGE IDENTIFIERS */
 | <ACROSS: "across">
 | <RECLASSIFY: "reclassify">
 | <OF: "of">
-| <ONE: "one">
-| <MANY: "many">
-| <ANY: "any">
 | <CREATE: "create">
 | <DELETE: "delete">
 | <WITH: "with">
@@ -445,6 +445,14 @@ TOKEN : /* ACTION LANGUAGE IDENTIFIERS */
 | <EACH: "each">
 | <IN: "in">
 | <BREAK: "break">
+| <SELECT: "select">
+| <ONE: "one">
+| <MANY: "many">
+| <ANY: "any">
+| <WHERE: "where">
+| <INSTANCES : "instances">
+| <RELATED : "related">
+| <SELECTED : "selected">
 | <IF: "if">
 | <ELSE: "else">
 | <ELSEIF: "elseif">
@@ -1084,6 +1092,7 @@ void Action() : {}
 		| AttributeAssignment()
 		| SignalGeneration()
 		| SignalCancel()
+                | SelectStatement() 
 	)
 	<SEMI>
 }
@@ -1258,6 +1267,55 @@ void WhileStatement() : {}
 	Expression()
 	<RPAREN>
 	ActionBlock()
+}
+
+void SelectStatement() : {}
+{
+    <SELECT>SelectClause() SelectVariable()
+    <FROM><INSTANCES><OF>ClassVariable()WhereClause()
+
+}
+
+void SelectVariable(): {}
+{
+    <SIMPLE_IDENTIFIER>
+}
+
+void ClassVariable() : {}
+{
+    <SIMPLE_IDENTIFIER>
+}
+
+void ClassVariable2() : {}
+{
+    <SIMPLE_IDENTIFIER>
+}
+
+void SelectClause() : {}
+{
+    (<ONE>|<MANY>|<ANY>)
+}
+
+void WhereClause() : {}
+{
+    [<WHERE>( Related() | Selected() ) ]
+}
+
+void Related() : {}
+{
+    ClassVariable()<RELATED><TO>ClassVariable2()<ACROSS>RelationshipVariable()
+}
+
+
+void RelationshipVariable() : {}
+{
+    <SIMPLE_IDENTIFIER>
+}
+
+/** Not done yet **/
+void Selected() : {}
+{
+    <SELECTED><DOT>SelectVariable() Relational() 
 }
 
 void ForLoop() : {}
