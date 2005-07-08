@@ -20,20 +20,20 @@ public class Interpreter {
     }
     
     /**
-     * 
-     * @param p 
-     * @param c 
-     * @throws runtime.LemRuntimeException 
+     * Interpret the given Procedure by calling executeProcedure on the procedure object
+     * @param p the procedure to interpret
+     * @param c the Context in which the procedure should be interpreted
+     * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
      */
     public void interpret(Procedure p, Context c) throws LemRuntimeException {
         executeProcedure(p, c);
     }
     
     /**
-     * 
-     * @param p 
-     * @param c 
-     * @throws runtime.LemRuntimeException 
+     * Execute the given procedure by calling executeAction on all of the Procedure's Actions
+     * @param p the procedure to execute
+     * @param c the context in which to execute
+     * @throws runtime.LemRuntimeException if any error occurs during the execution of the procedure
      */
     public void executeProcedure( Procedure p, Context c ) throws LemRuntimeException {
         LinkedList actions = p.getActions();
@@ -46,10 +46,10 @@ public class Interpreter {
     }
     
     /**
-     * 
-     * @param a 
-     * @param c 
-     * @throws runtime.LemRuntimeException 
+     * Execute the given action.
+     * @param a the action to execute
+     * @param c the context in which to execute the action
+     * @throws runtime.LemRuntimeException in case any errors occur during the execution of the action
      */
     public void executeAction( Action a, Context c ) throws LemRuntimeException {
         if ( a instanceof CreateAction )
@@ -130,6 +130,13 @@ public class Interpreter {
         return destination;
     }
     
+    /**
+     * Dereference the given VariableReference in the given Context.
+     * @param r the VariableReference which references the Variable to be returned
+     * @param c the Context in which the VariableReference should be evaluated
+     * @throws runtime.LemRuntimeException if the referenced variable does not exist in the given Context
+     * @return the referenced Variable
+     */
     protected Variable getVariable( VariableReference r, Context c ) throws LemRuntimeException {
         String name = r.getObjectName();
         Variable destination;
