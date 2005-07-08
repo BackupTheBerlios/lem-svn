@@ -1,6 +1,11 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.54  2005/07/08 05:31:40  u3957053
+* Removed redundant FLOATING_POINT_LITERAL.
+*
+* Made DECIMAL_LITERAL match the number 0!!
+*
 * Revision 1.53  2005/07/08 03:22:38  u3958283
 * Added Select statement to the LemParsers, Where clause is not completed yet, needs discussing with the group.
 *
@@ -173,6 +178,9 @@ options {
 	NODE_PREFIX = "LEM";
 	NODE_PACKAGE = "parser";
     VISITOR_EXCEPTION = "metamodel.LemException";
+//    DEBUG_PARSER           = true;
+//    DEBUG_TOKEN_MANAGER    = true;
+
 }
 
 PARSER_BEGIN(LemParser)
@@ -313,7 +321,7 @@ SKIP :
 TOKEN : /* LITERALS */
 {
  
-  < DECIMAL_LITERAL: ["1"-"9"] (["0"-"9"])* >
+  < DECIMAL_LITERAL: (["0"-"9"])+ >
 |
   < REAL_LITERAL:
         (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)? (["f","F","d","D"])?
@@ -321,13 +329,13 @@ TOKEN : /* LITERALS */
       | (["0"-"9"])+ <EXPONENT> (["f","F","d","D"])?
       | (["0"-"9"])+ (<EXPONENT>)? ["f","F","d","D"]
   >
-|
+/* |
   < FLOATING_POINT_LITERAL:
         (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)? (["f","F","d","D"])?
       | "." (["0"-"9"])+ (<EXPONENT>)? (["f","F","d","D"])?
       | (["0"-"9"])+ <EXPONENT> (["f","F","d","D"])?
       | (["0"-"9"])+ (<EXPONENT>)? ["f","F","d","D"]
-  >
+  > */
 |
   < #EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
 |
@@ -609,7 +617,7 @@ void Literal() : {}
 	| 	<REAL_LITERAL> 
 	| 	<STRING_LITERAL> 
 	|	<BOOLEAN_LITERAL>
-	|	<FLOATING_POINT_LITERAL>
+//	|	<FLOATING_POINT_LITERAL>
 	|	<NULL>
 }
 
