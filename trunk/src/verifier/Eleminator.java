@@ -9,6 +9,7 @@ package verifier;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
 import java.awt.BorderLayout;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileInputStream;
@@ -95,6 +96,8 @@ public class Eleminator extends javax.swing.JFrame {
     openItem = new javax.swing.JMenuItem();
     importItem = new javax.swing.JMenuItem();
     quitItem = new javax.swing.JMenuItem();
+    jMenu1 = new javax.swing.JMenu();
+    preferencesItem = new javax.swing.JMenuItem();
     toolsMenu = new javax.swing.JMenu();
     generateStatechartItem = new javax.swing.JMenuItem();
 
@@ -154,11 +157,25 @@ public class Eleminator extends javax.swing.JFrame {
 
     menubar.add(fileMenu);
 
+    jMenu1.setMnemonic('E');
+    jMenu1.setText("Edit");
+    preferencesItem.setMnemonic('n');
+    preferencesItem.setText("Preferences...");
+    preferencesItem.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        preferencesItemActionPerformed(evt);
+      }
+    });
+
+    jMenu1.add(preferencesItem);
+
+    menubar.add(jMenu1);
+
     toolsMenu.setMnemonic('T');
     toolsMenu.setText("Tools");
     toolsMenu.setToolTipText("");
     generateStatechartItem.setMnemonic('S');
-    generateStatechartItem.setText("Generate StateChart...");
+    generateStatechartItem.setText("Generate Statechart...");
     generateStatechartItem.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         generateStatechartItemActionPerformed(evt);
@@ -176,11 +193,20 @@ public class Eleminator extends javax.swing.JFrame {
   // </editor-fold>//GEN-END:initComponents
 	
 	/**
+	 * @todo Test stub only
+	 */
+	private void preferencesItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preferencesItemActionPerformed
+		Parameters p = new Parameters();
+		System.out.println( p.getDefaultProperty("eleminator.version"));
+	}//GEN-LAST:event_preferencesItemActionPerformed
+	
+	/**
 	 * @todo Add selector for the statechart to export
 	 * @todo Add statechart export functionality
 	 */
 	private void generateStatechartItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateStatechartItemActionPerformed
 		// Display a file chooser
+		/*
 		File selectedFile;
 		JFileChooser jfc = new JFileChooser( workingDirectory );
 		jfc.setFileFilter( new FileFilter() {
@@ -196,7 +222,16 @@ public class Eleminator extends javax.swing.JFrame {
 		// TODO: Add selector for statechart
 		
 		// TODO: Export to the selected file
+		*/
 		
+		// Display the Generate Statechart dialog
+		/*
+		GenerateStatechartDialog genStateDialog = new GenerateStatechartDialog( this, true );
+		Rectangle parentBounds = this.getBounds();
+		genStateDialog.setLocation( (parentBounds.x + parentBounds.width)/2,
+						(parentBounds.y + parentBounds.height)/2 );
+		genStateDialog.setVisible( true );
+		*/
 	}//GEN-LAST:event_generateStatechartItemActionPerformed
 	
 	private void importItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importItemActionPerformed
@@ -407,9 +442,11 @@ public class Eleminator extends javax.swing.JFrame {
   private javax.swing.JMenu fileMenu;
   private javax.swing.JMenuItem generateStatechartItem;
   private javax.swing.JMenuItem importItem;
+  private javax.swing.JMenu jMenu1;
   private javax.swing.JToolBar lemToolBar;
   private javax.swing.JMenuBar menubar;
   private javax.swing.JMenuItem openItem;
+  private javax.swing.JMenuItem preferencesItem;
   private javax.swing.JMenuItem quitItem;
   private javax.swing.JPanel statusPanel;
   private javax.swing.JComboBox themeComboBox;

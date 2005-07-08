@@ -49,6 +49,23 @@
             </MenuItem>
           </SubComponents>
         </Menu>
+        <Menu class="javax.swing.JMenu" name="jMenu1">
+          <Properties>
+            <Property name="mnemonic" type="int" value="69"/>
+            <Property name="text" type="java.lang.String" value="Edit"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="preferencesItem">
+              <Properties>
+                <Property name="mnemonic" type="int" value="110"/>
+                <Property name="text" type="java.lang.String" value="Preferences..."/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="preferencesItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
         <Menu class="javax.swing.JMenu" name="toolsMenu">
           <Properties>
             <Property name="mnemonic" type="int" value="84"/>
@@ -59,7 +76,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="generateStatechartItem">
               <Properties>
                 <Property name="mnemonic" type="int" value="83"/>
-                <Property name="text" type="java.lang.String" value="Generate StateChart..."/>
+                <Property name="text" type="java.lang.String" value="Generate Statechart..."/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="generateStatechartItemActionPerformed"/>
