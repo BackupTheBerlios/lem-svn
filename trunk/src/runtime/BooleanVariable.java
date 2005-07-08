@@ -14,7 +14,7 @@ import metamodel.BooleanType;
 import metamodel.DataType;
 
 /**
- *
+ * Encapsulates a Java Boolean object.
  * @author sjr
  */
 public class BooleanVariable extends Variable {
@@ -48,5 +48,21 @@ public class BooleanVariable extends Variable {
     
     public Variable logicalNot() throws LemRuntimeException {
         return new BooleanVariable( !value.booleanValue() );
+    }
+    
+    public Variable logicalAnd( Variable right ) throws LemRuntimeException {
+        if( !right.getCoreDataType().equals( BooleanType.getInstance() )) {
+            throw new LemRuntimeException( "Unsupported operation logicalAnd(boolean, " + right.getCoreDataType().getName() + ")" );
+        }
+        
+        return new BooleanVariable( value.booleanValue() && ((Boolean)right.getValue()).booleanValue() );
+    }
+    
+    public Variable logicalOr( Variable right ) throws LemRuntimeException {
+        if( !right.getCoreDataType().equals( BooleanType.getInstance() )) {
+            throw new LemRuntimeException( "Unsupported operation logicalAnd(boolean, " + right.getCoreDataType().getName() + ")" );
+        }
+        
+        return new BooleanVariable( value.booleanValue() || ((Boolean)right.getValue()).booleanValue() );
     }
 }
