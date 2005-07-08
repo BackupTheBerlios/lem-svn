@@ -118,6 +118,7 @@ public class Context {
      * Adds the given LemEventListener to the list of listeners. This listener
      * will now receive LemEvent objects representing events that occur within this
      * context
+     * @param l the listener to add
      */
     public void addLemEventListener( LemEventListener l ) {
         listeners.add(l);
@@ -126,6 +127,7 @@ public class Context {
     /**
      * Remove the given LemEventListener from the list of listeners. This listener
      * will receive no more LemEvents
+     * @param l the listener to remove
      */
     public void removeLemEventListener( LemEventListener l ) {
         listeners.remove(l);
@@ -133,6 +135,7 @@ public class Context {
     
     /**
      * Returns the collection of all LemEventListener objects registered with this context
+     * @return the list of listeners
      */
     public Collection getLemEventListeners() {
         return listeners;
