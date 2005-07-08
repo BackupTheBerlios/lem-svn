@@ -32,7 +32,7 @@ public class VariableFactory {
         if( c.equals( StringType.getInstance() )) {
             v = new StringVariable( value );
         } else if( c.equals( NumericType.getInstance() )) {
-            v = new NumericVariable( value );
+            return new NumericVariable( type, value );
         } else if( c.equals( BooleanType.getInstance() )) {
             v = new BooleanVariable( value );
         } else if( c.equals( ObjectReferenceType.getInstance() )) {
