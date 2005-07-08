@@ -263,14 +263,7 @@ public class BuilderPass2 extends Visitor {
         if( node.jjtGetNumChildren() == 1 ) {
             return node.jjtGetChild( 0 ).jjtAccept(this, null);
         } else {
-            Expression left = (Expression)(node.jjtGetChild( 0 ).jjtAccept(this, null));
-            BinaryOperation o = (BinaryOperation)(node.jjtGetChild( 1 ).jjtAccept(this, null));
-            Expression right = (Expression)(node.jjtGetChild( 2 ).jjtAccept(this, null));
-            
-            o.setLeft( left );
-            o.setRight( right );
-            
-            return o;
+            return listToTree( node, node.jjtGetNumChildren() - 1 );
         }
     }
     
@@ -475,7 +468,7 @@ public class BuilderPass2 extends Visitor {
         switch( node.getFirstToken().kind ) {
             case LemParserConstants.DECIMAL_LITERAL:
             case LemParserConstants.REAL_LITERAL:
-            case LemParserConstants.FLOATING_POINT_LITERAL:
+//            case LemParserConstants.FLOATING_POINT_LITERAL:
                 t = NumericType.getInstance();
                 break;
             case LemParserConstants.BOOLEAN_LITERAL:
