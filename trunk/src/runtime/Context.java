@@ -26,7 +26,7 @@ public class Context {
      *
      * @todo Should this be a HashMap?
      */
-    HashMap localVariables = new HashMap();
+    HashMap variableList = new HashMap();
     
     /**
      * A collection of LemEventListener instances interested in 
@@ -54,6 +54,7 @@ public class Context {
     public Context(Context inContext) {
         parentContext = inContext;
     }
+
     /**
      * Adds the given object to this context
      * @param inObject the object to add to the context
@@ -61,38 +62,30 @@ public class Context {
     public void addObject(runtime.Object inObject) {
         objectList.add(inObject);
     }
-    
+
     /**
-     * Returns the list of objects visible in this context
-     * @return the objects in this context
+     * Adds the given collection of objects to this context
+     * @param inObjects the objects to add to the context
      */
-    public Collection getObjects() {
-        return objectList;
+    public void addObjects(Collection inObjects) {
+        objectList.add(inObjects);
     }
-    
-    /**
-     * Returns the list of local variables in this context
-     * @return the local variables in this context
-     */
-    public HashMap getLocalVariables() {
-        return localVariables;
-    }
- 
+      
     /**
      * Gets the named variable from this context or any parent contexts.
      *
      * @param name the name of the variable
      * @return the variable, or null if there is no variable with that name
      */
-    public Variable getLocalVariable( String name ) {
-        java.lang.Object v = localVariables.get( name );
+    public Variable getVariable( String name ) {
+        Variable v = (Variable)variableList.get( name );
         
         if( v == null && parentContext != null ) {
             // Search parent contexts
-            return parentContext.getLocalVariable( name );
+            v = parentContext.getVariable( name );
         }
         
-        return (Variable)v;
+        return v;
     }
     
     /**
@@ -101,8 +94,8 @@ public class Context {
      * @param name the identifier of the variable
      * @param variable the variable to be added
      */
-    public void addLocalVariable( String name, Variable variable ) {
-        localVariables.put( name, variable );
+    public void addVariable( String name, Variable variable ) {
+        variableList.put( name, variable );
     }
     
     /**
@@ -111,8 +104,10 @@ public class Context {
      * etc.
      */
     public void finish() {
+	if (parentContext != null) {
+		parentContext.addObjects(objectList);
+	}
     }
-    
     
     /**
      * Adds the given LemEventListener to the list of listeners. This listener

@@ -853,6 +853,14 @@ public class BuilderPass1 extends Visitor {
 	return p;
     }
     
+    public Object visit (LEMActionBlock node, Object data) throws metamodel.LemException {
+	ActionBlock a = new ActionBlock();
+	getMapper().add(node, a);
+	super.visit(node, a);
+
+	return data;
+    }
+
     /**
      * Process a variable declaration. Temporary hack.
      */

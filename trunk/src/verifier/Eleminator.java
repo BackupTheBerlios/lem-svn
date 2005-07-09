@@ -6,7 +6,7 @@
 
 package verifier;
 
-import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
+import org.apache.xalan.processor.TransformerFactoryImpl;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Rectangle;

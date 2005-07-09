@@ -96,13 +96,27 @@ public class BuilderPass2 extends Visitor {
      * @throws metamodel.LemException 
      * @return 
      */
-    public Object visit( LEMProcedure node, Object data ) throws LemException {
+    public Object visit( LEMVariableDeclarationList node, Object data ) throws LemException {
         Procedure p = (Procedure)getMapper().getObject(node);
         
         super.visit( node, p );
         return p;
     }
     
+    /**
+     * 
+     * @param node 
+     * @param data 
+     * @throws metamodel.LemException 
+     * @return 
+     */
+    public Object visit( LEMActionBlock node, Object data ) throws LemException {
+        ActionBlock a = (ActionBlock)getMapper().getObject(node);
+        
+        super.visit( node, a );
+        return a;
+    }
+
     /**
      * 
      * @param node 
@@ -213,8 +227,8 @@ public class BuilderPass2 extends Visitor {
         
         
         a.setClasses(c);
-        Procedure p = (Procedure)data;
-        p.addAction( a );
+        ActionBlock ablock = (ActionBlock)data;
+        ablock.addAction( a );
         
         return a;
     }
@@ -232,17 +246,17 @@ public class BuilderPass2 extends Visitor {
         // or an Expression...
         
         Object o = node.jjtGetChild( 1 ).jjtAccept(this, data);
-        Procedure p = (Procedure)data;
         
         if( o instanceof CreateAction ) {
             ((CreateAction)o).setVariable( r );
             return o;
         } else {
             // Otherwise, o is an Expression
+	    ActionBlock ablock = (ActionBlock)data;
             AssignmentAction a = new AssignmentAction();
             a.setVariableReference( r );
             a.setExpression((Expression) o);
-            p.addAction(a);
+            ablock.addAction( a );
             
             return a;
         }

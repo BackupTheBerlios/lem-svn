@@ -36,13 +36,16 @@ public class Interpreter {
      * @throws runtime.LemRuntimeException if any error occurs during the execution of the procedure
      */
     public void executeProcedure( Procedure p, Context c ) throws LemRuntimeException {
-        LinkedList actions = p.getActions();
+	LocalContext localContext = new LocalContext(c);
+	ActionBlock block = p.getActionBlock();
+        LinkedList actions = block.getActions();
         Iterator i = actions.iterator();
         
         while( i.hasNext() ) {
             Action a = (Action)i.next();
-            executeAction(a, c);
+            executeAction(a, localContext);
         }
+	localContext.finish();
     }
     
     /**
@@ -78,7 +81,7 @@ public class Interpreter {
         c.addObject(o);
         
         // Add the object reference to the context
-        c.addLocalVariable( a.getVariable().getVariableName(), new ObjectReferenceVariable( o ));
+        c.addVariable( a.getVariable().getVariableName(), new ObjectReferenceVariable( o ));
         
         // Notify listeners that the object has been added
         LemObjectCreationEvent e = new LemObjectCreationEvent( o, a );
@@ -115,7 +118,7 @@ public class Interpreter {
         // TODO: Variable references are declared anyway. We probably don't need this behaviour.
         if( destination == null ) {
             destination = VariableFactory.newVariable( value.getType() );
-            c.addLocalVariable( r.getVariableName(), value );
+            c.addVariable( r.getVariableName(), value );
             destination.setValue( value.getValue() );
             return destination;
         }
@@ -143,7 +146,7 @@ public class Interpreter {
         
         if( name != null ) {
             // Look up the object reference in the current context
-            Variable v = c.getLocalVariable( name );
+            Variable v = c.getVariable( name );
             if( v == null ) {
                 throw new LemRuntimeException( "Variable '" + name + "' is not defined" );
             }
@@ -163,7 +166,7 @@ public class Interpreter {
                 throw new LemRuntimeException( "Attribute '" + r.getVariableName() + "' not defined on object named '" + name + "'");
             }
         } else {
-            destination = c.getLocalVariable( r.getVariableName () );
+            destination = c.getVariable( r.getVariableName () );
         }
 
         return destination;
