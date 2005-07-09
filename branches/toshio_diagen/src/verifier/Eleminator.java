@@ -205,15 +205,15 @@ public class Eleminator extends javax.swing.JFrame {
 	 */
 	private void generateStatechartItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateStatechartItemActionPerformed
 		// Get a list of statecharts
-		activeModel.get
-		Iterator domainIter = activeModel.getDomains().values().iterator();
-		while (domainIter.hasNext()) {
+		//activeModel.get
+		//Iterator domainIter = activeModel.getDomains().values().iterator();
+		//while (domainIter.hasNext()) {
 			
-		}
+		//}
 		
 		// Display the Generate Statechart dialog
 		//String temp = GenerateStatechartDialog.showDialog( this );
-		System.out.println( temp );
+		//System.out.println( temp );
 	}//GEN-LAST:event_generateStatechartItemActionPerformed
 	
 	private void importItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importItemActionPerformed
