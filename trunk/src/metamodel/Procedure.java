@@ -37,7 +37,7 @@ public class Procedure {
     /** the state to which this procuedure belongs */
     private State state = null;
     
-    private ActionBlock block = new ActionBlock();
+    private ActionBlock block = null;
     
     /** Creates a new instance of Procedure */
     public Procedure() {
@@ -64,5 +64,18 @@ public class Procedure {
     /** returns the procedure's main block */
     public ActionBlock getActionBlock() {
 	return block;
+    }
+
+    public void setActionBlock( ActionBlock a ) {
+        this.block = a;
+    }
+    
+    /**
+     * Returns the list of actions contained in this procedure's action block.
+     *
+     * @return the list of actions
+     */
+    public java.util.LinkedList getActions() {
+        return block.getActions();
     }
 }
