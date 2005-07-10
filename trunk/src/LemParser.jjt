@@ -1,6 +1,10 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.55  2005/07/10 02:03:07  u3957053
+* Remove Type() production from VariableDeclaration, replace with new token
+* "VAR"
+*
 * Revision 1.54  2005/07/08 05:31:40  u3957053
 * Removed redundant FLOATING_POINT_LITERAL.
 *
@@ -478,6 +482,7 @@ TOKEN : /* ACTION LANGUAGE IDENTIFIERS */
 | <EXPON:	"^"	>
 | <LBRACE : "{">
 | <RBRACE : "}">
+| <VAR: "var">
 
 }
 
@@ -1074,7 +1079,8 @@ void VariableDeclarationList() : {}
 
 void VariableDeclaration() : {}
 {
-	Type()
+//	Type()
+	<VAR>
 	Identifier()
 	<SEMI>
 }
