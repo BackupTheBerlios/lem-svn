@@ -7,6 +7,7 @@
 
 package verifier;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Vector;
 import metamodel.*;
 import parser.*;
@@ -96,11 +97,58 @@ public class BuilderPass2 extends Visitor {
      * @throws metamodel.LemException 
      * @return 
      */
+    
     public Object visit( LEMVariableDeclarationList node, Object data ) throws LemException {
-        Procedure p = (Procedure)getMapper().getObject(node);
+        LinkedList decls = new LinkedList();
         
-        super.visit( node, p );
+        for( int i = 0; i < node.jjtGetNumChildren(); i++ ) {
+            decls.add( node.jjtGetChild( i ).jjtAccept(this, null ));
+        }
+        
+        return decls;
+    }
+    
+    
+    public Object visit( LEMVariableDeclaration node, Object data ) throws LemException {
+        String varName = (String)node.jjtGetChild( 0 ).jjtAccept(this, null);
+        VariableDeclaration v = new VariableDeclaration(null, varName);
+        
+        return v;
+    }
+    
+    public Object visit( LEMProcedure node, Object data ) throws LemException {
+        // Fetch the Procedure object created in the first pass
+        Procedure p = (Procedure)getMapper().getObject( node );
+        
+        if( node.jjtGetNumChildren() > 0 )
+            p.setActionBlock( (ActionBlock)node.jjtGetChild( 0 ).jjtAccept(this, null));
+        else
+            p.setActionBlock( new ActionBlock() );
+        
         return p;
+    }
+    
+    public Object visit( LEMStatementList node, Object data ) throws LemException {
+        LinkedList actions = new LinkedList();
+        
+        for( int i = 0; i < node.jjtGetNumChildren(); i++ ) {
+            Object o = node.jjtGetChild( i ).jjtAccept(this, null);
+            
+            if( o != null && o instanceof Action )
+                actions.add( o );
+        }
+        
+        return actions;
+    }
+    
+    public Object visit( LEMAction node, Object data ) throws LemException {
+        Object o = node.jjtGetChild( 0 ).jjtAccept(this, null);
+        
+        if( o == null || !(o instanceof Action )) 
+            System.err.println( node.jjtGetChild( 0 ).getClass().getName()
+                + " returns a null or non-Action object" );
+        
+        return o;
     }
     
     /**
@@ -111,9 +159,20 @@ public class BuilderPass2 extends Visitor {
      * @return 
      */
     public Object visit( LEMActionBlock node, Object data ) throws LemException {
-        ActionBlock a = (ActionBlock)getMapper().getObject(node);
+//        ActionBlock a = (ActionBlock)getMapper().getObject(node);
+        ActionBlock a = new ActionBlock();
+        LinkedList varDecls = (LinkedList)node.jjtGetChild( 0 ).jjtAccept(this, null);
+        LinkedList stmts = (LinkedList)node.jjtGetChild( 1 ).jjtAccept(this, null);
         
-        super.visit( node, a );
+        for( int i = 0; i < varDecls.size(); i++ ) {
+            a.addAction( (Action)varDecls.get( i ));
+        }
+        
+        for( int i = 0; i < stmts.size(); i++ ) {
+            a.addAction( (Action)stmts.get( i ));
+        }
+        
+//        super.visit( node, a );
         return a;
     }
 
@@ -225,10 +284,9 @@ public class BuilderPass2 extends Visitor {
         CreateAction a = new CreateAction();
         Collection c = (Collection)(node.jjtGetChild(0).jjtAccept(this, null));
         
-        
         a.setClasses(c);
-        ActionBlock ablock = (ActionBlock)data;
-        ablock.addAction( a );
+//        ActionBlock ablock = (ActionBlock)data;
+//        ablock.addAction( a );
         
         return a;
     }
@@ -252,11 +310,11 @@ public class BuilderPass2 extends Visitor {
             return o;
         } else {
             // Otherwise, o is an Expression
-	    ActionBlock ablock = (ActionBlock)data;
+//	    ActionBlock ablock = (ActionBlock)data;
             AssignmentAction a = new AssignmentAction();
             a.setVariableReference( r );
             a.setExpression((Expression) o);
-            ablock.addAction( a );
+//            ablock.addAction( a );
             
             return a;
         }
