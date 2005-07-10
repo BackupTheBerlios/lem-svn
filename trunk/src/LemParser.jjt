@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.56  2005/07/10 14:25:40  u3958283
+* Completed Select Statement.
+*
 * Revision 1.55  2005/07/10 02:03:07  u3957053
 * Remove Type() production from VariableDeclaration, replace with new token
 * "VAR"
@@ -460,6 +463,7 @@ TOKEN : /* ACTION LANGUAGE IDENTIFIERS */
 | <SELECT: "select">
 | <ONE: "one">
 | <MANY: "many">
+| <ALL : "all">
 | <ANY: "any">
 | <WHERE: "where">
 | <INSTANCES : "instances">
@@ -1300,14 +1304,9 @@ void ClassVariable() : {}
     <SIMPLE_IDENTIFIER>
 }
 
-void ClassVariable2() : {}
-{
-    <SIMPLE_IDENTIFIER>
-}
-
 void SelectClause() : {}
 {
-    (<ONE>|<MANY>|<ANY>)
+    (<ONE>|<ALL>|<ANY>)
 }
 
 void WhereClause() : {}
@@ -1317,20 +1316,19 @@ void WhereClause() : {}
 
 void Related() : {}
 {
-    ClassVariable()<RELATED><TO>ClassVariable2()<ACROSS>RelationshipVariable()
+    ObjectReference()<RELATED><TO>ClassVariable()<ACROSS>RelationshipVariable()
 }
-
 
 void RelationshipVariable() : {}
 {
     <SIMPLE_IDENTIFIER>
 }
 
-/** Not done yet **/
 void Selected() : {}
 {
-    <SELECTED><DOT>SelectVariable() Relational() 
+    Expression()
 }
+
 
 void ForLoop() : {}
 {
