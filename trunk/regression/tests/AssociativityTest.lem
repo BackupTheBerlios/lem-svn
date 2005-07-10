@@ -26,8 +26,11 @@ model TestModel is
 						i := 000000000000000000000000001 + 1;
 					} end;
 
-                                        state b is {
-                                            select one player from instances of Player where Player related to Team across R1;
+				
+                                        state b is {					   					                                        select one player from instances of Player where myTeam related to Player across R1;					  
+										
+					    // select all teams from instances of team where total = 234 ; // this doesn't work !!					    
+					    select all ts from instances of Team where 234  = total ;
                                         } end ; 
 
 				end behaviour;
