@@ -27,10 +27,10 @@ public class ContextTest extends junit.framework.TestCase {
         
         try {
             Variable v = VariableFactory.newVariable( StringType.getInstance(), "\"\"" );
-            c.addLocalVariable( "testVariable", v );
+            c.addVariable( "testVariable", v );
             
             // Now, grab that variable from d
-            Variable t = d.getLocalVariable( "testVariable" );
+            Variable t = d.getVariable( "testVariable" );
             
             assertEquals( "The two variables should be the same", v, t );
             
