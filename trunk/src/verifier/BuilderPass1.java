@@ -820,11 +820,11 @@ public class BuilderPass1 extends Visitor {
         // TODO: Hack until we can modify LEMDescription to be more like LEMIdentifier
         visit( (LEMDescription)node.jjtGetChild(1), state );
         
-        Procedure p = (Procedure) visit( (LEMProcedure)node.jjtGetChild(3), null );
+        Procedure p = (Procedure)node.jjtGetChild(3).jjtAccept( this, null );
         state.setProcedure( p );
         p.setState(state);
         
-        StateSignature s = (StateSignature) visit( (LEMStateSignature)node.jjtGetChild(2), null );
+        StateSignature s = (StateSignature) node.jjtGetChild(2).jjtAccept( this, null );
         
         // add the state to the state machine
         
@@ -844,21 +844,10 @@ public class BuilderPass1 extends Visitor {
     public Object visit (LEMProcedure node, Object data) throws metamodel.LemException {
 	Procedure p = new Procedure();
 	getMapper().add(node, p);
-//	p.setState(state);
-//	state.setProcedure(p);
-        // TODO: Put the above two statements in the visit(LEMStateDeclaration) thingy
 
         super.visit( node, p );
         
 	return p;
-    }
-    
-    public Object visit (LEMActionBlock node, Object data) throws metamodel.LemException {
-	ActionBlock a = new ActionBlock();
-	getMapper().add(node, a);
-	super.visit(node, a);
-
-	return data;
     }
 
     /**
