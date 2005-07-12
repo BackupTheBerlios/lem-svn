@@ -42,11 +42,11 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMModelDeclaration node, Object data ) throws LemException {
         super.visit(node, currentModel);
@@ -54,11 +54,11 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMDomainDeclaration node, Object data ) throws LemException {
         currentDomain = (Domain)(getMapper().getObject(node));
@@ -69,10 +69,10 @@ public class BuilderPass2 extends Visitor {
     
     /**
      * Process an Generalisation
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit(LEMGeneralisation node, Object data) throws LemException {
         
@@ -91,11 +91,11 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     
     public Object visit( LEMVariableDeclarationList node, Object data ) throws LemException {
@@ -144,19 +144,19 @@ public class BuilderPass2 extends Visitor {
     public Object visit( LEMAction node, Object data ) throws LemException {
         Object o = node.jjtGetChild( 0 ).jjtAccept(this, null);
         
-        if( o == null || !(o instanceof Action )) 
+        if( o == null || !(o instanceof Action ))
             System.err.println( node.jjtGetChild( 0 ).getClass().getName()
-                + " returns a null or non-Action object" );
+            + " returns a null or non-Action object" );
         
         return o;
     }
     
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMActionBlock node, Object data ) throws LemException {
 //        ActionBlock a = (ActionBlock)getMapper().getObject(node);
@@ -175,13 +175,13 @@ public class BuilderPass2 extends Visitor {
 //        super.visit( node, a );
         return a;
     }
-
+    
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMClassList node, Object data ) throws LemException {
         Vector v = new Vector();
@@ -205,11 +205,11 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMUnaryOperator node, Object data ) throws LemException {
         switch( node.getFirstToken().kind ) {
@@ -223,11 +223,11 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMUnary node, Object data ) throws LemException {
         if( node.jjtGetNumChildren() == 2 ) {
@@ -244,11 +244,11 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMFactor node, Object data ) throws LemException {
         if( node.jjtGetNumChildren() == 1 ) {
@@ -263,22 +263,22 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMPrimary node, Object data ) throws LemException {
         return node.jjtGetChild(0).jjtAccept(this, null);
     }
     
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMObjectCreation node, Object data ) throws LemException {
         CreateAction a = new CreateAction();
@@ -325,11 +325,11 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMExpression node, Object data ) throws LemException {
         if( node.jjtGetNumChildren() == 1 ) {
@@ -340,11 +340,26 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
+     */
+    public Object visit( LEMAndRelation node, Object data ) throws LemException {
+        if( node.jjtGetNumChildren() == 1 ) {
+            return node.jjtGetChild( 0 ).jjtAccept(this, null);
+        } else {
+            return listToTree( node, node.jjtGetNumChildren() - 1 );
+        }
+    }
+    
+    /**
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMRelation node, Object data ) throws LemException {
         if( node.jjtGetNumChildren() == 1 ) {
@@ -355,11 +370,11 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMSimpleExpression node, Object data ) throws LemException {
         if( node.jjtGetNumChildren() == 1 ) {
@@ -377,7 +392,7 @@ public class BuilderPass2 extends Visitor {
      *
      *        +
      *      +   5
-     *    2   3 
+     *    2   3
      */
     protected Expression listToTree( SimpleNode n, int index ) throws LemException {
         if( index == 0 )
@@ -397,11 +412,11 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMTerm node, Object data ) throws LemException {
         if( node.jjtGetNumChildren() == 1 ) {
@@ -412,11 +427,11 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMAdding node, Object data ) throws LemException {
         switch( node.getFirstToken().kind ) {
@@ -430,30 +445,33 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
-    public Object visit( LEMLogical node, Object data ) throws LemException {
-        switch( node.getFirstToken().kind ) {
-            case LemParserConstants.LAND:
-                return new BinaryOperation( BinaryOperation.LOGICAL_AND );
-                
-            case LemParserConstants.LOR:
-                return new BinaryOperation( BinaryOperation.LOGICAL_OR );
-        }
-        
-        throw new LemException( "Unknown operator '" + node.getFirstToken() + "' encountered" );
+    public Object visit( LEMLogicalOr node, Object data ) throws LemException {
+        return new BinaryOperation( BinaryOperation.LOGICAL_OR );
     }
     
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
+     */
+    public Object visit( LEMLogicalAnd node, Object data ) throws LemException {
+        return new BinaryOperation( BinaryOperation.LOGICAL_AND );
+    }
+    
+    /**
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMRelational node, Object data ) throws LemException {
         switch( node.getFirstToken().kind ) {
@@ -476,10 +494,10 @@ public class BuilderPass2 extends Visitor {
     
     /**
      *
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMMultiplying node, Object data ) throws LemException {
         switch( node.getFirstToken().kind ) {
@@ -495,11 +513,11 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     * 
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMObjectReference node, Object data ) throws LemException {
         return node.getFirstToken().image;
@@ -508,10 +526,10 @@ public class BuilderPass2 extends Visitor {
     /**
      * Visit a LEMVariableReference. Return the instance of metamodel.VariableReference
      * which represents this LEMVariableReferenceNode.
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMVariableReference node, Object data ) throws LemException {
         if( node.jjtGetNumChildren() == 1 ) {
@@ -530,10 +548,10 @@ public class BuilderPass2 extends Visitor {
     /**
      * Visit a LEMLiteral node. Return the instance of metamodel.Literal representing
      * this literal.
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit( LEMLiteral node, Object data ) throws LemException {
         DataType t = null;
@@ -561,10 +579,10 @@ public class BuilderPass2 extends Visitor {
      * Process the superclass identifier in a Generalisation
      *
      * This node can exist in the context of a generalisation or is a specialisation list
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit(LEMSuperClassIdentifier node, Object data) throws LemException {
         
@@ -596,10 +614,10 @@ public class BuilderPass2 extends Visitor {
     
     /**
      * Process the subclass identifier in a Generalisation
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit(LEMSubClassIdentifier node, Object data) throws LemException {
         
@@ -637,10 +655,10 @@ public class BuilderPass2 extends Visitor {
     
     /**
      * Process an ActivePerspective
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit(LEMActivePerspective node, Object data) throws LemException {
         
@@ -655,10 +673,10 @@ public class BuilderPass2 extends Visitor {
     
     /**
      * Process a PassivePerspective
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit(LEMPassivePerspective node, Object data) throws LemException {
         
@@ -674,10 +692,10 @@ public class BuilderPass2 extends Visitor {
     /**
      * Process an ActiveSubject reference. This node might be visited in the
      * context of either an Active or Passive perspective
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit(LEMActiveSubject node, Object data) throws LemException {
         
@@ -725,10 +743,10 @@ public class BuilderPass2 extends Visitor {
     /**
      * Process an ActiveObject reference. This node might be visited in the
      * context of either an Active or Passive perspective
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit(LEMActiveObject node, Object data) throws LemException {
         
@@ -773,10 +791,10 @@ public class BuilderPass2 extends Visitor {
      * our task is to simply construct the parameter declaration and
      * add it to the Signature. We much ensure that the name of the parameter
      * is unique with the signature
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit(LEMParameterDeclaration node, Object data) throws metamodel.LemException {
         
@@ -791,10 +809,10 @@ public class BuilderPass2 extends Visitor {
     
     /**
      * Process an attribute declaration
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit(LEMBaseAttribute node, Object data) throws LemException {
         
@@ -808,10 +826,10 @@ public class BuilderPass2 extends Visitor {
     /**
      * Check that the named Domain Sepcific Type is actually in the domain.
      * We can now discard the proxy object.
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit(LEMDomainSpecificType node, Object data)   throws LemException {
         super.visit( node, data );
@@ -869,10 +887,10 @@ public class BuilderPass2 extends Visitor {
     /**
      * Process an event declaration. An event declaration may be made in the context of a class
      * (public event) or in the context of a State Machine (private or self directed event).
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit(LEMEventDeclaration node, Object data) throws metamodel.LemException {
         
@@ -886,10 +904,10 @@ public class BuilderPass2 extends Visitor {
     
     /**
      * Process an IdentifierDeclaration
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit(LEMIdentifierDeclaration node, Object data) throws LemException {
         
@@ -904,10 +922,10 @@ public class BuilderPass2 extends Visitor {
     
     /**
      * Process an IdentifyingAttribute
-     * @param node 
-     * @param data 
-     * @throws metamodel.LemException 
-     * @return 
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
      */
     public Object visit(LEMIdentifyingAttribute node, Object data) throws LemException {
         
@@ -946,9 +964,9 @@ public class BuilderPass2 extends Visitor {
     
     /**
      *
-     * @param node 
-     * @param data 
-     * @return 
+     * @param node
+     * @param data
+     * @return
      */
     public Object visit(LEMIdentifier node, Object data) {
         return node.getFirstToken().image;
