@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.58  2005/07/12 06:49:41  u3957053
+* Move LOR and LAND tokens into their own non-terminal to satisfy BuilderPass2.listToTree
+*
 * Revision 1.57  2005/07/12 04:32:19  u2567446
 * Modified the Logical AND and OR to reflect AND having higher precedence than OR.
 *
@@ -1362,16 +1365,27 @@ void Expression() : {}
 { 
 	AndRelation()
 	(
-		<LOR>
+		LogicalOr()
 		AndRelation()
 	)*
+}
+
+/* This is kept only to keep BuilderPass2.listToTree() happy */
+void LogicalOr() : {}
+{
+	<LOR>
+}
+
+void LogicalAnd() : {}
+{
+	<LAND>
 }
 
 void AndRelation() : {}
 {
 	Relation()
 	(
-		<LAND>		
+		LogicalAnd()
 		Relation()
 	)*
 }
