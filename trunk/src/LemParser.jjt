@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.57  2005/07/12 04:32:19  u2567446
+* Modified the Logical AND and OR to reflect AND having higher precedence than OR.
+*
 * Revision 1.56  2005/07/10 14:25:40  u3958283
 * Completed Select Statement.
 *
@@ -1357,9 +1360,18 @@ void Break() : {}
  */
 void Expression() : {}
 { 
+	AndRelation()
+	(
+		<LOR>
+		AndRelation()
+	)*
+}
+
+void AndRelation() : {}
+{
 	Relation()
 	(
-		Logical()
+		<LAND>		
 		Relation()
 	)*
 }
@@ -1371,12 +1383,6 @@ void Relation() : {}
 		Relational()
 		SimpleExpression()
 	)*
-}
-
-void Logical() : {}
-{
-	<LAND>
-	| <LOR>
 }
 
 void Relational() : {}
