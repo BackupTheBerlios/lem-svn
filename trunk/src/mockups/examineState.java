@@ -3,10 +3,10 @@
  *
  * Created on 4 July 2005, 06:26
  */
-
+package mockups;
 /**
  *
- * @author  Administrator
+ * @author  David Gavin
  */
 public class examineState extends javax.swing.JFrame {
     

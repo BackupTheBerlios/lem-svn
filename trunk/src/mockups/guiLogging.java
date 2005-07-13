@@ -5,6 +5,12 @@
  */
 package mockups;
 
+import java.util.Vector;
+import metamodel.ActionBlock;
+import metamodel.CreateAction;
+import metamodel.Procedure;
+import runtime.DomainContext;
+
 
 /**
  *
@@ -16,6 +22,15 @@ public class guiLogging extends javax.swing.JFrame {
     public guiLogging() {
         initComponents();
         Procedure p = new Procedure();
+        ActionBlock aB = new ActionBlock();
+        CreateAction a = new CreateAction();
+        metamodel.Class newClass = new metamodel.Class();
+        newClass.setName("newClass");
+        Vector c = new Vector();
+        c.add(newClass);
+        a.setClasses(c);
+        runtime.DomainContext d = new DomainContext();
+        /*verifier.ConsoleLogger c = new ConsoleLogger(d);*/
     }
         /*public void ExecuteProcedure() 
     {
