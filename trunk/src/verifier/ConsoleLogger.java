@@ -4,7 +4,7 @@ import java.util.Iterator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-class ConsoleLogger implements runtime.LemEventListener {
+public class ConsoleLogger implements runtime.LemEventListener {
     
     static Logger logger = Logger.getRootLogger();
     private int counter = 0;
