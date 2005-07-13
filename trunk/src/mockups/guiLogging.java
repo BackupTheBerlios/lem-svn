@@ -10,6 +10,7 @@ import metamodel.ActionBlock;
 import metamodel.CreateAction;
 import metamodel.Procedure;
 import runtime.DomainContext;
+import runtime.LemRuntimeException;
 
 
 /**
@@ -17,35 +18,31 @@ import runtime.DomainContext;
  * @author  David Gavin
  */
 public class guiLogging extends javax.swing.JFrame {
-    
+   Procedure p = new Procedure();
+   ActionBlock aB = new ActionBlock();
+   CreateAction a = new CreateAction();
+   metamodel.Class newClass = new metamodel.Class();
+   runtime.DomainContext d = new DomainContext();
+   verifier.ConsoleLogger c = new verifier.ConsoleLogger(d);
+   runtime.Interpreter I = new runtime.Interpreter();
     /** Creates new form guiLogging */
     public guiLogging() {
         initComponents();
-        Procedure p = new Procedure();
-        ActionBlock aB = new ActionBlock();
-        CreateAction a = new CreateAction();
-        metamodel.Class newClass = new metamodel.Class();
         newClass.setName("newClass");
         Vector c = new Vector();
         c.add(newClass);
         a.setClasses(c);
-        runtime.DomainContext d = new DomainContext();
-        /*verifier.ConsoleLogger c = new ConsoleLogger(d);*/
     }
-        /*public void ExecuteProcedure() 
+     public void ExecuteProcedure() 
     {
-         = this.state.getProcedure();
-        runtime.DomainContext d = new DomainContext();
-        ConsoleLogger c = new ConsoleLogger(d);
-        runtime.Interpreter I = new Interpreter();
-        try{
+       try{
         I.interpret(p, d);
         }
         catch(LemRuntimeException e)
         {
             System.out.println(e);
         }
-    }*/
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -66,11 +63,21 @@ public class guiLogging extends javax.swing.JFrame {
         jScrollPane1.setBounds(20, 72, 360, 210);
 
         jButton1.setText("Generate!");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
+
         getContentPane().add(jButton1);
         jButton1.setBounds(30, 30, 350, 23);
 
         pack();
     }//GEN-END:initComponents
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        ExecuteProcedure();
+    }//GEN-LAST:event_jButton1MouseClicked
     
     /**
      * @param args the command line arguments
