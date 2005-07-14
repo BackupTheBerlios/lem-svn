@@ -18,7 +18,7 @@ import metamodel.DomainSpecificDataType;
 public class Variable {
     
     protected DataType type = null;
-    protected Object value = null ;
+    protected java.lang.Object value = null ;
     
     public Variable() {
         type = new NullType() ;
@@ -30,7 +30,7 @@ public class Variable {
      *
      * @return the value associated with this getType() instance
      */
-    public  java.lang.Object getValue() throws LemRuntimeException{
+    public java.lang.Object getValue() throws LemRuntimeException{
         throw new LemRuntimeException( "Unsupported operation (set value) in type " + getType().getName() );
     }
     
@@ -50,8 +50,8 @@ public class Variable {
             return (BooleanVariable)this ;
             //   }else if (d instanceof ArbitraryIdType) {
             //       (ArbitraryIdVariable)this ;
-            //   }else if(d instanceof DateType) {
-            //       (DateVariable)this ;
+        }else if(d instanceof DateType) {
+            return (DateVariable)this ;
             //   }else if(d instanceof IntegerType) {
             //       (IntegerVariable)this ;
         }else if(d instanceof NumericType) {
@@ -73,7 +73,7 @@ public class Variable {
      *@param d type of the variable
      */
     public void setType(DataType d) {
-        type = d ; 
+        type = d ;
     }
     
     /** Gets the CoreDataType of this variable.
