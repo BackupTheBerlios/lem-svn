@@ -59,6 +59,9 @@ public class Interpreter {
             executeCreateAction((CreateAction)a, c);
         else if( a instanceof AssignmentAction )
             executeAssignmentAction((AssignmentAction)a, c);
+        else if ( a instanceof VariableDeclaration ) {
+            executeVariableDeclaration ( (VariableDeclaration)a , c) ; 
+        }
         else {
             throw new LemRuntimeException("executeAction encountered unknown action");
         }
@@ -252,4 +255,23 @@ public class Interpreter {
         
         return null;
     }
+    
+    /** This method will execute a VariableDeclaration and adds a declated variable to the context.
+     *it will check whether the variable already exists in the context in which case it will ...
+     *otherwise it will add a new variable to the context, the declared variable initially has no type or value.
+     *@param v The VariableDeclaration to execute.
+     *@param c the context in which the action has been executed.
+     */
+    public void executeVariableDeclaration( VariableDeclaration v, Context c) throws LemRuntimeException {
+        String name ; 
+        name = v.getVariableName() ;          
+        Variable var = new Variable() ;         
+        /** variable already defined in a parent context */
+        if ( c.getVariable(name) != null) {
+            // do something about this later.
+        } else {
+            c.addVariable(name , var ) ; 
+        }
+    }
+    
 }
