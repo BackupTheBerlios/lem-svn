@@ -9,6 +9,7 @@ import java.util.Vector;
 import metamodel.ActionBlock;
 import metamodel.CreateAction;
 import metamodel.Procedure;
+import metamodel.VariableReference;
 import runtime.DomainContext;
 import runtime.LemRuntimeException;
 
@@ -23,8 +24,9 @@ public class guiLogging extends javax.swing.JFrame {
    CreateAction a = new CreateAction();
    metamodel.Class newClass = new metamodel.Class();
    runtime.DomainContext d = new DomainContext();
-   verifier.ConsoleLogger c = new verifier.ConsoleLogger(d);
+   
    runtime.Interpreter I = new runtime.Interpreter();
+   metamodel.VariableReference variable = new metamodel.VariableReference("thisClass");
     /** Creates new form guiLogging */
     public guiLogging() {
         initComponents();
@@ -32,11 +34,18 @@ public class guiLogging extends javax.swing.JFrame {
         Vector c = new Vector();
         c.add(newClass);
         a.setClasses(c);
+        variable.setObjectName("newThing");
+        variable.setVariableName("thisClass");
+        a.setVariable(variable);
+        aB.addAction(a);
+        p.setActionBlock(aB);
     }
      public void ExecuteProcedure() 
     {
        try{
+           verifier.ConsoleLogger Con = new verifier.ConsoleLogger(d);
         I.interpret(p, d);
+        
         }
         catch(LemRuntimeException e)
         {
@@ -56,6 +65,8 @@ public class guiLogging extends javax.swing.JFrame {
         getContentPane().setLayout(null);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setFocusCycleRoot(false);
+        setName("LoggingPrototype");
         jTextArea1.setEditable(false);
         jScrollPane1.setViewportView(jTextArea1);
 
