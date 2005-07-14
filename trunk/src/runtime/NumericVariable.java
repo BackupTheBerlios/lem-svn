@@ -186,10 +186,9 @@ public class NumericVariable extends Variable {
     public Variable mod(Variable b) throws LemRuntimeException {
         if( !NumericType.getInstance().equals( b.getCoreDataType() ))
             throw new LemRuntimeException( "Operation mod(numeric, " + b.getType().getName() + "' not supported" );
-        //BigDecimal right = (BigDecimal)b.getValue();
-        //BigDecimal rem = value.remainder( right );
-        //return new NumericVariable( rem );
-	return null;
+        BigDecimal right = (BigDecimal)b.getValue();
+        BigDecimal rem = value.remainder( right );
+        return new NumericVariable( rem );
     }
     
     /**
