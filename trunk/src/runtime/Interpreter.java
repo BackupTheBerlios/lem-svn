@@ -81,7 +81,8 @@ public class Interpreter {
         c.addObject(o);
         
         // Add the object reference to the context
-        c.addVariable( a.getVariable().getVariableName(), new ObjectReferenceVariable( o ));
+	if( a.getVariable() != null ) 
+            c.addVariable( a.getVariable().getVariableName(), new ObjectReferenceVariable( o ));
         
         // Notify listeners that the object has been added
         LemObjectCreationEvent e = new LemObjectCreationEvent( o, a );
