@@ -53,6 +53,7 @@ public class Context {
      */
     public Context(Context inContext) {
         parentContext = inContext;
+        listeners.addAll( inContext.getLemEventListeners() );
     }
 
     /**
