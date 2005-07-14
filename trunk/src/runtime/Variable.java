@@ -7,17 +7,22 @@
 package runtime;
 import metamodel.CoreDataType;
 import metamodel.DataType;
+import metamodel.NullType;
+import metamodel.*;
 import metamodel.DomainSpecificDataType;
 
 /**
  * This class represents an instance of an getType().
  * @author u4128551
  */
-public abstract class Variable {
+public class Variable {
     
     protected DataType type = null;
+    protected Object value = null ;
     
     public Variable() {
+        type = new NullType() ;
+        value = null ;
     }
     
     /**
@@ -25,16 +30,55 @@ public abstract class Variable {
      *
      * @return the value associated with this getType() instance
      */
-    public abstract java.lang.Object getValue();
+    public  java.lang.Object getValue() throws LemRuntimeException{
+        throw new LemRuntimeException( "Unsupported operation (set value) in type " + getType().getName() );
+    }
     
+    /** Gets the datatype of this variable.
+     *@return the DataType associated with this variable
+     */
     public DataType getType() {
         return type;
     }
     
-    public void setType( DataType d ) {
+    /** Initializes the type of the variable
+     *@param d DataType of this variable
+     */
+    public Variable initializeType( DataType d ) throws LemRuntimeException {
         this.type = d;
+        if (d instanceof BooleanType) {
+            return (BooleanVariable)this ;
+            //   }else if (d instanceof ArbitraryIdType) {
+            //       (ArbitraryIdVariable)this ;
+            //   }else if(d instanceof DateType) {
+            //       (DateVariable)this ;
+            //   }else if(d instanceof IntegerType) {
+            //       (IntegerVariable)this ;
+        }else if(d instanceof NumericType) {
+            return (NumericVariable)this ;
+        }else if(d instanceof ObjectReferenceType) {
+            return  (ObjectReferenceVariable)this ;
+            //    }else if(d instanceof RealType) {
+            //        (RealVariable)this ;
+        }else if(d instanceof StringType) {
+            return  (StringVariable)this ;
+            //   }else if(d instanceof TimeStampType) {
+            //       (TimeStampVariable)this ;
+        }else {
+            throw new LemRuntimeException("Invalid operation settype." + d.getCoreDataType() ) ;
+        }
     }
     
+    /* sets the type of variable to the specified type
+     *@param d type of the variable
+     */
+    public void setType(DataType d) {
+        type = d ; 
+    }
+    
+    /** Gets the CoreDataType of this variable.
+     *@return the CoreDataType associated with this variable
+     */
     public CoreDataType getCoreDataType() {
         DataType type = getType();
         if( type instanceof DomainSpecificDataType ) {
@@ -44,7 +88,16 @@ public abstract class Variable {
         return (CoreDataType)type;
     }
     
-    public abstract void setValue( java.lang.Object o );
+    /** Set the value of this variable
+     *
+     * In case of unTyped Variables (declared but not instantiated yet) it would throw an Exception
+     * @param Object representing the value of this variable.
+     */
+    public void setValue( java.lang.Object o ) throws LemRuntimeException {
+        throw new LemRuntimeException( "Unsupported operation (set value) in type " + getType().getName() );
+    }
+    
+    /*Mathematical and Logical operations defined on variables */
     
     public Variable add( Variable b ) throws LemRuntimeException {
         throw new LemRuntimeException( "Unsupported operation (add) in type " + getType().getName() );
@@ -61,7 +114,7 @@ public abstract class Variable {
     public Variable divide( Variable b ) throws LemRuntimeException {
         throw new LemRuntimeException( "Unsupported operation (divide) in type " + getType().getName() );
     }
-   
+    
     public Variable exp( Variable b ) throws LemRuntimeException {
         throw new LemRuntimeException( "Unsupported operation (exp) in type " + getType().getName() );
     }
