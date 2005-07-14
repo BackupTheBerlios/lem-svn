@@ -15,6 +15,7 @@ import metamodel.Class;
 import runtime.DomainContext;
 import runtime.LemRuntimeException;
 import runtime.Interpreter;
+import javax.swing.JFrame;
 /**
  *
  * @author David Gavin
@@ -37,6 +38,9 @@ public class JContextLoggerPanelTest extends junit.framework.TestCase {
         a.setClasses(c);
         aB.addAction(a);
         p.setActionBlock(aB);
+        frame.getContentPane().add(Logger, java.awt.BorderLayout.CENTER);
+        frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        frame.setVisible(true);
     }
     public void testCreateObject(){
         try{
@@ -47,7 +51,5 @@ public class JContextLoggerPanelTest extends junit.framework.TestCase {
             System.out.println(e);
         }
     }
-    // TODO add test methods here. The name must begin with 'test'. For example:
-    // public void testHello() {}
     
 }
