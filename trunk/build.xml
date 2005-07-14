@@ -10,7 +10,7 @@
     <property name="classes.dir" value="${build.dir}/classes" />
     <property name="etc.dir" value="${basedir}/etc" />
     <property name="javacchome"
-        value="/usr/java/javacc-3.2" />
+        value="C:\Program Files\Java\javacc-3.2" />
     <property name="deploy.name" value="${name}.jar" />
     <property name="lib.dir" value="${basedir}/lib" />
 
@@ -154,6 +154,11 @@
   
   <target name="runjar" depends="init">
     <java jar="build/lem.jar" fork="true" classpathref="build.classpath" />
+  </target>
+  
+  <target name="runGUILog" depends="init">
+   <java classname="mockups.guiLogging" fork="true"
+   classpathref="run.classpath"/>
   </target>
   
   <target name="debug" depends="init">
