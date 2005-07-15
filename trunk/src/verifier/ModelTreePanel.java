@@ -16,7 +16,7 @@ import metamodel.Model;
  * @author  sjr
  */
 public class ModelTreePanel extends javax.swing.JPanel {
-    private JPopupMenu ContextMenu = new JPopupMenu();
+    private JPopupMenu contextMenu = new JPopupMenu();
     private Object currentContextObject = null;
     /** Creates new form ModelTreePanel */
     public ModelTreePanel(Model m) {
@@ -30,7 +30,7 @@ public class ModelTreePanel extends javax.swing.JPanel {
         /*
         if((m.getDescription()!=null)&&(m.getDescription()!=""))
         {
-            DescriptionArea.setText(m.getDescription());    
+            DescriptionArea.setText(m.getDescription());
         }
         else
         {
@@ -78,75 +78,66 @@ public class ModelTreePanel extends javax.swing.JPanel {
 
   }
   // </editor-fold>//GEN-END:initComponents
-
+  
     private void modelTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modelTreeMouseClicked
-
-        if (evt.BUTTON3 == evt.getButton()||evt.BUTTON2 == evt.getButton())
-        {
-          try{
-            //Object p =modelTree.getSelectionPath().getLastPathComponent();
-            Object p = modelTree.getClosestPathForLocation(evt.getX(), evt.getY()).getLastPathComponent();
-            if (p instanceof AbstractDescriptionNode){
-               AbstractDescriptionNode ADN = (AbstractDescriptionNode)p;
-               currentContextObject=p;
-               ContextMenu = ADN.getContextMenu();
-               JMenuItem Desc = new JMenuItem();
-               Desc.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                DescriptionMenuClicked(evt);
-            }
-            });
-               Desc.setText("Description");
-               ContextMenu.add(Desc);
-               ContextMenu.setLocation(evt.getPoint());
-               ContextMenu.setVisible(true);
-                              
-            }
-          }
-          catch(Exception e){System.out.println(e);}
-        }
-        else
-        {
+        
+        if (evt.BUTTON3 == evt.getButton()||evt.BUTTON2 == evt.getButton()) {
+            try{
+                //Object p =modelTree.getSelectionPath().getLastPathComponent();
+                Object p = modelTree.getClosestPathForLocation(evt.getX(), evt.getY()).getLastPathComponent();
+                if (p instanceof AbstractDescriptionNode){
+                    AbstractDescriptionNode adn = (AbstractDescriptionNode)p;
+                    currentContextObject = p;
+                    contextMenu = adn.getContextMenu();
+                    JMenuItem desc = new JMenuItem();
+                    desc.addMouseListener(new java.awt.event.MouseAdapter() {
+                        public void mouseClicked(java.awt.event.MouseEvent evt) {
+                            DescriptionMenuClicked(evt);
+                        }
+                    });
+                    desc.setText("Description");
+                    contextMenu.add(desc);
+                    contextMenu.show( this, evt.getX(), evt.getY() );
+                }
+            } catch(Exception e){System.out.println(e);}
+        } else {
             displayDescription(modelTree.getSelectionPath().getLastPathComponent());
         }
         
     }//GEN-LAST:event_modelTreeMouseClicked
-    private void DescriptionMenuClicked(java.awt.event.MouseEvent evt)
-    {
+    private void DescriptionMenuClicked(java.awt.event.MouseEvent evt) {
         displayDescription(currentContextObject);
-        ContextMenu.setVisible(false);
+        contextMenu.setVisible(false);
         currentContextObject=null;
     }
     private void modelTreePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_modelTreePropertyChange
         try{
-        displayDescription(modelTree.getSelectionPath().getLastPathComponent());
-        }
-        catch(Exception e){}
+            displayDescription(modelTree.getSelectionPath().getLastPathComponent());
+        } catch(Exception e){}
     }//GEN-LAST:event_modelTreePropertyChange
-    public void displayDescription(Object p)
-    {
+    public void displayDescription(Object p) {
         StyledDocument doc = null ;
         try{
-        
-        if (p instanceof AbstractDescriptionNode){
-            AbstractDescriptionNode ADN = (AbstractDescriptionNode)p;
-            //Description = ADN.getDescription();
-            doc = ADN.getStyledDocument();
-                       
-        try {            
-            descriptionArea.getDocument().remove ( 0 , descriptionArea.getDocument().getLength() ) ; 
-            for ( int i = 0 ; i < doc.getLength() ; i++ ) {
-                descriptionArea.getDocument().insertString(descriptionArea.getDocument().getLength() ,doc.getStyledElement(i).getContent() + "\n", doc.getStyledElement(i).getAttributeSet()) ;
+            
+            if (p instanceof AbstractDescriptionNode){
+                AbstractDescriptionNode ADN = (AbstractDescriptionNode)p;
+                //Description = ADN.getDescription();
+                doc = ADN.getStyledDocument();
+                
+                try {
+                    descriptionArea.getDocument().remove( 0 , descriptionArea.getDocument().getLength() ) ;
+                    for ( int i = 0 ; i < doc.getLength() ; i++ ) {
+                        descriptionArea.getDocument().insertString(descriptionArea.getDocument().getLength() ,doc.getStyledElement(i).getContent() + "\n", doc.getStyledElement(i).getAttributeSet()) ;
+                    }
+                }
+                
+                catch(Exception e) {}
             }
-        }
-        
-        catch(Exception e) {}
-        }
         }
 //        descriptionArea.setText(Description);
         
-        catch(NullPointerException e)
-        {}
+        catch(NullPointerException e) {
+        }
         
     }
     
@@ -157,5 +148,5 @@ public class ModelTreePanel extends javax.swing.JPanel {
   private javax.swing.JTree modelTree;
   private javax.swing.JScrollPane treeScrollPane;
   // End of variables declaration//GEN-END:variables
-    
+  
 }
