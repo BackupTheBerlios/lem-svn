@@ -6,9 +6,12 @@
 
 package runtime;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
+import metamodel.Association;
 import metamodel.Attribute;
 import metamodel.State;
 
@@ -33,9 +36,20 @@ public class Instance {
     Map attributeInstances = null;
     
     /**
+     * A map of Association to AssociationInstance references.
+     */
+    Map associationInstances = null;
+    
+    /**
      * The Class of which this Instance is an instance
      */
     metamodel.Class instanceOfClass = null;
+    
+    /**
+     * Creates a new instance of Instance.
+     */
+    protected Instance() {
+    }
     
     /**
      * Creates a new instance of Instance given the template metamodel.Class
@@ -46,6 +60,7 @@ public class Instance {
         instanceOfClass = theClass;
         
         initialiseAttributeInstances();
+        initialiseAssociationInstances();
     }
     
     /**
@@ -60,6 +75,7 @@ public class Instance {
         currentState = state;
         
         initialiseAttributeInstances();
+        initialiseAssociationInstances();
     }
     
     private void initialiseAttributeInstances() throws LemRuntimeException {
@@ -72,6 +88,15 @@ public class Instance {
         }
     }
     
+    private void initialiseAssociationInstances() throws LemRuntimeException {
+        Iterator i = instanceOfClass.getAssociations().values().iterator();
+        associationInstances = new HashMap();
+        
+        while( i.hasNext() ) {
+            associationInstances.put( i.next(), new LinkedList() );
+        }
+    }
+    
     /** 
      * Return the Class of which this Instance is an instance
      *
@@ -79,6 +104,14 @@ public class Instance {
      */
     public metamodel.Class getInstanceClass() {
         return instanceOfClass;
+    }
+    
+    public Collection getAssociationInstances( Association a ) {
+        return (Collection)(associationInstances.get( a ));
+    }
+    
+    public void addAssociationInstance( AssociationInstance a ) {
+        ((LinkedList)associationInstances.get( a.getAssociation() )).add( a );
     }
     
     /**
