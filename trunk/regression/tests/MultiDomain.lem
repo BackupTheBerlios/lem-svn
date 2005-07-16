@@ -18,10 +18,10 @@ model MultiDomain is
 		subsystem S1 is
 			class C1 is
 			end C1;
-			class C2 is
-			end C2;
-			class C3 is
-			end C3;
+			class CB2 is
+			end CB2;
+			class CB3 is
+			end CB3;
 		end S1;
 	end D2;
 
@@ -29,10 +29,10 @@ model MultiDomain is
 		subsystem S1 is
 			class C1 is
 			end C1;
-			class C2 is
-			end C2;
-			class C3 is
-			end C3;
+			class CC2 is
+			end CC2;
+			class CC3 is
+			end CC3;
 		end S1;
 	end D3;
 
