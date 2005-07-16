@@ -1,0 +1,39 @@
+$Id$
+
+model MultiDomain is
+	"a test model containing multiple domains"
+
+	domain D1 is 
+		subsystem S1 is
+			class C1 is
+			end C1;
+			class C2 is
+			end C2;
+			class C3 is
+			end C3;
+		end S1;
+	end D1;
+
+	domain D2 is 
+		subsystem S1 is
+			class C1 is
+			end C1;
+			class C2 is
+			end C2;
+			class C3 is
+			end C3;
+		end S1;
+	end D2;
+
+	domain D3 is 
+		subsystem S1 is
+			class C1 is
+			end C1;
+			class C2 is
+			end C2;
+			class C3 is
+			end C3;
+		end S1;
+	end D3;
+
+end MultiDomain;
