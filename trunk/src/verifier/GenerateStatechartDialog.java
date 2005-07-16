@@ -183,22 +183,22 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
     pack();
   }
   // </editor-fold>//GEN-END:initComponents
-
+	
 	private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
 		if ("cancel".equals( evt.getActionCommand() )) {
 			this.dispose();
 		}
 	}//GEN-LAST:event_cancelButtonActionPerformed
-
-/**
- * @todo Recode to use Exceptions?
- */
+	
+	/**
+	 * @todo Recode to use Exceptions?
+	 */
 	private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
 		if ("generate".equals( evt.getActionCommand() )) {
 			// Fail if no filename specified
 			if (filenameField.getText() == "") {
 				JOptionPane.showMessageDialog( this, "No output filename specified", "Error",
-							JOptionPane.ERROR_MESSAGE );
+						JOptionPane.ERROR_MESSAGE );
 			}
 			// 'Normal' case
 			else {
@@ -302,7 +302,7 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
 	}
 	
 	/**
-	 * Uses an external dot binary to convert a given set of dot code into a 
+	 * Uses an external dot binary to convert a given set of dot code into a
 	 * PNG file
 	 *
 	 * @param dotCode the dot code to convert
