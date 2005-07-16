@@ -1,6 +1,11 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.59  2005/07/16 15:55:23  u3957053
+* Eliminated RelationshipIdentifier and RelationshipEndIdentifier.
+*
+* Add LinkCreation() to action list.
+*
 * Revision 1.58  2005/07/12 06:49:41  u3957053
 * Move LOR and LAND tokens into their own non-terminal to satisfy BuilderPass2.listToTree
 *
@@ -848,12 +853,12 @@ void Association() :
 // constraint: LEM_E_01022=In an association, the active object of each perspective must be the same class.
 }
 {
-	<ASSOCIATION> RelationshipIdentifier() <IS> 
+	<ASSOCIATION> Identifier() <IS> 
 		Description() 
         ActivePerspective() ";"
         PassivePerspective() ";"
         [ AssociationClassDeclaration() ]
-	<END> [RelationshipEndIdentifier()] ";"
+	EndIdentifier() ";"
 }
 
 void ActivePerspective() : {
@@ -932,10 +937,10 @@ void Generalisation() : {
 //constraint: LEM_E_01016=Each relationship must have a unique ID within the domain
 }
 {
-	<GENERALISATION> RelationshipIdentifier() <IS>
+	<GENERALISATION> Identifier() <IS>
 		Description() 
         GeneralisationBody() 
-	<END> [RelationshipEndIdentifier()] ";"
+	EndIdentifier() ";"
 }
 
 /*
@@ -946,12 +951,6 @@ void GeneralisationBody() : {}
 	SuperClassIdentifier() "is" 
 		SubClassIdentifier() ( "," SubClassIdentifier() )* "or" SubClassIdentifier()  ";"
 }
-
-void RelationshipIdentifier() : {}
-{ <SIMPLE_IDENTIFIER> }
-
-void RelationshipEndIdentifier() : {}
-{ <SIMPLE_IDENTIFIER> }
 
 void SuperClassIdentifier() : {
 // constraint:LEM_E_01014=The superclass in a generalisation relationship must be an existing class defined in the current domain
@@ -1117,6 +1116,7 @@ void Action() : {}
 		| SignalGeneration()
 		| SignalCancel()
                 | SelectStatement() 
+		| LinkCreation()
 	)
 	<SEMI>
 }
@@ -1157,8 +1157,8 @@ void ObjectDeletion() : {}
 void RelationshipReference() : {}
 {
 	LOOKAHEAD(2)
-	  RelationshipIdentifier() <DOT> ActiveVerbClause()
-	| RelationshipIdentifier()
+	  Identifier() <DOT> ActiveVerbClause()
+	| Identifier()
 }
 
 void LinkCreation() : {} 
