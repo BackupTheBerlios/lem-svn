@@ -73,6 +73,16 @@
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
           <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="generateClassDiagramItem">
+              <Properties>
+                <Property name="mnemonic" type="int" value="67"/>
+                <Property name="text" type="java.lang.String" value="Generate Class Diagram..."/>
+                <Property name="toolTipText" type="java.lang.String" value=""/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="generateClassDiagramItemActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="generateStatechartItem">
               <Properties>
                 <Property name="mnemonic" type="int" value="83"/>

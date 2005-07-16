@@ -100,6 +100,7 @@ public class Eleminator extends javax.swing.JFrame {
     jMenu1 = new javax.swing.JMenu();
     preferencesItem = new javax.swing.JMenuItem();
     toolsMenu = new javax.swing.JMenu();
+    generateClassDiagramItem = new javax.swing.JMenuItem();
     generateStatechartItem = new javax.swing.JMenuItem();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -175,6 +176,17 @@ public class Eleminator extends javax.swing.JFrame {
     toolsMenu.setMnemonic('T');
     toolsMenu.setText("Tools");
     toolsMenu.setToolTipText("");
+    generateClassDiagramItem.setMnemonic('C');
+    generateClassDiagramItem.setText("Generate Class Diagram...");
+    generateClassDiagramItem.setToolTipText("");
+    generateClassDiagramItem.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        generateClassDiagramItemActionPerformed(evt);
+      }
+    });
+
+    toolsMenu.add(generateClassDiagramItem);
+
     generateStatechartItem.setMnemonic('S');
     generateStatechartItem.setText("Generate Statechart...");
     generateStatechartItem.addActionListener(new java.awt.event.ActionListener() {
@@ -192,6 +204,10 @@ public class Eleminator extends javax.swing.JFrame {
     pack();
   }
   // </editor-fold>//GEN-END:initComponents
+
+	private void generateClassDiagramItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateClassDiagramItemActionPerformed
+		GenerateClassDiagramDialog.showDialog( this, activeModel );
+	}//GEN-LAST:event_generateClassDiagramItemActionPerformed
 	
 	/**
 	 * @todo Test stub only
@@ -413,6 +429,7 @@ public class Eleminator extends javax.swing.JFrame {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JDesktopPane desktopPane;
   private javax.swing.JMenu fileMenu;
+  private javax.swing.JMenuItem generateClassDiagramItem;
   private javax.swing.JMenuItem generateStatechartItem;
   private javax.swing.JMenuItem importItem;
   private javax.swing.JMenu jMenu1;
