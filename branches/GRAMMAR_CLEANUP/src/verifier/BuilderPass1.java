@@ -53,19 +53,6 @@ public class BuilderPass1 extends Visitor {
 	return (String)(visit( (LEMIdentifier)identifierNode.jjtGetChild( 0 ), null ));
     }
 
-
-    public Object visit(LEMModelDeclaration node, Object data) throws LemException {
-	Model m = new Model();
-
-        super.visit( node, m );
-
-	String name = getIdentifier(node.jjtGetChild( 0 ));
-	String endName = getEndIdentifier( node.jjtGetChild( node.jjtGetNumChildren() - 1 ));
-	checkIdentity( name, endName, node.getLastToken() );
-	m.setName( name );
-
-	return m;
-    }
     /**
      * Returns a bridge when given a LEMBridgeDeclaration
      * Adds a bridge to the model
@@ -76,13 +63,11 @@ public class BuilderPass1 extends Visitor {
      */
     public Object visit(LEMBridgeDeclaration node, Object data) throws LemException {
         Bridge b = new Bridge();
-        super.visit( node, b );
+        
         String bridgeName = getIdentifier( node.jjtGetChild( 0 ));
         String bridgeEndName = getEndIdentifier( node.jjtGetChild( 2));
         checkIdentity( bridgeName, bridgeEndName, node.getLastToken());
         b.setId( bridgeName );
-        Model m = (Model)data;
-        m.add(b);
         
         return b;
     }
@@ -104,6 +89,38 @@ public class BuilderPass1 extends Visitor {
         getMapper().add(node, a);
         return a;
     }
+
+    public Object visit(LEMModelDeclaration node, Object data) throws LemException {
+	Model m = new Model();
+
+	String name = getIdentifier(node.jjtGetChild( 0 ));
+	String endName = getEndIdentifier( node.jjtGetChild( node.jjtGetNumChildren() - 1 ));
+	checkIdentity( name, endName, node.getLastToken() );
+	m.setName( name );
+
+        for( int i = 2; i < node.jjtGetNumChildren() - 1; i++ ) {
+            Object o = node.jjtGetChild( i ).jjtAccept( this, null );
+            if( o instanceof Domain ) {
+                Domain d = (Domain)o;
+                if( m.getDomain( d.getName() ) != null ) {
+                    throw new LemException( "Domain " + d.getName() + " is already defined",
+                            node.getFirstToken(), "LEM_E_01004" );
+                }
+                
+                m.add( d );
+            } else if( o instanceof Bridge ) {
+                Bridge b = (Bridge)o;
+                if( m.getBridge( b.getId() ) != null ) {
+                    throw new LemException( "Bridge " + b.getId() + " is already defined", 
+                            node.getFirstToken(), "LEM_E_01001" );
+                }
+                
+                m.add( b );
+            } 
+        }
+        
+	return m;
+    }
     
     /**
      * Process a Domain declaration by creating a Domain instance for use by this visitor
@@ -121,12 +138,28 @@ public class BuilderPass1 extends Visitor {
 	domain.setName( name );
 
         getMapper().add( node, domain );
-        super.visit( node, domain );
         
-        // insert the newly constructed domain into the model
-        
-        Model model = (Model) data;
-        model.add( domain );
+        for( int i = 2; i < node.jjtGetNumChildren() - 1; i++ ) {
+            Object o = node.jjtGetChild( i ).jjtAccept( this, domain );
+            if( o instanceof DomainSpecificDataType ) {
+                DomainSpecificDataType t = (DomainSpecificDataType)o;
+                if( domain.getType( t.getName() ) != null ) {
+                    throw new LemException( "Type " + t.getName() + " is already defined",
+                            node.getFirstToken(), "LEM_E_01005" );
+                }
+                
+                domain.add( t );
+            } else if( o instanceof Subsystem ) {
+                Subsystem s = (Subsystem)o;
+                if( domain.getSubsystem( s.getName()) != null ) {
+                    throw new LemException( "Subsystem " + s.getName() + " is already defined", 
+                            node.getFirstToken(), "LEM_E_01004" );
+                }
+                
+                s.setDomain( domain );
+                domain.add( s );
+            } 
+        }
         
         return domain;
         
@@ -137,25 +170,33 @@ public class BuilderPass1 extends Visitor {
     *
     * @todo Do we do subsystem uniqueness checking here?
     */
-    public Object visit(LEMSubSystemDeclaration node, Object data) throws LemException {
-        Domain domain = (Domain) data;
+    public Object visit( LEMSubSystemDeclaration node, Object data ) throws LemException {
         Subsystem subsystem = new Subsystem();
-	String name = getIdentifier( node.jjtGetChild( 0 ));
-	String endName = getEndIdentifier( node.jjtGetChild( node.jjtGetNumChildren() - 1 ));
-	checkIdentity( name, endName, node.getLastToken() );
-	subsystem.setName( name );
-
-	System.err.println( "Got subsystem name '" + name + "'" );
-	
-        subsystem.setDomain( domain );
-        getMapper().add( node, subsystem );
-        super.visit( node, subsystem );
-
-        // insert the newly constructed subsystem into the domain
-        domain.add( subsystem );
-
-        return data;
-
+        
+        for( int i = 2; i < node.jjtGetNumChildren() - 1; i++ ) {
+            // Visit each child from number 2 ... n - 2. Each will be either
+            // a ClassDeclaration or Relationship. Visiting each will result either in
+            // a Class or a Relationship
+            
+            Object o = node.jjtGetChild( i ).jjtAccept( this, null );
+            
+            if( o instanceof metamodel.Class ) {
+                metamodel.Class c = (metamodel.Class)o;
+                  // TODO: Check uniqueness elsewhere
+//                if( subsystem.getDomain().getClass( c.getName() ) != null ) {
+//                    throw new LemException( "Class " + c.getName() + " is already defined", node.getFirstToken(), "TODO" );
+//                }
+                
+                subsystem.add( c );
+            } else if( o instanceof metamodel.Relationship ) {
+                  // TODO: Process relationships elsewhere
+//                Relationship r = (Relationship)o;
+                
+//                subsystem.getDomain().add( r );
+            }
+        }
+        
+        return subsystem;
     }
 
     /**
@@ -165,22 +206,6 @@ public class BuilderPass1 extends Visitor {
      * as an assocation class. The data passed to this method is used to determine the context
      */
     public Object visit(LEMClassDeclaration node, Object data) throws LemException {
-        
-        Subsystem subsystem = null;
-        Association association = null;
-        
-        
-        // sort out the context
-        
-        if ( data instanceof Subsystem ) {
-            subsystem = (Subsystem) data;
-        } else {
-            association = (Association) data;
-            subsystem = association.getSubsystem();
-        }
-        
-        // now create a new class as a placeholder
-        
         metamodel.Class theClass = new metamodel.Class();
        	String name = getIdentifier( node.jjtGetChild( 0 ));
 	String endName = getEndIdentifier( node.jjtGetChild( node.jjtGetNumChildren() - 1 ));
@@ -189,34 +214,9 @@ public class BuilderPass1 extends Visitor {
         
         getMapper().add( node, theClass );
         
-        // set its subsystem to allow the child elements to get context
-        
-        theClass.setSubsystem( subsystem );
-        
         super.visit( node, theClass );
         
-        // check the uniqueness constraint
-        
-        Domain domain = subsystem.getDomain();
-        if ( null != domain.getClass( name ) ) {
-            throw new LemException(
-                    "Class " + name + " is already defined.",
-                    node.getFirstToken(),
-                    "LEM_E_01013" );
-            
-        }
-        
-        subsystem.add( theClass );
-        
-        // if this is an association class, then record its presence
-        
-        if ( null != association ) {
-            AssociationClassRole acr = new AssociationClassRole( theClass, association );
-            association.setAssociationClassRole( acr );
-        }
-        
-        
-        return data;
+        return theClass;
         
     }
     
@@ -242,28 +242,11 @@ public class BuilderPass1 extends Visitor {
         // create the new domain to be constructed by this visitor
         
         DomainSpecificDataType type = new DomainSpecificDataType();
+        type.setDomain( (Domain) data );
         getMapper().add( node, type );
         super.visit( node, type );
         
-        // insert the newly constructed type into the domain
-        
-        Domain domain = (Domain) data;
-        
-        // check that the type is unique
-        
-        
-        if ( null != domain.getType( type.getName() )) {
-            throw new LemException(
-                    "Type " + type.getName() + " is already defined",
-                    node.getFirstToken(),
-                    "LEM_E_01005" );
-        }
-        
-        // add the type to the domain
-        
-        domain.add( type );
-        
-        return data;
+        return type;
         
     }
     
@@ -507,30 +490,28 @@ public class BuilderPass1 extends Visitor {
      * Process an Association declaration
      */
     public Object visit(LEMAssociation node, Object data) throws LemException {
+        Association a = new Association();
         
-        Subsystem subSystem = (Subsystem) data;
-        Association association = new Association();
-        getMapper().add( node, association );
-        association.setSubsystem( subSystem );
+        String name = getIdentifier(node.jjtGetChild( 0 ));
+        // TODO: Validate name
+        String description = (String)(node.jjtGetChild( 1 ).jjtAccept( this, null ));
+        ActivePerspective ap = (ActivePerspective)(node.jjtGetChild( 2 ).jjtAccept( this, null ));
+        PassivePerspective pp = (PassivePerspective)(node.jjtGetChild( 3 ).jjtAccept( this, null ));
+        String endName;
         
-        super.visit( node, association );
-        
-        // register the association in the domain
-        
-        Domain domain = subSystem.getDomain();
-        
-        // check that the association does not exist
-        
-        if ( null != domain.getRelationship( association.getName() )) {
-            throw new LemException(
-                    "Relation " + association.getName() + " is already defined",
-                    node.getFirstToken(),
-                    "LEM_E_01016" );
+        if( node.jjtGetNumChildren() == 6 ) {
+            // An association class has been specified
+            metamodel.Class assocClass = (metamodel.Class)(node.jjtGetChild( 4 ).jjtAccept( this, null ));
+            AssociationClassRole r = new AssociationClassRole( assocClass, a );
+            a.setAssociationClassRole( r );
+            endName = getEndIdentifier( node.jjtGetChild( 5 ));
+        } else {
+            // No association class
+            endName = getEndIdentifier( node.jjtGetChild( 4 ));
         }
         
-        // add it
+        checkIdentity( name, endName, node.getFirstToken() );
         
-        domain.add( association );
         
         return data;
     }

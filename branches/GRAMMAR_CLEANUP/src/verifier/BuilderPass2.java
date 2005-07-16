@@ -731,6 +731,7 @@ public class BuilderPass2 extends Visitor {
             
             perspective.setAssociation( association );
             association.setActivePerspective( perspective );
+            subjectClass.add( association );
             
         }
         
@@ -780,6 +781,7 @@ public class BuilderPass2 extends Visitor {
             
             perspective.setAssociation( association );
             association.setPassivePerspective( perspective );
+            objectClass.add( association );
         }
         
         super.visit( node, data );

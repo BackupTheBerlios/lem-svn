@@ -1,6 +1,10 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.58.2.1  2005/07/16 15:09:28  u3957053
+* Beginnings of a big grammar cleanup. This branch doesn't build yet, but
+* it should be made to build soon.
+*
 * Revision 1.58  2005/07/12 06:49:41  u3957053
 * Move LOR and LAND tokens into their own non-terminal to satisfy BuilderPass2.listToTree
 *
@@ -514,7 +518,14 @@ LEMModelDeclaration ModelDeclaration() : {
 // constraint: LEM_E_01001=The <identifier> at the end of a model, subsystem, domain or class block must match the <identifier> at the beginning of the block.
 }
 {
-  <MODEL> Identifier() <IS> Description() ModelBody() EndIdentifier() <SEMI> 
+	<MODEL> 
+	Identifier() 
+	<IS> 
+	Description() 
+        ( DomainDeclaration() )+ 
+	( BridgeDeclaration() )*
+	EndIdentifier() 
+	<SEMI> 
   { return jjtThis; }
 }
 
@@ -527,13 +538,6 @@ void EndIdentifier() : {}
 {
 	<END> [ Identifier() ]
 }
-
-/* Documentation for Model Body */
-void ModelBody() : {}
-{
-  ( DomainDeclaration() )+ ( BridgeDeclaration() )*
-}
-
 
 /*
 *@todo Fix description() so that it can differentiate it from the model description
@@ -781,7 +785,9 @@ void SubSystemDeclaration() : {
 { 
 	<SUBSYSTEM> Identifier() <IS>
 		Description() 
-		SubSystemBody() 
+		( ClassDeclaration() 
+		| Relationship() 
+		)*
 	EndIdentifier() <SEMI>
 }
 
@@ -848,12 +854,12 @@ void Association() :
 // constraint: LEM_E_01022=In an association, the active object of each perspective must be the same class.
 }
 {
-	<ASSOCIATION> RelationshipIdentifier() <IS> 
+	<ASSOCIATION> Identifier() <IS> 
 		Description() 
         ActivePerspective() ";"
         PassivePerspective() ";"
-        [ AssociationClassDeclaration() ]
-	<END> [RelationshipEndIdentifier()] ";"
+        [ ClassDeclaration() ]
+	EndIdentifier() ";"
 }
 
 void ActivePerspective() : {
@@ -962,9 +968,6 @@ void SubClassIdentifier() : {
 // constraint:LEM_E_01015=All subclasses in a generalisation relationship must be existing classes defined in the current domain
 }
 { <SIMPLE_IDENTIFIER> }
-
-void AssociationClassDeclaration() : {}
-{ ClassDeclaration() }
 
 /*
 
@@ -1117,6 +1120,7 @@ void Action() : {}
 		| SignalGeneration()
 		| SignalCancel()
                 | SelectStatement() 
+		| LinkCreation()
 	)
 	<SEMI>
 }
@@ -1157,13 +1161,19 @@ void ObjectDeletion() : {}
 void RelationshipReference() : {}
 {
 	LOOKAHEAD(2)
-	  RelationshipIdentifier() <DOT> ActiveVerbClause()
-	| RelationshipIdentifier()
+	  Identifier() <DOT> ActiveVerbClause()
+	| Identifier()
 }
 
 void LinkCreation() : {} 
 {
-	<RELATE> ObjectReference() <TO> ObjectReference() <ACROSS> RelationshipReference() LinkObjectCreation()
+	<RELATE> 
+	ObjectReference() 
+	<TO> 
+	ObjectReference() 
+	<ACROSS> 
+	Identifier() 
+	LinkObjectCreation()
 }
 
 // Do we assume the link object is of only one class? I think it's a fair assumption.
@@ -1322,7 +1332,11 @@ void WhereClause() : {}
 
 void Related() : {}
 {
-    ObjectReference()<RELATED><TO>ClassVariable()<ACROSS>RelationshipVariable()
+    ObjectReference()
+    <RELATED><TO>
+    ClassVariable()
+    <ACROSS>
+    RelationshipVariable()
 }
 
 void RelationshipVariable() : {}
