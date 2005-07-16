@@ -44,6 +44,7 @@ import javax.xml.transform.stream.*;
 public class Eleminator extends javax.swing.JFrame {
 	
 	Vector models = new Vector();
+	Model activeModel = null;
 	File workingDirectory = null;
 	ModelTreePanel MTP = new ModelTreePanel(new Model());
 	
@@ -59,7 +60,7 @@ public class Eleminator extends javax.swing.JFrame {
 		try{
 			File custDir = new File(System.getProperty("user.home")+"/"+"WorkSpace.dat");
 			ObjectInputStream In = new ObjectInputStream(new FileInputStream
-							(custDir));
+					(custDir));
 			workingDirectory = new File( ((WorkSpace)In.readObject()).getWorkSpace());
 		} catch (Exception ex){
 			workingDirectory = new File(System.getProperty("user.home"));}
@@ -199,39 +200,9 @@ public class Eleminator extends javax.swing.JFrame {
 		Parameters p = new Parameters();
 		System.out.println( p.getDefaultProperty("eleminator.version"));
 	}//GEN-LAST:event_preferencesItemActionPerformed
-	
-	/**
-	 * @todo Add selector for the statechart to export
-	 * @todo Add statechart export functionality
-	 */
+
 	private void generateStatechartItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateStatechartItemActionPerformed
-		// Display a file chooser
-		/*
-		File selectedFile;
-		JFileChooser jfc = new JFileChooser( workingDirectory );
-		jfc.setFileFilter( new FileFilter() {
-			public boolean accept( File f) {
-				return f.isDirectory() || f.getName().endsWith( ".dot" );
-			}
-			public String getDescription() {
-				return "DOT graph files (*.dot)";
-			}
-		} );
-		int retval = jfc.showSaveDialog( this );
-		
-		// TODO: Add selector for statechart
-		
-		// TODO: Export to the selected file
-		*/
-		
-		// Display the Generate Statechart dialog
-		/*
-		GenerateStatechartDialog genStateDialog = new GenerateStatechartDialog( this, true );
-		Rectangle parentBounds = this.getBounds();
-		genStateDialog.setLocation( (parentBounds.x + parentBounds.width)/2,
-						(parentBounds.y + parentBounds.height)/2 );
-		genStateDialog.setVisible( true );
-		*/
+		GenerateStatechartDialog.showDialog( this, activeModel );
 	}//GEN-LAST:event_generateStatechartItemActionPerformed
 	
 	private void importItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importItemActionPerformed
@@ -260,8 +231,9 @@ public class Eleminator extends javax.swing.JFrame {
 				m = importModel( selectedFile );
 				if (m != null) {
 					models.add(m);
+					activeModel = m;
 					JOptionPane.showMessageDialog( this, "Model loaded successfully.", "Success!",
-									JOptionPane.INFORMATION_MESSAGE );
+							JOptionPane.INFORMATION_MESSAGE );
 					workingDirectory = jfc.getSelectedFile().getParentFile();
 					getContentPane().remove(MTP);
 					MTP = new ModelTreePanel(m);
@@ -277,17 +249,17 @@ public class Eleminator extends javax.swing.JFrame {
 				}
 			} catch( FileNotFoundException fnfe ) {
 				JOptionPane.showMessageDialog( this, "Could not open the model file: " + fnfe.getMessage(),
-								"File not found", JOptionPane.ERROR_MESSAGE );
+						"File not found", JOptionPane.ERROR_MESSAGE );
 			} catch( ParseException pe ) {
 				JOptionPane.showMessageDialog( this, "There was an error in parsing the given model: " + pe.getMessage(),
-								"Parse error", JOptionPane.ERROR_MESSAGE );
+						"Parse error", JOptionPane.ERROR_MESSAGE );
 				
 			} catch( LemException le ) {
 				JOptionPane.showMessageDialog( this, "There was an error in parsing the given model: " + le.getMessage(),
-								"Parse error", JOptionPane.ERROR_MESSAGE );
+						"Parse error", JOptionPane.ERROR_MESSAGE );
 			} catch( IOException ioe ) {
 				JOptionPane.showMessageDialog( this, "An input/output error occured while trying to read the model: " + ioe.getMessage(),
-								"Read error", JOptionPane.ERROR_MESSAGE );
+						"Read error", JOptionPane.ERROR_MESSAGE );
 			} catch( Exception e ) {
 				e.printStackTrace();
 			}
@@ -336,8 +308,9 @@ public class Eleminator extends javax.swing.JFrame {
 					m = loadModel( selectedFile );
 					if( m != null ) {
 						models.add( m );
+						activeModel = m;
 						JOptionPane.showMessageDialog( this,jfc.getApproveButtonMnemonic()+ "Model loaded successfully.", "Success!",
-										JOptionPane.INFORMATION_MESSAGE );
+								JOptionPane.INFORMATION_MESSAGE );
 						workingDirectory = jfc.getSelectedFile().getParentFile();
 						getContentPane().remove(MTP);
 						MTP = new ModelTreePanel(m);
@@ -352,17 +325,17 @@ public class Eleminator extends javax.swing.JFrame {
 					}
 				} catch( FileNotFoundException fnfe ) {
 					JOptionPane.showMessageDialog( this, "Could not open the model file: " + fnfe.getMessage(),
-									"File not found", JOptionPane.ERROR_MESSAGE );
+							"File not found", JOptionPane.ERROR_MESSAGE );
 				} catch( ParseException pe ) {
 					JOptionPane.showMessageDialog( this, "There was an error in parsing the given model: " + pe.getMessage(),
-									"Parse error", JOptionPane.ERROR_MESSAGE );
+							"Parse error", JOptionPane.ERROR_MESSAGE );
 					
 				} catch( LemException le ) {
 					JOptionPane.showMessageDialog( this, "There was an error in parsing the given model: " + le.getMessage(),
-									"Parse error", JOptionPane.ERROR_MESSAGE );
+							"Parse error", JOptionPane.ERROR_MESSAGE );
 				} catch( IOException ioe ) {
 					JOptionPane.showMessageDialog( this, "An input/output error occured while trying to read the model: " + ioe.getMessage(),
-									"Read error", JOptionPane.ERROR_MESSAGE );
+							"Read error", JOptionPane.ERROR_MESSAGE );
 				}
 				
 			}
@@ -392,7 +365,7 @@ public class Eleminator extends javax.swing.JFrame {
 		 * @return a LEM model created from the XMI file
 		 */
 		public Model importModel( File importFile ) throws TransformerException, TransformerConfigurationException,
-						FileNotFoundException, ParseException, LemException, IOException {
+				FileNotFoundException, ParseException, LemException, IOException {
 			Lem l = new Lem();
 			String s = importXMI(importFile);
 			return l.parse(new StringBufferInputStream(s));

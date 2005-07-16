@@ -246,11 +246,10 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
 	 * @param parent the component that this dialog belongs do
 	 * @param model the model for which the dialog is acting as a selector
 	 */
-	public static String showDialog(Component parent, Model m) {
+	public static void showDialog(Component parent, Model m) {
 		Frame frame = JOptionPane.getFrameForComponent( parent );
 		dialog = new GenerateStatechartDialog( frame, true, m );
 		dialog.setVisible( true );
-		return "This is a test";
 	}
 	
 	/**
