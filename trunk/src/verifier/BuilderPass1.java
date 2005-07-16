@@ -221,20 +221,6 @@ public class BuilderPass1 extends Visitor {
     }
     
     /**
-     * Process the END identifier for a Relationship by checking for a match
-     */
-    public Object visit(LEMRelationshipEndIdentifier node, Object data)   throws LemException {
-        super.visit( node, data );
-        
-        Relationship relationship = (Relationship) data;
-        String name =  node.getFirstToken().image;
-        checkIdentity(  relationship.getName(), name, node.getLastToken() );
-        
-        return data;
-        
-    }
-    
-    /**
      * Process a Type declaration by creating a DomainSpecificDataType instance for use by this visitor
      */
     public Object visit(LEMTypeDeclaration node, Object data) throws LemException {
@@ -451,7 +437,16 @@ public class BuilderPass1 extends Visitor {
         Generalisation generalisation = new Generalisation();
         getMapper().add( node, generalisation );
         Subsystem subSystem = (Subsystem) data;
-        generalisation.setSubsystem( subSystem );
+        generalisation.setSubsystem( subSystem );        
+        
+        String startName = getIdentifier( node.jjtGetChild( 0 ));
+        String endName = getEndIdentifier( node.jjtGetChild( node.jjtGetNumChildren() - 1 ));
+        checkIdentity( startName, endName, node.getFirstToken() );
+        
+        if( !startName.matches( "R(\\d)+" )) 
+            throw new LemException( "Association identifier not in correct format", node.getFirstToken(), "TODO" );
+
+        generalisation.setName( Integer.parseInt( startName.substring( 1 )));
         
         // now visit its components
         
@@ -513,6 +508,15 @@ public class BuilderPass1 extends Visitor {
         getMapper().add( node, association );
         association.setSubsystem( subSystem );
         
+        String startName = getIdentifier( node.jjtGetChild( 0 ));
+        String endName = getEndIdentifier( node.jjtGetChild( node.jjtGetNumChildren() - 1 ));
+        checkIdentity( startName, endName, node.getFirstToken() );
+        
+        if( !startName.matches( "R(\\d)+" )) 
+            throw new LemException( "Association identifier not in correct format", node.getFirstToken(), "TODO" );
+        
+        association.setName(Integer.parseInt( startName.substring(1) ));
+        
         super.visit( node, association );
         
         // register the association in the domain
@@ -547,19 +551,6 @@ public class BuilderPass1 extends Visitor {
         
         getMapper().add( node, id );
         super.visit( node, id );
-        
-        return data;
-    }
-    
-    
-    public Object visit(LEMRelationshipIdentifier node, Object data)  throws LemException {
-        super.visit( node, data );
-        
-        Relationship relationship = (Relationship) data;
-        getMapper().add( node, relationship );
-        String name =  node.getFirstToken().image;
-        int number = Relationship.parseNumber( name );
-        relationship.setName( number );
         
         return data;
     }
