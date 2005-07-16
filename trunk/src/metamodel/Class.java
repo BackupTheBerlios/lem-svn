@@ -60,6 +60,9 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
     /** generalisation roles in which this class participates */
     private HashMap generalisationRoles = new HashMap();
     
+    /** Associations in which this class participates */
+    private HashMap associations = new HashMap();
+    
     /**
      * The events to which this class responds.
      * This excludes non-public (self directed) events delared in the LEM "behaviour" block.
@@ -71,8 +74,6 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
      * The state machine associated with this class [R501]
      */
     private StateMachine stateMachine = null;
-   
-    
     
     /**
      * Creates a new instance of Class given a Domain and name
@@ -345,6 +346,25 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
      */
     public void add( GeneralisationRole aGeneralisationRole ) {
         generalisationRoles.put( aGeneralisationRole, aGeneralisationRole );
+    }
+    
+    /**
+     * Add the given Association to this class. This class is considered to 
+     * participate somehow in the Association.
+     * 
+     * @param a the Association to be added
+     */
+    public void add( Association a ) {
+        associations.put( a.getName(), a );
+    }
+    
+    /**
+     * Gets the Associations in which this class participates.
+     *
+     * @return the HashMap of association name to Associations
+     */
+    public HashMap getAssociations() {
+        return associations;
     }
     
     /**
