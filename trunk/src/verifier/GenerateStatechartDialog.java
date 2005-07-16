@@ -8,13 +8,23 @@ package verifier;
 
 import java.awt.Component;
 import java.awt.Frame;
-import java.util.Collection;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.CharBuffer;
+import java.util.Iterator;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import metamodel.Domain;
 import metamodel.Model;
+
 
 /**
  *
- * @author  gen
+ * @author Toshio Nakamura
  */
 public class GenerateStatechartDialog extends javax.swing.JDialog {
 	
@@ -26,7 +36,24 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
 	/**
 	 * The model that this dialog is associated with
 	 */
-	private static Model model = null;
+	private Model model = null;
+	
+	/**
+	 * The currently selected Domain
+	 */
+	private Domain selectedDomain;
+	
+	/**
+	 * The currently selected LEM Class
+	 */
+	private metamodel.Class selectedClass;
+	
+	/**
+	 * Hardcoded name of dot binary
+	 * @todo this is a hack
+	 * @todo this needs to be replaced with a Preferences-style solution
+	 */
+	private static String dotBinary = "/usr/bin/dot";
 	
 	/**
 	 * Creates new form GenerateStatechartDialog
@@ -38,6 +65,7 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
 	private GenerateStatechartDialog(java.awt.Frame parent, boolean modal,
 			Model m) {
 		super(parent, modal);
+		this.model = m;
 		initComponents();
 	}
 	
@@ -50,13 +78,14 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
   private void initComponents() {
     java.awt.GridBagConstraints gridBagConstraints;
 
-    statechartLabel = new javax.swing.JLabel();
-    statechartList = new javax.swing.JComboBox();
-    jLabel4 = new javax.swing.JLabel();
-    browseButton = new javax.swing.JButton();
-    destField = new javax.swing.JTextField();
+    domainLabel = new javax.swing.JLabel();
+    destinationLabel = new javax.swing.JLabel();
+    filenameField = new javax.swing.JTextField();
     generateButton = new javax.swing.JButton();
     cancelButton = new javax.swing.JButton();
+    domainList = new javax.swing.JComboBox();
+    statechartLabel = new javax.swing.JLabel();
+    stateMachineList = new javax.swing.JComboBox();
 
     getContentPane().setLayout(new java.awt.GridBagLayout());
 
@@ -69,64 +98,146 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
       }
     });
 
-    statechartLabel.setText("Statechart:");
+    domainLabel.setText("Domain:");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-    getContentPane().add(statechartLabel, gridBagConstraints);
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    getContentPane().add(domainLabel, gridBagConstraints);
 
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-    getContentPane().add(statechartList, gridBagConstraints);
-
-    jLabel4.setText("Destination:");
+    destinationLabel.setText("Output Filename:");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-    getContentPane().add(jLabel4, gridBagConstraints);
+    gridBagConstraints.gridy = 3;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    getContentPane().add(destinationLabel, gridBagConstraints);
 
-    browseButton.setMnemonic('B');
-    browseButton.setText("Browse...");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 2;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-    getContentPane().add(browseButton, gridBagConstraints);
-
-    destField.setText("jTextField1");
+    filenameField.setText("statechart.png");
+    filenameField.setPreferredSize(new java.awt.Dimension(300, 20));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 1;
+    gridBagConstraints.gridy = 3;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
     gridBagConstraints.weightx = 1.0;
-    getContentPane().add(destField, gridBagConstraints);
+    getContentPane().add(filenameField, gridBagConstraints);
 
     generateButton.setMnemonic('G');
     generateButton.setText("Generate");
+    generateButton.setActionCommand("generate");
+    generateButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        generateButtonActionPerformed(evt);
+      }
+    });
+
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 2;
+    gridBagConstraints.gridy = 4;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
     getContentPane().add(generateButton, gridBagConstraints);
 
     cancelButton.setMnemonic('C');
     cancelButton.setText("Cancel");
+    cancelButton.setActionCommand("cancel");
+    cancelButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        cancelButtonActionPerformed(evt);
+      }
+    });
+
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 4;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+    getContentPane().add(cancelButton, gridBagConstraints);
+
+    domainList.setPreferredSize(new java.awt.Dimension(300, 20));
+    domainList.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        domainListActionPerformed(evt);
+      }
+    });
+
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+    getContentPane().add(domainList, gridBagConstraints);
+
+    statechartLabel.setText("State Machine:");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    getContentPane().add(statechartLabel, gridBagConstraints);
+
+    stateMachineList.setPreferredSize(new java.awt.Dimension(300, 20));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 2;
-    getContentPane().add(cancelButton, gridBagConstraints);
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    getContentPane().add(stateMachineList, gridBagConstraints);
 
     pack();
   }
   // </editor-fold>//GEN-END:initComponents
+
+	private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+		if ("cancel".equals( evt.getActionCommand() )) {
+			this.dispose();
+		}
+	}//GEN-LAST:event_cancelButtonActionPerformed
+
+/**
+ * @todo Recode to use Exceptions?
+ */
+	private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
+		if ("generate".equals( evt.getActionCommand() )) {
+			// Fail if no filename specified
+			if (filenameField.getText() == "") {
+				JOptionPane.showMessageDialog( this, "No output filename specified", "Error",
+							JOptionPane.ERROR_MESSAGE );
+			}
+			// 'Normal' case
+			else {
+				String dotCode = selectedClass.getStateMachine().dumpDot();
+				System.out.println( dotCode );
+				dotToPNG( dotCode, filenameField.getText() );
+			}
+		}
+		System.err.println("generateButton complete");
+		this.dispose();
+	}//GEN-LAST:event_generateButtonActionPerformed
 	
+	private void domainListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_domainListActionPerformed
+		// Update the Domain and State Machine combo boxes
+		JComboBox cb = (JComboBox)evt.getSource();
+		selectedDomain = model.getDomain( (String)domainList.getSelectedItem() );
+		updateStateMachineList( selectedDomain );
+	}//GEN-LAST:event_domainListActionPerformed
+	
+	/**
+	 * Event handler called when the dialog is initially displayed
+	 * @param evt the event
+	 * @todo handle null cases
+	 * @todo use ComboBoxModel instead of calls to addItem()?
+	 * @todo add State Machine combo box
+	 * @todo handle null cases
+	 */
 	private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+		// Initialise up the Domains combo box
+		Iterator domainIter = model.getDomains().values().iterator();
+		while (domainIter.hasNext()) {
+			domainList.addItem( ((Domain)domainIter.next()).getName() );
+		}
+		domainList.setSelectedIndex( 0 );
+		selectedDomain = model.getDomain( (String)domainList.getSelectedItem() );
 		
+		// Initialise the Subsystem and State Machine combo boxes
+		//updateSubsystemList
+		updateStateMachineList( selectedDomain );
 	}//GEN-LAST:event_formWindowOpened
 	
 	/**
@@ -136,21 +247,113 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
 	 * @param model the model for which the dialog is acting as a selector
 	 */
 	public static String showDialog(Component parent, Model m) {
-		model = m;
 		Frame frame = JOptionPane.getFrameForComponent( parent );
-		dialog = new GenerateStatechartDialog( frame, true, model );
+		dialog = new GenerateStatechartDialog( frame, true, m );
 		dialog.setVisible( true );
 		return "This is a test";
 	}
 	
+	/**
+	 * Updates the Subsystem combo box to display the child subsystems of a single
+	 * parent domain.
+	 *
+	 * @param parent the parent Domain
+	 * @todo only list classes with state machines
+	 * @todo this function may not be needed - may be possible to access
+	 * statecharts directly
+	 * @todo does Java support an 'or else'-style construct?
+	 * @todo Recode to use Exceptions?
+	 */
+	private void updateStateMachineList( Domain parent ) {
+		stateMachineList.removeAllItems();
+		// Handle 'domainless' models
+		if (parent == null) {
+			stateMachineList.addItem( "<None>" );
+			stateMachineList.setSelectedIndex( 0 );
+			selectedClass = null;
+		} else {
+			Iterator classIter = parent.getClasses().values().iterator();
+			// Handle domains with no classes
+			if (classIter.hasNext() == false) {
+				stateMachineList.addItem( "<None>" );
+				stateMachineList.setSelectedIndex( 0 );
+				selectedClass = null;
+			} else {
+				metamodel.Class c;
+				while (classIter.hasNext()) {
+					c = (metamodel.Class)classIter.next();
+					// Only add classes that have state machines
+					if (c.getStateMachine() != null) {
+						stateMachineList.addItem( c.getName() );
+					}
+				}
+				// Case where classes exist, but none have state machines
+				if (stateMachineList.getItemCount() == 0) {
+					stateMachineList.addItem( "<None>" );
+					stateMachineList.setSelectedIndex( 0 );
+					selectedClass = null;
+				}
+				// 'Normal' case
+				else {
+					stateMachineList.setSelectedIndex( 0 );
+					selectedClass = parent.getClass( (String)stateMachineList.getSelectedItem() );
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Uses an external dot binary to convert a given set of dot code into a 
+	 * PNG file
+	 *
+	 * @param dotCode the dot code to convert
+	 * @param filename the name of the PNG file to write
+	 * @todo add error handling code for dot binary
+	 * @todo return a Java image?
+	 */
+	private static void dotToPNG( String dotCode, String filename ) {
+		String[] cmdString = {dotBinary, "-Tpng", "-o" + filename};
+		Runtime rt = Runtime.getRuntime();
+		Process p = null;
+		OutputStreamWriter out = null;
+		InputStreamReader in = null;
+		BufferedReader bufRead = null;
+		StringBuffer strBuf = new StringBuffer();
+		int c;
+		try {
+			p = rt.exec( cmdString );
+			// Feed the dot code into the dot binary's standard input
+			out = new OutputStreamWriter( p.getOutputStream() );
+			in = new InputStreamReader( p.getInputStream() );
+			out.write( dotCode );
+			//out.write( "\n" );
+			//out.flush();
+			out.close();
+			bufRead = new BufferedReader( in );
+			while (true) {
+				c = in.read();
+				if (c == -1) {
+					break;
+				}
+				strBuf.append( (char)c );
+			}
+			
+			System.err.println( "Standard output: " + strBuf.toString() );
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		System.err.println("dotToPNG() complete");
+	}
+	
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JButton browseButton;
   private javax.swing.JButton cancelButton;
-  private javax.swing.JTextField destField;
+  private javax.swing.JLabel destinationLabel;
+  private javax.swing.JLabel domainLabel;
+  private javax.swing.JComboBox domainList;
+  private javax.swing.JTextField filenameField;
   private javax.swing.JButton generateButton;
-  private javax.swing.JLabel jLabel4;
+  private javax.swing.JComboBox stateMachineList;
   private javax.swing.JLabel statechartLabel;
-  private javax.swing.JComboBox statechartList;
   // End of variables declaration//GEN-END:variables
 	
 }
