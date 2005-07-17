@@ -291,6 +291,35 @@ public class BuilderPass2 extends Visitor {
         return a;
     }
     
+    public Object visit( LEMLinkCreation node, Object data ) throws LemException {
+        RelateAction a = new RelateAction();
+        
+        String active = (String)node.jjtGetChild( 0 ).jjtAccept( this, null );
+        String passive = (String)node.jjtGetChild( 1 ).jjtAccept( this, null );
+        String assocName = (String)node.jjtGetChild( 2 ).jjtAccept( this, null );
+        
+        Relationship r = currentDomain.getRelationship( assocName );
+        if( !(r instanceof Association )) {
+            throw new LemException( "Relationship " 
+                    + assocName 
+                    + " is not an Association", node.getFirstToken(), "LEM_E_01041" );
+        }
+        
+        Association ra = (Association)r;
+        
+        a.setActiveObjectName( active );
+        a.setPassiveObjectName( passive );
+        a.setAssociationClassReference( assocName );
+        a.setAssociation( ra );
+        
+        return a;
+    }
+    
+    public Object visit( LEMLinkObjectCreation node, Object data ) throws LemException {
+        if( node.jjtGetNumChildren() != 1 ) return null;
+        return node.jjtGetChild( 0 ).jjtAccept( this, null );
+    }
+    
     public Object visit( LEMRValue node, Object data ) throws LemException {
         return node.jjtGetChild( 0 ).jjtAccept( this, data );
     }
@@ -732,6 +761,8 @@ public class BuilderPass2 extends Visitor {
             perspective.setAssociation( association );
             association.setActivePerspective( perspective );
             
+            subjectClass.add( association );
+            
         }
         
         super.visit( node, data );
@@ -780,6 +811,7 @@ public class BuilderPass2 extends Visitor {
             
             perspective.setAssociation( association );
             association.setPassivePerspective( perspective );
+            objectClass.add( association );
         }
         
         super.visit( node, data );
