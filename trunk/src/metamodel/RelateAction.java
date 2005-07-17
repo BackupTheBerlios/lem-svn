@@ -45,6 +45,11 @@ public class RelateAction {
      */
     protected String associationClassReference = null;
     
+    /**
+     * The Association which will be instantiated by the execution of this action.
+     */
+    protected Association association;
+    
     /** Creates a new instance of RelateAction */
     public RelateAction() {
     }
@@ -104,6 +109,24 @@ public class RelateAction {
      */
     public void setAssociationClassReference(String associationClassReference) {
         this.associationClassReference = associationClassReference;
+    }
+
+    /**
+     * Return the Association which will be instantiated by the execution of this action.
+     *
+     * @return the Association
+     */
+    public Association getAssociation() {
+        return association;
+    }
+
+    /**
+     * Set the Association which will be instantiated by the execution of this action.
+     *
+     * @param association the Association
+     */    
+    public void setAssociation(Association association) {
+        this.association = association;
     }
     
 }
