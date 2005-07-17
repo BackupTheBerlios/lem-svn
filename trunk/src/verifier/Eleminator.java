@@ -6,7 +6,7 @@
 
 package verifier;
 
-import org.apache.xalan.processor.TransformerFactoryImpl;
+import net.sf.saxon.TransformerFactoryImpl;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -368,7 +368,7 @@ public class Eleminator extends javax.swing.JFrame {
 		
 		public Model loadModel( File modelFile ) throws FileNotFoundException, ParseException, LemException, IOException {
 			Lem l = new Lem();
-			FileInputStream fis = new FileInputStream( modelFile );
+			FileReader fis = new FileReader( modelFile );
 			
 			return l.parse( fis );
 		}
@@ -384,7 +384,7 @@ public class Eleminator extends javax.swing.JFrame {
 				FileNotFoundException, ParseException, LemException, IOException {
 			Lem l = new Lem();
 			String s = importXMI(importFile);
-			return l.parse(new StringBufferInputStream(s));
+			return l.parse(new StringReader(s));
 		}
 		
 		
