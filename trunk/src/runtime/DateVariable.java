@@ -81,7 +81,7 @@ public class DateVariable extends Variable
         int day = cal.get(Calendar.DAY_OF_MONTH) ; 
         int month = cal.get(Calendar.MONTH) ; 
         int year = cal.get(Calendar.YEAR) ;
-        value = (java.lang.Object) day + "-" + month + "-" + year ;                
+        value = day + "-" + month + "-" + year ;                
         return value ; 
     }
     
