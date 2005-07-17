@@ -39,9 +39,17 @@ public class SourceBuffer {
         readLines( in );
     }
     
+    public SourceBuffer( Reader r ) throws IOException {
+        readLines( r );
+    }
+    
     private void readLines( InputStream in ) throws IOException {
+        readLines( new InputStreamReader( in ));
+    }
+    
+    private void readLines( Reader r ) throws IOException {
         
-        BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
+        BufferedReader br = new BufferedReader( r );
         
         String line = null;
         while( ( line = br.readLine() ) != null ) {
@@ -82,7 +90,7 @@ public class SourceBuffer {
         
         
     }
-    
+     
     /**
      * Return the source line at the supplied position
      * 
