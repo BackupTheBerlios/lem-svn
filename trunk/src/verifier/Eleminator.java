@@ -325,7 +325,7 @@ public class Eleminator extends javax.swing.JFrame {
 					if( m != null ) {
 						models.add( m );
 						activeModel = m;
-						JOptionPane.showMessageDialog( this,jfc.getApproveButtonMnemonic()+ "Model loaded successfully.", "Success!",
+						JOptionPane.showMessageDialog( this, "Model loaded successfully.", "Success!",
 								JOptionPane.INFORMATION_MESSAGE );
 						workingDirectory = jfc.getSelectedFile().getParentFile();
 						getContentPane().remove(MTP);
