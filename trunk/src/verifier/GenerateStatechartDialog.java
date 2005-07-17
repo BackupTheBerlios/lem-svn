@@ -174,6 +174,12 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
     getContentPane().add(statechartLabel, gridBagConstraints);
 
     stateMachineList.setPreferredSize(new java.awt.Dimension(300, 20));
+    stateMachineList.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        stateMachineListActionPerformed(evt);
+      }
+    });
+
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 2;
@@ -183,6 +189,12 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
     pack();
   }
   // </editor-fold>//GEN-END:initComponents
+
+	private void stateMachineListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stateMachineListActionPerformed
+		// Update the selection
+		JComboBox cb = (JComboBox)evt.getSource();
+		selectedClass = selectedDomain.getClass( (String)cb.getSelectedItem() );
+	}//GEN-LAST:event_stateMachineListActionPerformed
 	
 	private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
 		if ("cancel".equals( evt.getActionCommand() )) {

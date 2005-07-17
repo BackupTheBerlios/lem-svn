@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Iterator;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import metamodel.Domain;
 import metamodel.Model;
@@ -141,6 +142,12 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
     getContentPane().add(cancelButton, gridBagConstraints);
 
     domainList.setPreferredSize(new java.awt.Dimension(300, 20));
+    domainList.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        domainListActionPerformed(evt);
+      }
+    });
+
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 0;
@@ -156,6 +163,12 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
     getContentPane().add(classLabel, gridBagConstraints);
 
     classList.setPreferredSize(new java.awt.Dimension(300, 20));
+    classList.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        classListActionPerformed(evt);
+      }
+    });
+
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 2;
@@ -165,6 +178,19 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
     pack();
   }
   // </editor-fold>//GEN-END:initComponents
+
+	private void domainListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_domainListActionPerformed
+			// Update the Domain and Class combo boxes
+		JComboBox cb = (JComboBox)evt.getSource();
+		selectedDomain = model.getDomain( (String)cb.getSelectedItem() );
+		updateClassList( selectedDomain );
+	}//GEN-LAST:event_domainListActionPerformed
+
+	private void classListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_classListActionPerformed
+		// Update the selection
+		JComboBox cb = (JComboBox)evt.getSource();
+		selectedClass = selectedDomain.getClass( (String)cb.getSelectedItem() );
+	}//GEN-LAST:event_classListActionPerformed
 	
 	/**
 	 * @todo Modify to call the class diagram DOT code, instead of the state machine code
