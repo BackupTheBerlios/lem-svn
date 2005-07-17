@@ -46,17 +46,17 @@ public class InterpreterTest extends junit.framework.TestCase {
         
         // Grab the AssignmentAction
         AssignmentAction a = (AssignmentAction)(m.getDomain("TestDomain")
-            .getClass("A")
-            .getStateMachine()
-            .getState("a")
-            .getProcedure()
-            .getActions()
-            .getFirst());
+        .getClass("A")
+        .getStateMachine()
+        .getState("a")
+        .getProcedure()
+        .getActions()
+        .getFirst());
         
         DomainContext c = new DomainContext();
         Interpreter i = new Interpreter();
         
-        try { 
+        try {
             Variable v = i.executeAssignmentAction(a, c);
             System.out.println( "The answer is " + v.getValue() );
             BigDecimal val = (BigDecimal)v.getValue();
@@ -84,10 +84,10 @@ public class InterpreterTest extends junit.framework.TestCase {
         }
         
         Procedure p = m.getDomain("TestDomain")
-            .getClass("A")
-            .getStateMachine()
-            .getState("evalTest")
-            .getProcedure();
+        .getClass("A")
+        .getStateMachine()
+        .getState("evalTest")
+        .getProcedure();
         
         DomainContext c = new DomainContext();
         Interpreter i = new Interpreter();
@@ -99,7 +99,7 @@ public class InterpreterTest extends junit.framework.TestCase {
         }
     }
     
-   public void testExecuteVariableDeclaration() {
+    public void testExecuteVariableDeclaration() {
         Lem l = new Lem();
         Model m = null;
         
@@ -116,10 +116,10 @@ public class InterpreterTest extends junit.framework.TestCase {
         }
         
         Procedure p = m.getDomain("TestDomain")
-            .getClass("A")
-            .getStateMachine()
-            .getState("varDeclTest")
-            .getProcedure();
+        .getClass("A")
+        .getStateMachine()
+        .getState("varDeclTest")
+        .getProcedure();
         
         DomainContext c = new DomainContext();
         Interpreter i = new Interpreter();
@@ -131,5 +131,29 @@ public class InterpreterTest extends junit.framework.TestCase {
         }
     }
     
-    
+    public void testAssociations() {
+        Lem l = new Lem();
+        Model m = null;
+        
+        try {
+            m = l.parse( new FileInputStream( "regression/tests/AssociationTest.lem" ));
+        } catch( FileNotFoundException fnfe ) {
+            fail( "Could not find model file " + fnfe.getMessage() );
+        } catch( IOException e ) {
+            fail( "Could not read model file: " + e.getMessage() );
+        } catch( ParseException e ) {
+            fail( "Could not parse model file: " + e.getMessage() );
+        } catch( LemException e ) {
+            fail( "Some LEMException occurred: " + e.getMessage() );
+        }
+        
+        metamodel.Class a = m.getDomain("TestDomain").getClass("A");
+        metamodel.Class b = m.getDomain("TestDomain").getClass("B");
+        metamodel.Class c = m.getDomain("TestDomain").getClass("C");
+        
+        assertEquals( "Class A participates in 1 association", 1, a.getAssociations().size() );
+        assertEquals( "Class B participates in 1 association", 1, b.getAssociations().size() );
+        assertEquals( "Class C participates in 1 (reflexive) association", 1, c.getAssociations().size() );
+    }
+            
 }
