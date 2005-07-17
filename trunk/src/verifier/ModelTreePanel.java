@@ -6,6 +6,7 @@
 
 package verifier;
 
+import java.awt.event.MouseEvent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultTreeModel;
@@ -81,7 +82,7 @@ public class ModelTreePanel extends javax.swing.JPanel {
   
     private void modelTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modelTreeMouseClicked
         
-        if (evt.BUTTON3 == evt.getButton()||evt.BUTTON2 == evt.getButton()) {
+        if (MouseEvent.BUTTON3 == evt.getButton()||MouseEvent.BUTTON2 == evt.getButton()) {
             try{
                 //Object p =modelTree.getSelectionPath().getLastPathComponent();
                 Object p = modelTree.getClosestPathForLocation(evt.getX(), evt.getY()).getLastPathComponent();
