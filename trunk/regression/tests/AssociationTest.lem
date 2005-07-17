@@ -24,6 +24,18 @@ model TestModel is
 				C "is the active subject" 0..1 C;
 				C "is also the passive subject!" 0..1 C;
 			end R4;
+
+			class TestClass is 
+				// Not so empty
+
+				behaviour is
+					state a is {
+						a := create A;
+						b := create B;
+						relate a to b across R3;
+					} end;
+				end behaviour;
+			end TestClass;
 		end TestSubsystem;
 	end TestDomain;
 end TestModel;
