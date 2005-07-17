@@ -242,7 +242,7 @@ public class Eleminator extends javax.swing.JFrame {
 		int retval = jfc.showDialog( this, "Import" );
 		
 		selectedFile = jfc.getSelectedFile();
-		if (selectedFile != null && (retval == jfc.APPROVE_OPTION)) {
+		if (selectedFile != null && (retval == JFileChooser.APPROVE_OPTION)) {
 			try {
 				m = importModel( selectedFile );
 				if (m != null) {
@@ -319,7 +319,7 @@ public class Eleminator extends javax.swing.JFrame {
 			int retval = jfc.showDialog(this, "Load");
 			
 			selectedFile = jfc.getSelectedFile();
-			if( selectedFile != null && (retval == jfc.APPROVE_OPTION) ) {
+			if( selectedFile != null && (retval == JFileChooser.APPROVE_OPTION) ) {
 				try {
 					m = loadModel( selectedFile );
 					if( m != null ) {
