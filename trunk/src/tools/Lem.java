@@ -157,6 +157,49 @@ public class Lem {
         return model;
     }
     
+    /**
+     * Return a parsed model based on the supplied LEM reader
+     *
+     * @param lemReader the model expressed in LEM
+     * @return the model as an instatiated graph of metamodel object instances
+     * @throws Throwable in the event of an error. A ParseException is thrown
+     * if parsing fails, a LemException is thrown if the model fails is semantic
+     * checking fails. Any Throwable may be thrown in the event of a program bug (this
+     * is a "work in progress" after all!)
+     */
+    public Model parse( Reader lemReader ) throws ParseException, LemException, IOException {
+        
+        // read the source into a SourceBuffer
+        
+        source = new SourceBuffer( lemReader );
+        
+        Model model = null;
+        LemParser parser = new LemParser( source.getInputStream() );
+        
+        try {
+            
+            model = parser.parse();
+            rootNode = parser.getRootNode();
+            
+            
+        } catch ( ParseException e) {
+            
+            errorException = e;
+            errorToken = e.currentToken.next;
+            buildErrorSourceLine();
+            throw e;
+            
+        } catch ( LemException e ) {
+            
+            errorException = e;
+            errorToken = e.getToken();
+            buildErrorSourceLine();
+            throw e;
+            
+        }
+        
+        return model;
+    }
     
     private static void printSourceLine( Token t ) {
         int line = 0;
