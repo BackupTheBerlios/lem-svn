@@ -1,0 +1,98 @@
+// $Id$
+
+model MultiDomain2 is
+	"a test model containing multiple domains"
+
+	domain D1 is 
+		subsystem S1 is
+			class C1 is
+				event EV1;
+				event EV2;
+				event EV3;
+				event EV4;
+
+				behaviour is
+					state ST1 is
+					end ST1;
+					state ST2 is
+					end ST2;
+					state ST3 is
+					end ST3;
+					state ST4 is
+					end ST4;
+
+					on EV1 transition from creation state to ST1;
+					on EV2 transition from ST1 to ST2;
+					on EV3 transition from ST3 to ST4;
+				end behaviour;
+
+			end C1;
+			class C2 is
+				event EV100;
+				event EV200;
+				event EV300;
+				event EV400;
+
+				behaviour is
+					state STX1 is
+					end STX1;
+					state STX2 is
+					end STX2;
+					state STX3 is
+					end STX3;
+					state STX4 is
+					end STX4;
+
+					on EV100 transition from creation state to STX1;
+					on EV200 transition from STX1 to STX2;
+					on EV300 transition from STX3 to STX4;
+				end behaviour;
+			end C2;
+			class C3 is
+			end C3;
+		end S1;
+	end D1;
+
+	domain D2 is 
+		subsystem S1 is
+			class C1 is
+			end C1;
+			class CB2 is
+				event EV1;
+				event EV2;
+				event EV3;
+				event EV4;
+
+				behaviour is
+					state ST10 is
+					end ST10;
+					state ST20 is
+					end ST20;
+					state ST30 is
+					end ST30;
+					state ST40 is
+					end ST40;
+
+					on EV1 transition from creation state to ST10;
+					on EV2 transition from ST10 to ST20;
+					on EV3 transition from ST30 to ST40;
+				end behaviour;
+
+			end CB2;
+			class CB3 is
+			end CB3;
+		end S1;
+	end D2;
+
+	domain D3 is 
+		subsystem S1 is
+			class C1 is
+			end C1;
+			class CC2 is
+			end CC2;
+			class CC3 is
+			end CC3;
+		end S1;
+	end D3;
+
+end MultiDomain2;
