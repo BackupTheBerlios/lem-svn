@@ -25,7 +25,7 @@ package metamodel;
  * two instances to be associated in some way.
  * @author sjr
  */
-public class RelateAction {
+public class RelateAction extends Action {
     
     /**
      * The name of the Variable containing a reference to the 
