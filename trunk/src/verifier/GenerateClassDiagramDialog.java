@@ -51,7 +51,7 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 	 * @todo this is a hack
 	 * @todo this needs to be replaced with a Preferences-style solution
 	 */
-	private static String dotBinary = "/usr/bin/dot";
+	private static String dotBinary = "C:\\Program Files\\ATT\\Graphviz\\bin\\dot";
 	
 	/** Creates new form GenerateClassDiagramDialog */
 	public GenerateClassDiagramDialog(java.awt.Frame parent, boolean modal, Model m) {
@@ -205,7 +205,7 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 			// 'Normal' case
 			else {
 				// TODO: Modify this line
-				String dotCode = selectedClass.getStateMachine().dumpDot();
+				String dotCode = selectedClass.dumpDot();
 				System.out.println( dotCode );
 				dotToPNG( dotCode, filenameField.getText() );
 			}
