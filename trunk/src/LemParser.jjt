@@ -1,6 +1,11 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.60  2005/07/17 09:10:43  u3957053
+* Bit of reformatting change.
+*
+* Change RelationshipReference to a simple Identifier, for the time being
+*
 * Revision 1.59  2005/07/16 15:55:23  u3957053
 * Eliminated RelationshipIdentifier and RelationshipEndIdentifier.
 *
@@ -1163,7 +1168,13 @@ void RelationshipReference() : {}
 
 void LinkCreation() : {} 
 {
-	<RELATE> ObjectReference() <TO> ObjectReference() <ACROSS> RelationshipReference() LinkObjectCreation()
+	<RELATE> 
+	ObjectReference() 
+	<TO> 
+	ObjectReference() 
+	<ACROSS> 
+	/* RelationshipReference() */ Identifier() 
+	LinkObjectCreation()
 }
 
 // Do we assume the link object is of only one class? I think it's a fair assumption.
