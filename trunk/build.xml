@@ -10,10 +10,9 @@
     <property name="classes.dir" value="${build.dir}/classes" />
     <property name="etc.dir" value="${basedir}/etc" />
     <property name="javacchome"
-        value="C:\Program Files\Java\javacc-3.2" />
+        value="/usr/share/java/javacc" />
     <property name="deploy.name" value="${name}.jar" />
     <property name="lib.dir" value="${basedir}/lib" />
-
 
   <!-- The classpath for compile the eLEMinator -->
   <path id="build.classpath" description="Classpath for compiling the eLEMinator">
@@ -111,6 +110,10 @@
   <target name="jarfile" depends="compile">
     <copy file="${etc.dir}/SemanticChecks.properties"
     todir="${classes.dir}" overwrite="true" />
+    <copy file="${etc.dir}/eleminatorDefault.properties"
+    todir="${classes.dir}" overwrite="true" />
+    <copy file="${etc.dir}/userPropertiesList.properties"
+    todir="${classes.dir}" overwrite="true" />
     <jar destfile="${build.dir}/${name}.jar"
     basedir="${classes.dir}" manifest="${etc.dir}/MANIFEST.MF" />
   </target>
@@ -178,7 +181,7 @@
   </target>
   
   <target name="test" depends="compile_tests">
-    <junit fork="yes" dir="${basedir}">
+    <junit fork="yes" printsummary="withOutAndErr" dir="${basedir}">
         <formatter type="plain"/>
         <classpath refid="run.classpath"/>
         <batchtest todir="${build.dir}">
