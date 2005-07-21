@@ -213,8 +213,8 @@ public class Eleminator extends javax.swing.JFrame {
 	 * @todo Test stub only
 	 */
 	private void preferencesItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preferencesItemActionPerformed
-		Parameters p = new Parameters();
-		System.out.println( p.getDefaultProperty("eleminator.version"));
+		//Parameters p = new Parameters();
+		//System.out.println( p.getDefaultProperty("eleminator.version"));
 	}//GEN-LAST:event_preferencesItemActionPerformed
 
 	private void generateStatechartItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateStatechartItemActionPerformed
