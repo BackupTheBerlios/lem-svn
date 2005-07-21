@@ -31,8 +31,18 @@ model TestModel is
                                         } end ; 
 					
 					state varDeclTest is {
-					         var g; 
+					         var g;
+						 g := "10-12-2005" ; 		
+						 e := "12-24-2006" ; 
 					} end ; 
+                                        
+					state relateAction is {
+						 var a ;
+						 var b ; 
+						 relate a to b across R8 creating zi;
+					} end ; 
+						 
+				
 
 				end behaviour;
 			end;
