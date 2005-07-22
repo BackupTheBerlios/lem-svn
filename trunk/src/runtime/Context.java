@@ -40,6 +40,11 @@ public class Context {
     Context parentContext = null;
 
     /**
+     * A collection of AssociationInstances known to this context.
+     */
+    HashMap associationInstances = new HashMap();
+
+    /**
      * The nullary Context constructor. Creates a new Context with no objects,
      * no listeners and a null list of local variables
      */
@@ -135,5 +140,23 @@ public class Context {
      */
     public Collection getLemEventListeners() {
         return listeners;
+    }
+
+    /** 
+     * Returns the mapping between Association and AssociationInstances.
+     *
+     * @return the HashMap
+     */
+    public HashMap getAssociationInstances() {
+        return associationInstances;
+    }
+
+    /**
+     * Add the given AssociationInstance to this context.
+     *
+     * @param a the AssociationInstance to add
+     */
+    public void addAssociationInstance( AssociationInstance a ) {
+        associationInstances.put( a.getAssociation(), a );
     }
 }
