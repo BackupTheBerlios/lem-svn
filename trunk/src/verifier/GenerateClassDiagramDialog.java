@@ -51,7 +51,7 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 	 * @todo this is a hack
 	 * @todo this needs to be replaced with a Preferences-style solution
 	 */
-	private static String dotBinary = "C:\\Program Files\\ATT\\Graphviz\\bin\\dot";
+	private static String dotBinary = "/usr/bin/dot";
 	
 	/** Creates new form GenerateClassDiagramDialog */
 	public GenerateClassDiagramDialog(java.awt.Frame parent, boolean modal, Model m) {
@@ -191,10 +191,7 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 		JComboBox cb = (JComboBox)evt.getSource();
 		selectedClass = selectedDomain.getClass( (String)cb.getSelectedItem() );
 	}//GEN-LAST:event_classListActionPerformed
-	
-	/**
-	 * @todo Modify to call the class diagram DOT code, instead of the state machine code
-	 */
+		
 	private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
 		if ("generate".equals( evt.getActionCommand() )) {
 			// Fail if no filename specified
@@ -204,10 +201,8 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 			}
 			// 'Normal' case
 			else {
-				// TODO: Modify this line
 				String dotCode = selectedClass.dumpDot();
-				System.out.println( dotCode );
-				dotToPNG( dotCode, filenameField.getText() );
+				DotWriter.dotToPNG( dotCode, filenameField.getText() );
 			}
 		}
 		System.err.println("generateButton complete");
@@ -281,49 +276,7 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 			this.dispose();
 		}
 	}//GEN-LAST:event_cancelButtonActionPerformed
-	
-	/**
-	 * Uses an external dot binary to convert a given set of dot code into a
-	 * PNG file
-	 *
-	 * @param dotCode the dot code to convert
-	 * @param filename the name of the PNG file to write
-	 * @todo add error handling code for dot binary
-	 * @todo return a Java image?
-	 */
-	private static void dotToPNG( String dotCode, String filename ) {
-		String[] cmdString = {dotBinary, "-Tpng", "-o" + filename};
-		Runtime rt = Runtime.getRuntime();
-		Process p = null;
-		OutputStreamWriter out = null;
-		InputStreamReader in = null;
-		BufferedReader bufRead = null;
-		StringBuffer strBuf = new StringBuffer();
-		int c;
-		try {
-			p = rt.exec( cmdString );
-			// Feed the dot code into the dot binary's standard input
-			out = new OutputStreamWriter( p.getOutputStream() );
-			in = new InputStreamReader( p.getInputStream() );
-			out.write( dotCode );
-			//out.write( "\n" );
-			//out.flush();
-			out.close();
-			bufRead = new BufferedReader( in );
-			while (true) {
-				c = in.read();
-				if (c == -1) {
-					break;
-				}
-				strBuf.append( (char)c );
-			}
-			
-			System.err.println( "Standard output: " + strBuf.toString() );
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
-		System.err.println("dotToPNG() complete");
-	}
+		
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton cancelButton;
   private javax.swing.JLabel classLabel;

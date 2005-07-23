@@ -216,7 +216,7 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
 			else {
 				String dotCode = selectedClass.getStateMachine().dumpDot();
 				System.out.println( dotCode );
-				dotToPNG( dotCode, filenameField.getText() );
+				DotWriter.dotToPNG( dotCode, filenameField.getText() );
 			}
 		}
 		System.err.println("generateButton complete");
@@ -312,50 +312,7 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
 			}
 		}
 	}
-	
-	/**
-	 * Uses an external dot binary to convert a given set of dot code into a
-	 * PNG file
-	 *
-	 * @param dotCode the dot code to convert
-	 * @param filename the name of the PNG file to write
-	 * @todo add error handling code for dot binary
-	 * @todo return a Java image?
-	 */
-	private static void dotToPNG( String dotCode, String filename ) {
-		String[] cmdString = {dotBinary, "-Tpng", "-o" + filename};
-		Runtime rt = Runtime.getRuntime();
-		Process p = null;
-		OutputStreamWriter out = null;
-		InputStreamReader in = null;
-		BufferedReader bufRead = null;
-		StringBuffer strBuf = new StringBuffer();
-		int c;
-		try {
-			p = rt.exec( cmdString );
-			// Feed the dot code into the dot binary's standard input
-			out = new OutputStreamWriter( p.getOutputStream() );
-			in = new InputStreamReader( p.getInputStream() );
-			out.write( dotCode );
-			//out.write( "\n" );
-			//out.flush();
-			out.close();
-			bufRead = new BufferedReader( in );
-			while (true) {
-				c = in.read();
-				if (c == -1) {
-					break;
-				}
-				strBuf.append( (char)c );
-			}
 			
-			System.err.println( "Standard output: " + strBuf.toString() );
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
-		System.err.println("dotToPNG() complete");
-	}
-	
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton cancelButton;
   private javax.swing.JLabel destinationLabel;
