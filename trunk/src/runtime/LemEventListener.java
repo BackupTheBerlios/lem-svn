@@ -10,17 +10,17 @@ package runtime;
  */
 
 public interface LemEventListener {
-
+    
     /**
      * Change the logging level to Debug which corresponds to level 2.
      */
 //    void levelDebug();
-
+    
     /**
      * Change the logging level to Info which corresponds to level 1.
      */
 //    void levelInfo();
-
+    
     /**
      * Called when a EventGeneration action has caused an xtUML Event to be placed
      * in the destination object's event queue
@@ -29,43 +29,50 @@ public interface LemEventListener {
      * of the generated event
      */
 //    void eventGenerated(EventObject ev);
-
+    
     /**
      * The logListener can notify the logger that a receiveEvent has occured.
      *
      * @param ev Event object that was received.
      */
 //    void receiveEvent(EventObject ev);
-
+    
     /**
-     * The logListener can notify the logger that a transition event has occured.
+     * Called by the runtime when an event recieved by an object has caused a
+     * transition from one state to the next.
      *
-     * @param tev Transition that occured within the runtime.
+     * @param event The event representing the circumstance in which the object
+     * transitioned between states
      */
-//    void transitionEvent(TransitionEvent tev);
-
+//    void transitionEvent(LemEvent event);
+    
     /**
-     * The logListener can notify the logger that an attribute change has occured.
+     * Called by the runtime when an attribute's value has changed.
      *
-     * @param ob Object in which the attribute changed.
+     * @param event The event representing the circumstances in which the
+     *  attribute changed values.
      * @param attributeName The name of the attribute which has changed.
      */
-//    void attributeChange(ObjectObject ob, String attributeName);
-
+//    void attributeChange(LemEvent event, String attributeName);
+    
     /**
-     * The logListener can notify the logger that a realtionship is about to be deleted.
+     * Called by the runtime when a DeleteAction has been executed successfully
+     * and an existing relationship has been deleted.
      *
-     * @param re The relationship to be deleted.
+     * @param event The LemRelationshipDeletionEvent representing the circumstances
+     * in which the relationship was deleted.
      */
-//    void relationshipDeletion(RelationshipObject re);
-
+//    void relationshipDeletion(LemRelationshipDeletionEvent event);
+    
     /**
-     * The logListener can notify the logger that a realtionship has been created.
+     * Called by the runtime when a CreatAction has been executed successfully
+     * and a new relationship has been created.
      *
-     * @param re The relationship created.
+     * @param event the LemRelationshipCreationEvent representing the circumstances
+     * in which the relationship is created.
      */
-//    void relationshipCreation(RelationshipObject re);
-
+//    void relationshipCreation(LemRelationshipCreationEvent event);
+    
     /**
      * Called by the runtime when a CreateAction has been executed successfully
      * and a new Object has been created
@@ -74,27 +81,31 @@ public interface LemEventListener {
      * in which the new object was created
      */
     void objectCreated( LemObjectCreationEvent event);
-
+    
     /**
-     * The logListener can notify the logger that an object is to be deleted.
+     * Called by the runtime when a DeleteAction has been executed successfully
+     * and an object has been deleted
      *
-     * @param ob The object to be deleted.
+     * @param event The LemObjectDeletionEvent representing the circumstances
+     *  in which the existing object was deleted
      */
-//    void objectDeletion(ObjectObject ob);
-
+//    void objectDeletion( LemObjectDeletionEvent event);
+    
     /**
-     * The logListener can notify the logger that an object has been reclassified.
+     * Called by the runtime when an ReclassificationAction has been executed
+     * successfully and an existing object, in a generalisation heirarchy has
+     * been reclassified
      *
-     * @param ob The object which was reclassified.
+     * @param event The object which was reclassified.
      * @param previousType The type of object before reclassification.
      */
-//    void reclassification(ObjectObject ob, String previousType) ;
-
+//    void reclassification( LemObjectReclassificatonEvent event, String previousType) ;
+    
     /**
-     * The logListener can notify the logger that an event has been cancelled.
+     * Called by the runtime when a delayed event sent by self is cancelled.
      *
-     * @param ev The event which has been cancelled.
+     * @param event The event which has been cancelled.
      */
-//    void cancelledEvent(EventObject ev);
-
+//    void cancelledEvent(LemEvent event);
+    
 }
