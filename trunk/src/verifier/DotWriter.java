@@ -23,21 +23,18 @@ import java.io.OutputStreamWriter;
 public class DotWriter {
 	
 	/**
-	 * Hardcoded name of dot binary
-	 * @todo this is a hack
-	 * @todo this needs to be replaced with a Preferences-style solution
-	 */
-	private static String dotBinary = "/usr/bin/dot";
-	
-	/**
 	 * Uses an external dot binary to convert a given set of dot code into a
 	 * PNG file
 	 *
 	 * @param dotCode the dot code to convert
 	 * @param filename the name of the PNG file to write
 	 * @todo add error handling code for dot binary
+	 * @todo use exception classes?
 	 */
 	public static void dotToPNG( String dotCode, String filename ) {
+		// Get the dot binary's location
+		Parameters params = Parameters.getInstance();
+		String dotBinary = params.getProperty( "eleminator.dotPath" );
 		String[] cmdString = {dotBinary, "-Tpng", "-o" + filename};
 		Runtime rt = Runtime.getRuntime();
 		Process p = null;
@@ -46,6 +43,8 @@ public class DotWriter {
 		BufferedReader bufRead = null;
 		StringBuffer strBuf = new StringBuffer();
 		int c;
+		
+		// Run dot
 		try {
 			p = rt.exec( cmdString );
 			// Feed the dot code into the dot binary's standard input
@@ -61,8 +60,6 @@ public class DotWriter {
 				}
 				strBuf.append( (char)c );
 			}
-			
-			System.err.println( "Standard output: " + strBuf.toString() );
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
