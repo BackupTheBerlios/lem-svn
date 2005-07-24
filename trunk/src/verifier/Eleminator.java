@@ -97,8 +97,6 @@ public class Eleminator extends javax.swing.JFrame {
     openItem = new javax.swing.JMenuItem();
     importItem = new javax.swing.JMenuItem();
     quitItem = new javax.swing.JMenuItem();
-    jMenu1 = new javax.swing.JMenu();
-    preferencesItem = new javax.swing.JMenuItem();
     toolsMenu = new javax.swing.JMenu();
     generateClassDiagramItem = new javax.swing.JMenuItem();
     generateStatechartItem = new javax.swing.JMenuItem();
@@ -159,20 +157,6 @@ public class Eleminator extends javax.swing.JFrame {
 
     menubar.add(fileMenu);
 
-    jMenu1.setMnemonic('E');
-    jMenu1.setText("Edit");
-    preferencesItem.setMnemonic('n');
-    preferencesItem.setText("Preferences...");
-    preferencesItem.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        preferencesItemActionPerformed(evt);
-      }
-    });
-
-    jMenu1.add(preferencesItem);
-
-    menubar.add(jMenu1);
-
     toolsMenu.setMnemonic('T');
     toolsMenu.setText("Tools");
     toolsMenu.setToolTipText("");
@@ -208,15 +192,7 @@ public class Eleminator extends javax.swing.JFrame {
 	private void generateClassDiagramItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateClassDiagramItemActionPerformed
 		GenerateClassDiagramDialog.showDialog( this, activeModel );
 	}//GEN-LAST:event_generateClassDiagramItemActionPerformed
-	
-	/**
-	 * @todo Test stub only
-	 */
-	private void preferencesItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preferencesItemActionPerformed
-		//Parameters p = new Parameters();
-		//System.out.println( p.getDefaultProperty("eleminator.version"));
-	}//GEN-LAST:event_preferencesItemActionPerformed
-
+		
 	private void generateStatechartItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateStatechartItemActionPerformed
 		GenerateStatechartDialog.showDialog( this, activeModel );
 	}//GEN-LAST:event_generateStatechartItemActionPerformed
@@ -432,11 +408,9 @@ public class Eleminator extends javax.swing.JFrame {
   private javax.swing.JMenuItem generateClassDiagramItem;
   private javax.swing.JMenuItem generateStatechartItem;
   private javax.swing.JMenuItem importItem;
-  private javax.swing.JMenu jMenu1;
   private javax.swing.JToolBar lemToolBar;
   private javax.swing.JMenuBar menubar;
   private javax.swing.JMenuItem openItem;
-  private javax.swing.JMenuItem preferencesItem;
   private javax.swing.JMenuItem quitItem;
   private javax.swing.JPanel statusPanel;
   private javax.swing.JComboBox themeComboBox;
