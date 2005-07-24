@@ -87,7 +87,7 @@
 
   <target name="compile_one" depends="init">
     <javac srcdir="${src.dir}" destdir="${classes.dir}"
-    debug="true" includes="${filename}" deprecation="true"
+    debug="true" source="1.4" includes="${filename}" deprecation="true"
     optimize="false"/>
   </target>
   
@@ -102,7 +102,7 @@
     <copy file="${src.dir}/splash/eLEMinator.jpg" todir="${classes.dir}/splash"/>
     
     <javac srcdir="${src.dir}" destdir="${classes.dir}"
-        classpathref="build.classpath" debug="true"
+        classpathref="build.classpath" debug="true" source="1.4" 
         deprecation="true" optimize="false"
         excludes="test/**" />
   </target>
@@ -176,7 +176,7 @@
   
   <target name="compile_tests" depends="compile">
     <javac srcdir="${src.dir}/test" destdir="${classes.dir}"
-        classpathref="build.classpath" debug="true"
+        classpathref="build.classpath" debug="true" source="1.4" 
         deprecation="true" optimize="false" />
   </target>
   
