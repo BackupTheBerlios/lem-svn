@@ -17,6 +17,7 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import metamodel.Domain;
 import metamodel.Model;
+import metamodel.Subsystem;
 
 /**
  *
@@ -33,6 +34,7 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 	/**
 	 * The model that this dialog is associated with
 	 * @todo should this be static?
+	 * @todo remove debugging println() statements
 	 */
 	private Model model;
 	
@@ -44,14 +46,7 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 	/**
 	 * The currently selected LEM Class
 	 */
-	private metamodel.Class selectedClass;
-	
-	/**
-	 * Hardcoded name of dot binary
-	 * @todo this is a hack
-	 * @todo this needs to be replaced with a Preferences-style solution
-	 */
-	private static String dotBinary = "/usr/bin/dot";
+	private Subsystem selectedSubsystem;
 	
 	/** Creates new form GenerateClassDiagramDialog */
 	public GenerateClassDiagramDialog(java.awt.Frame parent, boolean modal, Model m) {
@@ -76,7 +71,7 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
     cancelButton = new javax.swing.JButton();
     domainList = new javax.swing.JComboBox();
     classLabel = new javax.swing.JLabel();
-    classList = new javax.swing.JComboBox();
+    subsystemList = new javax.swing.JComboBox();
 
     getContentPane().setLayout(new java.awt.GridBagLayout());
 
@@ -101,7 +96,7 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     getContentPane().add(destinationLabel, gridBagConstraints);
 
-    filenameField.setText("statechart.png");
+    filenameField.setText("classes.png");
     filenameField.setPreferredSize(new java.awt.Dimension(300, 20));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
@@ -155,17 +150,17 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
     gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
     getContentPane().add(domainList, gridBagConstraints);
 
-    classLabel.setText("Class:");
+    classLabel.setText("Subsystem:");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 2;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
     getContentPane().add(classLabel, gridBagConstraints);
 
-    classList.setPreferredSize(new java.awt.Dimension(300, 20));
-    classList.addActionListener(new java.awt.event.ActionListener() {
+    subsystemList.setPreferredSize(new java.awt.Dimension(300, 20));
+    subsystemList.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
-        classListActionPerformed(evt);
+        subsystemListActionPerformed(evt);
       }
     });
 
@@ -173,25 +168,28 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    getContentPane().add(classList, gridBagConstraints);
+    getContentPane().add(subsystemList, gridBagConstraints);
 
     pack();
   }
   // </editor-fold>//GEN-END:initComponents
 
 	private void domainListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_domainListActionPerformed
-			// Update the Domain and Class combo boxes
+		// Update the Domain and Subsystem combo boxes
 		JComboBox cb = (JComboBox)evt.getSource();
 		selectedDomain = model.getDomain( (String)cb.getSelectedItem() );
-		updateClassList( selectedDomain );
+		updateSubsystemList( selectedDomain );
 	}//GEN-LAST:event_domainListActionPerformed
 
-	private void classListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_classListActionPerformed
+	private void subsystemListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subsystemListActionPerformed
 		// Update the selection
 		JComboBox cb = (JComboBox)evt.getSource();
-		selectedClass = selectedDomain.getClass( (String)cb.getSelectedItem() );
-	}//GEN-LAST:event_classListActionPerformed
+		selectedSubsystem = selectedDomain.getSubsystem( (String)cb.getSelectedItem() );
+	}//GEN-LAST:event_subsystemListActionPerformed
 		
+	/**
+	 * Add dot drawing code
+	 */
 	private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
 		if ("generate".equals( evt.getActionCommand() )) {
 			// Fail if no filename specified
@@ -201,11 +199,20 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 			}
 			// 'Normal' case
 			else {
-				String dotCode = selectedClass.dumpDot();
-				DotWriter.dotToPNG( dotCode, filenameField.getText() );
+				// The user has selected all the classes in the domain
+				if (subsystemList.getSelectedIndex() == 0) {
+					System.err.println( "All classes in domain" );
+					String dotCode = 
+							ClassWriter.dumpDot( selectedDomain, selectedDomain.getClasses().values() );
+				}
+				// The user has selected a specific subsystem
+				else {
+					System.err.println( "Specific subsystem" );
+					String dotCode = 
+						ClassWriter.dumpDot( selectedDomain, selectedSubsystem.getClasses().values() );
+				}
 			}
 		}
-		System.err.println("generateButton complete");
 		this.dispose();
 	}//GEN-LAST:event_generateButtonActionPerformed
 	
@@ -230,12 +237,12 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 		domainList.setSelectedIndex( 0 );
 		selectedDomain = model.getDomain( (String)domainList.getSelectedItem() );
 		
-		// Initialise the Class combo box
-		updateClassList( selectedDomain );
+		// Initialise the Subsystem combo box
+		updateSubsystemList( selectedDomain );
 	}//GEN-LAST:event_formWindowOpened
 	
 	/**
-	 * Updates the Class combo box to display the child subsystems of a single
+	 * Updates the Subsystem combo box to display the child subsystems of a single
 	 * parent domain.
 	 *
 	 * @param parent the parent Domain
@@ -245,29 +252,31 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 	 * @todo does Java support an 'or else'-style construct?
 	 * @todo Recode to use Exceptions?
 	 */
-	private void updateClassList( Domain parent ) {
-		classList.removeAllItems();
+	private void updateSubsystemList( Domain parent ) {
+		subsystemList.removeAllItems();
 		// Handle 'domainless' models
 		if (parent == null) {
-			classList.addItem( "<None>" );
-			classList.setSelectedIndex( 0 );
-			selectedClass = null;
+			subsystemList.addItem( "<None>" );
+			subsystemList.setSelectedIndex( 0 );
+			selectedSubsystem = null;
 		} else {
-			Iterator classIter = parent.getClasses().values().iterator();
-			// Handle domains with no classes
-			if (classIter.hasNext() == false) {
-				classList.addItem( "<None>" );
-				classList.setSelectedIndex( 0 );
-				selectedClass = null;
-			} else {
-				metamodel.Class c;
-				while (classIter.hasNext()) {
-					c = (metamodel.Class)classIter.next();
-					classList.addItem( c.getName() );
+			Iterator subsystemIter = parent.getSubsystems().values().iterator();
+			// Handle domains with no subsystems
+			if (subsystemIter.hasNext() == false) {
+				subsystemList.addItem( "<None>" );
+				subsystemList.setSelectedIndex( 0 );
+				selectedSubsystem = null;
+			} else { // 'Normal' case
+				// A special-case 'all classes in domain' option
+				subsystemList.addItem( "<All>" );
+				metamodel.Subsystem s;
+				while (subsystemIter.hasNext()) {
+					s = (metamodel.Subsystem)subsystemIter.next();
+					subsystemList.addItem( s.getName() );
 				}
 			}
-			classList.setSelectedIndex( 0 );
-			selectedClass = parent.getClass( (String)classList.getSelectedItem() );
+			subsystemList.setSelectedIndex( 0 );
+			selectedSubsystem = parent.getSubsystem( (String)subsystemList.getSelectedItem() );
 		}
 	}
 	
@@ -280,12 +289,12 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton cancelButton;
   private javax.swing.JLabel classLabel;
-  private javax.swing.JComboBox classList;
   private javax.swing.JLabel destinationLabel;
   private javax.swing.JLabel domainLabel;
   private javax.swing.JComboBox domainList;
   private javax.swing.JTextField filenameField;
   private javax.swing.JButton generateButton;
+  private javax.swing.JComboBox subsystemList;
   // End of variables declaration//GEN-END:variables
 	
 }
