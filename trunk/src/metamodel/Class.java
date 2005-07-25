@@ -597,9 +597,9 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
     
      public String dumpDot() { 
         
-        StringBuffer strBuf = new StringBuffer( "digraph Class {" );
-        strBuf.append("node [shape=record];");
-        strBuf.append(this.name + "[shape=record,label=\"{" + this.name.toUpperCase()  + "|");
+        StringBuffer strBuf = new StringBuffer( );
+
+        strBuf.append("    " + this.name + "[shape=record,label=\"{" + this.name.toUpperCase()  + "|");
         
         for ( Iterator it = attributes.values().iterator(); it.hasNext(); ) {
             Attribute attribute = (Attribute) it.next();
@@ -608,7 +608,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
         }
         
         
-        strBuf.append( "|}\"];}" );
+        strBuf.append( "|}\"];\n" );
 				
 	return strBuf.toString();
     }
