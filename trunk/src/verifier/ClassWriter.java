@@ -23,6 +23,7 @@ package verifier;
 
 import java.util.Collection;
 import metamodel.Domain;
+import java.util.Iterator;
 
 /**
  * Generates dot code for class diagrams.
@@ -42,6 +43,20 @@ public class ClassWriter {
 	 * @todo print the class list
 	 */
 	public static String dumpDot( Domain domain, Collection classList ) {
-		return "This is currently a stub procedure only.";
+            
+              StringBuffer strBuf = new StringBuffer( );
+   
+              strBuf.append("digraph classdiagram { \n");
+        
+              for ( Iterator it = classList.iterator(); it.hasNext(); ) {
+                  metamodel.Class umlclass = (metamodel.Class) it.next();
+           
+                  strBuf.append(umlclass.dumpDot());
+              }
+             strBuf.append("\n");
+             strBuf.append( "}" );
+				
+	     return strBuf.toString();
+            	
 	}
 }
