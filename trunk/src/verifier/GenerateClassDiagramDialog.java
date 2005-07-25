@@ -216,12 +216,14 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 					System.err.println( "All classes in domain" );
 					String dotCode = 
 							ClassWriter.dumpDot( selectedDomain, selectedDomain.getClasses().values() );
+                                       // System.err.println( dotCode );
 				}
 				// The user has selected a specific subsystem
 				else {
 					System.err.println( "Specific subsystem" );
 					String dotCode = 
 						ClassWriter.dumpDot( selectedDomain, selectedSubsystem.getClasses().values() );
+                                       // System.err.println( dotCode );
 				}
 			}
 		}
