@@ -75,6 +75,8 @@ public class Interpreter {
             executeCreateAction((CreateAction)a, c);
         else if( a instanceof AssignmentAction )
             executeAssignmentAction((AssignmentAction)a, c);
+	else if( a instanceof IfStatement )
+	    executeIfStatement((IfStatement)a, c);
         else {
             throw new LemRuntimeException("executeAction encountered unknown action");
         }
@@ -110,6 +112,41 @@ public class Interpreter {
         return o;
     }
    
+    /**
+     * Execute the given IfStatement in the given Context. 
+     *
+     * @param a the IfStatement to execute
+     * @param c the Context in which to execute the action
+     * @throws runtime.LemRuntimeException thrown by the metamodel.Object 
+     * constructor
+     */
+    public void executeIfStatement( IfStatement a, Context c ) throws LemRuntimeException {
+	LinkedList condList = a.getConditionalAlternatives();
+	Iterator i = condList.iterator();
+
+	while (i.hasNext()) {
+		IfStatement.ConditionalAlternative ca = (IfStatement.ConditionalAlternative)i.next();
+		Expression condition = ca.condition;
+		ActionBlock block = ca.block;
+
+		if (condition != null) {
+			Variable result = evaluateExpression(condition, c);
+			if (result.getCoreDataType() instanceof BooleanType) {
+				throw new LemRuntimeException("Type mismatch: expected boolean condition");
+			}
+			if (!((Boolean)((BooleanVariable)result).getValue()).booleanValue())
+				continue;
+
+		}
+
+		/* Fallthrough: either condition is Null (we've hit the else
+		 * part), or the conditional result has evaluated True.
+		 * Execute the associated action block and break the loop.
+		 */
+		executeBlock(block, c);
+	}
+    }
+ 
     /**
      * Executes the given AssignmentAction in the current context. 
      *
