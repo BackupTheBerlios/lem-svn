@@ -18,7 +18,7 @@ import metamodel.ArbitraryIdType;
 import metamodel.DataType;
 
 public class ArbitraryIdVariable extends Variable {
-    static long current_id = 0;
+    static int current_id = 0;
     protected Integer id;
     
     /** Creates a new instance of ArbitaryIdVariable */
