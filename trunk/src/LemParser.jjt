@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.61  2005/07/27 05:43:18  u2567446
+* Removed the StatementList and replaced it with ActionList. All conditionals and loops are now actions.
+*
 * Revision 1.60  2005/07/17 09:10:43  u3957053
 * Bit of reformatting change.
 *
@@ -1082,7 +1085,7 @@ void ActionBlock() : {}
 {
 	<LBRACE>
 	VariableDeclarationList()
-	StatementList()
+	ActionList()
 	<RBRACE>
 }
 
@@ -1100,15 +1103,10 @@ void VariableDeclaration() : {}
 }
 
 
-void StatementList() : {}
+void ActionList() : {}
 {
 	(
 		Action()
-		| IfStatement()
-		| WhileStatement()
-		| ActionBlock()
-		| ForLoop()
-		| Break()
 	)*
 }
 
@@ -1122,6 +1120,11 @@ void Action() : {}
 		| SignalCancel()
                 | SelectStatement() 
 		| LinkCreation()
+		| IfStatement()
+		| WhileStatement()
+		| ActionBlock()
+		| ForLoop()
+		| Break()
 	)
 	<SEMI>
 }
