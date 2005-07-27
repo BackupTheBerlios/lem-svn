@@ -48,8 +48,8 @@ public class Variable {
         this.type = d;
         if (d instanceof BooleanType) {
             return (BooleanVariable)this ;
-            //   }else if (d instanceof ArbitraryIdType) {
-            //       (ArbitraryIdVariable)this ;
+        }else if (d instanceof ArbitraryIdType) {
+            return (ArbitraryIdVariable)this ;
         }else if(d instanceof DateType) {
             return (DateVariable)this ;
             //   }else if(d instanceof IntegerType) {
