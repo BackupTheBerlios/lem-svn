@@ -20,24 +20,29 @@ public class Interpreter {
     }
     
     /**
-     * Interpret the given Procedure by calling executeProcedure on the procedure object
+     * Interpret the given Procedure by calling executeBlock on Procedure's
+     * main ActionBlock.
+     *
      * @param p the procedure to interpret
      * @param c the Context in which the procedure should be interpreted
      * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
      */
     public void interpret(Procedure p, Context c) throws LemRuntimeException {
-        executeProcedure(p, c);
+	ActionBlock block = p.getActionBlock();
+        executeBlock(block, c);
     }
     
     /**
-     * Execute the given procedure by calling executeAction on all of the Procedure's Actions
+     * Execute the given ActionBlock by setting up the "stack frame" for
+     * all variable declarations then calling executeAction on all of the
+     * block's Actions.
+     *
      * @param p the procedure to execute
      * @param c the context in which to execute
      * @throws runtime.LemRuntimeException if any error occurs during the execution of the procedure
      */
-    public void executeProcedure( Procedure p, Context c ) throws LemRuntimeException {
+    public void executeBlock( ActionBlock block, Context c ) throws LemRuntimeException {
 	LocalContext localContext = new LocalContext(c);
-	ActionBlock block = p.getActionBlock();
         LinkedList actions = block.getActions();
         Iterator i = actions.iterator();
         

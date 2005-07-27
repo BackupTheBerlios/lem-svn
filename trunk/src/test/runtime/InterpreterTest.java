@@ -93,7 +93,7 @@ public class InterpreterTest extends junit.framework.TestCase {
         Interpreter i = new Interpreter();
         
         try {
-            i.executeProcedure( p, c );
+            i.interpret( p, c );
         } catch( LemRuntimeException e ) {
             fail( "Some LemRuntimeException occurred: " + e.getMessage() );
         }
@@ -125,7 +125,7 @@ public class InterpreterTest extends junit.framework.TestCase {
         Interpreter i = new Interpreter();
         
         try {
-            i.executeProcedure( p, c );
+            i.interpret( p, c );
         } catch( LemRuntimeException e ) {
             fail( "Some LemRuntimeException occurred: " + e.getMessage() );
         }
