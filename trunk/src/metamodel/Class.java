@@ -604,7 +604,8 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
         for ( Iterator it = attributes.values().iterator(); it.hasNext(); ) {
             Attribute attribute = (Attribute) it.next();
            
-            strBuf.append(attribute.getName() + "\\n");
+            strBuf.append(attribute.getName());
+            strBuf.append(" :\\ " + attribute.getType().getName() + "\\n");
         }
         strBuf.append( "|}\"];\n" );
         
