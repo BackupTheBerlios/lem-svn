@@ -128,7 +128,7 @@ public class BuilderPass2 extends Visitor {
         return p;
     }
     
-    public Object visit( LEMStatementList node, Object data ) throws LemException {
+    public Object visit( LEMActionList node, Object data ) throws LemException {
         LinkedList actions = new LinkedList();
         
         for( int i = 0; i < node.jjtGetNumChildren(); i++ ) {
