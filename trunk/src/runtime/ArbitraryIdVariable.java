@@ -19,11 +19,11 @@ import metamodel.DataType;
 
 public class ArbitraryIdVariable extends Variable {
     static long current_id = 0;
-    protected long id;
+    protected Integer id;
     
     /** Creates a new instance of ArbitaryIdVariable */
     public ArbitraryIdVariable() throws LemRuntimeException{
-        id = current_id;
+        id = new Integer(current_id);
         current_id++;
     }
     
