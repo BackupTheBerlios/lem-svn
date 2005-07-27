@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.62  2005/07/27 10:13:09  u2567446
+* Fixed the grammar for the Action production for semi colon error.
+*
 * Revision 1.61  2005/07/27 05:43:18  u2567446
 * Removed the StatementList and replaced it with ActionList. All conditionals and loops are now actions.
 *
@@ -1112,21 +1115,18 @@ void ActionList() : {}
 
 void Action() : {}
 {
-	(
-		ObjectCreation()
-		| ObjectDeletion()
-		| AttributeAssignment()
-		| SignalGeneration()
-		| SignalCancel()
-                | SelectStatement() 
-		| LinkCreation()
-		| IfStatement()
-		| WhileStatement()
-		| ActionBlock()
-		| ForLoop()
-		| Break()
-	)
-	<SEMI>
+	ObjectCreation()<SEMI>
+	| ObjectDeletion()<SEMI>
+	| AttributeAssignment()<SEMI>
+	| SignalGeneration()<SEMI>
+	| SignalCancel()<SEMI>
+        | SelectStatement()<SEMI>
+	| LinkCreation()<SEMI>
+	| IfStatement()
+	| WhileStatement()
+	| ActionBlock()
+	| ForLoop()
+	| Break()
 }
 
 void ObjectReference() : {}
