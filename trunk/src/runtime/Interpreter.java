@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import metamodel.*;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Collection;
 
 /**
  * This is the main interpreter file.
@@ -43,9 +44,19 @@ public class Interpreter {
      */
     public void executeBlock( ActionBlock block, Context c ) throws LemRuntimeException {
 	LocalContext localContext = new LocalContext(c);
+	Collection decls = block.getVariableDeclarations();
         LinkedList actions = block.getActions();
-        Iterator i = actions.iterator();
-        
+	Iterator i;
+
+	/* Set up variables into the local context */
+	i = decls.iterator();
+	while (i.hasNext()) {
+		VariableDeclaration vd = (VariableDeclaration)i.next();
+		instantiateVariable ( vd, c );
+        }
+      
+	/* Execute actions */
+        i = actions.iterator();
         while( i.hasNext() ) {
             Action a = (Action)i.next();
             executeAction(a, localContext);
@@ -64,9 +75,6 @@ public class Interpreter {
             executeCreateAction((CreateAction)a, c);
         else if( a instanceof AssignmentAction )
             executeAssignmentAction((AssignmentAction)a, c);
-        else if ( a instanceof VariableDeclaration ) {
-            executeVariableDeclaration ( (VariableDeclaration)a , c) ; 
-        }
         else {
             throw new LemRuntimeException("executeAction encountered unknown action");
         }
@@ -261,13 +269,16 @@ public class Interpreter {
         return null;
     }
     
-    /** This method will execute a VariableDeclaration and adds a declated variable to the context.
-     *it will check whether the variable already exists in the context in which case it will ...
+    /** This method will instantiate a variable in context c from the given
+     * VariableDeclaration.
+     * 
+     * It will check whether the variable already exists in the context in
+     * which case it will ...
      *otherwise it will add a new variable to the context, the declared variable initially has no type or value.
      *@param v The VariableDeclaration to execute.
      *@param c the context in which the action has been executed.
      */
-    public void executeVariableDeclaration( VariableDeclaration v, Context c) throws LemRuntimeException {
+    public void instantiateVariable( VariableDeclaration v, Context c) throws LemRuntimeException {
         String name ; 
         name = v.getVariableName() ;          
         Variable var = new Variable() ;         

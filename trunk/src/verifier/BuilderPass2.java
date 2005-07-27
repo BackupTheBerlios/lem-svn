@@ -165,7 +165,7 @@ public class BuilderPass2 extends Visitor {
         LinkedList stmts = (LinkedList)node.jjtGetChild( 1 ).jjtAccept(this, null);
         
         for( int i = 0; i < varDecls.size(); i++ ) {
-            a.addAction( (Action)varDecls.get( i ));
+            a.addVariableDeclaration( (VariableDeclaration)varDecls.get( i ));
         }
         
         for( int i = 0; i < stmts.size(); i++ ) {

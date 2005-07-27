@@ -8,7 +8,7 @@ package metamodel;
  *
  * @author npiggin
  */
-public class VariableDeclaration extends Action {
+public class VariableDeclaration {
     
     /**
      * The name of the variable being referenced.
