@@ -182,12 +182,15 @@ public class NumericVariable extends Variable {
      * @return a new NumericVariable which contains the result of the BigDecimal.remainder()
      * operation applied to this and <code>b</code>
      * @see the java.math.BigDecimal remainder() API call
+     * 
+     * Note, this is implemented using truncated integer divide in order to
+     * be compatible with older versions of java.
      */
     public Variable mod(Variable b) throws LemRuntimeException {
         if( !NumericType.getInstance().equals( b.getCoreDataType() ))
             throw new LemRuntimeException( "Operation mod(numeric, " + b.getType().getName() + "' not supported" );
         BigDecimal right = (BigDecimal)b.getValue();
-        BigDecimal rem = value.remainder( right );
+        BigDecimal rem = value.subtract( value.divide( right, BigDecimal.ROUND_DOWN ) );
         return new NumericVariable( rem );
     }
     
