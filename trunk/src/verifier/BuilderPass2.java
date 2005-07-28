@@ -388,6 +388,15 @@ public class BuilderPass2 extends Visitor {
         }
     }
     
+    public Object visit( LEMWhileStatement node, Object data ) throws LemException {
+        WhileStatement w = new WhileStatement();
+        
+        w.setCondition( (Expression)node.jjtGetChild( 0 ).jjtAccept(this, null ));
+        w.setBlock( (ActionBlock)node.jjtGetChild( 1 ).jjtAccept( this, null ));
+        
+        return w;
+    }
+    
     public Object visit( LEMLValue node, Object data ) throws LemException {
         return node.jjtGetChild( 0 ).jjtAccept(this, null);
     }
