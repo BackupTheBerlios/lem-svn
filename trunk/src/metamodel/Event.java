@@ -128,6 +128,5 @@ public class Event implements DescribedEntity {
         this.signature = aSignature;
         aSignature.setEvent( this );
     }
-    
 }
 

@@ -22,6 +22,15 @@ import metamodel.Generalisation;
  * @see the Objects at Runtime description at http://xtuml.jdns.org/wiki/index.php/Runtime_object
  */
 public class Object {
+    /** Queue of pending signals for the object */
+    LinkedList signalQueue = new LinkedList();;
+    
+    /**
+     * Queue of pending signals to self. All signals from here must be
+     * processed before any signals from 'signalQueue'
+     */
+    LinkedList signalSelfQueue = new LinkedList();
+    
 //    InstanceAttribute attributes[] = null;
     Collection instances = new LinkedList();
     
@@ -71,6 +80,12 @@ public class Object {
             
             addInstance( inst );
         }
+    }
+    
+    public void addSignal(Signal s) throws LemRuntimeException
+    {
+	    signalQueue.add(s);
+	    /* todo: a lot more */
     }
     
     /**

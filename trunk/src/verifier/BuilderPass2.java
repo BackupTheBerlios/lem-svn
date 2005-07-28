@@ -121,7 +121,7 @@ public class BuilderPass2 extends Visitor {
         Procedure p = (Procedure)getMapper().getObject( node );
         
         if( node.jjtGetNumChildren() > 0 )
-            p.setActionBlock( (ActionBlock)node.jjtGetChild( 0 ).jjtAccept(this, null));
+            p.setActionBlock( (ActionBlock)node.jjtGetChild( 0 ).jjtAccept(this, data));
         else
             p.setActionBlock( new ActionBlock() );
         
@@ -132,7 +132,7 @@ public class BuilderPass2 extends Visitor {
         LinkedList actions = new LinkedList();
         
         for( int i = 0; i < node.jjtGetNumChildren(); i++ ) {
-            Object o = node.jjtGetChild( i ).jjtAccept(this, null);
+            Object o = node.jjtGetChild( i ).jjtAccept(this, data);
             
             if( o != null && o instanceof Action )
                 actions.add( o );
@@ -142,7 +142,7 @@ public class BuilderPass2 extends Visitor {
     }
     
     public Object visit( LEMAction node, Object data ) throws LemException {
-        Object o = node.jjtGetChild( 0 ).jjtAccept(this, null);
+        Object o = node.jjtGetChild( 0 ).jjtAccept(this, data);
         
         if( o == null || !(o instanceof Action ))
             System.err.println( node.jjtGetChild( 0 ).getClass().getName()
@@ -161,8 +161,8 @@ public class BuilderPass2 extends Visitor {
     public Object visit( LEMActionBlock node, Object data ) throws LemException {
 //        ActionBlock a = (ActionBlock)getMapper().getObject(node);
         ActionBlock a = new ActionBlock();
-        LinkedList varDecls = (LinkedList)node.jjtGetChild( 0 ).jjtAccept(this, null);
-        LinkedList stmts = (LinkedList)node.jjtGetChild( 1 ).jjtAccept(this, null);
+        LinkedList varDecls = (LinkedList)node.jjtGetChild( 0 ).jjtAccept(this, data);
+        LinkedList stmts = (LinkedList)node.jjtGetChild( 1 ).jjtAccept(this, data);
         
         for( int i = 0; i < varDecls.size(); i++ ) {
             a.addVariableDeclaration( (VariableDeclaration)varDecls.get( i ));
@@ -282,6 +282,8 @@ public class BuilderPass2 extends Visitor {
      */
     public Object visit( LEMObjectCreation node, Object data ) throws LemException {
         CreateAction a = new CreateAction();
+	getMapper().add(node, a);
+
         Collection c = (Collection)(node.jjtGetChild(0).jjtAccept(this, null));
         
         a.setClasses(c);
@@ -290,12 +292,49 @@ public class BuilderPass2 extends Visitor {
         
         return a;
     }
+
+    /**
+     * Returns a LinkedList of Expressions as parameters.
+     */
+    public Object visit(LEMParameterList node, Object data) throws LemException {
+	LinkedList parameters = null;
+	if (node.jjtGetNumChildren() > 0) {
+		parameters = new LinkedList();
+		for (int i = 0; i < node.jjtGetNumChildren(); i++) {
+			Expression p = (Expression)node.jjtGetChild(i).jjtAccept(this, null);
+			parameters.add(p);
+		}
+	}
+	return parameters;
+    }
     
+    public Object visit(LEMEventGeneration node, Object data) throws LemException {
+	    GenerateAction a = new GenerateAction();
+	    getMapper().add(node, a);
+
+	    metamodel.Class theClass = (metamodel.Class)data;
+	    
+	    String eventName = getIdentifier(node.jjtGetChild(0));
+	    Event e = theClass.getEvent(eventName);
+	    a.setEvent(e);
+
+	    LinkedList p = (LinkedList)node.jjtGetChild(1).jjtAccept(this, null);
+	    a.setParameters(p);
+	    
+	    VariableReference vr = (VariableReference)node.jjtGetChild(2).jjtAccept(this, null);
+	    a.setTarget(vr);
+
+	    /* todo: delay! */
+
+	    return a;
+    }
+    
+
     public Object visit( LEMLinkCreation node, Object data ) throws LemException {
         RelateAction a = new RelateAction();
         
-        String active = (String)node.jjtGetChild( 0 ).jjtAccept( this, null );
-        String passive = (String)node.jjtGetChild( 1 ).jjtAccept( this, null );
+        VariableReference active = (VariableReference)node.jjtGetChild( 0 ).jjtAccept( this, null );
+        VariableReference passive = (VariableReference)node.jjtGetChild( 1 ).jjtAccept( this, null );
         String assocName = (String)node.jjtGetChild( 2 ).jjtAccept( this, null );
         
         Relationship r = currentDomain.getRelationship( assocName );
@@ -307,8 +346,8 @@ public class BuilderPass2 extends Visitor {
         
         Association ra = (Association)r;
         
-        a.setActiveObjectName( active );
-        a.setPassiveObjectName( passive );
+        a.setActiveObjectName( active.getVariableName() );
+        a.setPassiveObjectName( passive.getVariableName() );
         a.setAssociationClassReference( assocName );
         a.setAssociation( ra );
         
@@ -549,7 +588,7 @@ public class BuilderPass2 extends Visitor {
      * @return
      */
     public Object visit( LEMObjectReference node, Object data ) throws LemException {
-        return node.getFirstToken().image;
+        return new VariableReference(node.getFirstToken().image);
     }
     
     /**
@@ -566,9 +605,9 @@ public class BuilderPass2 extends Visitor {
             return new VariableReference( getIdentifier(node.jjtGetChild(0) ));
         } else if( node.jjtGetNumChildren() == 2 ) {
             // object.variable-style reference, eg. "publisher.name"
-            String objectName = (String)(visit( (LEMObjectReference)node.jjtGetChild(0), null ));
+	    VariableReference obj = (VariableReference)visit( (LEMObjectReference)node.jjtGetChild(0), null );
             String variableName = getIdentifier( node.jjtGetChild(1));
-            return new VariableReference( objectName, variableName );
+            return new VariableReference( obj.getVariableName(), variableName );
         }
         
         throw new LemException( "LEMVariableReference has neither 1 nor 2 children" );
@@ -602,6 +641,17 @@ public class BuilderPass2 extends Visitor {
         }
         
         return new Literal( t, node.getFirstToken().image );
+    }
+    
+    /**
+     * Visit LEMClassDeclaration and pass this class down to children.
+     */
+    public Object visit(LEMClassDeclaration node, Object data) throws LemException {
+
+        metamodel.Class c = (metamodel.Class) mapper.getObject( node );
+        super.visit( node, c );
+
+	return c;
     }
     
     /**

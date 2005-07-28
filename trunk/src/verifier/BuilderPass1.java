@@ -7,7 +7,6 @@
 package verifier;
 import metamodel.*;
 import parser.*;
-import metamodel.CreateAction;
 
 /**
  * Populates the basic object graph representing the subject model and builds a map between
@@ -98,13 +97,6 @@ public class BuilderPass1 extends Visitor {
 	return null;
     }
 
-    public Object visit(LEMObjectCreation node, Object data) throws LemException {
-        CreateAction a = new CreateAction();
-        
-        getMapper().add(node, a);
-        return a;
-    }
-    
     /**
      * Process a Domain declaration by creating a Domain instance for use by this visitor
      *

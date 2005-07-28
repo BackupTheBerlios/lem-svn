@@ -1,6 +1,12 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.65  2005/07/28 07:47:14  u3293115
+* Lots of work here.
+*
+* Added initial support and test cases for signal generation.
+* Signals are getting as far as the target object.
+*
 * Revision 1.64  2005/07/28 04:18:48  u3293115
 * Changed terminology used in the grammar to match the metamodel: 'signal'
 * is now called 'event'.
@@ -1052,9 +1058,6 @@ void StateDeclaration() : {}
     EndIdentifier() <SEMI>
 }
 
-void EventIdentifier() : {}
-{ <SIMPLE_IDENTIFIER> }
-
 /*****************************************************************************************
  * State transition definitions
  *****************************************************************************************/
@@ -1208,7 +1211,7 @@ void ObjectReclassification() : {}
 void EventGeneration() : {}
 {
         <GENERATE>
-	EventIdentifier()
+	Identifier()
 	ParameterList()
 	<TO>
 	ObjectReference()
@@ -1243,7 +1246,7 @@ void WithDelay() : {}
 void EventCancel() : {}
 {
 	<CANCEL>
-	EventIdentifier()
+	Identifier()
 	<TO>
 	ObjectReference()
 }

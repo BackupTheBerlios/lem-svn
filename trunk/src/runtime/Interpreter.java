@@ -79,6 +79,8 @@ public class Interpreter {
 	    executeIfStatement((IfStatement)a, c);
 	else if( a instanceof WhileStatement )
 	    executeWhileStatement((WhileStatement)a, c);
+	else if( a instanceof GenerateAction )
+	    executeGenerateAction((GenerateAction)a, c);
         else {
             throw new LemRuntimeException("executeAction encountered unknown action");
         }
@@ -114,6 +116,42 @@ public class Interpreter {
         return o;
     }
    
+    /**
+     * Execute the given GenerateAction in the given Context. 
+     *
+     * @param a the GenerateAction to execute
+     * @param c the Context in which to execute the action
+     * @throws runtime.LemRuntimeException thrown by the metamodel.Object 
+     * constructor
+     */
+    public void executeGenerateAction( GenerateAction a, Context c ) throws LemRuntimeException {
+        // Create the new signal
+	Signal s = new Signal(a.getEvent());
+
+	LinkedList p = a.getParameters();
+	if (p != null) {
+		/* Evaluate parameters - pass by value obviously */
+		for (Iterator i = p.iterator(); i.hasNext();) {
+			Expression e = (Expression)i.next();
+			Variable result = evaluateExpression(e, c);
+			s.setParameter("param1", p); /* todo: need to fix this */
+		}
+	}
+
+	VariableReference vr = a.getTarget();
+        Variable targetRef = getVariable( vr, c );
+	if (!(targetRef instanceof ObjectReferenceVariable)) {
+		throw new LemRuntimeException("Type mismatch: expected objref");
+	}
+
+	runtime.Object target = (runtime.Object)((ObjectReferenceVariable)targetRef).getValue();
+	
+	/* todo: handle signals to self */
+	target.addSignal(s);
+	
+        // todo: Notify listeners that the signal has been generated
+    }
+ 
     /**
      * Execute the given IfStatement in the given Context. 
      *
