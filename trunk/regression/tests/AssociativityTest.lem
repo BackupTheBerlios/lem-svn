@@ -29,6 +29,12 @@ model TestModel is
 						while( j < 10 ) {
 						    j := j + 1;
 						}
+
+						if( j /= 10 ) {
+						    z := "Yes";
+						} else {
+						    z := "No";
+						}
 					} end;
 								
                                         state selectTest is {
