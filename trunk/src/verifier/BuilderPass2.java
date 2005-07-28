@@ -397,6 +397,32 @@ public class BuilderPass2 extends Visitor {
         return w;
     }
     
+    public Object visit( LEMIfStatement node, Object data ) throws LemException {
+        IfStatement theIf = new IfStatement();
+        Expression cond = (Expression)node.jjtGetChild( 0 ).jjtAccept( this, null );
+        ActionBlock ab = (ActionBlock)node.jjtGetChild( 1 ).jjtAccept( this, null );
+        theIf.addConditionalAlternative( cond, ab );
+        
+        for( int i = 2; i < node.jjtGetNumChildren(); i++ ) {
+            theIf.addConditionalAlternative((ConditionalAlternative)node.jjtGetChild( i ).jjtAccept( this, null ));
+        }
+        
+        return theIf;
+    }
+    
+    public Object visit( LEMElseIfPart node, Object data ) throws LemException {
+        Expression cond = (Expression)node.jjtGetChild( 0 ).jjtAccept( this, null );
+        ActionBlock ab = (ActionBlock)node.jjtGetChild( 1 ).jjtAccept( this, null );
+        
+        return new ConditionalAlternative( cond, ab );
+    }
+    
+    public Object visit( LEMElsePart node, Object data ) throws LemException {
+        ActionBlock ab = (ActionBlock)node.jjtGetChild( 0 ).jjtAccept( this, null );
+        
+        return new ConditionalAlternative( null, ab );
+    }
+    
     public Object visit( LEMLValue node, Object data ) throws LemException {
         return node.jjtGetChild( 0 ).jjtAccept(this, null);
     }
