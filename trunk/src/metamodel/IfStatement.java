@@ -10,21 +10,6 @@ import java.util.ArrayList;
  * @author npiggin
  */
 public class IfStatement extends Action {
-	/**
-	 * ConditionalAlternative pairs a condition with its action-block.
-	 * A list of ConditionalAlternatives is used to represent if / elseif
-	 * / else chains.
-	 */
-	public class ConditionalAlternative {
-		public Expression condition;
-		public ActionBlock block;
-		public ConditionalAlternative(Expression c, ActionBlock b)
-		{
-			condition = c;
-			block = b;
-		}
-	}
-
 	LinkedList condList;
     
 	/** Creates a new instance of IfStatement */
@@ -42,4 +27,9 @@ public class IfStatement extends Action {
 		ConditionalAlternative ca = new ConditionalAlternative(c, b);
 		condList.add(ca);
 	}
+        
+        /** adds a conditional alternative to the if statement */
+        public void addConditionalAlternative( ConditionalAlternative a ) {
+            condList.add( a );
+        }
 }
