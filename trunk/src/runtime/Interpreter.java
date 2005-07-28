@@ -165,13 +165,13 @@ public class Interpreter {
 	Iterator i = condList.iterator();
 
 	while (i.hasNext()) {
-		IfStatement.ConditionalAlternative ca = (IfStatement.ConditionalAlternative)i.next();
-		Expression condition = ca.condition;
-		ActionBlock block = ca.block;
+		ConditionalAlternative ca = (ConditionalAlternative)i.next();
+		Expression condition = ca.getCondition();
+		ActionBlock block = ca.getBlock();
 
 		if (condition != null) {
 			Variable result = evaluateExpression(condition, c);
-			if (result.getCoreDataType() instanceof BooleanType) {
+			if (!(result instanceof BooleanVariable)) {
 				throw new LemRuntimeException("Type mismatch: expected boolean condition");
 			}
 			if (!((Boolean)((BooleanVariable)result).getValue()).booleanValue())
@@ -184,6 +184,7 @@ public class Interpreter {
 		 * Execute the associated action block and break the loop.
 		 */
 		executeBlock(block, c);
+                break;
 	}
     }
 
