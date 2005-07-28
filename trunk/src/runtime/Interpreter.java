@@ -77,6 +77,8 @@ public class Interpreter {
             executeAssignmentAction((AssignmentAction)a, c);
 	else if( a instanceof IfStatement )
 	    executeIfStatement((IfStatement)a, c);
+	else if( a instanceof WhileStatement )
+	    executeWhileStatement((WhileStatement)a, c);
         else {
             throw new LemRuntimeException("executeAction encountered unknown action");
         }
@@ -146,7 +148,33 @@ public class Interpreter {
 		executeBlock(block, c);
 	}
     }
+
+    /**
+     * Execute the given WhileStatement in the given Context. 
+     *
+     * @param a the WhileStatement to execute
+     * @param c the Context in which to execute the action
+     * @throws runtime.LemRuntimeException thrown by the metamodel.Object 
+     * constructor
+     */
+    public void executeWhileStatement( WhileStatement a, Context c ) throws LemRuntimeException {
+	Expression loopCond = a.getCondition();
+	ActionBlock block = a.getBlock();
+
+	while (true) {
+		Variable result = evaluateExpression(loopCond, c);
+		if (result.getCoreDataType() instanceof BooleanType) {
+			throw new LemRuntimeException("Type mismatch: expected boolean condition");
+		}
+		if (!((Boolean)((BooleanVariable)result).getValue()).booleanValue())
+			break;
+
+		/* Condition evaluated to true */
+		executeBlock(block, c);
+	}
+    }
  
+
     /**
      * Executes the given AssignmentAction in the current context. 
      *
