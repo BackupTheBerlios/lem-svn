@@ -1070,10 +1070,9 @@ void IfStatement() : {}
 	Expression()
 	<RPAREN>
 	ActionBlock()
-	[
-		ElseIfPart()
-		| ElsePart()
-	]
+
+	( ElseIfPart() )*
+	[ ElsePart() ]
 }
 
 void ElseIfPart() : {}
@@ -1083,10 +1082,6 @@ void ElseIfPart() : {}
 	Expression()
 	<RPAREN>
 	ActionBlock()
-	[
-		ElseIfPart()
-		| ElsePart()
-	]
 }
 
 void ElsePart() : {}
