@@ -24,11 +24,15 @@ model TestModel is
 						g := -17.1 mod 3.2;
 						h := !c || ( 2 + 1 > 8 );
 						i := 000000000000000000000000001 + 1;
+						j := 0;
+
+						while( j < 10 ) {
+						    j := j + 1;
+						}
 					} end;
 								
-                                        state selectTest is {					   					                           select one player from instances of Player where myTeam related to Player across R1;					  										
-					    select all teams from instances of team where (total = 234) ; // this doesn't work !!					    					    					    
-                                        } end ; 
+                                        state selectTest is {
+					} end ; 
 					
 					state varDeclTest is {
 					         objref g;
