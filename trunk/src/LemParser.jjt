@@ -1,6 +1,9 @@
 /*
 * $Revision$
 * $Log$
+* Revision 1.63  2005/07/28 03:48:47  u3293115
+* Use strict identifiers for variable declarations instead of 'var'.
+*
 * Revision 1.62  2005/07/27 10:13:09  u2567446
 * Fixed the grammar for the Action production for semi colon error.
 *
@@ -1099,8 +1102,8 @@ void VariableDeclarationList() : {}
 
 void VariableDeclaration() : {}
 {
-//	Type()
-	<VAR>
+	Type()
+//	<VAR>
 	Identifier()
 	<SEMI>
 }
