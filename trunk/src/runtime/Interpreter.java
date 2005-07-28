@@ -201,7 +201,7 @@ public class Interpreter {
 
 	while (true) {
 		Variable result = evaluateExpression(loopCond, c);
-		if (result.getCoreDataType() instanceof BooleanType) {
+		if (!(result.getCoreDataType() instanceof BooleanType)) {
 			throw new LemRuntimeException("Type mismatch: expected boolean condition");
 		}
 		if (!((Boolean)((BooleanVariable)result).getValue()).booleanValue())
