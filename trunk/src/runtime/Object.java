@@ -22,8 +22,10 @@ import metamodel.Generalisation;
  * @see the Objects at Runtime description at http://xtuml.jdns.org/wiki/index.php/Runtime_object
  */
 public class Object {
+    Interpreter interpreter;
+    
     /** Queue of pending signals for the object */
-    LinkedList signalQueue = new LinkedList();;
+    LinkedList signalQueue = new LinkedList();
     
     /**
      * Queue of pending signals to self. All signals from here must be
@@ -44,7 +46,8 @@ public class Object {
      * not represent a valid type for the new object
      */
     public Object(Collection classes) throws LemRuntimeException {
-        
+        interpreter = new Interpreter(this);
+
         // Do these classes actually participate in the same inheritance
         // hierarchy?
         if( !validClasses( classes )) {
@@ -87,7 +90,14 @@ public class Object {
 	    signalQueue.add(s);
 	    /* todo: a lot more */
     }
+
+    public void addSignalSelf(Signal s) throws LemRuntimeException
+    {
+	    signalSelfQueue.add(s);
+	    /* todo: a lot more */
+    }
     
+   
     /**
      * Returns the attribute of this object with the given name. All instances
      * which constitute the object are searched.

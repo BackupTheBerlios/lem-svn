@@ -66,7 +66,8 @@ public class StateNode extends AbstractDescriptionNode {
         metamodel.Procedure p = this.state.getProcedure();
         runtime.DomainContext d = new DomainContext();
         ConsoleLogger c = new ConsoleLogger(d);
-        runtime.Interpreter i = new Interpreter();
+	/* Not executing in the context of an object! */
+        runtime.Interpreter i = new Interpreter(null);
         try{
             i.interpret(p, d);
         } catch(LemRuntimeException e) {

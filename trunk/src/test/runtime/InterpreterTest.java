@@ -66,7 +66,7 @@ public class InterpreterTest extends junit.framework.TestCase {
         .getFirst());
         
         DomainContext c = new DomainContext();
-        Interpreter i = new Interpreter();
+        Interpreter i = new Interpreter(null);
         
         try {
 	    instantiateVariable(v, c);
@@ -105,7 +105,7 @@ public class InterpreterTest extends junit.framework.TestCase {
         .getProcedure();
         
         DomainContext c = new DomainContext();
-        Interpreter i = new Interpreter();
+        Interpreter i = new Interpreter(null);
         
         try {
             i.interpret( p, c );
@@ -137,7 +137,7 @@ public class InterpreterTest extends junit.framework.TestCase {
         .getProcedure();
         
         DomainContext c = new DomainContext();
-        Interpreter i = new Interpreter();
+        Interpreter i = new Interpreter(null);
         
         try {
             i.interpret( p, c );
@@ -170,7 +170,7 @@ public class InterpreterTest extends junit.framework.TestCase {
         .getProcedure();
         
         DomainContext c = new DomainContext();
-        Interpreter i = new Interpreter();
+        Interpreter i = new Interpreter(null);
         
         try {
             i.interpret( p, c );

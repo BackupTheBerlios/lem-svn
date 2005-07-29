@@ -21,7 +21,7 @@ public class VariableFactory {
     private VariableFactory() {
     }
     
-    static Variable newVariable( DataType type, String value ) throws LemRuntimeException {
+    static Variable newVariable( DataType type, java.lang.Object value ) throws LemRuntimeException {
         Variable v = null;
         DataType c = type;
         
@@ -30,13 +30,13 @@ public class VariableFactory {
         }
         
         if( c.equals( StringType.getInstance() )) {
-            v = new StringVariable( value );
+            v = new StringVariable( (String)value );
         } else if( c.equals( NumericType.getInstance() )) {
-            return new NumericVariable( type, value );
+            return new NumericVariable( type, (String)value );
         } else if( c.equals( BooleanType.getInstance() )) {
-            v = new BooleanVariable( value );
+            v = new BooleanVariable( (String)value );
         } else if( c.equals( ObjectReferenceType.getInstance() )) {
-            v = new ObjectReferenceVariable( null );
+            v = new ObjectReferenceVariable( (runtime.Object)value );
         } else {
             throw new LemRuntimeException( "VariableFactory for type '" + type.getName() + "' unimplemented" );
         }

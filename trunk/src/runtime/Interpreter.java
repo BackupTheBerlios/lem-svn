@@ -16,8 +16,14 @@ import java.util.Collection;
  * @todo javadoc
  */
 public class Interpreter {
-    /** Creates a new instance of Interpreter */
-    public Interpreter() {
+    private runtime.Object currentObject;
+    
+    /** Creates a new instance of Interpreter
+     * @param obj is the object that the Interpreter is
+     * executing the procedures for.
+     */
+    public Interpreter(runtime.Object obj) {
+	    currentObject = obj;
     }
     
     /**
@@ -149,8 +155,11 @@ public class Interpreter {
 
 	runtime.Object target = (runtime.Object)((ObjectReferenceVariable)targetRef).getValue();
 	
-	/* todo: handle signals to self */
-	target.addSignal(s);
+	if (target == currentObject) {
+		target.addSignalSelf(s);
+	} else {
+		target.addSignal(s);
+	}
 	
         // todo: Notify listeners that the signal has been generated
     }
@@ -277,7 +286,20 @@ public class Interpreter {
                 throw new LemRuntimeException( "Attribute '" + r.getVariableName() + "' not defined on object named '" + name + "'");
             }
         } else {
-            destination = c.getVariable( r.getVariableName () );
+	    if (r.getVariableName().equals("self")) {
+		    /* special case for self */
+		    if (currentObject == null) {
+			    throw new LemRuntimeException("Cannot generate signal to self - not executing within an object");
+		    }
+
+		    try {
+			    destination = VariableFactory.newVariable(CoreDataType.findByName("objref"), currentObject);
+		    } catch (LemException e) {
+			    throw new LemRuntimeException("todo");
+		    }
+	    } else {
+	            destination = c.getVariable( r.getVariableName () );
+	    }
         }
 
         return destination;

@@ -13,6 +13,7 @@ model TestModel is
 						obj := create A;
 						generate ev1 to obj;
 						generate ev2(1, 2) to obj;
+						generate ev1 to self;
 					} end;
 
 				end behaviour;
