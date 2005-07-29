@@ -73,8 +73,11 @@ public class Context {
      * Adds the given collection of objects to this context
      * @param inObjects the objects to add to the context
      */
-    public void addObjects(Collection inObjects) {
+    public void addObjects(Collection inObjects) throws LemRuntimeException {
         objectList.add(inObjects);
+	if (parentContext != null && objectList.size() > 128) {
+		throw new LemRuntimeException("Too many objects on stack.");
+	}
     }
       
     /**
@@ -109,7 +112,7 @@ public class Context {
      * all visible objects for participation in all relevant associations,
      * etc.
      */
-    public void finish() {
+    public void finish() throws LemRuntimeException {
 	if (parentContext != null) {
 		parentContext.addObjects(objectList);
 	}
