@@ -9,25 +9,30 @@ model TestModel is
 				// empty
 				behaviour is
 					state a is {
+						numeric b;
 						b := 2.1 + 3.2 + 4.3 ;
 					} end;
 
-					state evalTest is {					 	
+					state evalTest is {
+						numeric a;
+						numeric b;
+						boolean c;
+						string d;
+						objref e;
+						numeric j;
+						string z;
+						
 						a := 4;
 						b := a + 2;
 						c := a > b;
 						d := "hello" + " world";
-						e := create A;
-						e.blah := 22;
-						e.blah := -(2 * e.blah + 1);
-						f := "hello " + e.blah;
-						g := -17.1 mod 3.2;
-						h := !c || ( 2 + 1 > 8 );
-						i := 000000000000000000000000001 + 1;
+//						e := create A;
+//						e.blah := 22;
+//						e.blah := -(2 * e.blah + 1);
 						j := 0;
 
-						while( j < 10 ) {
-						    j := j + 1;
+						while( 5 < 10 ) {
+//						    j := j + 1;
 						}
 
 						if( j /= 10 ) {

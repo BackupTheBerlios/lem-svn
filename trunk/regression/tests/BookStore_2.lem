@@ -9,6 +9,9 @@
 // $Id$
 // 
 // $Log$
+// Revision 1.2  2005/07/29 02:47:40  u3293115
+// Start moving toward strict variable declarations in the regression tests.
+//
 // Revision 1.1  2005/06/01 13:10:52  u3293115
 // First pass at a basic regression tester.
 // Whether or not this is going to be the accepted, well designed regression
@@ -157,13 +160,6 @@ model BookStoreModel is
 						"the manuscript is incomplete and is subject to regular
 						additions by the author" ( newText is string ) is
 						{
-							objref obj;
-							a := blah;
-							a := b.blah;
-							// a := create Manuscript;	
-							// action language goes here
-							// action language goes here
-							// action language goes here
 						}
 
 					end Adding;

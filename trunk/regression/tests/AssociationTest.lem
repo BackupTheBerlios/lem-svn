@@ -30,6 +30,8 @@ model TestModel is
 
 				behaviour is
 					state a is {
+						objref a;
+						objref b;
 						a := create A;
 						b := create B;
 						relate a to b across R3;
