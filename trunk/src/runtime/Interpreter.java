@@ -231,7 +231,6 @@ public class Interpreter {
         
         // At this point, we evaluate the expression no matter what
         Variable value = evaluateExpression( a.getExpression(), c );
-        System.err.println( "Debug: " + value.getValue() );
         
         if( value.getCoreDataType() != destination.getCoreDataType() ) {
             throw new LemRuntimeException( "Type mismatch: evaluated '" + value.getType().getName() + "'" 

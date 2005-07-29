@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import metamodel.VariableDeclaration;
 import metamodel.AssignmentAction;
 import metamodel.LemException;
 import metamodel.Model;
@@ -28,6 +29,7 @@ public class InterpreterTest extends junit.framework.TestCase {
         super(testName);
     }
     
+    /*
     public void testExecuteAssignmentAction() {
         Lem l = new Lem();
         Model m = null;
@@ -44,12 +46,22 @@ public class InterpreterTest extends junit.framework.TestCase {
             fail( "Some LEMException occurred: " + e.getMessage() );
         }
         
+	VariableDeclaration v = (VariableDeclaration)(m.getDomain("TestDomain")
+	.getClass("A")
+	.getStateMachine()
+	.getState("a")
+	.getProcedure()
+	.getActionBlock()
+	.getVariableDeclarations()
+	.getFirst());
+	
         // Grab the AssignmentAction
         AssignmentAction a = (AssignmentAction)(m.getDomain("TestDomain")
         .getClass("A")
         .getStateMachine()
         .getState("a")
         .getProcedure()
+	.getActionBlock()
         .getActions()
         .getFirst());
         
@@ -57,6 +69,8 @@ public class InterpreterTest extends junit.framework.TestCase {
         Interpreter i = new Interpreter();
         
         try {
+	    instantiateVariable(v, c);
+
             Variable v = i.executeAssignmentAction(a, c);
             System.out.println( "The answer is " + v.getValue() );
             BigDecimal val = (BigDecimal)v.getValue();
@@ -66,7 +80,8 @@ public class InterpreterTest extends junit.framework.TestCase {
         }
         
     }
-    
+    */
+
     public void testEvaluation() {
         Lem l = new Lem();
         Model m = null;
