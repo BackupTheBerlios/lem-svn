@@ -52,7 +52,7 @@ public class Interpreter {
 	i = decls.iterator();
 	while (i.hasNext()) {
 		VariableDeclaration vd = (VariableDeclaration)i.next();
-		instantiateVariable ( vd, c );
+		instantiateVariable ( vd, localContext );
         }
       
 	/* Execute actions */
@@ -245,7 +245,11 @@ public class Interpreter {
         }
         
         // Otherwise, we do a type check. If there's a mismatch, throw an error
-        if( value.getCoreDataType() != destination.getCoreDataType() ) {
+//	CoreDataType t1 = value.getCoreDataType();
+//	CoreDataType t2 = destination.getCoreDataType();
+
+        if( value.getCoreDataType()
+			!= destination.getCoreDataType() ) {
             throw new LemRuntimeException( "Type mismatch: evaluated '" + value.getType().getName() + "'" 
                     + ", expected '" + destination.getType() );
         }
