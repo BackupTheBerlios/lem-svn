@@ -850,27 +850,16 @@ void StateDeclaration() : {}
  *****************************************************************************************/
 
 void TransitionDeclaration() : {}
-{ 	
-	<ON> TransitionEventIdentifier()
-		Description()
-		<TRANSITION> 
-		<FROM> [ <CREATION> <STATE> | FromStateIdentifier() ]
-		<TO> ToStateIdentifier() <SEMI>
-}
-
-void FromStateIdentifier() : {
 // constraint: LEM_E_01010=Transition 'from' State must be defined in enclosing behaviour block.
 // constraint: LEM_E_01012=Transition 'from' State must be a non deletion state.
-}
-{ <SIMPLE_IDENTIFIER> }
-
-void ToStateIdentifier() : {
 // constraint: LEM_E_01011=Transition 'to' State must be defined in enclosing behaviour block.
+{ 	
+	<ON> Identifier()
+		Description()
+		<TRANSITION> 
+		<FROM> [ <CREATION> <STATE> | Identifier() ]
+		<TO> Identifier() <SEMI>
 }
-{ <SIMPLE_IDENTIFIER> }
-
-void TransitionEventIdentifier() : {}
-{ <SIMPLE_IDENTIFIER> }
 
 /*****************************************************************************************
  * Action Language defined here

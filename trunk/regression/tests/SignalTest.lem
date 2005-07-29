@@ -2,20 +2,19 @@ model TestModel is
 	domain TestDomain is
 
 		subsystem TestSubsystem is
-			class A is
-				event ev1 "blah";
-				event ev2 "blah blah" carries (first is numeric, second is numeric);
+			class main is
+				event ping "starts object running";
 
-				// empty
 				behaviour is
-					state sigTest is {
-						objref obj;
-						obj := create A;
-						generate ev1 to obj;
-						generate ev2(1, 2) to obj;
-						generate ev1 to self;
+					state sigInit is {
+						create main;
 					} end;
 
+					state sigTest is {
+						generate ping to self;
+					} end;
+
+					on ping transition from sigTest to sigTest;
 				end behaviour;
 			end;
 		end TestSubsystem;

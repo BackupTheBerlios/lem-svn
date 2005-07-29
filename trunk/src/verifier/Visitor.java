@@ -397,21 +397,6 @@ public class Visitor implements LemParserVisitor {
 		node.childrenAccept( this, data );
 		return data;
 	}
-	  public Object visit(LEMFromStateIdentifier node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMToStateIdentifier node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMTransitionEventIdentifier node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
 	  public Object visit(LEMProcedure node, Object data) throws metamodel.LemException { 
 		logVisit( node, data );
 		node.childrenAccept( this, data );

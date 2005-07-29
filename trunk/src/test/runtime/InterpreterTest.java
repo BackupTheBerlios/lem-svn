@@ -16,6 +16,8 @@ import metamodel.AssignmentAction;
 import metamodel.LemException;
 import metamodel.Model;
 import metamodel.Procedure;
+import metamodel.Action;
+import metamodel.CreateAction;
 import parser.ParseException;
 import tools.Lem;
 
@@ -130,8 +132,17 @@ public class InterpreterTest extends junit.framework.TestCase {
             fail( "Some LEMException occurred: " + e.getMessage() );
         }
         
-        Procedure p = m.getDomain("TestDomain")
-        .getClass("A")
+        CreateAction create = (CreateAction)m.getDomain("TestDomain")
+        .getClass("main")
+        .getStateMachine()
+        .getState("sigInit")
+        .getProcedure()
+	.getActionBlock()
+	.getActions()
+	.getFirst();
+
+	Procedure mainProc = m.getDomain("TestDomain")
+        .getClass("main")
         .getStateMachine()
         .getState("sigTest")
         .getProcedure();
@@ -140,7 +151,9 @@ public class InterpreterTest extends junit.framework.TestCase {
         Interpreter i = new Interpreter(null);
         
         try {
-            i.interpret( p, c );
+            runtime.Object obj = i.executeCreateAction( create, c );
+	    i = new Interpreter(obj);
+	    i.interpret(mainProc, c);
         } catch( LemRuntimeException e ) {
             fail( "Some LemRuntimeException occurred: " + e.getMessage() );
         }
