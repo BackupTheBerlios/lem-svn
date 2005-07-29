@@ -38,7 +38,7 @@ import java.util.*;
 public abstract class Signature {
     
    /** the Parameters associated with this Signature  [R507] */
-    private HashMap parameters = new HashMap();
+    private LinkedList parameters = new LinkedList();
     
     /** Creates a new instance of Signature */
     public Signature() {
@@ -51,34 +51,17 @@ public abstract class Signature {
      * @param aParameter to be added to this Signature
      */
     public void add( Parameter aParameter ) {
-        parameters.put( aParameter.getName(), aParameter );
+        parameters.add( aParameter );
         aParameter.setSignature( this );
     }
     
     /**
-     * Return an array of the parameters in this Signature
+     * Return the list of parameters in this Signature
      * 
-     * @return an array of the parameters in this Signature
+     * @return the list of parameters in this Signature
      */
-    public Parameter [] getParameterArray() {
-        
-        Parameter [] result = new Parameter[ parameters.size() ];
-        
-        int i = 0;
-        for ( Iterator it = parameters.values().iterator(); it.hasNext()  ; i++ )
-            result[ i ] = (Parameter) it.next();
-            
-        return result;
-    }
-    
-    /**
-     * Return a parameter given a name
-     *
-     * @param name of the required parameter
-     * @return the named parameter or null if it does not exist
-     */
-    public Parameter getParameter( String name ) {
-        return (Parameter) parameters.get( name );
+    public LinkedList getParameters() {
+        return parameters; 
     }
     
     /** 

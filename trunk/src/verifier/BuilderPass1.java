@@ -874,15 +874,17 @@ public class BuilderPass1 extends Visitor {
 
         // parameter name must be unique within the signature
         
+	/* todo: fix this test
         if ( null != signature.getParameter( parameter.getName() )) {
             throw new LemException(
                     "Parameter " + parameter.getName() + " is already defined.",
                     node.getFirstToken(),
                     "LEM_E_01008" );
             
-        } else {
-            signature.add( parameter );
         }
+	*/
+
+        signature.add( parameter );
         
         return data;
     }

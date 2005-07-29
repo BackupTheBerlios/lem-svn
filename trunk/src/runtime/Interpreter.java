@@ -127,15 +127,18 @@ public class Interpreter {
     public void executeGenerateAction( GenerateAction a, Context c ) throws LemRuntimeException {
         // Create the new signal
 	Signal s = new Signal(a.getEvent());
-
 	LinkedList p = a.getParameters();
 	if (p != null) {
+		LinkedList passedValues = new LinkedList();
+		
 		/* Evaluate parameters - pass by value obviously */
 		for (Iterator i = p.iterator(); i.hasNext();) {
 			Expression e = (Expression)i.next();
 			Variable result = evaluateExpression(e, c);
-			s.setParameter("param1", p); /* todo: need to fix this */
+			passedValues.add(result);
 		}
+
+		s.setParameters(passedValues);
 	}
 
 	VariableReference vr = a.getTarget();

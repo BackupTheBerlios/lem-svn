@@ -6,7 +6,7 @@
 
 package runtime;
 
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Iterator;
 import metamodel.Event;
 import metamodel.EventSignature;
@@ -20,7 +20,7 @@ import metamodel.Parameter;
  */
 public class Signal {
 	Event event;
-	HashMap parameters;
+	LinkedList parameters;
 	
 	/**
 	 * Creates a new instance of Signal.
@@ -32,34 +32,43 @@ public class Signal {
 		event = e;
 		parameters = null;
 
+	}
+
+	/**
+	 * Returns the list of the Signal's parameters.
+	 */
+	public LinkedList getParameters()
+	{
+		return parameters;
+	}
+
+	/**
+	 * Sets the list of the Signal's parameters to p.
+	 */
+	public void setParameters(LinkedList newParams) throws LemRuntimeException {
+		parameters = newParams;
+		
 		EventSignature evSig = event.getSignature();
-		if (evSig != null) {
-			Parameter[] params;
-			params = evSig.getParameterArray();
-			if (params.length > 0) {
-				parameters = new HashMap();
-				for (int i = 0; i < params.length; i++) {
-					Parameter p = params[i];
-					Variable v = VariableFactory.newVariable(p.getType(), null);
-					parameters.put(p.getName(), v);
-				}
+		if (evSig == null) {
+			throw new LemRuntimeException("Attaching a parameter list to signal accepting no parameters");
+		}
+
+		LinkedList params = evSig.getParameters();
+		/* todo: fix up confusing names :( */
+		Iterator i = params.iterator();
+		Iterator j = parameters.iterator();
+		while (true) {
+			if (i.hasNext() != j.hasNext()) {
+				throw new LemRuntimeException("Mismatched parameter list sizes");
+			}
+			if (!i.hasNext())
+				break;
+			
+			Parameter p = (Parameter)i.next();
+			Variable v = (Variable)j.next();
+			if (p.getType() != v.getType()) {
+				throw new LemRuntimeException("Mismatched parameter types");
 			}
 		}
-	}
-
-	/**
-	 * Sets the value of one of the Signal's parameters.
-	 */
-	public void setParameter(java.lang.String name, java.lang.Object value) throws LemRuntimeException
-	{
-		((Variable)parameters.get(name)).setValue(value);
-	}
-
-	/**
-	 * Returns one of the Signal's parameters.
-	 */
-	public Variable getParameter(java.lang.String name) throws LemRuntimeException
-	{
-		return (Variable)parameters.get(name);
 	}
 }

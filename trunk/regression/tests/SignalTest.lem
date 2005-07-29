@@ -12,6 +12,7 @@ model TestModel is
 						objref obj;
 						obj := create A;
 						generate ev1 to obj;
+						generate ev2(1, 2) to obj;
 					} end;
 
 				end behaviour;
