@@ -74,7 +74,7 @@ public class Context {
      * @param inObjects the objects to add to the context
      */
     public void addObjects(Collection inObjects) throws LemRuntimeException {
-        objectList.add(inObjects);
+        objectList.addAll(inObjects);
 	if (parentContext != null && objectList.size() > 128) {
 		throw new LemRuntimeException("Too many objects on stack.");
 	}
