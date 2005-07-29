@@ -233,22 +233,7 @@ public class Interpreter {
         Variable value = evaluateExpression( a.getExpression(), c );
         System.err.println( "Debug: " + value.getValue() );
         
-        // If the destination is not defined, then there is no object reference and we should 
-        // create a new Variable and place it in the current context
-        // TODO: Variable references are declared anyway. We probably don't need this behaviour.
-        if( destination == null ) {
-            destination = VariableFactory.newVariable( value.getType() );
-            c.addVariable( r.getVariableName(), value );
-            destination.setValue( value.getValue() );
-            return destination;
-        }
-        
-        // Otherwise, we do a type check. If there's a mismatch, throw an error
-//	CoreDataType t1 = value.getCoreDataType();
-//	CoreDataType t2 = destination.getCoreDataType();
-
-        if( value.getCoreDataType()
-			!= destination.getCoreDataType() ) {
+        if( value.getCoreDataType() != destination.getCoreDataType() ) {
             throw new LemRuntimeException( "Type mismatch: evaluated '" + value.getType().getName() + "'" 
                     + ", expected '" + destination.getType() + ", name: " + r.getVariableName() );
         }
