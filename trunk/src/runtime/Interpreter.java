@@ -226,7 +226,6 @@ public class Interpreter {
     public Variable executeAssignmentAction( AssignmentAction a, Context c ) throws LemRuntimeException {
         VariableReference r = a.getVariableReference();
         String name = r.getObjectName();
-        runtime.Object o = null;
         
         Variable destination = getVariable( r, c );
         
@@ -251,7 +250,7 @@ public class Interpreter {
         if( value.getCoreDataType()
 			!= destination.getCoreDataType() ) {
             throw new LemRuntimeException( "Type mismatch: evaluated '" + value.getType().getName() + "'" 
-                    + ", expected '" + destination.getType() );
+                    + ", expected '" + destination.getType() + ", name: " + r.getVariableName() );
         }
         
         destination.setValue( value.getValue() );
@@ -388,14 +387,9 @@ public class Interpreter {
      */
     public void instantiateVariable( VariableDeclaration v, Context c) throws LemRuntimeException {
         String name ; 
-        name = v.getVariableName() ;          
-        Variable var = new Variable() ;         
-        /** variable already defined in a parent context */
-        if ( c.getVariable(name) != null) {
-            // do something about this later.
-        } else {
-            c.addVariable(name , var ) ; 
-        }
+        Variable var = VariableFactory.newVariable(v.getVariableType(), null);
+        name = v.getVariableName() ; 
+        c.addVariable(name , var ) ; 
     }
     
 }

@@ -74,7 +74,10 @@ public class NumericVariable extends Variable {
      */
     public NumericVariable( DataType type, String value ) throws LemRuntimeException {
         try {
-            this.value = new BigDecimal( value );
+	    if (value != null)
+                this.value = new BigDecimal( value );
+	    else
+		this.value = null;
             setType( type );
         } catch( NumberFormatException nfe ) {
             System.err.println( "Invalid string passed to NumericVariable constructor: " + nfe.getMessage() );

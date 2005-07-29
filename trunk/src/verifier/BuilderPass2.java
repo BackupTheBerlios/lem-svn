@@ -110,8 +110,10 @@ public class BuilderPass2 extends Visitor {
     
     
     public Object visit( LEMVariableDeclaration node, Object data ) throws LemException {
-        String varName = (String)node.jjtGetChild( 0 ).jjtAccept(this, null);
-        VariableDeclaration v = new VariableDeclaration(null, varName);
+	String typeName = (String)node.jjtGetChild( 0 ).jjtAccept(this, null);
+	DataType type = CoreDataType.findByName(typeName);
+        String varName = (String)node.jjtGetChild( 1 ).jjtAccept(this, null);
+        VariableDeclaration v = new VariableDeclaration(type, varName);
         
         return v;
     }
@@ -1087,6 +1089,13 @@ public class BuilderPass2 extends Visitor {
      */
     public Object visit(LEMIdentifier node, Object data) {
         return node.getFirstToken().image;
+    }
+
+    public Object visit(LEMType node, Object data) throws LemException {
+	return node.jjtGetChild(0).jjtAccept(this, null);
+    }
+    public Object visit(LEMPrimitiveType node, Object data) {
+	return node.getFirstToken().image;
     }
     
     /**

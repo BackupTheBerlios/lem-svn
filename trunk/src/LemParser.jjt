@@ -458,11 +458,11 @@ void AttributeIdentifier() : {}
 void Type() : {}
 {
 	  PrimitiveType()
-	| DomainSpecificType()
+//	| DomainSpecificType()
 }
 
-void DomainSpecificType() : {}
-{ <SIMPLE_IDENTIFIER> }
+//void DomainSpecificType() : {}
+//{ <SIMPLE_IDENTIFIER> }
 
 void DomainDeclaration() : {
 // constraint: LEM_E_01004=Each domain must have a unique <DomainIdentifier>.
@@ -897,7 +897,6 @@ void VariableDeclarationList() : {}
 void VariableDeclaration() : {}
 {
 	Type()
-//	<VAR>
 	Identifier()
 	<SEMI>
 }

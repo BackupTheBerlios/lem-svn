@@ -4,7 +4,8 @@ model TestModel is
 
 		subsystem TestSubsystem is
 			class A is
-				attribute blah is Money;
+				//attribute blah is Money;
+				attribute blah is numeric;
 
 				// empty
 				behaviour is
