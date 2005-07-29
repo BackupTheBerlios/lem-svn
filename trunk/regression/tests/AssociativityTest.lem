@@ -27,13 +27,13 @@ model TestModel is
 						b := a + 2;
 						c := a > b;
 						d := "hello" + " world";
-//						e := create A;
-//						e.blah := 22;
-//						e.blah := -(2 * e.blah + 1);
+						e := create A;
+						e.blah := 22;
+						e.blah := -(2 * e.blah + 1);
 						j := 0;
 
-						while( 5 < 10 ) {
-//						    j := j + 1;
+						while( 5 < 10 && j < 10000 ) {
+						    j := j + 1;
 						}
 
 						if( j /= 10 ) {
