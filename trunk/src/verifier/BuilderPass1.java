@@ -890,45 +890,9 @@ public class BuilderPass1 extends Visitor {
     }
     
     /**
-     * Process a transition declarattion
-     */
-    public Object visit(LEMTransitionDeclaration node, Object data) throws metamodel.LemException {
-        
-        // we don't know the type of transition yet but we will
-        // assume it to be the common variety StateTransition. We
-        // can correct this later if it is found to be an initialising transition
-        
-        StateMachine stateMachine = (StateMachine) data;
-        StateTransition transition = new StateTransition();
-        transition.setStateMachine( stateMachine );
-        
-        super.visit( node, transition );
-        
-        // test to see if it is an initialising transition
-        
-        Transition actualTransition = null;
-        
-        if ( null == transition.getFromState() ) {
-            actualTransition = new InitialisingTransition();
-            actualTransition.setDescription( transition.getDescription() );
-            actualTransition.setEvent( transition.getEvent() );
-            actualTransition.setToState( transition.getToState() );
-        } else {
-            actualTransition = transition;
-        }
-        
-        // add the transition to the state machine
-        
-        stateMachine.add( actualTransition );
-        
-        return data;
-    }
-    
-    /**
      * Process a From state identifier in the context of a state transition
      */
     public Object visit(LEMFromStateIdentifier node, Object data) throws metamodel.LemException {
-        
         StateTransition transition = (StateTransition) data;
         super.visit( node, transition );
         
