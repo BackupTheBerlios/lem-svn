@@ -3,11 +3,11 @@
  */
 
 package runtime;
-import java.math.BigDecimal;
 import metamodel.*;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Collection;
+import java.util.HashMap;
 
 /**
  * This is the main interpreter file.
@@ -23,7 +23,7 @@ public class Interpreter {
      * executing the procedures for.
      */
     public Interpreter(runtime.Object obj) {
-	    currentObject = obj;
+        currentObject = obj;
     }
     
     /**
@@ -35,7 +35,7 @@ public class Interpreter {
      * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
      */
     public void interpret(Procedure p, Context c) throws LemRuntimeException {
-	ActionBlock block = p.getActionBlock();
+        ActionBlock block = p.getActionBlock();
         executeBlock(block, c);
     }
     
@@ -49,25 +49,25 @@ public class Interpreter {
      * @throws runtime.LemRuntimeException if any error occurs during the execution of the procedure
      */
     public void executeBlock( ActionBlock block, Context c ) throws LemRuntimeException {
-	LocalContext localContext = new LocalContext(c);
-	Collection decls = block.getVariableDeclarations();
+        LocalContext localContext = new LocalContext(c);
+        Collection decls = block.getVariableDeclarations();
         LinkedList actions = block.getActions();
-	Iterator i;
-
-	/* Set up variables into the local context */
-	i = decls.iterator();
-	while (i.hasNext()) {
-		VariableDeclaration vd = (VariableDeclaration)i.next();
-		instantiateVariable ( vd, localContext );
+        Iterator i;
+        
+        /* Set up variables into the local context */
+        i = decls.iterator();
+        while (i.hasNext()) {
+            VariableDeclaration vd = (VariableDeclaration)i.next();
+            instantiateVariable( vd, localContext );
         }
-      
-	/* Execute actions */
+        
+        /* Execute actions */
         i = actions.iterator();
         while( i.hasNext() ) {
             Action a = (Action)i.next();
             executeAction(a, localContext);
         }
-	localContext.finish();
+        localContext.finish();
     }
     
     /**
@@ -81,23 +81,23 @@ public class Interpreter {
             executeCreateAction((CreateAction)a, c);
         else if( a instanceof AssignmentAction )
             executeAssignmentAction((AssignmentAction)a, c);
-	else if( a instanceof IfStatement )
-	    executeIfStatement((IfStatement)a, c);
-	else if( a instanceof WhileStatement )
-	    executeWhileStatement((WhileStatement)a, c);
-	else if( a instanceof GenerateAction )
-	    executeGenerateAction((GenerateAction)a, c);
+        else if( a instanceof IfStatement )
+            executeIfStatement((IfStatement)a, c);
+        else if( a instanceof WhileStatement )
+            executeWhileStatement((WhileStatement)a, c);
+        else if( a instanceof GenerateAction )
+            executeGenerateAction((GenerateAction)a, c);
         else {
             throw new LemRuntimeException("executeAction encountered unknown action");
         }
     }
     
     /**
-     * Execute the given CreateAction in the given Context. 
+     * Execute the given CreateAction in the given Context.
      *
      * @param a the CreateAction to execute
      * @param c the Context in which to execute the action
-     * @throws runtime.LemRuntimeException thrown by the metamodel.Object 
+     * @throws runtime.LemRuntimeException thrown by the metamodel.Object
      * constructor
      * @return the newly created runtime.Object
      */
@@ -109,7 +109,7 @@ public class Interpreter {
         c.addObject(o);
         
         // Add the object reference to the context
-	if( a.getVariable() != null ) 
+        if( a.getVariable() != null )
             c.addVariable( a.getVariable().getVariableName(), new ObjectReferenceVariable( o ));
         
         // Notify listeners that the object has been added
@@ -121,113 +121,113 @@ public class Interpreter {
         
         return o;
     }
-   
+    
     /**
-     * Execute the given GenerateAction in the given Context. 
+     * Execute the given GenerateAction in the given Context.
      *
      * @param a the GenerateAction to execute
      * @param c the Context in which to execute the action
-     * @throws runtime.LemRuntimeException thrown by the metamodel.Object 
+     * @throws runtime.LemRuntimeException thrown by the metamodel.Object
      * constructor
      */
     public void executeGenerateAction( GenerateAction a, Context c ) throws LemRuntimeException {
         // Create the new signal
-	Signal s = new Signal(a.getEvent());
-	LinkedList p = a.getParameters();
-	if (p != null) {
-		LinkedList passedValues = new LinkedList();
-		
-		/* Evaluate parameters - pass by value obviously */
-		for (Iterator i = p.iterator(); i.hasNext();) {
-			Expression e = (Expression)i.next();
-			Variable result = evaluateExpression(e, c);
-			passedValues.add(result);
-		}
-
-		s.setParameters(passedValues);
-	}
-
-	VariableReference vr = a.getTarget();
+        Signal s = new Signal(a.getEvent());
+        LinkedList p = a.getParameters();
+        if (p != null) {
+            LinkedList passedValues = new LinkedList();
+            
+            /* Evaluate parameters - pass by value obviously */
+            for (Iterator i = p.iterator(); i.hasNext();) {
+                Expression e = (Expression)i.next();
+                Variable result = evaluateExpression(e, c);
+                passedValues.add(result);
+            }
+            
+            s.setParameters(passedValues);
+        }
+        
+        VariableReference vr = a.getTarget();
         Variable targetRef = getVariable( vr, c );
-	if (!(targetRef instanceof ObjectReferenceVariable)) {
-		throw new LemRuntimeException("Type mismatch: expected objref");
-	}
-
-	runtime.Object target = (runtime.Object)((ObjectReferenceVariable)targetRef).getValue();
-	
-	if (target == currentObject) {
-		target.addSignalSelf(s);
-	} else {
-		target.addSignal(s);
-	}
-	
+        if (!(targetRef instanceof ObjectReferenceVariable)) {
+            throw new LemRuntimeException("Type mismatch: expected objref");
+        }
+        
+        runtime.Object target = (runtime.Object)((ObjectReferenceVariable)targetRef).getValue();
+        
+        if (target == currentObject) {
+            target.addSignalSelf(s);
+        } else {
+            target.addSignal(s);
+        }
+        
         // todo: Notify listeners that the signal has been generated
     }
- 
+    
     /**
-     * Execute the given IfStatement in the given Context. 
+     * Execute the given IfStatement in the given Context.
      *
      * @param a the IfStatement to execute
      * @param c the Context in which to execute the action
-     * @throws runtime.LemRuntimeException thrown by the metamodel.Object 
+     * @throws runtime.LemRuntimeException thrown by the metamodel.Object
      * constructor
      */
     public void executeIfStatement( IfStatement a, Context c ) throws LemRuntimeException {
-	LinkedList condList = a.getConditionalAlternatives();
-	Iterator i = condList.iterator();
-
-	while (i.hasNext()) {
-		ConditionalAlternative ca = (ConditionalAlternative)i.next();
-		Expression condition = ca.getCondition();
-		ActionBlock block = ca.getBlock();
-
-		if (condition != null) {
-			Variable result = evaluateExpression(condition, c);
-			if (!(result instanceof BooleanVariable)) {
-				throw new LemRuntimeException("Type mismatch: expected boolean condition");
-			}
-			if (!((Boolean)((BooleanVariable)result).getValue()).booleanValue())
-				continue;
-
-		}
-
-		/* Fallthrough: either condition is Null (we've hit the else
-		 * part), or the conditional result has evaluated True.
-		 * Execute the associated action block and break the loop.
-		 */
-		executeBlock(block, c);
-                break;
-	}
+        LinkedList condList = a.getConditionalAlternatives();
+        Iterator i = condList.iterator();
+        
+        while (i.hasNext()) {
+            ConditionalAlternative ca = (ConditionalAlternative)i.next();
+            Expression condition = ca.getCondition();
+            ActionBlock block = ca.getBlock();
+            
+            if (condition != null) {
+                Variable result = evaluateExpression(condition, c);
+                if (!(result instanceof BooleanVariable)) {
+                    throw new LemRuntimeException("Type mismatch: expected boolean condition");
+                }
+                if (!((Boolean)((BooleanVariable)result).getValue()).booleanValue())
+                    continue;
+                
+            }
+            
+                /* Fallthrough: either condition is Null (we've hit the else
+                 * part), or the conditional result has evaluated True.
+                 * Execute the associated action block and break the loop.
+                 */
+            executeBlock(block, c);
+            break;
+        }
     }
-
+    
     /**
-     * Execute the given WhileStatement in the given Context. 
+     * Execute the given WhileStatement in the given Context.
      *
      * @param a the WhileStatement to execute
      * @param c the Context in which to execute the action
-     * @throws runtime.LemRuntimeException thrown by the metamodel.Object 
+     * @throws runtime.LemRuntimeException thrown by the metamodel.Object
      * constructor
      */
     public void executeWhileStatement( WhileStatement a, Context c ) throws LemRuntimeException {
-	Expression loopCond = a.getCondition();
-	ActionBlock block = a.getBlock();
-
-	while (true) {
-		Variable result = evaluateExpression(loopCond, c);
-		if (!(result.getCoreDataType() instanceof BooleanType)) {
-			throw new LemRuntimeException("Type mismatch: expected boolean condition");
-		}
-		if (!((Boolean)((BooleanVariable)result).getValue()).booleanValue())
-			break;
-
-		/* Condition evaluated to true */
-		executeBlock(block, c);
-	}
+        Expression loopCond = a.getCondition();
+        ActionBlock block = a.getBlock();
+        
+        while (true) {
+            Variable result = evaluateExpression(loopCond, c);
+            if (!(result.getCoreDataType() instanceof BooleanType)) {
+                throw new LemRuntimeException("Type mismatch: expected boolean condition");
+            }
+            if (!((Boolean)((BooleanVariable)result).getValue()).booleanValue())
+                break;
+            
+            /* Condition evaluated to true */
+            executeBlock(block, c);
+        }
     }
- 
-
+    
+    
     /**
-     * Executes the given AssignmentAction in the current context. 
+     * Executes the given AssignmentAction in the current context.
      *
      * @param a the AssignmentAction to execute
      * @param c the Context in which to execute the action
@@ -245,7 +245,7 @@ public class Interpreter {
         Variable value = evaluateExpression( a.getExpression(), c );
         
         if( value.getCoreDataType() != destination.getCoreDataType() ) {
-            throw new LemRuntimeException( "Type mismatch: evaluated '" + value.getType().getName() + "'" 
+            throw new LemRuntimeException( "Type mismatch: evaluated '" + value.getType().getName() + "'"
                     + ", expected '" + destination.getType() + ", name: " + r.getVariableName() );
         }
         
@@ -286,22 +286,22 @@ public class Interpreter {
                 throw new LemRuntimeException( "Attribute '" + r.getVariableName() + "' not defined on object named '" + name + "'");
             }
         } else {
-	    if (r.getVariableName().equals("self")) {
-		    /* special case for self */
-		    if (currentObject == null) {
-			    throw new LemRuntimeException("Cannot generate signal to self - not executing within an object");
-		    }
-
-		    try {
-			    destination = VariableFactory.newVariable(CoreDataType.findByName("objref"), currentObject);
-		    } catch (LemException e) {
-			    throw new LemRuntimeException("todo");
-		    }
-	    } else {
-	            destination = c.getVariable( r.getVariableName () );
-	    }
+            if (r.getVariableName().equals("self")) {
+                /* special case for self */
+                if (currentObject == null) {
+                    throw new LemRuntimeException("Cannot generate signal to self - not executing within an object");
+                }
+                
+                try {
+                    destination = VariableFactory.newVariable(CoreDataType.findByName("objref"), currentObject);
+                } catch (LemException e) {
+                    throw new LemRuntimeException("todo");
+                }
+            } else {
+                destination = c.getVariable( r.getVariableName() );
+            }
         }
-
+        
         return destination;
     }
     
@@ -317,13 +317,19 @@ public class Interpreter {
     public Variable evaluateExpression( Expression e, Context c ) throws LemRuntimeException {
         if( e instanceof Literal ) {
             Literal l = (Literal)e;
-            
             // TODO: Testing only
             Variable v = VariableFactory.newVariable(  l.getType(), l.getValue() );
-            
             return v;
+        }else if (e instanceof Expression) {
+            if (e instanceof SelectExpression) {
+                SelectExpression se = (SelectExpression) e;
+                //HashMap vl = c.variableList ; 
+                /** get the list of all variables from same class 
+                 *and compare them agains the condition */
+                
+               // return v ;
+            }
         }
-        
         if( e instanceof BinaryOperation ) {
             BinaryOperation o = (BinaryOperation) e;
             Variable left = evaluateExpression( o.getLeft(), c );
@@ -387,7 +393,7 @@ public class Interpreter {
     
     /** This method will instantiate a variable in context c from the given
      * VariableDeclaration.
-     * 
+     *
      * It will check whether the variable already exists in the context in
      * which case it will ...
      *otherwise it will add a new variable to the context, the declared variable initially has no type or value.
@@ -395,10 +401,10 @@ public class Interpreter {
      *@param c the context in which the action has been executed.
      */
     public void instantiateVariable( VariableDeclaration v, Context c) throws LemRuntimeException {
-        String name ; 
+        String name ;
         Variable var = VariableFactory.newVariable(v.getVariableType(), null);
-        name = v.getVariableName() ; 
-        c.addVariable(name , var ) ; 
+        name = v.getVariableName() ;
+        c.addVariable(name , var ) ;
     }
     
 }
