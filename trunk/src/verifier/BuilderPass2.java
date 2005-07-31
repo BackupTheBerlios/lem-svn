@@ -119,9 +119,26 @@ public class BuilderPass2 extends Visitor {
         DataType type = CoreDataType.findByName(typeName);
         String varName = (String)node.jjtGetChild( 1 ).jjtAccept(this, null);
         VariableDeclaration v = new VariableDeclaration(type, varName);
-        
         return v;
     }
+    
+    public Object visit(LEMSelectStatement node, Object data) throws LemException {
+        //getMapper().add(node, a);
+        Expression e = null ; 
+        String multiplicity = (String) getIdentifier(node.jjtGetChild(0));
+        String fromClass = (String) getIdentifier(node.jjtGetChild(2));
+        Object condition = node.jjtGetChild(3).jjtAccept( this , data ) ; 
+        if ( condition != null ) {
+            if ( condition instanceof LEMRelated ) {
+                // todo later ..
+            }else if ( condition instanceof LEMSelected ){
+                e = (Expression) condition ; 
+            }            
+        }
+        SelectExpression se = new SelectExpression(multiplicity , fromClass , e ) ;
+        return se ;
+    }
+    
     
     public Object visit( LEMProcedure node, Object data ) throws LemException {
         // Fetch the Procedure object created in the first pass
@@ -1104,9 +1121,9 @@ public class BuilderPass2 extends Visitor {
             if( o instanceof Transition )
                 m.add( (Transition) o );
             else
-                System.err.println( "Warning: Does visit(" 
-                    + node.jjtGetChild( i ).getClass().getName() 
-                    + ") still uses old-style side effects?" );
+                System.err.println( "Warning: Does visit("
+                        + node.jjtGetChild( i ).getClass().getName()
+                        + ") still uses old-style side effects?" );
         }
         
         return m;
