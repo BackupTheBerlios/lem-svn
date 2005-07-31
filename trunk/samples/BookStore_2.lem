@@ -9,6 +9,9 @@
 // $Id$
 // 
 // $Log$
+// Revision 1.17  2005/07/31 05:08:24  u3957053
+// Temporarily modified sample to reflect bug in grammar
+//
 // Revision 1.16  2005/07/12 01:55:07  u3957053
 // Change sample to reflect new grammar definition
 //
@@ -117,14 +120,14 @@ model BookStoreModel is
 			 * ====
 			 */
 			class Book is "a representation of a book"
-				attribute bookNumber "uniquely identifies the book" is ISBN;
+				attribute bookNumber "uniquely identifies the book" is string;
 				attribute title "appears on the cover of the book" is string;
 				attribute subtitle "provides additional information for some books.
 						  We regard the subtitle as a simple extension of the 
 						  name of the book" is string := "NO SUBTITLE";
 				attribute copyright "a notice detailing the owner of the copyright for 
 						   the book" is string;
-				attribute unitPrice "the price of one copy of the book" is Money;
+				attribute unitPrice "the price of one copy of the book" is numeric;
 			end Book;
 
 			/*
@@ -171,7 +174,6 @@ model BookStoreModel is
 						"the manuscript is incomplete and is subject to regular
 						additions by the author" ( newText is string ) is
 						{
-							var obj;
 							a := blah;
 							a := b.blah;
 							obj := create Manuscript;
@@ -292,8 +294,8 @@ model BookStoreModel is
 				class Sale is "a record of the sale of a book to a customer"
 					attribute saleDate "records the date of the transaction" is date;
 					attribute quantity "of this title (book) sold to the customer" is numeric;
-					attribute unitPrice "of the book" is Money;
-					attribute value "of this sale" is Money;
+					attribute unitPrice "of the book" is numeric;
+					attribute value "of this sale" is numeric;
 				end Sale;
 				
 			end R3;
