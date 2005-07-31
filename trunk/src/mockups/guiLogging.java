@@ -26,7 +26,7 @@ public class guiLogging extends javax.swing.JFrame {
     Class newClass = new Class();
     DomainContext d = new DomainContext();
     JContextLoggerPanel Logger = new JContextLoggerPanel(d);
-    Interpreter I = new Interpreter();
+    Interpreter I = new Interpreter(null);
     /** Creates new form guiLogging */
     public guiLogging() {
         newClass.setName("newClass");

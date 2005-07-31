@@ -152,6 +152,11 @@ public class Visitor implements LemParserVisitor {
 		node.childrenAccept( this, data );
 		return data;
 	}
+	  public Object visit(LEMDomainSpecificType node, Object data) throws metamodel.LemException { 
+		logVisit( node, data );
+		node.childrenAccept( this, data );
+		return data;
+	}
 	  public Object visit(LEMDomainDeclaration node, Object data) throws metamodel.LemException { 
 		logVisit( node, data );
 		node.childrenAccept( this, data );
