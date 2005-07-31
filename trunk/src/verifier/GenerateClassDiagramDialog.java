@@ -205,29 +205,32 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 	private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
 		if ("generate".equals( evt.getActionCommand() )) {
 			// Fail if no filename specified
-			if (filenameField.getText() == "") {
+			if (filenameField.getText().equals("")) {
 				JOptionPane.showMessageDialog( this, "No output filename specified", "Error",
 						JOptionPane.ERROR_MESSAGE );
-			}
-			// 'Normal' case
-			else {
+			} else { // 'Normal' case
+				String dotCode;
 				// The user has selected all the classes in the domain
 				if (subsystemList.getSelectedIndex() == 0) {
-					System.err.println( "All classes in domain" );
-					String dotCode =
+					dotCode =
 							ClassWriter.dumpDot( selectedDomain, selectedDomain.getClasses().values() );
-					// System.err.println( dotCode );
-				}
-				// The user has selected a specific subsystem
-				else {
-					System.err.println( "Specific subsystem" );
-					String dotCode =
+					// The user has selected a specific subsystem
+				} else {
+					dotCode =
 							ClassWriter.dumpDot( selectedDomain, selectedSubsystem.getClasses().values() );
-					// System.err.println( dotCode );
 				}
+				// Generate the graph image
+				try {
+					DotWriter.dotToPNG( dotCode, filenameField.getText() );
+					JOptionPane.showMessageDialog( this, "Diagram generated successfully.", "Success!",
+							JOptionPane.INFORMATION_MESSAGE );
+				} catch (IOException ioe) {
+					JOptionPane.showMessageDialog( this, ioe.toString(), "Error",
+							JOptionPane.ERROR_MESSAGE );
+				}
+				this.dispose();
 			}
 		}
-		this.dispose();
 	}//GEN-LAST:event_generateButtonActionPerformed
 	
 	/**

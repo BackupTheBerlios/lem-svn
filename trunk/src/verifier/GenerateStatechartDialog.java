@@ -217,24 +217,24 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
 	private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
 		if ("generate".equals( evt.getActionCommand() )) {
 			// Fail if no filename specified
-			if (filenameField.getText() == "") {
+			if (filenameField.getText().equals("")) {
 				JOptionPane.showMessageDialog( this, "No output filename specified", "Error",
 						JOptionPane.ERROR_MESSAGE );
 			}
 			// 'Normal' case
 			else {
 				String dotCode = selectedClass.getStateMachine().dumpDot();
-				System.out.println( dotCode );
 				try {
 					DotWriter.dotToPNG( dotCode, filenameField.getText() );
+					JOptionPane.showMessageDialog( this, "Diagram generated successfully.", "Success!",
+							JOptionPane.INFORMATION_MESSAGE );
 				} catch (IOException ioe) {
 					JOptionPane.showMessageDialog(this, ioe.toString(), "Error",
 							JOptionPane.ERROR_MESSAGE );
 				}
+				this.dispose();
 			}
 		}
-		System.err.println("generateButton complete");
-		this.dispose();
 	}//GEN-LAST:event_generateButtonActionPerformed
 	
 	private void domainListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_domainListActionPerformed
