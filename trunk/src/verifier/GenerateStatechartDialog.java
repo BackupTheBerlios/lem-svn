@@ -23,13 +23,7 @@ package verifier;
 
 import java.awt.Component;
 import java.awt.Frame;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.nio.CharBuffer;
 import java.util.Iterator;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -204,7 +198,7 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
     pack();
   }
   // </editor-fold>//GEN-END:initComponents
-
+	
 	private void stateMachineListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stateMachineListActionPerformed
 		// Update the selection
 		JComboBox cb = (JComboBox)evt.getSource();
@@ -231,7 +225,12 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
 			else {
 				String dotCode = selectedClass.getStateMachine().dumpDot();
 				System.out.println( dotCode );
-				DotWriter.dotToPNG( dotCode, filenameField.getText() );
+				try {
+					DotWriter.dotToPNG( dotCode, filenameField.getText() );
+				} catch (IOException ioe) {
+					JOptionPane.showMessageDialog(this, ioe.toString(), "Error",
+							JOptionPane.ERROR_MESSAGE );
+				}
 			}
 		}
 		System.err.println("generateButton complete");
@@ -274,9 +273,15 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
 	 * @param model the model for which the dialog is acting as a selector
 	 */
 	public static void showDialog(Component parent, Model m) {
-		Frame frame = JOptionPane.getFrameForComponent( parent );
-		dialog = new GenerateStatechartDialog( frame, true, m );
-		dialog.setVisible( true );
+		// Handle the 'no model loaded' case
+		if (m == null) {
+			JOptionPane.showMessageDialog(parent, "No model loaded.", "Error",
+					JOptionPane.INFORMATION_MESSAGE );
+		} else { // 'Normal' case
+			Frame frame = JOptionPane.getFrameForComponent( parent );
+			dialog = new GenerateStatechartDialog( frame, true, m );
+			dialog.setVisible( true );
+		}
 	}
 	
 	/**
@@ -327,7 +332,7 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
 			}
 		}
 	}
-			
+	
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton cancelButton;
   private javax.swing.JLabel destinationLabel;

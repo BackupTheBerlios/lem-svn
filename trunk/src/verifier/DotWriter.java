@@ -42,7 +42,8 @@ public class DotWriter {
 	 * @todo add error handling code for dot binary
 	 * @todo use exception classes?
 	 */
-	public static void dotToPNG( String dotCode, String filename ) {
+	public static void dotToPNG( String dotCode, String filename ) throws
+			IOException {
 		// Get the dot binary's location
 		Parameters params = Parameters.getInstance();
 		String dotBinary = params.getProperty( "eleminator.dotPath" );
@@ -56,23 +57,19 @@ public class DotWriter {
 		int c;
 		
 		// Run dot
-		try {
-			p = rt.exec( cmdString );
-			// Feed the dot code into the dot binary's standard input
-			out = new OutputStreamWriter( p.getOutputStream() );
-			in = new InputStreamReader( p.getInputStream() );
-			out.write( dotCode );
-			out.close();
-			bufRead = new BufferedReader( in );
-			while (true) {
-				c = in.read();
-				if (c == -1) {
-					break;
-				}
-				strBuf.append( (char)c );
+		p = rt.exec( cmdString );
+		// Feed the dot code into the dot binary's standard input
+		out = new OutputStreamWriter( p.getOutputStream() );
+		in = new InputStreamReader( p.getInputStream() );
+		out.write( dotCode );
+		out.close();
+		bufRead = new BufferedReader( in );
+		while (true) {
+			c = in.read();
+			if (c == -1) {
+				break;
 			}
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			strBuf.append( (char)c );
 		}
 	}
 }

@@ -188,20 +188,20 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
     pack();
   }
   // </editor-fold>//GEN-END:initComponents
-
+	
 	private void domainListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_domainListActionPerformed
 		// Update the Domain and Subsystem combo boxes
 		JComboBox cb = (JComboBox)evt.getSource();
 		selectedDomain = model.getDomain( (String)cb.getSelectedItem() );
 		updateSubsystemList( selectedDomain );
 	}//GEN-LAST:event_domainListActionPerformed
-
+	
 	private void subsystemListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subsystemListActionPerformed
 		// Update the selection
 		JComboBox cb = (JComboBox)evt.getSource();
 		selectedSubsystem = selectedDomain.getSubsystem( (String)cb.getSelectedItem() );
 	}//GEN-LAST:event_subsystemListActionPerformed
-		
+	
 	private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
 		if ("generate".equals( evt.getActionCommand() )) {
 			// Fail if no filename specified
@@ -214,16 +214,16 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 				// The user has selected all the classes in the domain
 				if (subsystemList.getSelectedIndex() == 0) {
 					System.err.println( "All classes in domain" );
-					String dotCode = 
+					String dotCode =
 							ClassWriter.dumpDot( selectedDomain, selectedDomain.getClasses().values() );
-                                       // System.err.println( dotCode );
+					// System.err.println( dotCode );
 				}
 				// The user has selected a specific subsystem
 				else {
 					System.err.println( "Specific subsystem" );
-					String dotCode = 
-						ClassWriter.dumpDot( selectedDomain, selectedSubsystem.getClasses().values() );
-                                       // System.err.println( dotCode );
+					String dotCode =
+							ClassWriter.dumpDot( selectedDomain, selectedSubsystem.getClasses().values() );
+					// System.err.println( dotCode );
 				}
 			}
 		}
@@ -237,13 +237,20 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 	 * @param model the model for which the dialog is acting as a selector
 	 */
 	public static void showDialog(Component parent, Model m) {
-		Frame frame = JOptionPane.getFrameForComponent( parent );
-		dialog = new GenerateClassDiagramDialog( frame, true, m );
-		dialog.setVisible( true );
+		// Handle the 'no model loaded' case
+		if (m == null) {
+			JOptionPane.showMessageDialog(parent, "No model loaded.", "Error",
+					JOptionPane.INFORMATION_MESSAGE );
+		} else { // 'Normal' case
+			Frame frame = JOptionPane.getFrameForComponent( parent );
+			dialog = new GenerateClassDiagramDialog( frame, true, m );
+			dialog.setVisible( true );
+		}
 	}
 	
 	private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-		// Initialise up the Domains combo box
+		
+// Initialise the Domains combo box
 		Iterator domainIter = model.getDomains().values().iterator();
 		while (domainIter.hasNext()) {
 			domainList.addItem( ((Domain)domainIter.next()).getName() );
@@ -299,7 +306,7 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 			this.dispose();
 		}
 	}//GEN-LAST:event_cancelButtonActionPerformed
-		
+	
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton cancelButton;
   private javax.swing.JLabel classLabel;
