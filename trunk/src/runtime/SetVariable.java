@@ -25,15 +25,15 @@ public class SetVariable extends Variable {
     
     /** Creates a new instance of StringVariable */
     public SetVariable() {
-        this.value = new ArrayList() ; 
+        this.setValue(new ArrayList()) ; 
     }
     
     public SetVariable( java.lang.Object o) {
-	this.value = (ArrayList) o ; 
+	this.setValue((ArrayList) o) ; 
     }
 
     public void setValue( java.lang.Object o ) {
-        this.value = (ArrayList) o;
+        this.setValue((ArrayList) o);
     }
     
     public java.lang.Object getValue() {
@@ -52,6 +52,10 @@ public class SetVariable extends Variable {
    public Variable add( Variable b ) throws LemRuntimeException {       
        //    String elementType = b.getValue().getType().getName() ;
        value.add ( b ) ;       
-       return new SetVariable ( value ) ; 
+       return new SetVariable ( getValue() ) ; 
     }   
+
+    public void setValue(ArrayList value) {
+        this.value = value;
+    }
 }
