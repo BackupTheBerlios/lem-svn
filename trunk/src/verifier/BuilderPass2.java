@@ -32,6 +32,11 @@ public class BuilderPass2 extends Visitor {
     private Domain currentDomain = null;
     
     /**
+     * A reference to the class in which we're currently visiting nodes
+     */
+    private metamodel.Class currentClass = null;
+    
+    /**
      * Creates a new instance of ModelFitout
      *
      * @param aMapper from a previous BuilderPass2
@@ -110,8 +115,8 @@ public class BuilderPass2 extends Visitor {
     
     
     public Object visit( LEMVariableDeclaration node, Object data ) throws LemException {
-	String typeName = (String)node.jjtGetChild( 0 ).jjtAccept(this, null);
-	DataType type = CoreDataType.findByName(typeName);
+        String typeName = (String)node.jjtGetChild( 0 ).jjtAccept(this, null);
+        DataType type = CoreDataType.findByName(typeName);
         String varName = (String)node.jjtGetChild( 1 ).jjtAccept(this, null);
         VariableDeclaration v = new VariableDeclaration(type, varName);
         
@@ -284,8 +289,8 @@ public class BuilderPass2 extends Visitor {
      */
     public Object visit( LEMObjectCreation node, Object data ) throws LemException {
         CreateAction a = new CreateAction();
-	getMapper().add(node, a);
-
+        getMapper().add(node, a);
+        
         Collection c = (Collection)(node.jjtGetChild(0).jjtAccept(this, null));
         
         a.setClasses(c);
@@ -294,44 +299,44 @@ public class BuilderPass2 extends Visitor {
         
         return a;
     }
-
+    
     /**
      * Returns a LinkedList of Expressions as parameters.
      */
     public Object visit(LEMParameterList node, Object data) throws LemException {
-	LinkedList parameters = null;
-	if (node.jjtGetNumChildren() > 0) {
-		parameters = new LinkedList();
-		for (int i = 0; i < node.jjtGetNumChildren(); i++) {
-			Expression p = (Expression)node.jjtGetChild(i).jjtAccept(this, null);
-			parameters.add(p);
-		}
-	}
-	return parameters;
+        LinkedList parameters = null;
+        if (node.jjtGetNumChildren() > 0) {
+            parameters = new LinkedList();
+            for (int i = 0; i < node.jjtGetNumChildren(); i++) {
+                Expression p = (Expression)node.jjtGetChild(i).jjtAccept(this, null);
+                parameters.add(p);
+            }
+        }
+        return parameters;
     }
     
     public Object visit(LEMEventGeneration node, Object data) throws LemException {
-	    GenerateAction a = new GenerateAction();
-	    getMapper().add(node, a);
-
-	    metamodel.Class theClass = (metamodel.Class)data;
-	    
-	    String eventName = getIdentifier(node.jjtGetChild(0));
-	    Event e = theClass.getEvent(eventName);
-	    a.setEvent(e);
-
-	    LinkedList p = (LinkedList)node.jjtGetChild(1).jjtAccept(this, null);
-	    a.setParameters(p);
-	    
-	    VariableReference vr = (VariableReference)node.jjtGetChild(2).jjtAccept(this, null);
-	    a.setTarget(vr);
-
-	    /* todo: delay! */
-
-	    return a;
+        GenerateAction a = new GenerateAction();
+        getMapper().add(node, a);
+        
+        metamodel.Class theClass = currentClass;
+        
+        String eventName = getIdentifier(node.jjtGetChild(0));
+        Event e = theClass.getEvent(eventName);
+        a.setEvent(e);
+        
+        LinkedList p = (LinkedList)node.jjtGetChild(1).jjtAccept(this, null);
+        a.setParameters(p);
+        
+        VariableReference vr = (VariableReference)node.jjtGetChild(2).jjtAccept(this, null);
+        a.setTarget(vr);
+        
+        /* todo: delay! */
+        
+        return a;
     }
     
-
+    
     public Object visit( LEMLinkCreation node, Object data ) throws LemException {
         RelateAction a = new RelateAction();
         
@@ -341,8 +346,8 @@ public class BuilderPass2 extends Visitor {
         
         Relationship r = currentDomain.getRelationship( assocName );
         if( !(r instanceof Association )) {
-            throw new LemException( "Relationship " 
-                    + assocName 
+            throw new LemException( "Relationship "
+                    + assocName
                     + " is not an Association", node.getFirstToken(), "LEM_E_01041" );
         }
         
@@ -642,7 +647,7 @@ public class BuilderPass2 extends Visitor {
             return new VariableReference( getIdentifier(node.jjtGetChild(0) ));
         } else if( node.jjtGetNumChildren() == 2 ) {
             // object.variable-style reference, eg. "publisher.name"
-	    VariableReference obj = (VariableReference)visit( (LEMObjectReference)node.jjtGetChild(0), null );
+            VariableReference obj = (VariableReference)visit( (LEMObjectReference)node.jjtGetChild(0), null );
             String variableName = getIdentifier( node.jjtGetChild(1));
             return new VariableReference( obj.getVariableName(), variableName );
         }
@@ -684,11 +689,12 @@ public class BuilderPass2 extends Visitor {
      * Visit LEMClassDeclaration and pass this class down to children.
      */
     public Object visit(LEMClassDeclaration node, Object data) throws LemException {
-
+        
         metamodel.Class c = (metamodel.Class) mapper.getObject( node );
+        currentClass = c;
         super.visit( node, c );
-
-	return c;
+        
+        return c;
     }
     
     /**
@@ -726,7 +732,6 @@ public class BuilderPass2 extends Visitor {
         
         return data;
     }
-    
     
     /**
      * Process the subclass identifier in a Generalisation
@@ -1001,26 +1006,6 @@ public class BuilderPass2 extends Visitor {
         
     }
     
-    
-    
-    /**
-     * Process an event declaration. An event declaration may be made in the context of a class
-     * (public event) or in the context of a State Machine (private or self directed event).
-     * @param node
-     * @param data
-     * @throws metamodel.LemException
-     * @return
-     */
-    public Object visit(LEMEventDeclaration node, Object data) throws metamodel.LemException {
-        
-        // recover the event
-        
-        Event event = (Event) getMapper().getObject( node );
-        super.visit( node, event );
-        
-        return data;
-    }
-    
     /**
      * Process an IdentifierDeclaration
      * @param node
@@ -1090,12 +1075,114 @@ public class BuilderPass2 extends Visitor {
     public Object visit(LEMIdentifier node, Object data) {
         return node.getFirstToken().image;
     }
-
+    
     public Object visit(LEMType node, Object data) throws LemException {
-	return node.jjtGetChild(0).jjtAccept(this, null);
+        return node.jjtGetChild(0).jjtAccept(this, null);
     }
+    
     public Object visit(LEMPrimitiveType node, Object data) {
-	return node.getFirstToken().image;
+        return node.getFirstToken().image;
+    }
+    
+    /**
+     * Process an event declaration. An event declaration may be made in the context of a class
+     * (public event) or in the context of a State Machine (private or self directed event).
+     */
+    public Object visit(LEMEventDeclaration node, Object data) throws LemException {
+        Event event = (Event)getMapper().getObject( node );
+        currentClass.getStateMachine().add( event );
+        
+        return event;
+    }
+    
+    public Object visit( LEMBehaviour node, Object data ) throws LemException {
+        StateMachine m = (StateMachine)getMapper().getObject( node );
+        
+        for( int i = 1; i < node.jjtGetNumChildren(); i++ ) {
+            Object o = node.jjtGetChild( i ).jjtAccept( this, null );
+            
+            if( o instanceof Transition )
+                m.add( (Transition) o );
+            else
+                System.err.println( "Warning: Does visit(" 
+                    + node.jjtGetChild( i ).getClass().getName() 
+                    + ") still uses old-style side effects?" );
+        }
+        
+        return m;
+    }
+    
+    public Object visit( LEMTransitionDeclaration node, Object data ) throws LemException {
+        Transition t;
+        
+        if( node.jjtGetNumChildren() == 4 ) {
+            StateTransition st = new StateTransition();
+            String fromStateName = getIdentifier( node.jjtGetChild( 2 ));
+            String toStateName = getIdentifier( node.jjtGetChild( 3 ));
+            
+            State fromState = getState( fromStateName );
+            State toState = getState( toStateName );
+            
+            if( fromState == null )
+                throw new LemException( "No such state '" + fromStateName + "' in class '"
+                        + currentClass.getName() +"'" );
+            if( toState == null )
+                throw new LemException( "No such state '" + toStateName + "' in class '"
+                        + currentClass.getName() +"'" );
+            
+            if( !(fromState instanceof NonDeletionState ))
+                throw new LemException( "State '" + fromStateName + "' is not a non-deletion state" );
+            
+            st.setFromState( (NonDeletionState)fromState );
+            st.setToState( toState );
+            
+            t = st;
+        } else {
+            // Only 3 children, must be from the creation state
+            InitialisingTransition i = new InitialisingTransition();
+            
+            String toStateName = getIdentifier( node.jjtGetChild( 2 ) );
+            State toState = getState( toStateName );
+            
+            if( toState == null )
+                throw new LemException( "No such state '" + toStateName + "' in class '"
+                        + currentClass.getName() +"'" );
+            
+            i.setToState( toState );
+            
+            t = i;
+        }
+        
+        // Why bother doing all the above if the event can't be found??
+        String eventName = getIdentifier( node.jjtGetChild( 0 ));
+        Event e = getEvent( eventName );
+        
+        if( e == null )
+            throw new LemException( "Event '" + eventName + "' not found" );
+        
+        t.setEvent( e );
+        t.setDescription( getIdentifier( node.jjtGetChild( 1 )));
+        
+        return t;
+        
+    }
+    
+    protected State getState( String stateName ) {
+        StateMachine m = currentClass.getStateMachine();
+        
+        if( m != null )
+            return m.getState( stateName );
+        
+        return null;
+    }
+    
+    protected Event getEvent( String eventName ) {
+        StateMachine m = currentClass.getStateMachine();
+        
+        if( m != null )
+            return m.getEvent( eventName );
+        
+        return null;
     }
     
     /**
@@ -1109,6 +1196,6 @@ public class BuilderPass2 extends Visitor {
      * class should implement this?
      */
     private String getIdentifier( Node identifierNode ) throws LemException {
-        return (String)(visit( (LEMIdentifier)identifierNode, null ));
+        return (String)identifierNode.jjtAccept( this, null );
     }
 }
