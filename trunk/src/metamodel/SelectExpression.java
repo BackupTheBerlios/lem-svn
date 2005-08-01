@@ -17,48 +17,52 @@ import runtime.SetVariable;
  * @author shuku
  */
 public class SelectExpression extends Expression {
+
+    public static final int MULTIPLICITY_ONE = 1;
+    public static final int MULTIPLICITY_ANY = 2;
+    public static final int MULTIPLICITY_ALL = 3;
            
     /** Name of the class to which the objects belong **/
-    private String className = null ; 
+    private metamodel.Class theClass = null; 
     
     /** Type of selection e.g. all, one or any 
      *  Default value "any"                         **/
-    private String multiplicity = "any" ; 
+    private int multiplicity = MULTIPLICITY_ALL; 
         
     /** Whether selectExpression has a where clause */
-    private boolean hasCondition = false ; 
+    private boolean hasCondition = false; 
     
     /** The condition of Select Expression, if any or null otherwise */
-    private Expression condition = null ; 
+    private Expression condition = null; 
     
     /** Creates a new instance of SelectExpression */
-    public SelectExpression(String multiplicity , String className , Expression condition ) {        
-        super() ; 
-        this.className = className ;
+    public SelectExpression(int multiplicity, metamodel.Class theClass, Expression condition ) {        
+        super(); 
+        this.theClass = theClass;
         this.multiplicity = multiplicity ; 
         if ( condition != null ) {
-            this.hasCondition = true ; 
-            this.condition = condition ;  
+            this.hasCondition = true; 
+            this.condition = condition;  
         }
     }
 
-    public String getClassName() {
-        return className;
+    public metamodel.Class getSelectedClass() {
+        return theClass;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
+    public void setClass(metamodel.Class theClass) {
+        this.theClass = theClass;
     }
 
-    public String getMultiplicity() {
+    public int getMultiplicity() {
         return multiplicity;
     }
 
-    public void setMultiplicity(String multiplicity) {
+    public void setMultiplicity(int multiplicity) {
         this.multiplicity = multiplicity;
     }
 
-    public boolean isHasCondition() {
+    public boolean hasCondition() {
         return hasCondition;
     }
 
