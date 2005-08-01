@@ -158,7 +158,6 @@ public class InterpreterTest extends junit.framework.TestCase {
             fail( "Some LemRuntimeException occurred: " + e.getMessage() );
         }
     }
-    
 
     public void testExecuteVariableDeclaration() {
         Lem l = new Lem();
@@ -216,5 +215,58 @@ public class InterpreterTest extends junit.framework.TestCase {
         assertEquals( "Class B participates in 1 association", 1, b.getAssociations().size() );
         assertEquals( "Class C participates in 1 (reflexive) association", 1, c.getAssociations().size() );
     }
-            
+       
+    public void testLinkCreation() {
+        Lem l = new Lem();
+        Model m = null;
+      
+        try {
+            m = l.parse( new FileInputStream( "regression/tests/LinkCreationTest.lem" ));
+        } catch( FileNotFoundException fnfe ) {
+            fail( "Could not find model file " + fnfe.getMessage() );
+        } catch( IOException e ) {
+            fail( "Could not read model file: " + e.getMessage() );
+        } catch( ParseException e ) {
+            fail( "Could not parse model file: " + e.getMessage() );
+        } catch( LemException e ) {
+            fail( "Some LEMException occurred: " + e.getMessage() );
+        }
+        
+        CreateAction create = (CreateAction)m.getDomain("TestDomain")
+        .getClass("TestClass")
+        .getStateMachine()
+        .getState("createTestClass")
+        .getProcedure()
+	.getActionBlock()
+	.getActions()
+	.getFirst();
+
+	Procedure mainProc = m.getDomain("TestDomain")
+        .getClass("TestClass")
+        .getStateMachine()
+        .getState("relateTestClass")
+        .getProcedure();
+        
+        DomainContext c = new DomainContext();
+        Interpreter i = new Interpreter(null);
+        int k=0;
+        try {
+            runtime.Object obj = i.executeCreateAction( create, c );
+	    i = new Interpreter(obj);
+	    i.interpret(mainProc, c);
+        } catch( LemRuntimeException e ) {
+            fail( "Some LemRuntimeException occurred: " + e.getMessage() );
+        }
+        
+        AssociationInstance a = (AssociationInstance)c.getAssociationInstances().values().iterator().next();
+        Instance active = a.getActiveInstance();
+        Instance passive = a.getPassiveInstance();        
+        assertEquals("An association instance has been added", 1, c.getAssociationInstances().size());
+        assertEquals("Active perspective instance is of class A", "A", active.getInstanceClass().getName());        
+        assertEquals("Passive perspective instance is of class B", "B", passive.getInstanceClass().getName());
+        AssociationInstance aI_active = (AssociationInstance)active.getAssociationInstances(a.getAssociation()).iterator().next();
+        assertEquals("Instance of class A has the correct association instance", a, aI_active);
+        AssociationInstance aI_passive = (AssociationInstance)passive.getAssociationInstances(a.getAssociation()).iterator().next();
+        assertEquals("Instance of class A has the correct association instance", a, aI_passive);        
+    }    
 }
