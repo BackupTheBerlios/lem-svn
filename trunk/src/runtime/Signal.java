@@ -35,6 +35,13 @@ public class Signal {
 	}
 
 	/**
+	 * Returns the event to which this signal is associated.
+	 */
+	public Event getEvent() {
+		return event;
+	}
+	
+	/**
 	 * Returns the list of the Signal's parameters.
 	 */
 	public LinkedList getParameters()

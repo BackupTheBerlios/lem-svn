@@ -85,18 +85,46 @@ public class Object {
         }
     }
     
+    /**
+     * adds a Signal to this object's signal queue
+     */
     public void addSignal(Signal s) throws LemRuntimeException
     {
 	    signalQueue.add(s);
 	    /* todo: a lot more */
     }
 
+    /**
+     * adds a Signal to this object's "self" signal queue - ie. signals to self.
+     */
     public void addSignalSelf(Signal s) throws LemRuntimeException
     {
 	    signalSelfQueue.add(s);
 	    /* todo: a lot more */
     }
     
+    /**
+     * Processes the next pending signal if one exists, otherwise wait until
+     * one has been put on the queue.
+     */
+    public void processNextSignal() throws LemRuntimeException
+    {
+	Event e;
+	Signal s = null;
+	do {
+		
+		if (signalSelfQueue.size() > 0) {
+			s = signalSelfQueue.remove(0);
+		} else if (signalQueue.size() > 0) {
+			s = signalQueue.remove(0);
+		} else {
+			/* wait until signal arrives */
+			continue;
+		}
+	} while (s == null);
+	e = s.getEvent();
+	
+    }
    
     /**
      * Returns the attribute of this object with the given name. All instances
