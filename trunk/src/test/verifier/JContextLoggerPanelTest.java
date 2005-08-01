@@ -28,7 +28,7 @@ public class JContextLoggerPanelTest extends junit.framework.TestCase {
    DomainContext d = new DomainContext();
    JFrame frame = new JFrame();
    JContextLoggerPanel Logger = new JContextLoggerPanel(d);
-   Interpreter I = new Interpreter();
+   Interpreter I = new Interpreter(null);
    
     public JContextLoggerPanelTest(String testName) {
         super(testName);
