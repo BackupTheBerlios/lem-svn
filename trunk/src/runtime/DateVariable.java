@@ -24,9 +24,8 @@ public class DateVariable extends Variable
         implements Comparable {
         
     /** Date object representing the date, in milliseconds */
-    private Date date ; 
-    /** value of the date **/
-    private java.lang.Object value;
+    private Date date; 
+
     /** Creates a new instance of DateVariable
      *with date set to today. */    
     public DateVariable() {
@@ -48,12 +47,11 @@ public class DateVariable extends Variable
     /**Creates a date object out of an object, representing date
      * 
      *@param object representing date in form of dd-mm-yyyy */
-    public DateVariable(java.lang.Object date) throws LemRuntimeException {        
-        String d = (java.lang.String) date ;    
-        this.date = convertToDate ( d ) ;                 
+    public DateVariable(String date) throws LemRuntimeException {        
+        this.date = StringToDate ( date );
     }
     
-    public Date convertToDate(String d) throws LemRuntimeException {         
+    public Date StringToDate(String d) throws LemRuntimeException {         
         StringTokenizer st = new StringTokenizer(d, "-");
         int day=0, month= 0, year = 0 ;
         Date newDate = null ;
@@ -73,16 +71,30 @@ public class DateVariable extends Variable
         return newDate ; 
     }
     
-    /**Returns the value of date variable 
-     *@return Object representing the value of this variable, in form of a String */
-    public java.lang.Object getValue() {
+    /**
+     * DateToString
+     * 
+     * @return Object representing the value of this variable, in form of
+     * a String
+     */
+    public String DateToString(Date date) {
         Calendar cal = new GregorianCalendar() ;
         cal.setTime(date) ; 
         int day = cal.get(Calendar.DAY_OF_MONTH) ; 
         int month = cal.get(Calendar.MONTH) ; 
         int year = cal.get(Calendar.YEAR) ;
-        value = day + "-" + month + "-" + year ;                
-        return value ; 
+        return day + "-" + month + "-" + year ;                
+    }
+
+    /**
+     * Returns the value of date variable 
+     */
+    public java.lang.Object getValue() {
+	    return date;
+    }
+    
+    public void setValue(java.lang.Object o) {
+	    date = (Date)o;
     }
     
     /**Returns the type of this variable 

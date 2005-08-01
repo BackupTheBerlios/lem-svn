@@ -695,7 +695,7 @@ public class BuilderPass2 extends Visitor {
                 t = StringType.getInstance();
                 break;
             case LemParserConstants.NULL:
-                // TODO: Need NullType
+		// TODO: NullType
                 break;
         }
         

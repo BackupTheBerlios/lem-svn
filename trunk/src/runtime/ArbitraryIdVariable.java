@@ -27,6 +27,10 @@ public class ArbitraryIdVariable extends Variable {
         current_id++;
     }
     
+    public void setValue(java.lang.Object o) {
+	    id = (Integer)o;
+    }
+
     public java.lang.Object getValue() {
         return id;
     }

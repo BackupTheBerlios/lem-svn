@@ -7,7 +7,6 @@
 package runtime;
 import metamodel.CoreDataType;
 import metamodel.DataType;
-import metamodel.NullType;
 import metamodel.*;
 import metamodel.DomainSpecificDataType;
 
@@ -15,14 +14,11 @@ import metamodel.DomainSpecificDataType;
  * This class represents an instance of an getType().
  * @author u4128551
  */
-public class Variable {
+public abstract class Variable {
     
     protected DataType type = null;
-    protected java.lang.Object value = null ;
     
     public Variable() {
-        type = new NullType() ;
-        value = null ;
     }
     
     /**
@@ -30,47 +26,28 @@ public class Variable {
      *
      * @return the value associated with this getType() instance
      */
-    public java.lang.Object getValue() throws LemRuntimeException{
-        throw new LemRuntimeException( "Unsupported operation (set value) in type " + getType().getName() );
-    }
+    public abstract java.lang.Object getValue() throws LemRuntimeException;
+
+    /**
+     * Set the value of this variable
+     *
+     * @param Object representing the value of this variable.
+     */
+    public abstract void setValue( java.lang.Object o ) throws LemRuntimeException;
     
-    /** Gets the datatype of this variable.
-     *@return the DataType associated with this variable
+    /**
+     * Gets the datatype of this variable.
+     *
+     * @return the DataType associated with this variable
      */
     public DataType getType() {
         return type;
     }
     
-    /** Initializes the type of the variable
-     *@param d DataType of this variable
-     */
-    public Variable initializeType( DataType d ) throws LemRuntimeException {
-        this.type = d;
-        if (d instanceof BooleanType) {
-            return (BooleanVariable)this ;
-        }else if (d instanceof ArbitraryIdType) {
-            return (ArbitraryIdVariable)this ;
-        }else if(d instanceof DateType) {
-            return (DateVariable)this ;
-            //   }else if(d instanceof IntegerType) {
-            //       (IntegerVariable)this ;
-        }else if(d instanceof NumericType) {
-            return (NumericVariable)this ;
-        }else if(d instanceof ObjectReferenceType) {
-            return  (ObjectReferenceVariable)this ;
-            //    }else if(d instanceof RealType) {
-            //        (RealVariable)this ;
-        }else if(d instanceof StringType) {
-            return  (StringVariable)this ;
-            //   }else if(d instanceof TimeStampType) {
-            //       (TimeStampVariable)this ;
-        }else {
-            throw new LemRuntimeException("Invalid operation settype." + d.getCoreDataType() ) ;
-        }
-    }
-    
-    /* sets the type of variable to the specified type
-     *@param d type of the variable
+    /**
+     * sets the type of variable to the specified type
+     *
+     * @param d type of the variable
      */
     public void setType(DataType d) {
         type = d ;
@@ -86,15 +63,6 @@ public class Variable {
         }
         
         return (CoreDataType)type;
-    }
-    
-    /** Set the value of this variable
-     *
-     * In case of unTyped Variables (declared but not instantiated yet) it would throw an Exception
-     * @param Object representing the value of this variable.
-     */
-    public void setValue( java.lang.Object o ) throws LemRuntimeException {
-        throw new LemRuntimeException( "Unsupported operation (set value) in type " + getType().getName() );
     }
     
     /*Mathematical and Logical operations defined on variables */
