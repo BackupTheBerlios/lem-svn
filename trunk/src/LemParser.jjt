@@ -746,7 +746,8 @@ void Generalisation() : {
 void GeneralisationBody() : {}
 {
 	SuperClassIdentifier() "is" 
-		SubClassIdentifier() ( "," SubClassIdentifier() )* "or" SubClassIdentifier()  ";"
+		SubClassIdentifier() [ ( "," SubClassIdentifier() )* "or"
+		SubClassIdentifier() ] ";"
 }
 
 void SuperClassIdentifier() : {
@@ -891,7 +892,6 @@ void Action() : {}
 	| AttributeAssignment()<SEMI>
 	| EventGeneration()<SEMI>
 	| EventCancel()<SEMI>
-        | SelectStatement()<SEMI>
 	| LinkCreation()<SEMI>
 	| IfStatement()
 	| WhileStatement()
@@ -1019,6 +1019,7 @@ void RValue() : {}
 {
 	  Expression()
 	| ObjectCreation()
+	| SelectStatement()
 }
 
 /**
@@ -1075,35 +1076,27 @@ void WhileStatement() : {}
 
 void SelectStatement() : {}
 {
-    <SELECT>SelectClause() SelectVariable()
-    <FROM><INSTANCES><OF>ClassVariable()WhereClause()
-
+    <SELECT>
+    SelectMultiplicity() 
+    <FROM> <INSTANCES> <OF>
+    Identifier() 
+    WhereClause()
 }
 
-void SelectVariable(): {}
-{
-    <SIMPLE_IDENTIFIER>
-}
-
-void ClassVariable() : {}
-{
-    <SIMPLE_IDENTIFIER>
-}
-
-void SelectClause() : {}
+void SelectMultiplicity() : {}
 {
     (<ONE>|<ALL>|<ANY>)
 }
 
 void WhereClause() : {}
 {
-    [<WHERE>( Related() | Selected() ) ]
+    [ <WHERE> Expression() ]
 }
 
-void Related() : {}
+/* void Related() : {}
 {
     ObjectReference()<RELATED><TO>ClassVariable()<ACROSS>RelationshipVariable()
-}
+} */
 
 void RelationshipVariable() : {}
 {
