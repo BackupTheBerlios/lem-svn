@@ -893,6 +893,7 @@ void Action() : {}
 	| EventGeneration()<SEMI>
 	| EventCancel()<SEMI>
 	| LinkCreation()<SEMI>
+      | LinkDeletion()<SEMI>
 	| IfStatement()
 	| WhileStatement()
 	| ActionBlock()
@@ -959,7 +960,7 @@ void LinkObjectCreation() : {}
 
 void LinkDeletion() : {}
 {
-	<UNRELATE> ObjectReference() <FROM> ObjectReference() <ACROSS> RelationshipReference()
+	<UNRELATE> ObjectReference() <FROM> ObjectReference() <ACROSS> /*RelationshipReference()*/ Identifier()
 }
 
 // can we reclassify from a multi class to another multi class?
