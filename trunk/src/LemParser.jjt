@@ -699,20 +699,6 @@ void PassiveVerbClause() : {}
 void VerbClause() : {}
 { <STRING_LITERAL> }
 
-/*
-void ClassBody() : {}
-{
-	( AttributeDeclaration() )*
-	( EventDeclaration() )*
-	( StateDeclaration() )*
-	( TransitionDeclaration() )*
-}
-
-
-   Consider declaring the behaviour of a class in a distinct block. 
-   This alters the syntax of ClassBody() to ...
-*/
-
 void ClassBody() : {}
 {
 	( AttributeDeclaration() )*
