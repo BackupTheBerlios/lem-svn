@@ -44,7 +44,22 @@ public class Instance {
      * The Class of which this Instance is an instance
      */
     metamodel.Class instanceOfClass = null;
+
+    /**
+     * The Object in which this Instance participates
+     */
+    runtime.Object instanceInObject = null;
     
+    /** Queue of pending signals for the instance */
+    LinkedList signalQueue = new LinkedList();
+    
+    /**
+     * Queue of pending signals to self. All signals from here must be
+     * processed before any signals from 'signalQueue'
+     */
+    LinkedList signalSelfQueue = new LinkedList();
+    
+
     /**
      * Creates a new instance of Instance.
      */
@@ -56,8 +71,9 @@ public class Instance {
      * @param theClass the class which is instantiated by this instance
      * @throws runtime.LemRuntimeException in case any class attributes could not be initialised to their default values
      */
-    public Instance(metamodel.Class theClass) throws LemRuntimeException {
+    public Instance(metamodel.Class theClass, runtime.Object theObject) throws LemRuntimeException {
         instanceOfClass = theClass;
+	instanceInObject = theObject;
         
         initialiseAttributeInstances();
         initialiseAssociationInstances();
@@ -122,5 +138,51 @@ public class Instance {
      */
     public Variable getAttribute( String name ) {
         return (Variable)attributeInstances.get( name );
+    }
+
+    /**
+     * adds a Signal to this instance's signal queue
+     */
+    public void addSignal(Signal s) throws LemRuntimeException
+    {
+	    signalQueue.add(s);
+	    /* todo: a lot more */
+    }
+
+    /**
+     * adds a Signal to this instances's "self" signal queue - ie. signals to self.
+     */
+    public void addSignalSelf(Signal s) throws LemRuntimeException
+    {
+	    signalSelfQueue.add(s);
+	    /* todo: a lot more */
+    }
+
+    /**
+     * Returns the next pending signal if one exists and remove it from the
+     * instance's signal queue, otherwise return null.
+     */
+    public Signal getNextSignal() throws LemRuntimeException
+    {
+	Signal s;
+	while (true) {
+		if (signalSelfQueue.size() > 0) {
+			s = signalSelfQueue.remove(0);
+		} else if (signalQueue.size() > 0) {
+			s = signalQueue.remove(0);
+		} else {
+			instanceInObject.propogateNextSignal();
+			continue;
+		}
+		break;
+	}
+
+	return s;
+    }
+
+    public void processNextSignal() throws LemRuntimeException
+    {
+	Signal s = getNextSignal();
+	/* transition the state machine. Execute it. */
     }
 }

@@ -59,7 +59,7 @@ public class Object {
         
         for( Iterator i = classes.iterator(); i.hasNext(); ) {
             metamodel.Class theClass = (metamodel.Class)i.next();
-            Instance inst = new Instance( theClass );
+            Instance inst = new Instance( theClass, this );
             
             // Instantiate all parent classes as well
             Collection gens = theClass.getAllGeneralisations().values();
@@ -102,30 +102,37 @@ public class Object {
 	    signalSelfQueue.add(s);
 	    /* todo: a lot more */
     }
-    
+
     /**
-     * Processes the next pending signal if one exists, otherwise wait until
-     * one has been put on the queue.
+     * propogate the next signal to all instances.
      */
-    public void processNextSignal() throws LemRuntimeException
+    public void propogateNextSignal() throws LemRuntimeException
     {
-	Event e;
-	Signal s = null;
-	do {
-		
+	while (true) {
 		if (signalSelfQueue.size() > 0) {
-			s = signalSelfQueue.remove(0);
+			Signal s = signalSelfQueue.remove(0);
+		        for( Iterator i = instances.iterator(); i.hasNext(); ) {
+		        	Instance in = (Instance)i.next();
+				in.addSignalSelf(s);
+			}
 		} else if (signalQueue.size() > 0) {
-			s = signalQueue.remove(0);
+			Signal s = signalQueue.remove(0);
+		        for( Iterator i = instances.iterator(); i.hasNext(); ) {
+		        	Instance in = (Instance)i.next();
+				in.addSignal(s);
+			}
 		} else {
-			/* wait until signal arrives */
+			/* Wait for next signal */
+			/* @todo: if we have multiple threads here, we still
+			 * only want to propogate only one signal to the
+			 * instances.
+			 */
 			continue;
 		}
-	} while (s == null);
-	e = s.getEvent();
-	
+		break;
+	}
     }
-   
+ 
     /**
      * Returns the attribute of this object with the given name. All instances
      * which constitute the object are searched.
