@@ -1,0 +1,47 @@
+model TestModel is
+	domain TestDomain is
+		type Money is numeric;
+
+		subsystem TestSubsystem is
+			class A is
+				// empty
+			end;
+
+			class B is
+				// also empty
+			end;
+
+			class C is
+				// really empty
+			end;
+
+			association R3 is "a test"
+				A "is the active subject" 0..1 B;
+				B "is the passive subject" 0..1 A;
+			end R3;
+
+			association R4 is "a reflexive test"
+				C "is the active subject" 0..1 C;
+				C "is also the passive subject!" 0..1 C;
+			end R4;
+
+			class TestClass is 
+				// Not so empty
+
+				behaviour is
+                                        state createTestClass is {
+						create TestClass;
+					} end;
+
+					state relateTestClass is {
+						objref a;
+						objref b;
+						a := create A;
+						b := create B;
+						relate a to b across R3;
+					} end;
+				end behaviour;
+			end TestClass;
+		end TestSubsystem;
+	end TestDomain;
+end TestModel;
