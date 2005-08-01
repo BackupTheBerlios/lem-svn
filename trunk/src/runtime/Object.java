@@ -77,7 +77,7 @@ public class Object {
                 }
                 
                 instantiatedClasses.add( superClass );
-                Instance superInst = new Instance( superClass );
+                Instance superInst = new Instance( superClass, this );
                 addInstance( superInst );
             }
             
@@ -110,13 +110,13 @@ public class Object {
     {
 	while (true) {
 		if (signalSelfQueue.size() > 0) {
-			Signal s = signalSelfQueue.remove(0);
+			Signal s = (Signal)signalSelfQueue.remove(0);
 		        for( Iterator i = instances.iterator(); i.hasNext(); ) {
 		        	Instance in = (Instance)i.next();
 				in.addSignalSelf(s);
 			}
 		} else if (signalQueue.size() > 0) {
-			Signal s = signalQueue.remove(0);
+			Signal s = (Signal)signalQueue.remove(0);
 		        for( Iterator i = instances.iterator(); i.hasNext(); ) {
 		        	Instance in = (Instance)i.next();
 				in.addSignal(s);

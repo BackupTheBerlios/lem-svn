@@ -167,9 +167,9 @@ public class Instance {
 	Signal s;
 	while (true) {
 		if (signalSelfQueue.size() > 0) {
-			s = signalSelfQueue.remove(0);
+			s = (Signal)signalSelfQueue.remove(0);
 		} else if (signalQueue.size() > 0) {
-			s = signalQueue.remove(0);
+			s = (Signal)signalQueue.remove(0);
 		} else {
 			instanceInObject.propogateNextSignal();
 			continue;
