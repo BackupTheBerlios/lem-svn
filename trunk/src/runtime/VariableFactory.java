@@ -2,6 +2,7 @@
 package runtime;
 
 import metamodel.BooleanType;
+import metamodel.ArbitraryIdType;
 import metamodel.CoreDataType;
 import metamodel.DataType;
 import metamodel.DomainSpecificDataType;
@@ -31,6 +32,8 @@ public class VariableFactory {
         
         if( c.equals( StringType.getInstance() )) {
             v = new StringVariable( (String)value );
+        } else if( c.equals( ArbitraryIdType.getInstance() )) {
+            return new ArbitraryIdVariable();
         } else if( c.equals( NumericType.getInstance() )) {
             return new NumericVariable( type, (String)value );
         } else if( c.equals( BooleanType.getInstance() )) {
@@ -55,6 +58,8 @@ public class VariableFactory {
         
         if( c.equals( StringType.getInstance() )) {
             v = new StringVariable( "\"\"" );
+        } else if( c.equals( ArbitraryIdType.getInstance() )) {
+            return new ArbitraryIdVariable();
         } else if( c.equals( NumericType.getInstance() )) {
             v = new NumericVariable( "0" );
         } else if( c.equals( BooleanType.getInstance() )) {
