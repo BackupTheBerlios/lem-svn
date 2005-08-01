@@ -380,6 +380,7 @@ public class BuilderPass2 extends Visitor {
         String assocName = (String)node.jjtGetChild( 2 ).jjtAccept( this, null );
         
         Relationship r = currentDomain.getRelationship( assocName );
+        
         if( !(r instanceof Association )) {
             throw new LemException( "Relationship "
                     + assocName
@@ -395,6 +396,31 @@ public class BuilderPass2 extends Visitor {
         
         return a;
     }
+    
+    public Object visit( LEMLinkDeletion node, Object data ) throws LemException {
+        UnrelateAction a = new UnrelateAction();
+        
+        VariableReference active = (VariableReference)node.jjtGetChild( 0 ).jjtAccept( this, null );
+        VariableReference passive = (VariableReference)node.jjtGetChild( 1 ).jjtAccept( this, null );
+        String assocName = (String)node.jjtGetChild( 2 ).jjtAccept( this, null );
+        
+        Relationship r = currentDomain.getRelationship( assocName );
+        if( !(r instanceof Association )) {
+            System.err.println( assocName + " is invalid." );
+            throw new LemException( "Relationship "
+                    + assocName
+                    + " is not an Association", node.getFirstToken(), "LEM_E_01041" );
+        }
+        
+        Association ra = (Association)r;
+        
+        a.setActiveObjectName( active.getVariableName() );
+        a.setPassiveObjectName( passive.getVariableName() );
+        a.setAssociationClassReference( assocName );
+        a.setAssociation( ra );
+        
+        return a;
+    }    
     
     public Object visit( LEMLinkObjectCreation node, Object data ) throws LemException {
         if( node.jjtGetNumChildren() != 1 ) return null;
