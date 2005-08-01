@@ -87,6 +87,8 @@ public class Interpreter {
             executeWhileStatement((WhileStatement)a, c);
         else if( a instanceof GenerateAction )
             executeGenerateAction((GenerateAction)a, c);
+        else if(a instanceof RelateAction )
+            executeRelateAction((RelateAction)a, c);
         else {
             throw new LemRuntimeException("executeAction encountered unknown action");
         }
@@ -405,6 +407,57 @@ public class Interpreter {
         Variable var = VariableFactory.newVariable(v.getVariableType(), null);
         name = v.getVariableName() ;
         c.addVariable(name , var ) ;
+    }
+
+
+    /**
+     * Execute the given RelateAction in the given Context. 
+     *
+     * @param a the RelateAction to execute
+     * @param c the Context in which to execute the action
+     * @throws runtime.LemRuntimeException thrown by the metamodel.Object 
+     * constructor
+     */    
+    public void executeRelateAction( RelateAction a, Context c ) throws LemRuntimeException {
+        // check both ends of the association to see if the classes are of 
+        // correct type
+        boolean valid = false;
+        Instance active = null;
+        Instance passive = null;
+        
+        ObjectReferenceVariable aP = (ObjectReferenceVariable)c.getVariable(a.getActiveObjectName());
+        ObjectReferenceVariable pP = (ObjectReferenceVariable)c.getVariable(a.getPassiveObjectName());
+        
+        // retrieve the names of the classes participating in the association
+        metamodel.Class aP_class = a.getAssociation().getActivePerspective().getDomainClass();
+        metamodel.Class pP_class = a.getAssociation().getPassivePerspective().getDomainClass();        
+        
+        Collection ac = ((runtime.Object)aP.getValue()).getInstances();
+        Collection pc = ((runtime.Object)pP.getValue()).getInstances();
+        
+        Iterator i = ac.iterator();        
+        while(i.hasNext() && !valid) {
+            active = (Instance)i.next();
+            if (active.getInstanceClass() == aP_class)
+                valid = true;
+        }
+        if(!valid)
+            throw new LemRuntimeException("Expecting "+aP_class.getName() +" for the perspective object");
+        valid = false;    
+        i = pc.iterator();        
+        while(i.hasNext() && !valid) {
+            passive = (Instance)i.next();
+            if (passive.getInstanceClass() == pP_class)
+                valid = true;
+        }        
+        if(!valid)
+            throw new LemRuntimeException("The passivePerspective object is not of the correct class");        
+        AssociationInstance aInst = new AssociationInstance(a.getAssociation());
+        aInst.setActiveInstance(active);
+        active.addAssociationInstance(aInst);
+        aInst.setPassiveInstance(passive);
+        passive.addAssociationInstance(aInst);
+        c.addAssociationInstance(aInst);
     }
     
 }
