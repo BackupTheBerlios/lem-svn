@@ -37,7 +37,7 @@ public class ArbitraryIdTest extends junit.framework.TestCase{
             id2 = new ArbitraryIdVariable() ;
             System.out.println(id1.getValue().toString()) ; 
             System.out.println(id2.getValue().toString()) ; 
-            assertEquals( "The two arbitrary ids are unique", false, id1.getValue() != id2.getValue());
+            assertEquals( "The two arbitrary ids are unique", true, id1.getValue() != id2.getValue());
         } catch( LemRuntimeException e ) {
             fail("Failed Because :" + e.getMessage() );
         }        
