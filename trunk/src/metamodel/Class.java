@@ -608,13 +608,6 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
             strBuf.append(" :\\ " + attribute.getType().getName() + "\\n");
         }
         strBuf.append( "|}\"];\n" );
-        
-	for ( Iterator it = associations.values().iterator(); it.hasNext(); ) {
-                  Association association = (Association) it.next();
-           
-                  strBuf.append(association.getParticipants()[0].getName() + "->");
-                  strBuf.append(association.getParticipants()[1].getName() + "\n");
-              }			
 	return strBuf.toString();
     }
 }
