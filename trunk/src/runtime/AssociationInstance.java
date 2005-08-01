@@ -34,7 +34,8 @@ public class AssociationInstance extends Instance {
      * The association of which this AssociationInstance is an instance.
      */
     Association association = null;
-    
+    Instance active = null;
+    Instance passive = null;
     /**
      * Create a new instance of the given Association.
      *
@@ -43,6 +44,22 @@ public class AssociationInstance extends Instance {
     public AssociationInstance( Association a ) {
         this.association = a;
     }
+    
+    public void setActiveInstance( Instance i ) {
+        this.active = i;
+    }
+        
+    public void setPassiveInstance( Instance i ) {
+        this.passive = i;
+    }
+    
+    public Instance getActiveInstance() {
+        return active;
+    }
+        
+    public Instance getPassiveInstance() {
+        return passive;
+    }    
     
     /** 
      * Get the Association of which this AssociationInstance is an instance.
