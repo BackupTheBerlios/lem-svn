@@ -115,6 +115,7 @@ public class Context {
     public void finish() throws LemRuntimeException {
 	if (parentContext != null) {
 		parentContext.addObjects(objectList);
+                parentContext.addAssociationInstance(associationInstances);
 	}
     }
     
@@ -162,4 +163,8 @@ public class Context {
     public void addAssociationInstance( AssociationInstance a ) {
         associationInstances.put( a.getAssociation(), a );
     }
+    
+    public void addAssociationInstance(HashMap inAssociation) {
+        associationInstances.putAll(inAssociation);
+    }    
 }
