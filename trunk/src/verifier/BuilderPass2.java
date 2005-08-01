@@ -123,22 +123,40 @@ public class BuilderPass2 extends Visitor {
     }
     
     public Object visit(LEMSelectStatement node, Object data) throws LemException {
-        //getMapper().add(node, a);
-        Expression e = null ; 
-        String multiplicity = (String) getIdentifier(node.jjtGetChild(0));
-        String fromClass = (String) getIdentifier(node.jjtGetChild(2));
-        Object condition = node.jjtGetChild(3).jjtAccept( this , data ) ; 
-        if ( condition != null ) {
-            if ( condition instanceof LEMRelated ) {
-                // todo later ..
-            }else if ( condition instanceof LEMSelected ){
-                e = (Expression) condition ; 
-            }            
-        }
-        SelectExpression se = new SelectExpression(multiplicity , fromClass , e ) ;
-        return se ;
+	int multiplicity = ((Integer)node.jjtGetChild( 0 ).jjtAccept( this, null )).intValue();
+        String fromClassName = getIdentifier(node.jjtGetChild(1));
+        Expression condition = (Expression)node.jjtGetChild(2).jjtAccept( this, data ); 
+
+	metamodel.Class fromClass = getClass( fromClassName );
+
+	if( fromClass == null ) 
+	    throw new LemException( "Class '" + fromClassName + "' not defined." );
+
+        SelectExpression se = new SelectExpression(multiplicity, fromClass, condition);
+        getMapper().add(node, se);
+
+        return se;
+    }
+   
+    public Object visit( LEMSelectMultiplicity node, Object data ) throws LemException {
+	switch( node.getFirstToken().kind ) {
+	    case LemParserConstants.ONE:
+		return new Integer( SelectExpression.MULTIPLICITY_ONE );
+	    case LemParserConstants.ANY:
+		return new Integer( SelectExpression.MULTIPLICITY_ANY );
+	    case LemParserConstants.ALL:
+		return new Integer( SelectExpression.MULTIPLICITY_ALL );
+	}
+
+	return null;
     }
     
+    public Object visit( LEMWhereClause node, Object data ) throws LemException {
+	if( node.jjtGetNumChildren() > 0 )
+            return node.jjtGetChild( 0 ).jjtAccept( this, null );
+
+	return null;
+    }
     
     public Object visit( LEMProcedure node, Object data ) throws LemException {
         // Fetch the Procedure object created in the first pass
@@ -1182,6 +1200,10 @@ public class BuilderPass2 extends Visitor {
         
         return t;
         
+    }
+   
+    protected metamodel.Class getClass( String className ) {
+	return currentDomain.getClass( className );
     }
     
     protected State getState( String stateName ) {
