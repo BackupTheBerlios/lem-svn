@@ -412,7 +412,8 @@ public class Interpreter {
     public void executeRelateAction( RelateAction a, Context c ) throws LemRuntimeException {
         // check both ends of the association to see if the classes are of 
         // correct type
-        boolean valid = false;
+        boolean valid_active, valid_passive;
+        valid_active = valid_passive = false;
         Instance active = null;
         Instance passive = null;
         
@@ -427,22 +428,27 @@ public class Interpreter {
         Collection pc = ((runtime.Object)pP.getValue()).getInstances();
         
         Iterator i = ac.iterator();        
-        while(i.hasNext() && !valid) {
+        while(i.hasNext() && !(valid_passive || valid_active)) {
             active = (Instance)i.next();
             if (active.getInstanceClass() == aP_class)
-                valid = true;
+                valid_active = true;
+            else if (active.getInstanceClass() == pP_class)
+                valid_passive = true;
         }
-        if(!valid)
-            throw new LemRuntimeException("Expecting "+aP_class.getName() +" for the active perspective object");
-        valid = false;    
+        if(!(valid_active || valid_passive))
+            throw new LemRuntimeException("Objects does not have the required instances for association "+a.getAssociation().getName());
+
         i = pc.iterator();        
-        while(i.hasNext() && !valid) {
+        while(i.hasNext() && !(valid_passive && valid_active)) {
             passive = (Instance)i.next();
             if (passive.getInstanceClass() == pP_class)
-                valid = true;
+                valid_passive = true;
+            else if (passive.getInstanceClass() == aP_class)
+                valid_active = true;
         }        
-        if(!valid)
-            throw new LemRuntimeException("Expecting "+pP_class.getName() +" for the passive perspective object");        
+        if(!(valid_active && valid_passive))
+            throw new LemRuntimeException("Objects does not have the required instances for association "+a.getAssociation().getName());
+        
         AssociationInstance aInst = new AssociationInstance(a.getAssociation());
         aInst.setActiveInstance(active);
         aInst.setPassiveInstance(passive);
@@ -462,7 +468,8 @@ public class Interpreter {
      */    
     public void executeUnrelateAction( UnrelateAction a, Context c ) throws LemRuntimeException {
         // verify the action is valid
-        boolean valid = false;
+        boolean valid_active, valid_passive;
+        valid_active = valid_passive = false;
         Instance active = null;
         Instance passive = null;
         
@@ -475,24 +482,28 @@ public class Interpreter {
         
         Collection ac = ((runtime.Object)aP.getValue()).getInstances();
         Collection pc = ((runtime.Object)pP.getValue()).getInstances();
-        
+                
         Iterator i = ac.iterator();        
-        while(i.hasNext() && !valid) {
+        while(i.hasNext() && !(valid_passive || valid_active)) {
             active = (Instance)i.next();
             if (active.getInstanceClass() == aP_class)
-                valid = true;
+                valid_active = true;
+            else if (active.getInstanceClass() == pP_class)
+                valid_passive = true;
         }
-        if(!valid)
-            throw new LemRuntimeException("Expecting "+aP_class.getName() +" for the active perspective object");
-        valid = false;    
+        if(!(valid_active || valid_passive))
+            throw new LemRuntimeException("Objects does not have the required instances for association "+a.getAssociation().getName());
+
         i = pc.iterator();        
-        while(i.hasNext() && !valid) {
+        while(i.hasNext() && !(valid_passive && valid_active)) {
             passive = (Instance)i.next();
             if (passive.getInstanceClass() == pP_class)
-                valid = true;
+                valid_passive = true;
+            else if (passive.getInstanceClass() == aP_class)
+                valid_active = true;
         }        
-        if(!valid)
-            throw new LemRuntimeException("Expecting "+pP_class.getName() +" for the passive perspective object");        
+        if(!(valid_active && valid_passive))
+            throw new LemRuntimeException("Objects does not have the required instances for association "+a.getAssociation().getName());
         
         // update the runtime model
         AssociationInstance aInst = new AssociationInstance(a.getAssociation());
