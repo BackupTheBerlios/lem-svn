@@ -36,8 +36,28 @@ model TestModel is
 					state relateTestClass is {
 						objref a;
 						objref b;
+                                                objref c;
+                                                objref d;
 						a := create A;
 						b := create B;
+                                                c := create A;
+						d := create B;
+						relate a to b across R3;
+						relate c to d across R3;
+					} end;
+
+					state relateTestClass2 is {
+						objref a;
+						objref b;
+                                                objref c;
+                                                objref d;
+						a := create A;
+						b := create B;
+                                                c := create A;
+						d := create B;
+                                                if(true) {
+                                                    relate a to b across R3;
+                                                }
 						relate a to b across R3;
 					} end;
 				end behaviour;
@@ -45,3 +65,4 @@ model TestModel is
 		end TestSubsystem;
 	end TestDomain;
 end TestModel;
+
