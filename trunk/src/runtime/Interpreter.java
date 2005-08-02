@@ -89,6 +89,8 @@ public class Interpreter {
             executeGenerateAction((GenerateAction)a, c);
         else if(a instanceof RelateAction )
             executeRelateAction((RelateAction)a, c);
+        else if(a instanceof UnrelateAction )
+            executeUnrelateAction((UnrelateAction)a, c);
         else {
             throw new LemRuntimeException("executeAction encountered unknown action");
         }
@@ -431,7 +433,7 @@ public class Interpreter {
                 valid = true;
         }
         if(!valid)
-            throw new LemRuntimeException("Expecting "+aP_class.getName() +" for the perspective object");
+            throw new LemRuntimeException("Expecting "+aP_class.getName() +" for the active perspective object");
         valid = false;    
         i = pc.iterator();        
         while(i.hasNext() && !valid) {
@@ -440,13 +442,66 @@ public class Interpreter {
                 valid = true;
         }        
         if(!valid)
-            throw new LemRuntimeException("The passivePerspective object is not of the correct class");        
+            throw new LemRuntimeException("Expecting "+pP_class.getName() +" for the passive perspective object");        
         AssociationInstance aInst = new AssociationInstance(a.getAssociation());
         aInst.setActiveInstance(active);
-        active.addAssociationInstance(aInst);
         aInst.setPassiveInstance(passive);
-        passive.addAssociationInstance(aInst);
+ 
+        if(c.containsAssociationInstance(aInst))
+            throw new LemRuntimeException("The association already exist between the two objects");        
         c.addAssociationInstance(aInst);
     }
-    
+   
+    /**
+     * Execute the given RelateAction in the given Context. 
+     *
+     * @param a the RelateAction to execute
+     * @param c the Context in which to execute the action
+     * @throws runtime.LemRuntimeException thrown by the metamodel.Object 
+     * constructor
+     */    
+    public void executeUnrelateAction( UnrelateAction a, Context c ) throws LemRuntimeException {
+        // verify the action is valid
+        boolean valid = false;
+        Instance active = null;
+        Instance passive = null;
+        
+        ObjectReferenceVariable aP = (ObjectReferenceVariable)c.getVariable(a.getActiveObjectName());
+        ObjectReferenceVariable pP = (ObjectReferenceVariable)c.getVariable(a.getPassiveObjectName());
+        
+        // retrieve the names of the classes participating in the association
+        metamodel.Class aP_class = a.getAssociation().getActivePerspective().getDomainClass();
+        metamodel.Class pP_class = a.getAssociation().getPassivePerspective().getDomainClass();        
+        
+        Collection ac = ((runtime.Object)aP.getValue()).getInstances();
+        Collection pc = ((runtime.Object)pP.getValue()).getInstances();
+        
+        Iterator i = ac.iterator();        
+        while(i.hasNext() && !valid) {
+            active = (Instance)i.next();
+            if (active.getInstanceClass() == aP_class)
+                valid = true;
+        }
+        if(!valid)
+            throw new LemRuntimeException("Expecting "+aP_class.getName() +" for the active perspective object");
+        valid = false;    
+        i = pc.iterator();        
+        while(i.hasNext() && !valid) {
+            passive = (Instance)i.next();
+            if (passive.getInstanceClass() == pP_class)
+                valid = true;
+        }        
+        if(!valid)
+            throw new LemRuntimeException("Expecting "+pP_class.getName() +" for the passive perspective object");        
+        
+        // update the runtime model
+        AssociationInstance aInst = new AssociationInstance(a.getAssociation());
+        aInst.setActiveInstance(active);
+        aInst.setPassiveInstance(passive);
+        
+        if(!c.containsAssociationInstance(aInst))
+            throw new LemRuntimeException("The association does not exist between the two objects");        
+        
+        c.removeAssociationInstance(aInst);
+    }    
 }
