@@ -71,14 +71,20 @@ public class AssociationInstance extends Instance {
     }
     
     public boolean equals(java.lang.Object o) {
+        boolean a,p, as;
+        a = p = as = false;
         if (o instanceof AssociationInstance) {
-            if(!active.equals(((AssociationInstance)o).active))
-                return false;
-            if(!passive.equals(((AssociationInstance)o).passive))
-                return false;
-            if(!association.equals(((AssociationInstance)o).association))
-                return false;
-            return true;
+            if(active.equals(((AssociationInstance)o).active))
+                a = true;
+            else if(active.equals(((AssociationInstance)o).passive))
+                a = true;
+            if(passive.equals(((AssociationInstance)o).passive))
+                p = true;
+            else if(passive.equals(((AssociationInstance)o).active))
+                p = true;
+            if(association.equals(((AssociationInstance)o).association))
+                as = true;
+            return (a && p && as);
         }
         return false;
     }
