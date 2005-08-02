@@ -69,4 +69,17 @@ public class AssociationInstance extends Instance {
     public Association getAssociation() {
         return association;
     }
+    
+    public boolean equals(java.lang.Object o) {
+        if (o instanceof AssociationInstance) {
+            if(!active.equals(((AssociationInstance)o).active))
+                return false;
+            if(!passive.equals(((AssociationInstance)o).passive))
+                return false;
+            if(!association.equals(((AssociationInstance)o).association))
+                return false;
+            return true;
+        }
+        return false;
+    }
 }
