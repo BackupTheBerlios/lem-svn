@@ -43,7 +43,8 @@ public class Context {
      * A collection of AssociationInstances known to this context.
      */
     HashMap associationInstances = new HashMap();
-
+    HashMap removedAssociations = new HashMap();
+    
     /**
      * The nullary Context constructor. Creates a new Context with no objects,
      * no listeners and a null list of local variables
@@ -116,6 +117,7 @@ public class Context {
 	if (parentContext != null) {
 		parentContext.addObjects(objectList);
                 parentContext.addAssociationInstance(associationInstances);
+                parentContext.removeAssociationInstance(removedAssociations);
 	}
     }
     
@@ -161,10 +163,58 @@ public class Context {
      * @param a the AssociationInstance to add
      */
     public void addAssociationInstance( AssociationInstance a ) {
-        associationInstances.put( a.getAssociation(), a );
+        if(!associationInstances.containsKey(a.getAssociation()))
+            associationInstances.put(a.getAssociation(), new LinkedList());
+        
+        a.getActiveInstance().addAssociationInstance(a);
+        a.getPassiveInstance().addAssociationInstance(a);
+        ((LinkedList)associationInstances.get(a.getAssociation())).add(a);
+        
     }
     
     public void addAssociationInstance(HashMap inAssociation) {
-        associationInstances.putAll(inAssociation);
-    }    
+        //associationInstances.putAll(inAssociation);
+        java.util.Iterator i = inAssociation.values().iterator();
+        while(i.hasNext()) {
+            Collection c = (Collection)i.next();
+            java.util.Iterator j = c.iterator();
+            while(j.hasNext()) {
+                addAssociationInstance((AssociationInstance)j.next());
+            }
+        }
+    }   
+
+    public void removeAssociationInstance( AssociationInstance a ) { 
+        if(associationInstances.containsKey(a.getAssociation()))
+            ((LinkedList)associationInstances.get(a.getAssociation())).remove(a);
+                
+        if(!removedAssociations.containsKey(a.getAssociation()))
+            removedAssociations.put(a.getAssociation(), new LinkedList());
+        
+        ((LinkedList)removedAssociations.get(a.getAssociation())).add(a);     
+        a.getActiveInstance().removeAssociationInstance(a);
+        a.getPassiveInstance().removeAssociationInstance(a);
+    }
+    
+    public void removeAssociationInstance(HashMap inAssociation) {
+        java.util.Iterator i = inAssociation.values().iterator();
+        while(i.hasNext()) {
+            Collection c = (Collection)i.next();
+            java.util.Iterator j = c.iterator();
+            while(j.hasNext()) {
+                removeAssociationInstance((AssociationInstance)j.next());
+            }  
+        }
+    }
+    
+    public boolean containsAssociationInstance(AssociationInstance a) {
+        if(associationInstances.containsKey(a.getAssociation()))
+            if(((LinkedList)associationInstances.get(a.getAssociation())).contains(a))
+                return true;
+        
+        if(parentContext != null)
+            return parentContext.containsAssociationInstance(a);
+        
+        return false;
+    }
 }
