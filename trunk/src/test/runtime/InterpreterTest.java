@@ -332,7 +332,7 @@ public class InterpreterTest extends junit.framework.TestCase {
 	    i = new Interpreter(obj);
 	    i.interpret(mainProc, c);
         } catch( LemRuntimeException e ) {
-            fail( "Some LemRuntimeException occurred: " + e.getMessage() );
+            fail( "Testing for deletion of association that exist.\n"+"Some LemRuntimeException occurred: " + e.getMessage() );
         }
         int count=0;
         java.util.Iterator j = c.getAssociationInstances().values().iterator();
@@ -353,7 +353,7 @@ public class InterpreterTest extends junit.framework.TestCase {
 	    i = new Interpreter(obj);
 	    i.interpret(mainProc, c);
         } catch( LemRuntimeException e ) {
-            fail( "Some LemRuntimeException occurred: " + e.getMessage() );
+            fail( "Testing for deletion of association that does not exist.\n" +"Some LemRuntimeException occurred: " + e.getMessage() );
         }    
     }        
 }
