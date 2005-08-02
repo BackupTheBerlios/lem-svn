@@ -130,6 +130,10 @@ public class Instance {
         ((LinkedList)associationInstances.get( a.getAssociation() )).add( a );
     }
     
+    public void removeAssociationInstance(AssociationInstance a) {
+        associationInstances.values().remove(a);
+    }
+    
     /**
      * Gets the named attribute from this instance.
      * 
