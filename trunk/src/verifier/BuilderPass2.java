@@ -123,39 +123,45 @@ public class BuilderPass2 extends Visitor {
     }
     
     public Object visit(LEMSelectStatement node, Object data) throws LemException {
-	int multiplicity = ((Integer)node.jjtGetChild( 0 ).jjtAccept( this, null )).intValue();
+        Expression condition = null ; 
+        RelatedToOperation rto = null ; 
+        int multiplicity = ((Integer)node.jjtGetChild( 0 ).jjtAccept( this, null )).intValue();
         String fromClassName = getIdentifier(node.jjtGetChild(1));
-        Expression condition = (Expression)node.jjtGetChild(2).jjtAccept( this, data ); 
-
-	metamodel.Class fromClass = getClass( fromClassName );
-
-	if( fromClass == null ) 
-	    throw new LemException( "Class '" + fromClassName + "' not defined." );
-
-        SelectExpression se = new SelectExpression(multiplicity, fromClass, condition);
+        String lastToken = node.getLastToken().toString() ;
+        if ( lastToken.equals("across") || lastToken.equals("to")) 
+            rto = (RelatedToOperation) node.jjtGetChild(2).jjtAccept( this, data );
+        else 
+            condition = (Expression)node.jjtGetChild(2).jjtAccept( this, data );                
+        
+        metamodel.Class fromClass = getClass( fromClassName );        
+        
+        if( fromClass == null )
+            throw new LemException( "Class '" + fromClassName + "' not defined." );
+        
+        SelectExpression se = new SelectExpression(multiplicity, fromClass, condition, rto);
         getMapper().add(node, se);
-
+        
         return se;
     }
-   
+    
     public Object visit( LEMSelectMultiplicity node, Object data ) throws LemException {
-	switch( node.getFirstToken().kind ) {
-	    case LemParserConstants.ONE:
-		return new Integer( SelectExpression.MULTIPLICITY_ONE );
-	    case LemParserConstants.ANY:
-		return new Integer( SelectExpression.MULTIPLICITY_ANY );
-	    case LemParserConstants.ALL:
-		return new Integer( SelectExpression.MULTIPLICITY_ALL );
-	}
-
-	return null;
+        switch( node.getFirstToken().kind ) {
+            case LemParserConstants.ONE:
+                return new Integer( SelectExpression.MULTIPLICITY_ONE );
+            case LemParserConstants.ANY:
+                return new Integer( SelectExpression.MULTIPLICITY_ANY );
+            case LemParserConstants.ALL:
+                return new Integer( SelectExpression.MULTIPLICITY_ALL );
+        }
+        
+        return null;
     }
     
     public Object visit( LEMWhereClause node, Object data ) throws LemException {
-	if( node.jjtGetNumChildren() > 0 )
+        if( node.jjtGetNumChildren() > 0 )
             return node.jjtGetChild( 0 ).jjtAccept( this, null );
-
-	return null;
+        
+        return null;
     }
     
     public Object visit( LEMProcedure node, Object data ) throws LemException {
@@ -420,7 +426,7 @@ public class BuilderPass2 extends Visitor {
         a.setAssociation( ra );
         
         return a;
-    }    
+    }
     
     public Object visit( LEMLinkObjectCreation node, Object data ) throws LemException {
         if( node.jjtGetNumChildren() != 1 ) return null;
@@ -539,6 +545,28 @@ public class BuilderPass2 extends Visitor {
             return listToTree( node, node.jjtGetNumChildren() - 1 );
         }
     }
+    
+    /**
+     *
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
+     */
+    public Object visit( LEMRelatedTo node, Object data ) throws LemException {
+        RelatedToOperation o = null ;
+        if( node.jjtGetNumChildren() != 3 ) {
+            throw new LemException("Related To is a ternary operator,\n Use: object1 Related To object2 Across R1 ") ;
+        }else {
+            String relatedClassName = getIdentifier(node.jjtGetChild(0));            
+            metamodel.Class relatedClass = getClass( relatedClassName );
+            String relationshipName = getIdentifier(node.jjtGetChild(1));
+            Relationship r = currentDomain.getRelationship( relationshipName );
+            o = new RelatedToOperation ( relatedClass, r) ; 
+        }
+        return o ; 
+    }
+    
     
     /**
      *
@@ -739,7 +767,7 @@ public class BuilderPass2 extends Visitor {
                 t = StringType.getInstance();
                 break;
             case LemParserConstants.NULL:
-		// TODO: NullType
+                // TODO: NullType
                 break;
         }
         
@@ -1227,9 +1255,9 @@ public class BuilderPass2 extends Visitor {
         return t;
         
     }
-   
+    
     protected metamodel.Class getClass( String className ) {
-	return currentDomain.getClass( className );
+        return currentDomain.getClass( className );
     }
     
     protected State getState( String stateName ) {
