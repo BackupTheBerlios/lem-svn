@@ -322,17 +322,10 @@ public class Interpreter {
             // TODO: Testing only
             Variable v = VariableFactory.newVariable(  l.getType(), l.getValue() );
             return v;
-        }else if (e instanceof Expression) {
-            if (e instanceof SelectExpression) {
-                SelectExpression se = (SelectExpression) e;
-                //HashMap vl = c.variableList ; 
-                /** get the list of all variables from same class 
-                 *and compare them agains the condition */
-                
-               // return v ;
-            }
-        }
-        if( e instanceof BinaryOperation ) {
+        } else if (e instanceof SelectExpression) {
+            SelectExpression se = (SelectExpression) e;
+//	    return evaluateSelectExpression( se, c );
+	} else if( e instanceof BinaryOperation ) {
             BinaryOperation o = (BinaryOperation) e;
             Variable left = evaluateExpression( o.getLeft(), c );
             Variable right = evaluateExpression( o.getRight(), c );
@@ -369,14 +362,10 @@ public class Interpreter {
             }
             
             throw new LemRuntimeException( "Unknown operation ID: " + o.getType() );
-        }
-        
-        if( e instanceof VariableReference ) {
+        } else if( e instanceof VariableReference ) {
             // Must look up Variable
             return getVariable( (VariableReference) e, c );
-        }
-        
-        if( e instanceof UnaryOperation ) {
+        } else if( e instanceof UnaryOperation ) {
             UnaryOperation o = (UnaryOperation) e;
             Variable operand = evaluateExpression( o.getOperand(), c );
             
