@@ -32,18 +32,28 @@ public class SelectExpression extends Expression {
     /** Whether selectExpression has a where clause */
     private boolean hasCondition = false; 
     
+    /** Whether selectExpression has a where clause */
+    private boolean hasRelatedTo = false; 
+    
     /** The condition of Select Expression, if any or null otherwise */
     private Expression condition = null; 
     
+        
+    /** The RelatedToOperation of Select, if any or null otherwise */
+    private RelatedToOperation rto = null ; 
+    
     /** Creates a new instance of SelectExpression */
-    public SelectExpression(int multiplicity, metamodel.Class theClass, Expression condition ) {        
+    public SelectExpression(int multiplicity, metamodel.Class theClass, Expression condition, RelatedToOperation rto ) {        
         super(); 
         this.theClass = theClass;
         this.multiplicity = multiplicity ; 
         if ( condition != null ) {
             this.hasCondition = true; 
             this.condition = condition;  
-        }
+        } else if ( rto != null) {
+            this.hasRelatedTo = true; 
+            this.rto = rto;  
+        }                
     }
 
     public metamodel.Class getSelectedClass() {
@@ -66,6 +76,10 @@ public class SelectExpression extends Expression {
         return hasCondition;
     }
 
+    public boolean hasRelatedTo() {
+        return hasRelatedTo;
+    }
+    
     public void setHasCondition(boolean hasCondition) {
         this.hasCondition = hasCondition;
     }
@@ -74,6 +88,10 @@ public class SelectExpression extends Expression {
         return condition;
     }
 
+    public RelatedToOperation getRelatedTo() {
+        return rto;
+    }
+    
     public void setCondition(Expression condition) {
         this.condition = condition;
     }
