@@ -33,18 +33,18 @@ public class TableModel extends AbstractTableModel {
     int colSort = 0;
     boolean ascend = true;
     JTable table = new JTable();
-    ImageIcon lemIcon = new ImageIcon();
-    URL imageURL = getClass().getClassLoader().getResource("verifier/lem.jpg");
+    ImageIcon upIcon = new ImageIcon();
+    ImageIcon downIcon = new ImageIcon();
     
     
     private String[] columnNames = {
         "Counter","Type", "Object1", "Object2", "State1",
                 "State2", "Event", "AttName", "AttValue", "RelName"};
                 
-    private Vector rowData = new Vector();
+                private Vector rowData = new Vector();
                 
-                
-   TableCellRenderer iconHeaderRenderer = new DefaultTableCellRenderer() {
+                //begin iconHeaderRenderer
+                TableCellRenderer iconHeaderRenderer = new DefaultTableCellRenderer() {
                     public Component getTableCellRendererComponent(JTable table, Object value,
                             boolean isSelected, boolean hasFocus, int row, int column) {
                         // Inherit the colors and font from the header component
@@ -58,8 +58,8 @@ public class TableModel extends AbstractTableModel {
                         }
                         
                         if (value instanceof TextAndIcon) {
-                            setIcon(((TextAndIcon)value).icon);
                             setText(((TextAndIcon)value).text);
+                            setIcon(((TextAndIcon)value).icon);
                         } else {
                             setText((value == null) ? "" : value.toString());
                             setIcon(null);
@@ -67,14 +67,17 @@ public class TableModel extends AbstractTableModel {
                         setBorder(UIManager.getBorder("TableHeader.cellBorder"));
                         setHorizontalAlignment(JLabel.CENTER);
                         return this;
-                    };};
+                    };};//end iconHeaderRenderer
                     
-                    
+
                     /**
                      * Creates a new instance of LogTableModel which holds the data
                      */
                     public TableModel() {
-                        lemIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+                        URL imageURL = getClass().getClassLoader().getResource("verifier/up.gif");
+                        upIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+                        imageURL = getClass().getClassLoader().getResource("verifier/down.gif");
+                        downIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
                     }
                     public void objectCreated(LemObjectCreationEvent event, int counter){
                         Vector tmp = new Vector();
@@ -137,17 +140,16 @@ public class TableModel extends AbstractTableModel {
                             } else{
                                 ascend=true;
                             }
-                        } else
-                        {
+                        } else {
                             colSort = colIndex;
                             ascend=true;
                         }
                         Vector data = getDataVector();
                         Collections.sort(data, new ColumnSorter(colIndex, ascend));
                         if (ascend) {
-                            changeIcon(colSort, lemIcon);
+                            changeIcon(colSort, downIcon);
                         } else {
-                            changeIcon(colSort, null);
+                            changeIcon(colSort, upIcon);
                         }
                         fireTableStructureChanged();
                     }
@@ -164,7 +166,7 @@ public class TableModel extends AbstractTableModel {
                         
                         // Set the text and icon values on the first column for the icon render
                         table.getColumnModel().getColumn(0).setHeaderValue(
-                                new TextAndIcon(columnNames[0], lemIcon));
+                                new TextAndIcon(columnNames[0], downIcon));
                         
                         for (int i=1; i<columnNames.length; i++){
                             table.getTableHeader().getColumnModel()
