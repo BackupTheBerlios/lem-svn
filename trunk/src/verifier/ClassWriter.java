@@ -53,6 +53,7 @@ public class ClassWriter {
            
                   strBuf.append(umlclass.dumpDot());
               }
+              
               for( Iterator it = domain.getRelationships().values().iterator(); it.hasNext();) {
                   metamodel.Association association = (metamodel.Association) it.next();
                   strBuf.append(association.getParticipants()[0].getName() + "->");
@@ -65,7 +66,7 @@ public class ClassWriter {
                   strBuf.append("\",");
                   strBuf.append("taillabel=\"");
                   strBuf.append(association.getActivePerspective().getMultiplicity().toString());
-                  strBuf.append("\"");
+                  strBuf.append("\", arrowhead=\"none\"");
                   strBuf.append("]; \n");
               }
                 
