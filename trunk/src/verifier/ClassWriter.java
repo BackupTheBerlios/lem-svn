@@ -46,7 +46,7 @@ public class ClassWriter {
             
               StringBuffer strBuf = new StringBuffer( );
    
-              strBuf.append("digraph classdiagram { \n");
+              strBuf.append("digraph classdiagram { \n\n    nodesep=1.50;ranksep=1.0;\n\n");
         
               for ( Iterator it = classList.iterator(); it.hasNext(); ) {
                   metamodel.Class umlclass = (metamodel.Class) it.next();
@@ -54,8 +54,11 @@ public class ClassWriter {
                   strBuf.append(umlclass.dumpDot());
               }
               
+              strBuf.append("\n");
+              
               for( Iterator it = domain.getRelationships().values().iterator(); it.hasNext();) {
                   metamodel.Association association = (metamodel.Association) it.next();
+                  strBuf.append("    ");
                   strBuf.append(association.getParticipants()[0].getName() + "->");
                   strBuf.append(association.getParticipants()[1].getName() + " ");
                   strBuf.append("[label=\"\\");
@@ -66,7 +69,7 @@ public class ClassWriter {
                   strBuf.append("\",");
                   strBuf.append("taillabel=\"");
                   strBuf.append(association.getActivePerspective().getMultiplicity().toString());
-                  strBuf.append("\", arrowhead=\"none\"");
+                  strBuf.append("\",arrowhead=\"none\",labelfontsize=\"7\"");
                   strBuf.append("]; \n");
               }
                 
