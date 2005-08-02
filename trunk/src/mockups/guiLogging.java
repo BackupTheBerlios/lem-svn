@@ -1,54 +1,44 @@
 /*
  * guiLogging.java
  *
- * Created on 13 July 2005, 01:42
+ * Created on 2 August 2005, 04:37
  */
+
 package mockups;
 
 import java.util.Vector;
-import javax.swing.JFrame;
 import metamodel.ActionBlock;
 import metamodel.CreateAction;
 import metamodel.Procedure;
 import metamodel.Class;
 import runtime.DomainContext;
-import runtime.LemRuntimeException;
 import runtime.Interpreter;
+import runtime.LemRuntimeException;
 import verifier.JContextLoggerPanel;
+
 /**
  *
  * @author  David Gavin
+ * @author  Donna Aloe
+ * @author  Simon Franklin
  */
 public class guiLogging extends javax.swing.JFrame {
-    Procedure p = new Procedure();
-    ActionBlock aB = new ActionBlock();
-    CreateAction a = new CreateAction();
-    Class newClass = new Class();
+    Vector c = new Vector();
     DomainContext d = new DomainContext();
-    JContextLoggerPanel Logger = new JContextLoggerPanel(d);
-    Interpreter I = new Interpreter(null);
+    Procedure p = new Procedure();
+    CreateAction a = new CreateAction();
+    ActionBlock aB = new ActionBlock();
+    Class newClass = new Class();
+    JContextLoggerPanel logger = new JContextLoggerPanel(d);
     /** Creates new form guiLogging */
     public guiLogging() {
-        newClass.setName("newClass");
-        Vector c = new Vector();
-        c.add(newClass);
-        a.setClasses(c);
-        aB.addAction(a);
-        p.setActionBlock(aB);
-        this.getContentPane().add(Logger, java.awt.BorderLayout.CENTER);
-        //this.getContentPane().add(genButton, java.awt.BorderLayout.NORTH);
-        this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        ExecuteProcedure();
-        ExecuteProcedure();
-        ExecuteProcedure();
+        getContentPane().add(logger,java.awt.BorderLayout.CENTER);
+        initComponents();
+      	setBounds(0,0,640,480);
+	setTitle("MockUps");
+        
     }
-    public void ExecuteProcedure() {
-        try{
-            I.interpret(p, d);
-        } catch(LemRuntimeException e) {
-            System.out.println(e);
-        }
-    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -56,32 +46,75 @@ public class guiLogging extends javax.swing.JFrame {
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
-        genButton = new javax.swing.JButton();
-
-        getContentPane().setLayout(null);
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setFocusCycleRoot(false);
-        setName("LoggingPrototype");
-        genButton.setText("generate");
-        genButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        setTitle("Mockup");
+        setName("????");
+        setResizable(false);
+        jButton1.setText("Generate");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                genButtonMouseClicked(evt);
+                jButton1MouseClicked(evt);
             }
         });
 
-        getContentPane().add(genButton);
-        genButton.setBounds(30, 20, 75, 23);
+        getContentPane().add(jButton1, java.awt.BorderLayout.NORTH);
 
         pack();
     }
     // </editor-fold>//GEN-END:initComponents
-    
-    private void genButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_genButtonMouseClicked
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        newClass.setName("newClass");
+        Vector c = new Vector();
+        c.add(newClass);
+        a.setClasses(c);
+        aB.addAction(a);
+        p.setActionBlock(aB);
         ExecuteProcedure();
-    }//GEN-LAST:event_genButtonMouseClicked
-    
-    /**
+        p=new Procedure();
+        a = new CreateAction();
+        aB = new ActionBlock();
+        newClass = new Class();
+        newClass.setName("2");
+        c = new Vector();
+        c.add(newClass);
+        a.setClasses(c);
+        aB.addAction(a);
+        p.setActionBlock(aB);
+        ExecuteProcedure();
+        p=new Procedure();
+        a = new CreateAction();
+        aB = new ActionBlock();
+        newClass = new Class();
+        newClass.setName("Hello");
+        c = new Vector();
+        c.add(newClass);
+        c.add(newClass);
+        c.add(newClass);
+        a.setClasses(c);
+        aB.addAction(a);
+        p.setActionBlock(aB);
+        ExecuteProcedure();
+        p=new Procedure();
+        a = new CreateAction();
+        aB = new ActionBlock();
+        newClass = new Class();
+    }//GEN-LAST:event_jButton1MouseClicked
+    public void ExecuteProcedure()
+    {
+        
+        
+	/* Not executing in the context of an object! */
+        runtime.Interpreter i = new Interpreter(null);
+        try{
+            i.interpret(p, d);
+        } catch(LemRuntimeException e) {
+            System.out.println(e);
+        }
+    }
+     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -93,7 +126,7 @@ public class guiLogging extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton genButton;
+    private javax.swing.JButton jButton1;
     // End of variables declaration//GEN-END:variables
     
 }
