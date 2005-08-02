@@ -80,7 +80,8 @@ public class TableModel extends AbstractTableModel {
                         Vector tmp = new Vector();
                         runtime.Object o = event.getCreatedObject();
                         String instances="";
-                        tmp.add(counter);
+                        
+                        tmp.add( new Integer(counter)) ;
                         tmp.add("OC");
                         for( Iterator i = o.getInstances().iterator(); i.hasNext(); ) {
                             runtime.Instance in = (runtime.Instance)i.next();
