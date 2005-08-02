@@ -4,9 +4,12 @@
 
 package runtime;
 import metamodel.*;
+import runtime.Object ;
+import runtime.Instance ;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Collection;
+import java.util.ArrayList ;
 import java.util.HashMap;
 
 /**
@@ -326,8 +329,8 @@ public class Interpreter {
             return v;
         } else if (e instanceof SelectExpression) {
             SelectExpression se = (SelectExpression) e;
-//	    return evaluateSelectExpression( se, c );
-	} else if( e instanceof BinaryOperation ) {
+            return evaluateSelectExpression( se, c );
+        } else if( e instanceof BinaryOperation ) {
             BinaryOperation o = (BinaryOperation) e;
             Variable left = evaluateExpression( o.getLeft(), c );
             Variable right = evaluateExpression( o.getRight(), c );
@@ -399,18 +402,18 @@ public class Interpreter {
         name = v.getVariableName() ;
         c.addVariable(name , var ) ;
     }
-
-
+    
+    
     /**
-     * Execute the given RelateAction in the given Context. 
+     * Execute the given RelateAction in the given Context.
      *
      * @param a the RelateAction to execute
      * @param c the Context in which to execute the action
-     * @throws runtime.LemRuntimeException thrown by the metamodel.Object 
+     * @throws runtime.LemRuntimeException thrown by the metamodel.Object
      * constructor
-     */    
+     */
     public void executeRelateAction( RelateAction a, Context c ) throws LemRuntimeException {
-        // check both ends of the association to see if the classes are of 
+        // check both ends of the association to see if the classes are of
         // correct type
         boolean valid_active, valid_passive;
         valid_active = valid_passive = false;
@@ -422,11 +425,12 @@ public class Interpreter {
         
         // retrieve the names of the classes participating in the association
         metamodel.Class aP_class = a.getAssociation().getActivePerspective().getDomainClass();
-        metamodel.Class pP_class = a.getAssociation().getPassivePerspective().getDomainClass();        
+        metamodel.Class pP_class = a.getAssociation().getPassivePerspective().getDomainClass();
         
         Collection ac = ((runtime.Object)aP.getValue()).getInstances();
         Collection pc = ((runtime.Object)pP.getValue()).getInstances();
         
+
         Iterator i = ac.iterator();        
         while(i.hasNext() && !(valid_passive || valid_active)) {
             active = (Instance)i.next();
@@ -435,13 +439,17 @@ public class Interpreter {
             else if (active.getInstanceClass() == pP_class)
                 valid_passive = true;
         }
+
         if(!(valid_active || valid_passive))
             throw new LemRuntimeException("Objects does not have the required instances for association "+a.getAssociation().getName());
 
         i = pc.iterator();        
         while(i.hasNext() && !(valid_passive && valid_active)) {
+
             passive = (Instance)i.next();
             if (passive.getInstanceClass() == pP_class)
+
+
                 valid_passive = true;
             else if (passive.getInstanceClass() == aP_class)
                 valid_active = true;
@@ -457,6 +465,44 @@ public class Interpreter {
             throw new LemRuntimeException("The association already exist between the two objects");        
         c.addAssociationInstance(aInst);
     }
+   
+    public Variable evaluateSelectExpression(SelectExpression se, Context c) throws LemRuntimeException {
+        metamodel.Class selectedClass = se.getSelectedClass() ;
+        ArrayList objectList = (ArrayList) c.objectList ;
+        SetVariable set = new SetVariable() ;        
+        
+        for (int i = 0 ; i < objectList.size() ; i++) {
+            Object o = (Object ) objectList.get(i) ;
+            for ( int j = 0 ; j < o.getInstances().size() ; j++) {
+                Instance instance = (Instance) ((ArrayList) o.getInstances()).get(j) ;
+                if ( instance.getInstanceClass().getName().equals(selectedClass.getName() )) {
+                    if ( se.hasCondition() ) {
+                        Context newContext = new Context( c ) ;
+                        //DomainSpecificDataType type = new DomainSpecificDataType() ;
+                        //type.setName( selectedClass.getName() ) ;
+                        //Variable var = VariableFactory.newVariable(type, null);
+                        //newContext.addVariable("selected" , var ) ;                        
+                        Collection classes = new ArrayList();
+                        classes.add(selectedClass) ;
+                        Object selected = new Object( classes ) ;
+                        selected.addInstance( instance ) ;
+                        if ( evaluateExpression(se.getCondition() , newContext).getType() instanceof BooleanType ) {
+                            if ( ((Boolean)evaluateExpression(se.getCondition() , newContext).getValue()).booleanValue() ) {
+                               set.add( instance ) ;
+                        } else 
+                            throw new LemRuntimeException("Not a Boolean Expression.") ; 
+                        }                             
+                        newContext.finish() ;
+                    } else if ( se.hasRelatedTo() ) {
+                        // todo ...
+                    }
+                    
+                }
+            }
+        }                                
+        return set ;
+    }
+       
    
     /**
      * Execute the given RelateAction in the given Context. 
