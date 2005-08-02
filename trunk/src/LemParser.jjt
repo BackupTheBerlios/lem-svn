@@ -1166,11 +1166,11 @@ void AndRelation() : {}
 
 void Relation() : {}
 {
-	SimpleExpression()
+	RelatedTo() | (SimpleExpression()
 	(
 		Relational()
 		SimpleExpression()
-	)*
+	)*)
 }
 
 void Relational() : {}
@@ -1180,7 +1180,15 @@ void Relational() : {}
 	| <LT>
 	| <LE>
 	| <GT>
-	| <GE>
+	| <GE>    
+}
+
+void RelatedTo() : {}
+{        
+    <RELATED><TO> 
+    Identifier() 
+    <ACROSS> 
+    Identifier() 
 }
 
 void SimpleExpression() : {}
