@@ -218,6 +218,7 @@ TOKEN : /* IDENTIFIERS */
 | <OR: "or">
 | <AND: "and">
 | <DOMAIN: "domain">
+| <SCENARIO: "scenario">
 | <SUBSYSTEM: "subsystem">
 | <MODEL: "model">
 | <TYPE: "type">
@@ -471,7 +472,8 @@ void DomainDeclaration() : {
   <DOMAIN> Identifier() <IS> 
   	Description() 
   	( TypeDeclaration() )* 
-  	( SubSystemDeclaration() )+ 
+  	( SubSystemDeclaration() )+
+        ( ScenarioDeclaration() )*
   EndIdentifier() <SEMI>
 }
 
@@ -599,6 +601,16 @@ void SubSystemDeclaration() : {
 		Description() 
 		SubSystemBody() 
 	EndIdentifier() <SEMI>
+}
+
+void ScenarioDeclaration() : {
+}
+{
+        <SCENARIO>
+        Identifier() 
+        <IS>
+        Description()
+        ActionBlock()
 }
 
 void Description() : {}
