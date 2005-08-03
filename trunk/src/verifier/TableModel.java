@@ -1,5 +1,5 @@
 /*
- * LogTableModel.java
+ * TableModel.java
  *
  * Created on 29 July 2005, 03:11
  */
