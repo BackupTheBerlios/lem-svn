@@ -2,10 +2,6 @@
  * ColumnHeaderListener.java
  *
  * Created on 2 August 2005, 02:50
- *
- * To change this template, choose Tools | Options and locate the template under
- * the Source Creation and Management node. Right-click the template and choose
- * Open. You can then make changes to the template in the Source Editor.
  */
 
 package verifier;
@@ -17,15 +13,21 @@ import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
-/**
- *
+/** Detects if the user clicks on the head of a column to sort.
+ * 
  * @author  David Gavin
  * @author  Donna Aloe
  * @author  Simon Franklin
+ *
+ * @see JContextLoggerPanel
+ * @see TableModel
  */
 public class ColumnHeaderListener extends MouseAdapter {
         public ColumnHeaderListener(){}
         
+	/** Receieves a mouse clicked event from the GUI 
+	* @param evt the Mouse click event
+	*/
         public void mouseClicked(MouseEvent evt) {
             JTable table = ((JTableHeader)evt.getSource()).getTable();
             TableModel model = (TableModel)table.getModel();
@@ -57,7 +59,7 @@ public class ColumnHeaderListener extends MouseAdapter {
                     vLeftColIndex--;
                 }
             }
-            
+            // Calls a sort when a column header is clicked 
             model.sortAllRowsBy(vColIndex);
         }
     }
