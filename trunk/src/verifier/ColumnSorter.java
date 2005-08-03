@@ -1,11 +1,6 @@
 /*
  * ColumnSorter.java
  *
- * Created on 2 August 2005, 02:54
- *
- * To change this template, choose Tools | Options and locate the template under
- * the Source Creation and Management node. Right-click the template and choose
- * Open. You can then make changes to the template in the Source Editor.
  */
 
 package verifier;
@@ -14,20 +9,33 @@ import java.util.Comparator;
 import java.util.Vector;
 
 /**
- *
+ * Provides an implementation of compare for Collections.sort.
+ * It allows elements in a column to be sorted in ascending or descending order
+ 
  * @author  David Gavin
  * @author  Donna Aloe
  * @author  Simon Franklin
+ * @see     TableModel
  */
 public class ColumnSorter implements Comparator {
         int colIndex;
         boolean ascending;
+	
+	/**
+	*  Sets the column to be sorted and the order
+	* @param colIndex The index of the column
+	* @param ascending True if ascending order, False if descending
+	*/
         ColumnSorter(int colIndex, boolean ascending) {
             this.colIndex = colIndex;
             this.ascending = ascending;
         }
-         /*   public ColumnSorter() {
-    }*/
+            
+          /**
+	  * Compares two objects according to the order
+	  * @param a The first object 
+	  * @param b The second object
+          */    
         public int compare(Object a, Object b) {
             Vector v1 = (Vector)a;
             Vector v2 = (Vector)b;
