@@ -63,6 +63,14 @@ public class Context {
     }
 
     /**
+     * Returns the parent context, or null if this is the root context.
+     * @returns the parent context.
+     */
+    public Context getParent() {
+	    return parentContext;
+    }
+    
+    /**
      * Adds the given object to this context
      * @param inObject the object to add to the context
      */

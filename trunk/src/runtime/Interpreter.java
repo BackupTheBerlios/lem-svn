@@ -468,33 +468,38 @@ public class Interpreter {
    
     public Variable evaluateSelectExpression(SelectExpression se, Context c) throws LemRuntimeException {
         metamodel.Class selectedClass = se.getSelectedClass() ;
-        Collection objectList = c.getObjectList();
         SetVariable set = new SetVariable() ;        
         
-	for (Iterator i = objectList.iterator(); i.hasNext();) {
-            runtime.Object o = (runtime.Object)i.next();
+	do {
+        	Collection objectList = c.getObjectList();
 
-            for (Iterator j = o.getInstances().iterator(); j.hasNext();) {
-                Instance instance = (Instance)j.next();
+		for (Iterator i = objectList.iterator(); i.hasNext();) {
+	            runtime.Object o = (runtime.Object)i.next();
 
-                if ( instance.getInstanceClass() == selectedClass ) {
-                    Variable var = VariableFactory.newVariable(ObjectReferenceType.getInstance(), o);
-		    Expression condition = se.getCondition();
-                    if ( condition != null ) {
-                        Context newContext = new Context( c ) ;
-                        newContext.addVariable("selected" , var ) ;                        
-                        if ( evaluateExpression(se.getCondition() , newContext).getType() instanceof BooleanType ) {
-                            if ( !((Boolean)evaluateExpression(se.getCondition() , newContext).getValue()).booleanValue() )
-				    continue;
-                        } else  {
-                            throw new LemRuntimeException("Not a Boolean Expression.") ; 
-			}
-                        newContext.finish() ;
-                    }
-		    set.add( var ) ;
-                }
-            }
-        }                                
+	            for (Iterator j = o.getInstances().iterator(); j.hasNext();) {
+	                Instance instance = (Instance)j.next();
+
+	                if ( instance.getInstanceClass() == selectedClass ) {
+	                    Variable var = VariableFactory.newVariable(ObjectReferenceType.getInstance(), o);
+			    Expression condition = se.getCondition();
+	                    if ( condition != null ) {
+	                        Context newContext = new Context( c ) ;
+	                        newContext.addVariable("selected" , var ) ;                        
+	                        if ( evaluateExpression(se.getCondition() , newContext).getType() instanceof BooleanType ) {
+	                            if ( !((Boolean)evaluateExpression(se.getCondition() , newContext).getValue()).booleanValue() )
+					    continue;
+	                        } else  {
+	                            throw new LemRuntimeException("Not a Boolean Expression.") ; 
+				}
+	                        newContext.finish() ;
+	                    }
+			    set.add( var ) ;
+			    break;
+	                }
+	            }
+	        }
+		c = c.getParent();
+	} while (c != null);
         return set ;
     }
        
