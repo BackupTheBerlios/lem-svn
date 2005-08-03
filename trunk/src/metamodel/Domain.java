@@ -56,6 +56,8 @@ public class Domain implements DescribedEntity {
     /** A Collection of Relationships. Impements R121 */
     private HashMap relationships = new HashMap();
     
+    /** A Map of Scenario names to Scenario objects */
+    private Map scenarios = new HashMap();
     /** 
      * Creates a new instance of Domain 
      */
@@ -213,6 +215,29 @@ public class Domain implements DescribedEntity {
         
         theRelationship.setDomain( this );
         relationships.put( key, theRelationship );
+    }
+    
+    /**
+     * Add the given Scenario to the domain
+     *
+     * @param scenario the Scenario
+     * @throws LemException in the event of a duplicate scenario name
+     */
+    public void add( Scenario scenario ) throws LemException {
+        String key = scenario.getName();
+        if( scenarios.get( key ) != null )
+            throw new LemException( "Scenario " + key + " already exists in domain " + name);
+        
+        scenarios.put( key, scenario ); 
+    }
+    
+    /**
+     * Get all scenarios defined for this domain.
+     *  
+     * @return the Map of Scenario names to Scenario objects
+     */
+    public Map getScenarios() {
+        return scenarios;
     }
     
     /**
