@@ -16,6 +16,7 @@ public class Visitor implements LemParserVisitor {
     
 
     private void logVisit( SimpleNode node, Object data ) {
+    	/*
         Token t1 = node.getFirstToken(); 
         Token t2 = node.getLastToken();
         System.err.print( "Visited " + node.getClass().getName() + " token=" + t1.image ); 
@@ -23,7 +24,7 @@ public class Visitor implements LemParserVisitor {
             System.err.println( "" );
         else
             System.err.println( " to token=" + t2.image );
-        
+	*/
     }
 
 
