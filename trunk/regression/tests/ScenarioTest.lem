@@ -1,0 +1,21 @@
+model TestModel is
+	domain TestDomain is
+		type Money is numeric;
+
+		subsystem TestSubsystem is
+			class A is
+				// empty
+			end;
+		end TestSubsystem;
+
+		scenario TestScenario is {
+			objref a;
+			numeric b;
+			boolean c;
+			
+			a := create A;
+			b := 4;
+			c := b > b;
+		}
+	end TestDomain;
+end TestModel;
