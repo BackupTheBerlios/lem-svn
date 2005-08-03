@@ -80,7 +80,15 @@ public class Context {
 		throw new LemRuntimeException("Too many objects on stack.");
 	}
     }
-      
+
+    /**
+     * Returns the list of objects in this context
+     * @returns the list of objects.
+     */
+    public Collection getObjectList() {
+	    return objectList;
+    }
+    
     /**
      * Gets the named variable from this context or any parent contexts.
      *

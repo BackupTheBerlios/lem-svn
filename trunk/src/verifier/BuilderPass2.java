@@ -123,22 +123,17 @@ public class BuilderPass2 extends Visitor {
     }
     
     public Object visit(LEMSelectStatement node, Object data) throws LemException {
-        Expression condition = null ; 
-        RelatedToOperation rto = null ; 
         int multiplicity = ((Integer)node.jjtGetChild( 0 ).jjtAccept( this, null )).intValue();
         String fromClassName = getIdentifier(node.jjtGetChild(1));
         String lastToken = node.getLastToken().toString() ;
-        if ( lastToken.equals("across") || lastToken.equals("to")) 
-            rto = (RelatedToOperation) node.jjtGetChild(2).jjtAccept( this, data );
-        else 
-            condition = (Expression)node.jjtGetChild(2).jjtAccept( this, data );                
+	Expression condition = (Expression)node.jjtGetChild(2).jjtAccept( this, data );                
         
         metamodel.Class fromClass = getClass( fromClassName );        
         
         if( fromClass == null )
             throw new LemException( "Class '" + fromClassName + "' not defined." );
         
-        SelectExpression se = new SelectExpression(multiplicity, fromClass, condition, rto);
+        SelectExpression se = new SelectExpression(multiplicity, fromClass, condition);
         getMapper().add(node, se);
         
         return se;
@@ -554,6 +549,8 @@ public class BuilderPass2 extends Visitor {
      * @return
      */
     public Object visit( LEMRelatedTo node, Object data ) throws LemException {
+	throw new LemException("Related To operator not yet implemented\n");
+	/*
         RelatedToOperation o = null ;
         if( node.jjtGetNumChildren() != 3 ) {
             throw new LemException("Related To is a ternary operator,\n Use: object1 Related To object2 Across R1 ") ;
@@ -565,6 +562,7 @@ public class BuilderPass2 extends Visitor {
             o = new RelatedToOperation ( relatedClass, r) ; 
         }
         return o ; 
+	*/
     }
     
     
