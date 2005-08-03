@@ -563,17 +563,7 @@ public class Visitor implements LemParserVisitor {
 		node.childrenAccept( this, data );
 		return data;
 	}
-	  public Object visit(LEMForLoop node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMLoopVariable node, Object data) throws metamodel.LemException { 
-		logVisit( node, data );
-		node.childrenAccept( this, data );
-		return data;
-	}
-	  public Object visit(LEMVariableSet node, Object data) throws metamodel.LemException { 
+	  public Object visit(LEMForStatement node, Object data) throws metamodel.LemException { 
 		logVisit( node, data );
 		node.childrenAccept( this, data );
 		return data;

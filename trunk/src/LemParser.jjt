@@ -897,7 +897,7 @@ void Action() : {}
 	| IfStatement()
 	| WhileStatement()
 	| ActionBlock()
-	| ForLoop()
+	| ForStatement()
 	| Break()
 }
 
@@ -1110,20 +1110,13 @@ void Selected() : {}
 }
 
 
-void ForLoop() : {}
+void ForStatement() : {}
 {
-	<FOR><EACH>LoopVariable()<IN>VariableSet()
+	<FOR> <EACH>
+	Identifier()
+	<IN>
+	VariableReference()
 	ActionBlock()	
-}
-
-void LoopVariable(): {}
-{
-	<SIMPLE_IDENTIFIER>
-}
-
-void VariableSet() : {}
-{
-	<SIMPLE_IDENTIFIER>
 }
 
 void Break() : {}
