@@ -57,7 +57,7 @@ public class BuilderPass2 extends Visitor {
         super.visit(node, currentModel);
         return null;
     }
-    
+        
     /**
      *
      * @param node
@@ -70,6 +70,16 @@ public class BuilderPass2 extends Visitor {
         
         super.visit(node, data);
         return data;
+    }
+    
+    public Object visit( LEMScenarioDeclaration node, Object data ) throws LemException {
+        Scenario s = new Scenario();
+        
+        s.setName( getIdentifier( node.jjtGetChild( 0 )));
+        s.setDescription( (String)node.jjtGetChild( 1 ).jjtAccept( this, null ));
+        s.setActionBlock( (ActionBlock)node.jjtGetChild( 2 ).jjtAccept( this, null ));
+        
+        return s;
     }
     
     /**
@@ -1263,6 +1273,19 @@ public class BuilderPass2 extends Visitor {
         
         return t;
         
+    }
+   
+    /** 
+     * Return the String description represented by the given LEMDescription node.
+     * 
+     * @todo The LemParser.jjt specifies an optional token. JavaCC will return the 
+     * next token along if no string is specified! This is an evil dirty hack until
+     * the grammar can be fixed.
+     */
+    public Object visit( LEMDescription node, Object data ) {
+        return node.getFirstToken().kind == LemParserConstants.STRING_LITERAL 
+                ? node.getFirstToken().image
+                : null;
     }
     
     protected metamodel.Class getClass( String className ) {
