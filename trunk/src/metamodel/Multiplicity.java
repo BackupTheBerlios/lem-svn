@@ -84,6 +84,15 @@ public class Multiplicity {
     public String toString() {
         return textual;
     }
+
+    /**
+     * Return a symbolic representation of the multiplicity
+     *
+     * @return a symbolic representation of the multiplicity
+     */
+      public String getSymbolic() {
+        return symbolic;
+    }
     
     /**
      * Return true if this multiplicity represents multiple associated objects
