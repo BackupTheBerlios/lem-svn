@@ -291,7 +291,6 @@ TOKEN : /* ACTION LANGUAGE IDENTIFIERS */
 | <WHERE: "where">
 | <INSTANCES : "instances">
 | <RELATED : "related">
-| <SELECTED : "selected">
 | <IF: "if">
 | <ELSE: "else">
 | <ELSEIF: "elseif">
@@ -1115,12 +1114,6 @@ void RelationshipVariable() : {}
 {
     <SIMPLE_IDENTIFIER>
 }
-
-void Selected() : {}
-{
-    Expression()
-}
-
 
 void ForStatement() : {}
 {

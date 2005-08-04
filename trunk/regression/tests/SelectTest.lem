@@ -2,11 +2,16 @@ model TestModel is
 	domain TestDomain is
 		subsystem TestSubsystem is
 			class TestClass is
+				attribute blah is numeric;
+				
 				behaviour is
 					state TestState is {
 						objref a;
 
-						objects := select all from instances of TestClass;
+						objects := select all from instances of TestClass where selected.blah > 10;
+						for each a in objects {
+							a.blah := a.blah+1;
+						}
 						
 					} end TestState;
 				end behaviour;
