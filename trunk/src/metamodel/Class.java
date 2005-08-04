@@ -593,21 +593,82 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
        
     }
     
-    
-    
+    /**
+     *@Return Dot string of this class
+     */
      public String dumpDot() { 
         
-        StringBuffer strBuf = new StringBuffer( );
+          StringBuffer strBuf = new StringBuffer( );
 
-        strBuf.append("    " + this.name + "[shape=record,label=\"{" + this.name.toUpperCase()  + "|");
+          strBuf.append("    " + this.name + "[shape=record,label=\"{" + this.name.toUpperCase()  + "|");
         
-        for ( Iterator it = attributes.values().iterator(); it.hasNext(); ) {
-            Attribute attribute = (Attribute) it.next();
+          for ( Iterator it = attributes.values().iterator(); it.hasNext(); ) {
+              Attribute attribute = (Attribute) it.next();
            
-            strBuf.append(attribute.getName());
-            strBuf.append(" :\\ " + attribute.getType().getName() + "\\n");
-        }
-        strBuf.append( "|}\"];\n" );
-	return strBuf.toString();
+              strBuf.append(attribute.getName());
+              strBuf.append(" :\\ " + attribute.getType().getName() + "\\l");
+          }
+          strBuf.append( "|}\"];\n" );
+	  return strBuf.toString();
     }
+     
+     /**
+     *@Return UMLGraph string  of this class, including relationships and attributes 
+     */
+     public String dumpUMLGraph() { 
+      
+          StringBuffer strBuf = new StringBuffer( );
+
+          strBuf.append("/**\n");
+          // color for this class
+          strBuf.append("*  @opt nodefillcolor \"#FFFF99\"\n");
+          
+          // add associations for a class   
+          for ( Iterator it = associations.values().iterator(); it.hasNext(); ) {
+               Association asso = (Association) it.next();              
+               if (verifier.ClassWriter.associationList.contains(asso)) {    
+                   
+                   if (this.name == asso.getPassivePerspective().getAttachedClassRole().getParticipant().getName()) {
+                       strBuf.append("*  @assoc " + 
+                                     asso.getActivePerspective().getMultiplicity().getSymbolic() + " " +
+                                     asso.getName() + " " +
+                                     asso.getPassivePerspective().getMultiplicity().getSymbolic() + " ");
+                   }
+                   else {
+                        strBuf.append("*  @assoc " + 
+                                     asso.getPassivePerspective().getMultiplicity().getSymbolic() + " " +
+                                     asso.getName() + " " +
+                                     asso.getActivePerspective().getMultiplicity().getSymbolic() + " ");
+                   }
+          
+                   if (this.name == asso.getParticipants()[0].getName()) {
+                       strBuf.append(asso.getParticipants()[1].getName().toUpperCase() + "\n");   
+                   }
+                   else {
+                       strBuf.append(asso.getParticipants()[0].getName().toUpperCase() + "\n");
+                   }
+                   verifier.ClassWriter.removeAssociation(asso);
+               }                              
+          } //end for
+          
+          //add generalisations for a class 
+          for ( Iterator it = generalisationRoles.values().iterator(); it.hasNext(); ) {
+               GeneralisationRole generalisationRole = (GeneralisationRole) it.next();
+               if (this.name != generalisationRole.getGeneralisation().getSuperclass().getName())
+                   strBuf.append("*  @extends " + generalisationRole.getGeneralisation().getSuperclass().getName() + "\n");
+          }       
+          strBuf.append("*/\n");
+          
+          // add class 
+          strBuf.append("class " + this.name.toUpperCase()  + " {\n");
+         // add atributes
+          for ( Iterator it = attributes.values().iterator(); it.hasNext(); ) {
+               Attribute attribute = (Attribute) it.next();
+               strBuf.append("   " + attribute.getType().getName() +  " " + attribute.getName() + ";\n");
+          }
+          strBuf.append("}\n\n");
+          
+	  return strBuf.toString();
+    }
+     
 }

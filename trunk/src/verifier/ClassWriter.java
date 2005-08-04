@@ -23,6 +23,7 @@ package verifier;
 
 import java.util.Collection;
 import metamodel.Domain;
+import metamodel.Association;
 import java.util.Iterator;
 
 /**
@@ -46,8 +47,11 @@ public class ClassWriter {
             
               StringBuffer strBuf = new StringBuffer( );
    
-              strBuf.append("digraph classdiagram { \n\n    nodesep=1.50;ranksep=1.0;\n\n");
-        
+              strBuf.append("digraph classdiagram { \n\n");
+              strBuf.append("    edge [fontname=\"Helvetica\",fontsize=10,labelfontname=\"Helvetica\",labelfontsize=10];\n");
+              strBuf.append("    node [fontname=\"Helvetica\",fontsize=10,shape=record];\n");
+              strBuf.append("    nodesep=1.50;ranksep=1.0;\n\n");
+              
               for ( Iterator it = classList.iterator(); it.hasNext(); ) {
                   metamodel.Class umlclass = (metamodel.Class) it.next();
            
@@ -55,7 +59,7 @@ public class ClassWriter {
               }
               
               strBuf.append("\n");
-              
+             
               for( Iterator it = domain.getRelationships().values().iterator(); it.hasNext();) {
                   metamodel.Association association = (metamodel.Association) it.next();
                   strBuf.append("    ");
@@ -79,4 +83,53 @@ public class ClassWriter {
 	     return strBuf.toString();
             	
 	}
-}
+       
+        /**  store all associations in in this domain for a subsystem */
+        public static Collection associationList; 
+
+        
+        /**
+	 * Generates UMLGraph code for class diagrams. Note that this procedure only
+	 * supports diagrams involving classes from a single domain.
+	 *
+	 * @param domain the domain inside which the class of interest reside
+	 * @param classList a list of class names (in String format)
+	 * that should  be included in the diagram
+	 * @todo fill in UMLGraph generation code
+	 * @todo print the class list
+	 */
+	public static String dumpUMLGraph( Domain domain, Collection classList ) {
+            
+             associationList = domain.getRelationships().values();
+              StringBuffer strBuf = new StringBuffer();
+              // list core types 
+              strBuf.append("/**\n* @opt attributes\n* @opt types\n* @hidden\n" +
+                        "* @opt bgcolor \"#F0F0F0\"\n" + "* @opt edgecolor \"green\"" +            
+                        "\n*/\nclass UMLOptions {}\n");
+              strBuf.append("/**\n* @hidden\n*/\nclass integer {}\n");
+              strBuf.append("/**\n* @hidden\n*/\nclass string {}\n"); 
+              strBuf.append("/**\n* @hidden\n*/\nclass Boolean {}\n");
+              strBuf.append("/**\n* @hidden\n*/\nclass real {}\n");
+              strBuf.append("/**\n* @hidden\n*/\nclass date {}\n");
+              strBuf.append("/**\n* @hidden\n*/\nclass timestamp {}\n");
+              strBuf.append("/**\n* @hidden\n*/\nclass numeric {}\n");
+              strBuf.append("/**\n* @hidden\n*/\nclass arbitrary_id {}\n");
+              strBuf.append("\n");strBuf.append("\n");
+             
+              // print UMLGraph code for all classes
+              for ( Iterator it = classList.iterator(); it.hasNext(); ) {
+                   metamodel.Class umlclass = (metamodel.Class) it.next();          
+                   strBuf.append(umlclass.dumpUMLGraph());
+              }
+              
+              strBuf.append("\n");
+            
+              return  strBuf.toString();
+        }
+        
+        /** remove a association in association list */
+        public static void removeAssociation (Association association)  {
+              associationList.remove(association);
+        }    
+        
+}        
