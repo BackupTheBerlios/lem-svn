@@ -34,13 +34,24 @@ public class DomainNode extends AbstractDescriptionNode {
 			add( new SubsystemNode( (metamodel.Subsystem)i.next() ));
 		}
 		
-		DefaultMutableTreeNode relationshipLevel = new DefaultMutableTreeNode( "Relationships" );
-		i = d.getRelationships().values().iterator();
-		while( i.hasNext() ) {
-			relationshipLevel.add( new RelationshipNode( (metamodel.Relationship)i.next() ));
-		}
 		
-		add( relationshipLevel );
+		i = d.getRelationships().values().iterator();
+                if(i.hasNext()){
+                    DefaultMutableTreeNode relationshipLevel = new DefaultMutableTreeNode( "Relationships" );
+                    while( i.hasNext() ) {
+    			relationshipLevel.add( new RelationshipNode( (metamodel.Relationship)i.next() ));
+                    }
+                    add( relationshipLevel );
+                }
+                
+                i = d.getScenarios().values().iterator();
+                if(i.hasNext()){
+                    DefaultMutableTreeNode scenarioLevel = new DefaultMutableTreeNode( "Scenarios" );
+                    while( i.hasNext() ) {
+                    	scenarioLevel.add( new ScenarioNode( (metamodel.Scenario)i.next() ));
+                    }
+                    add( scenarioLevel );
+                }
 	}
 	/**
          * Returns name property of LEM Domain object.
