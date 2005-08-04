@@ -12,7 +12,8 @@ package runtime;
 
 import metamodel.DataType;
 import metamodel.SetType;
-import java.util.ArrayList ; 
+import java.util.Collection;
+import java.util.LinkedList;
 
 /**
  *
@@ -20,20 +21,19 @@ import java.util.ArrayList ;
  */
 public class SetVariable extends Variable {
 
-    private ArrayList value;
-    
+    private Collection value;
     
     /** Creates a new instance of StringVariable */
     public SetVariable() {
-        this.setValue(new ArrayList()) ; 
+        this.setValue(new LinkedList()) ; 
     }
     
-    public SetVariable( java.lang.Object o) {
-	this.setValue((ArrayList) o) ; 
+    public SetVariable( Collection o) {
+	this.setValue(o) ; 
     }
 
     public void setValue( java.lang.Object o ) {
-        this.setValue((ArrayList) o);
+        this.value = (Collection)o;
     }
     
     public java.lang.Object getValue() {
@@ -44,18 +44,13 @@ public class SetVariable extends Variable {
         return SetType.getInstance();
     }
     
-    /** This method adds a certain variable to the set, no type checking is done here 
+    /**
+     * This method adds a certain variable to the set, no type checking is done here 
      *to make sure the types in a set match each other 
      *@param b the variable to be added.
-     *@return a Variable with that object added */
+     */
  
-   public Variable add( Variable b ) throws LemRuntimeException {       
-       //    String elementType = b.getValue().getType().getName() ;
+   public void addToSet( Variable b ) throws LemRuntimeException {       
        value.add ( b ) ;       
-       return new SetVariable ( getValue() ) ; 
-    }   
-
-    public void setValue(ArrayList value) {
-        this.value = value;
-    }
+   }   
 }

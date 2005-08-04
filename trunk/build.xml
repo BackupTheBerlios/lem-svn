@@ -10,7 +10,7 @@
     <property name="classes.dir" value="${build.dir}/classes" />
     <property name="etc.dir" value="${basedir}/etc" />
     <property name="javacchome"
-        value="javacc-3.2/" />
+        value="/students/u3293115/comp3500/javacc-3.2/" />
     <property name="deploy.name" value="${name}.jar" />
     <property name="lib.dir" value="${basedir}/lib" />
 
@@ -75,11 +75,11 @@
     <javacc target="${src.dir}/parser/LemParser.jj"
     javacchome="${javacchome}"
     outputdirectory="${src.dir}/parser" />
-    <!-- <exec executable="perl"
+    <exec executable="perl"
       output="${src.dir}/verifier/Visitor.java">
       <arg line="${src.dir}/util/generateVisitor.pl
       ${src.dir}/parser/LemParserVisitor.java"/>
-    </exec> -->
+    </exec>
     <touch file="${src.dir}/parser/.timestamp" />
   </target>
 

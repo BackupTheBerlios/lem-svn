@@ -88,6 +88,8 @@ public class Interpreter {
             executeIfStatement((IfStatement)a, c);
         else if( a instanceof WhileStatement )
             executeWhileStatement((WhileStatement)a, c);
+	else if( a instanceof ForStatement )
+	    executeForStatement((ForStatement)a, c);
         else if( a instanceof GenerateAction )
             executeGenerateAction((GenerateAction)a, c);
         else if(a instanceof RelateAction )
@@ -232,7 +234,34 @@ public class Interpreter {
         }
     }
     
-    
+    /**
+     * Execute the given ForStatement in the given Context.
+     *
+     * @param a the ForStatement to execute
+     * @param c the Context in which to execute the action
+     * @throws runtime.LemRuntimeException thrown by the metamodel.Object
+     * constructor
+     */
+    public void executeForStatement( ForStatement a, Context c ) throws LemRuntimeException {
+	String selectName = a.getSelectVariable();
+        ActionBlock block = a.getBlock();
+	VariableReference setRef = a.getSetReference();
+        Variable var = getVariable( setRef, c );
+	SetVariable set;
+	if (!(var instanceof SetVariable)) {
+        	throw new LemRuntimeException("Type mismatch: expected set variable");
+	}
+	set = (SetVariable)var;
+	Iterator i = ((Collection)set.getValue()).iterator();
+	while (i.hasNext()) {
+		Variable select = (Variable)i.next();
+		Context newContext = new Context( c );
+                newContext.addVariable(selectName , var );
+		executeBlock(block, newContext);
+		newContext.finish();
+	}
+    }
+
     /**
      * Executes the given AssignmentAction in the current context.
      *
