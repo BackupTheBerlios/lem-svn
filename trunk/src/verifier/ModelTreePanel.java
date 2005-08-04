@@ -77,7 +77,7 @@ public class ModelTreePanel extends javax.swing.JPanel {
         add(SplitPanel, java.awt.BorderLayout.CENTER);
 
     }//GEN-END:initComponents
-  
+    
     private void modelTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modelTreeMouseClicked
         
         if (MouseEvent.BUTTON3 == evt.getButton()||MouseEvent.BUTTON2 == evt.getButton()) {
@@ -88,8 +88,8 @@ public class ModelTreePanel extends javax.swing.JPanel {
                     currentContextObject = p;
                     contextMenu = adn.getContextMenu();
                     JMenuItem desc = new JMenuItem();
-                    desc.addMouseListener(new java.awt.event.MouseAdapter() {
-                        public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    desc.addActionListener(new java.awt.event.ActionListener() {
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
                             DescriptionMenuClicked(evt);
                         }
                     });
@@ -103,7 +103,7 @@ public class ModelTreePanel extends javax.swing.JPanel {
         }
         
     }//GEN-LAST:event_modelTreeMouseClicked
-    private void DescriptionMenuClicked(java.awt.event.MouseEvent evt) {
+    private void DescriptionMenuClicked(java.awt.event.ActionEvent evt) {
         displayDescription(currentContextObject);
         contextMenu.setVisible(false);
         currentContextObject=null;
@@ -144,5 +144,5 @@ public class ModelTreePanel extends javax.swing.JPanel {
     private javax.swing.JTree modelTree;
     private javax.swing.JScrollPane treeScrollPane;
     // End of variables declaration//GEN-END:variables
-  
+    
 }
