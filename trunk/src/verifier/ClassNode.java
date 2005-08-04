@@ -11,12 +11,13 @@ import java.util.Iterator;
 import javax.swing.JPopupMenu;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
+import javax.swing.tree.DefaultMutableTreeNode;
 import metamodel.StateMachine;
 import metamodel.Event ;
 
 /**
  * Tree node appearing inside a SubsystemNode. For representing and "holding" a
- * LEM Class object. Has AttributeNode, StateMachineNode and EventsTreeNode as 
+ * LEM Class object. Has AttributeNode, StateMachineNode and EventsTreeNode as
  * children.
  * @author sjr
  */
@@ -24,7 +25,7 @@ public class ClassNode extends AbstractDescriptionNode {
     /**The LEM Class object that ClassNode contains*/
     metamodel.Class thisClass;
     /**The StyledDocument object that ClassNode maintains*/
-    private StyledDocument attributeListing ; 
+    private StyledDocument attributeListing ;
     
     /**
      * Creates a new instance of ClassNode. Examines LEM Class object and creates
@@ -33,14 +34,14 @@ public class ClassNode extends AbstractDescriptionNode {
      */
     public ClassNode( metamodel.Class c ) {
         this.thisClass = c;
-        attributeListing = new StyledDocument() ; 
+        attributeListing = new StyledDocument() ;
         
         Iterator i = c.getAllAttributes().values().iterator();
         
         while( i.hasNext() ) {
-            AttributeNode attribute =  new AttributeNode ( (metamodel.Attribute) i.next() ) ; 
+            AttributeNode attribute =  new AttributeNode( (metamodel.Attribute) i.next() ) ;
             add( attribute);
-            attributeListing.append(attribute.getStyledDocument() ) ; 
+            attributeListing.append(attribute.getStyledDocument() ) ;
         }
         
         StateMachine m = thisClass.getStateMachine();
@@ -48,9 +49,13 @@ public class ClassNode extends AbstractDescriptionNode {
             add( new StateMachineNode( m ));
         }
         
-        Event[] e = thisClass.getEvents() ; 
-        if (e != null) {
-            add ( new EventsTreeNode (e)) ;
+        Event[] e = thisClass.getEvents() ;
+        if (e.length != 0) {
+            DefaultMutableTreeNode eventLevel = new DefaultMutableTreeNode( "Events" );
+            for (int x = 0 ; x<e.length ; x++) {
+                eventLevel.add( new EventNode(e[x]) ) ;
+            }
+            add(eventLevel);
         }
     }
     /**
@@ -65,10 +70,10 @@ public class ClassNode extends AbstractDescriptionNode {
      * @return the description of the Class.
      */
     public String getDescription(){
-        if (thisClass.getDescription() != null ) 
-            return trim(thisClass.getDescription());   
-        else 
-            return "" ; 
+        if (thisClass.getDescription() != null )
+            return trim(thisClass.getDescription());
+        else
+            return "" ;
     }
     /**
      * Returns StyledDocument object containing preformatted LEM Class description,
@@ -81,30 +86,29 @@ public class ClassNode extends AbstractDescriptionNode {
         StyleConstants.setFontFamily(s, "Times New Roman");
         StyleConstants.setFontSize(s, 14);
         StyleConstants.setBold(s, true);
-        StyleConstants.setForeground(s, Color.blue);       
+        StyleConstants.setForeground(s, Color.blue);
         StyledElement element = new StyledElement(toString()+"\n" , s) ;
-        doc.addStyle(element) ; 
+        doc.addStyle(element) ;
         
-        SimpleAttributeSet s1 = new SimpleAttributeSet();        
+        SimpleAttributeSet s1 = new SimpleAttributeSet();
         StyleConstants.setFontFamily(s1, "Times New Roman");
         StyleConstants.setFontSize(s1, 14);
         StyleConstants.setBold(s1, false);
-        StyleConstants.setForeground(s1, Color.black);       
+        StyleConstants.setForeground(s1, Color.black);
         StyledElement element1 = new StyledElement(getDescription() , s1) ;
-        doc.addStyle(element1) ; 
-                
-        StyledElement element2 = new StyledElement("\n-------------- Attributes ----------------\n" , s1) ;
-        doc.addStyle(element2) ; 
+        doc.addStyle(element1) ;
         
-        doc.append(attributeListing) ;         
+        StyledElement element2 = new StyledElement("\n-------------- Attributes ----------------\n" , s1) ;
+        doc.addStyle(element2) ;
+        
+        doc.append(attributeListing) ;
         return doc ;
     }
     /**
      * Creates and returns a JPopupMenu based on the specified Class.
      * @return the ContextMenu of the ClassNode.
      */
-    public JPopupMenu getContextMenu()
-    {
+    public JPopupMenu getContextMenu() {
         JPopupMenu ContextMenu = new JPopupMenu();
         return ContextMenu;
     }
