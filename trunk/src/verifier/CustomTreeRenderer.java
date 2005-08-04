@@ -34,8 +34,6 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
     private ImageIcon closedIcon = new ImageIcon();
     /**Image icon for event objects in model tree*/
     private ImageIcon eventIcon = new ImageIcon();
-    /**Image icon for events objects in model tree*/
-    private ImageIcon eventsIcon = new ImageIcon();
     /**Image icon for class objects in model tree*/
     private ImageIcon classIcon = new ImageIcon();
     /**Image icon for scenario objects in model tree*/
@@ -62,8 +60,6 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
         closedIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/event.jpg");
         eventIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
-        imageURL = getClass().getClassLoader().getResource("verifier/events.jpg");
-        eventsIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/class.jpg");
         classIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/scenario.jpg");
@@ -109,8 +105,6 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
             setIcon(stateIcon);
         } else if (value instanceof TransitionNode){
             setIcon(transitionIcon);
-        } else if (value instanceof EventsTreeNode){
-            setIcon(eventsIcon);
         } else if (value instanceof EventNode){
             setIcon(eventIcon);
         } else if (value instanceof ScenarioNode){
