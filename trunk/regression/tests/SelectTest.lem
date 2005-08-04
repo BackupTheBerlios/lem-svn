@@ -1,0 +1,16 @@
+model TestModel is
+	domain TestDomain is
+		subsystem TestSubsystem is
+			class TestClass is
+				behaviour is
+					state TestState is {
+						objref a;
+
+						objects := select all from instances of TestClass;
+						
+					} end TestState;
+				end behaviour;
+			end TestClass;
+		end TestSubsystem;
+	end TestDomain;
+end TestModel;

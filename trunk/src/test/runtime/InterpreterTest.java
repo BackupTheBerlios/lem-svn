@@ -115,7 +115,39 @@ public class InterpreterTest extends junit.framework.TestCase {
             fail( "Some LemRuntimeException occurred: " + e.getMessage() );
         }
     }
- 
+
+    public void testSelect() {
+        Lem l = new Lem();
+        Model m = null;
+        
+        try {
+            m = l.parse( new FileInputStream( "regression/tests/SelectTest.lem" ));
+        } catch( FileNotFoundException fnfe ) {
+            fail( "Could not find model file " + fnfe.getMessage() );
+        } catch( IOException e ) {
+            fail( "Could not read model file: " + e.getMessage() );
+        } catch( ParseException e ) {
+            fail( "Could not parse model file: " + e.getMessage() );
+        } catch( LemException e ) {
+            fail( "Some LEMException occurred: " + e.getMessage() );
+        }
+        
+	Procedure mainProc = m.getDomain("TestDomain")
+        .getClass("TestClass")
+        .getStateMachine()
+        .getState("TestState")
+        .getProcedure();
+        
+        DomainContext c = new DomainContext();
+        Interpreter i = new Interpreter(null);
+        
+        try {
+	    i.interpret(mainProc, c);
+        } catch( LemRuntimeException e ) {
+            fail( "Some LemRuntimeException occurred: " + e.getMessage() );
+        }
+    }
+
     public void testSignalGeneration() {
         Lem l = new Lem();
         Model m = null;
