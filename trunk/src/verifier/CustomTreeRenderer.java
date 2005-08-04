@@ -38,6 +38,8 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
     private ImageIcon eventsIcon = new ImageIcon();
     /**Image icon for class objects in model tree*/
     private ImageIcon classIcon = new ImageIcon();
+    /**Image icon for scenario objects in model tree*/
+    private ImageIcon scenarioIcon = new ImageIcon();
     
     /** 
      * Creates a new instance of CustomTreeRenderer. Contains locations for all
@@ -64,6 +66,8 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
         eventsIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/class.jpg");
         classIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        imageURL = getClass().getClassLoader().getResource("verifier/scenario.jpg");
+        scenarioIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
     }
     /**
      * Method for setting the icon of the current JTree component. Recursively 
@@ -95,9 +99,9 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
         
         if (value instanceof ClassNode) {
             setIcon(classIcon);
-        } else if (leaf && value instanceof RelationshipNode){
+        } else if (value instanceof RelationshipNode){
             setIcon(relationshipIcon);
-        } else if (leaf && value instanceof AttributeNode){
+        } else if (value instanceof AttributeNode){
             setIcon(attributeIcon);
         } else if (value instanceof StateMachineNode){
             setIcon(stateMachineIcon);
@@ -109,6 +113,8 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
             setIcon(eventsIcon);
         } else if (value instanceof EventNode){
             setIcon(eventIcon);
+        } else if (value instanceof ScenarioNode){
+            setIcon(scenarioIcon);
         }
         
         return this;
