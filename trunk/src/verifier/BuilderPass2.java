@@ -571,11 +571,10 @@ public class BuilderPass2 extends Visitor {
      */
     public Object visit( LEMRelatedTo node, Object data ) throws LemException {
 	throw new LemException("Related To operator not yet implemented\n");
-	/*
         RelatedToOperation o = null ;
         if( node.jjtGetNumChildren() != 3 ) {
-            throw new LemException("Related To is a ternary operator,\n Use: object1 Related To object2 Across R1 ") ;
-        }else {
+            throw new LemException("Related To is a ternary operator,\n Use:  Related To class1 Across R1 ") ;
+        }else {            
             String relatedClassName = getIdentifier(node.jjtGetChild(0));            
             metamodel.Class relatedClass = getClass( relatedClassName );
             String relationshipName = getIdentifier(node.jjtGetChild(1));
@@ -583,7 +582,6 @@ public class BuilderPass2 extends Visitor {
             o = new RelatedToOperation ( relatedClass, r) ; 
         }
         return o ; 
-	*/
     }
     
     
