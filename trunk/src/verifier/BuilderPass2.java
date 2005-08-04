@@ -67,8 +67,18 @@ public class BuilderPass2 extends Visitor {
      */
     public Object visit( LEMDomainDeclaration node, Object data ) throws LemException {
         currentDomain = (Domain)(getMapper().getObject(node));
-        
-        super.visit(node, data);
+       
+        // I don't believe that any children of DomainDeclaration are actually
+        // handled here (in BuilderPass2), so removing the next line shouldn't 
+        // have any effect 
+        // super.visit(node, data);
+
+        for( int i = 2; i < node.jjtGetNumChildren(); i++ ) {
+             Object o = node.jjtGetChild( i ).jjtAccept( this, null );
+             if( o instanceof Scenario )
+                 currentDomain.add( (Scenario)o );
+        }
+
         return data;
     }
     
