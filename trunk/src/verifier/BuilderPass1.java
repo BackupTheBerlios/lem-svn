@@ -136,9 +136,6 @@ public class BuilderPass1 extends Visitor {
 	String endName = getEndIdentifier( node.jjtGetChild( node.jjtGetNumChildren() - 1 ));
 	checkIdentity( name, endName, node.getLastToken() );
 	subsystem.setName( name );
-
-	System.err.println( "Got subsystem name '" + name + "'" );
-	
         subsystem.setDomain( domain );
         getMapper().add( node, subsystem );
         super.visit( node, subsystem );
