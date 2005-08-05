@@ -33,6 +33,7 @@ public class Filter {
      *@see tableModel
      */
     public void applyFilter(String text, int colIndex){
+        newData.removeAllElements();
         Vector tmp = new Vector();
         tmp = tModel.getDataVector();
         
@@ -45,7 +46,7 @@ public class Filter {
             
         }
      tModel.changeDisplayRows(newData);
-     newData.removeAllElements();
+   
     }
     
     public void removeFilter(){
