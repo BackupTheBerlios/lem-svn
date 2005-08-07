@@ -948,7 +948,7 @@ void ObjectDeletion() : {}
 void RelationshipReference() : {}
 {
 	LOOKAHEAD(2)
-	  Identifier() <DOT> ActiveVerbClause()
+	  (Identifier() <DOT> VerbClause())
 	| Identifier()
 }
 
@@ -959,11 +959,10 @@ void LinkCreation() : {}
 	<TO> 
 	ObjectReference() 
 	<ACROSS> 
-	/* RelationshipReference() */ Identifier() 
+	RelationshipReference()
 	LinkObjectCreation()
 }
 
-// Do we assume the link object is of only one class? I think it's a fair assumption.
 void LinkObjectCreation() : {}
 {
 	[<CREATING> Identifier()]
