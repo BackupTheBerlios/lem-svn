@@ -18,6 +18,9 @@ model TestModel is
 			association R3 is "a test"
 				A "is the active subject" 0..1 B;
 				B "is the passive subject" 0..1 A;
+                                class D is
+                                    // empty association class
+                                end;
 			end R3;
 
 			association R4 is "a reflexive test"
@@ -42,7 +45,7 @@ model TestModel is
 						b := create B;
                                                 c := create A;
 						d := create B;
-						relate a to b across R3;
+						relate b to a across R3."is the passive subject" creating e;
 						relate c to d across R3;
 					} end;
 
@@ -56,7 +59,7 @@ model TestModel is
                                                 c := create A;
 						d := create B;
                                                 if(true) {
-                                                    relate a to b across R3;
+                                                    relate b to a across R3;
                                                 }
 						relate a to b across R3;
 					} end;
