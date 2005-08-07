@@ -46,6 +46,16 @@ public class RelateAction extends Action {
     protected String associationClassReference = null;
     
     /**
+     * The name of the variable containing a reference to the
+     * linke object in the Association
+     **/
+    protected String linkObjectName = null;
+    
+    /**
+     * boolean value to indicate if verb clause is provided
+     **/    
+    protected boolean verbClause = false;
+    /**
      * The Association which will be instantiated by the execution of this action.
      */
     protected Association association;
@@ -91,6 +101,42 @@ public class RelateAction extends Action {
         this.passiveObjectName = passiveObjectName;
     }
 
+    /**
+     * Get the verb clause indicating direction of association if any.
+     *
+     * @return the verb clause
+     */
+    public boolean getVerbClause() {
+        return verbClause;
+    }    
+    
+    /**
+     * Set the verb clause that indicates direction of association.
+     *
+     * @param the verb clause
+     */
+    public void setVerbClause(boolean clause) {
+        this.verbClause = clause;
+    }    
+    
+    /**
+     * Set the name of the Variable containing a reference to the link object.
+     *
+     * @param linkObjectName the Variable name
+     */   
+    public void setLinkObjectName(String linkObjectName) {
+        this.linkObjectName = linkObjectName;
+    }
+    
+    /**
+     * Get the name of the Variable containing a reference to the link object.
+     *
+     * @return the Variable name
+     */
+    public String getLinkObjectName() {
+        return linkObjectName;
+    }
+    
     /**
      * Returns the name of the variable which will be assigned the object reference
      * of any instantiated association class.
