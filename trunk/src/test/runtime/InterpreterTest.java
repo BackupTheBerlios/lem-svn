@@ -302,10 +302,13 @@ public class InterpreterTest extends junit.framework.TestCase {
         assertEquals("An association instance has been added", 2, count);
         assertEquals("Active perspective instance is of class A", "A", active.getInstanceClass().getName());        
         assertEquals("Passive perspective instance is of class B", "B", passive.getInstanceClass().getName());
+        Instance linkobject = (Instance)a.getLinkObjectInstance().getInstances().iterator().next();
+        assertEquals("Link object instance is of class D", "D", linkobject.getInstanceClass().getName());
         AssociationInstance aI_active = (AssociationInstance)active.getAssociationInstances(a.getAssociation()).iterator().next();
         assertEquals("Instance of class A has the correct association instance", a, aI_active);
         AssociationInstance aI_passive = (AssociationInstance)passive.getAssociationInstances(a.getAssociation()).iterator().next();
         assertEquals("Instance of class A has the correct association instance", a, aI_passive);        
+        
         
 	mainProc = m.getDomain("TestDomain")
         .getClass("TestClass")
@@ -322,7 +325,7 @@ public class InterpreterTest extends junit.framework.TestCase {
         } catch( LemRuntimeException e ) {
             
             fail( "Testing for creation of association that already exist.\n" + "Some LemRuntimeException occurred: " + e.getMessage() );
-        }        
+        }     
     }    
     
     public void testLinkDeletion() {
