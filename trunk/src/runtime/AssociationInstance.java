@@ -34,8 +34,21 @@ public class AssociationInstance extends Instance {
      * The association of which this AssociationInstance is an instance.
      */
     Association association = null;
+    
+    /**
+     * A reference to the active instance participating in this association
+     */    
     Instance active = null;
+    
+     /**
+     * A reference to the passive instance participating in this association
+     */     
     Instance passive = null;
+    
+     /**
+     * A reference to the link object instance participating in this association
+     */      
+    Object linkobject = null;
     /**
      * Create a new instance of the given Association.
      *
@@ -53,12 +66,20 @@ public class AssociationInstance extends Instance {
         this.passive = i;
     }
     
+    public void setLinkObjectInstance( Object i ) {
+        this.linkobject = i;
+    }    
+    
     public Instance getActiveInstance() {
         return active;
     }
         
     public Instance getPassiveInstance() {
         return passive;
+    }    
+    
+    public Object getLinkObjectInstance() {
+        return linkobject;
     }    
     
     /** 
