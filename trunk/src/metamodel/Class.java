@@ -76,9 +76,15 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
     private StateMachine stateMachine = null;
     
     /**
+     * a list store association's names which have a assciation class
+     */
+    private ArrayList list = new ArrayList();
+    
+    /**
      * Creates a new instance of Class given a Domain and name
      *
-     */
+     */   
+    
     public Class( ) {
     }
     
@@ -593,81 +599,98 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
        
     }
     
-    /**
-     *@Return Dot string of this class
-     */
-     public String dumpDot() { 
-        
-          StringBuffer strBuf = new StringBuffer( );
-
-          strBuf.append("    " + this.name + "[shape=record,label=\"{" + this.name.toUpperCase()  + "|");
-        
-          for ( Iterator it = attributes.values().iterator(); it.hasNext(); ) {
-              Attribute attribute = (Attribute) it.next();
-           
-              strBuf.append(attribute.getName());
-              strBuf.append(" :\\ " + attribute.getType().getName() + "\\l");
-          }
-          strBuf.append( "|}\"];\n" );
-	  return strBuf.toString();
-    }
-     
+    
      /**
      *@Return UMLGraph string  of this class, including relationships and attributes 
      */
      public String dumpUMLGraph() { 
       
           StringBuffer strBuf = new StringBuffer( );
+          Collection associationList; 
+          
+           
+          // for all non-AssociationClasses
+          if (!associations.isEmpty() || !generalisationRoles.isEmpty()) { 
+                  // add ParticipatingClass option
+                  strBuf.append("/**\n");
+                  // set color for this class
+                  strBuf.append("*  @opt nodefillcolor \"#FFFF99\"\n");
+           
+                  // add associations for a class   
+                  for ( Iterator it = associations.values().iterator(); it.hasNext(); ) {
+                       Association asso = (Association) it.next();    
+                       // if this association have not be printed 
+                       if (verifier.ClassWriter.getAssociationList().contains(asso)) {   
+                           // decide which side Multiplicity belongs to 
+                           if (this.name == asso.getPassivePerspective().
+                                   getAttachedClassRole().getParticipant().getName()) {
+                               strBuf.append("*  @assoc " + 
+                                       asso.getActivePerspective().getMultiplicity().getSymbolic() + " " +
+                                       asso.getName() + " " +
+                                       asso.getPassivePerspective().getMultiplicity().getSymbolic() + " ");
+                           }
+                           else {
+                                strBuf.append("*  @assoc " + 
+                                       asso.getPassivePerspective().getMultiplicity().getSymbolic() + " " +
+                                       asso.getName() + " " +
+                                       asso.getActivePerspective().getMultiplicity().getSymbolic() + " ");
+                           }
+                           // print the name of other participant 
+                           if (this.name == asso.getParticipants()[0].getName()) {
+                               strBuf.append(asso.getParticipants()[1].getName().toUpperCase() + "\n");   
+                           }
+                           else {
+                               strBuf.append(asso.getParticipants()[0].getName().toUpperCase() + "\n");
+                           }
 
-          strBuf.append("/**\n");
-          // color for this class
-          strBuf.append("*  @opt nodefillcolor \"#FFFF99\"\n");
-          
-          // add associations for a class   
-          for ( Iterator it = associations.values().iterator(); it.hasNext(); ) {
-               Association asso = (Association) it.next();              
-               if (verifier.ClassWriter.associationList.contains(asso)) {    
-                   
-                   if (this.name == asso.getPassivePerspective().getAttachedClassRole().getParticipant().getName()) {
-                       strBuf.append("*  @assoc " + 
-                                     asso.getActivePerspective().getMultiplicity().getSymbolic() + " " +
-                                     asso.getName() + " " +
-                                     asso.getPassivePerspective().getMultiplicity().getSymbolic() + " ");
-                   }
-                   else {
-                        strBuf.append("*  @assoc " + 
-                                     asso.getPassivePerspective().getMultiplicity().getSymbolic() + " " +
-                                     asso.getName() + " " +
-                                     asso.getActivePerspective().getMultiplicity().getSymbolic() + " ");
-                   }
-          
-                   if (this.name == asso.getParticipants()[0].getName()) {
-                       strBuf.append(asso.getParticipants()[1].getName().toUpperCase() + "\n");   
-                   }
-                   else {
-                       strBuf.append(asso.getParticipants()[0].getName().toUpperCase() + "\n");
-                   }
-                   verifier.ClassWriter.removeAssociation(asso);
-               }                              
-          } //end for
-          
-          //add generalisations for a class 
-          for ( Iterator it = generalisationRoles.values().iterator(); it.hasNext(); ) {
-               GeneralisationRole generalisationRole = (GeneralisationRole) it.next();
-               if (this.name != generalisationRole.getGeneralisation().getSuperclass().getName())
-                   strBuf.append("*  @extends " + generalisationRole.getGeneralisation().getSuperclass().getName() + "\n");
-          }       
-          strBuf.append("*/\n");
-          
-          // add class 
-          strBuf.append("class " + this.name.toUpperCase()  + " {\n");
-         // add atributes
-          for ( Iterator it = attributes.values().iterator(); it.hasNext(); ) {
-               Attribute attribute = (Attribute) it.next();
-               strBuf.append("   " + attribute.getType().getName() +  " " + attribute.getName() + ";\n");
+                           // this association contains Asscociation Class                                     
+                           if (asso.getAssociationClassRole()!=null)  {  
+                               list.add(asso);
+                           }                          
+                           verifier.ClassWriter.removeAssociation(asso);
+                       }                              
+                  } //end for
+
+                  //add generalisations for a class 
+                  for ( Iterator it = generalisationRoles.values().iterator(); it.hasNext(); ) {
+                       GeneralisationRole generalisationRole = (GeneralisationRole) it.next();
+                       if (this.name != generalisationRole.getGeneralisation().getSuperclass().getName())
+                           strBuf.append("*  @extends " + generalisationRole.getGeneralisation().getSuperclass().getName() + "\n");
+                  }       
+                  strBuf.append("*/\n");
+
+
+                  // add ParticipantingClass 
+                  strBuf.append("class " + this.name.toUpperCase()  + " {\n");
+                 // add atributes
+                  for ( Iterator it = attributes.values().iterator(); it.hasNext(); ) {
+                       Attribute attribute = (Attribute) it.next();
+                       strBuf.append("   " + attribute.getType().getName() +  " " + attribute.getName() + ";\n");
+                  }
+                  strBuf.append("}\n\n");
           }
-          strBuf.append("}\n\n");
           
+          // add AssociationClass
+          for (Iterator lit = list.listIterator();lit.hasNext();)  {
+               Association asso = (Association) lit.next();
+               Class associationClass = asso.getAssociationClassRole().getAssociationClass();
+               // only display the AssociationClass in selected domain (subsystem)
+               if (verifier.ClassWriter.getClassList().contains(associationClass)) {
+                    // add  AssociationClass option
+                    strBuf.append("/**\n");
+                    // set color for this class
+                    strBuf.append("*  @opt nodefillcolor \"#FFFF99\"\n"); 
+                    strBuf.append("*  @tagvalue " + "Association " +  asso.getName() + "\n*/\n" );
+                    strBuf.append("class " + associationClass.getName().toUpperCase()  + " {\n");
+                    // add atributes
+                    for ( Iterator it = associationClass.attributes.values().iterator(); it.hasNext(); ) {
+                        Attribute attribute = (Attribute) it.next();
+                        strBuf.append("   " + attribute.getType().getName() +  " " + attribute.getName() + ";\n");
+                    }
+                    strBuf.append("}\n\n");
+               }            
+          } // end for
+          list.clear();
 	  return strBuf.toString();
     }
      

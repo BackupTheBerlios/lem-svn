@@ -25,6 +25,7 @@ import java.util.Collection;
 import metamodel.Domain;
 import metamodel.Association;
 import java.util.Iterator;
+import java.util.ArrayList;
 
 /**
  * Generates dot code for class diagrams.
@@ -32,61 +33,15 @@ import java.util.Iterator;
  * @author Toshio Nakamura
  */
 public class ClassWriter {
-	
-	/**
-	 * Generates dot code for class diagrams. Note that this procedure only
-	 * supports diagrams involving classes from a single domain.
-	 *
-	 * @param domain the domain inside which the class of interest reside
-	 * @param classList a list of class names (in String format)
-	 * that should  be included in the diagram
-	 * @todo fill in dot generation code
-	 * @todo print the class list
-	 */
-	public static String dumpDot( Domain domain, Collection classList ) {
-            
-              StringBuffer strBuf = new StringBuffer( );
-   
-              strBuf.append("digraph classdiagram { \n\n");
-              strBuf.append("    edge [fontname=\"Helvetica\",fontsize=10,labelfontname=\"Helvetica\",labelfontsize=10];\n");
-              strBuf.append("    node [fontname=\"Helvetica\",fontsize=10,shape=record];\n");
-              strBuf.append("    nodesep=1.50;ranksep=1.0;\n\n");
-              
-              for ( Iterator it = classList.iterator(); it.hasNext(); ) {
-                  metamodel.Class umlclass = (metamodel.Class) it.next();
-           
-                  strBuf.append(umlclass.dumpDot());
-              }
-              
-              strBuf.append("\n");
-             
-              for( Iterator it = domain.getRelationships().values().iterator(); it.hasNext();) {
-                  metamodel.Association association = (metamodel.Association) it.next();
-                  strBuf.append("    ");
-                  strBuf.append(association.getParticipants()[0].getName() + "->");
-                  strBuf.append(association.getParticipants()[1].getName() + " ");
-                  strBuf.append("[label=\"\\");
-                  strBuf.append(association.getName());
-                  strBuf.append("\",");
-                  strBuf.append("headlabel=\"");
-                  strBuf.append(association.getPassivePerspective().getMultiplicity().toString());
-                  strBuf.append("\",");
-                  strBuf.append("taillabel=\"");
-                  strBuf.append(association.getActivePerspective().getMultiplicity().toString());
-                  strBuf.append("\",arrowhead=\"none\",labelfontsize=\"7\"");
-                  strBuf.append("]; \n");
-              }
-                
-             strBuf.append("\n");
-             strBuf.append( "}" );
-				
-	     return strBuf.toString();
-            	
-	}
-       
-        /**  store all associations in in this domain for a subsystem */
-        public static Collection associationList; 
 
+        /**  store all classes in this domain for a subsystem */
+        private static Collection classList;
+
+        /**  store all associations in in this domain for a subsystem */
+        private static  Collection associationList;
+        
+        /**  store all associations in in this domain for a subsystem */
+        private static ArrayList list = new ArrayList();
         
         /**
 	 * Generates UMLGraph code for class diagrams. Note that this procedure only
@@ -98,9 +53,12 @@ public class ClassWriter {
 	 * @todo fill in UMLGraph generation code
 	 * @todo print the class list
 	 */
-	public static String dumpUMLGraph( Domain domain, Collection classList ) {
-            
-             associationList = domain.getRelationships().values();
+	public static String dumpUMLGraph( Domain domain, Collection aClassList ) {
+
+              classList = aClassList;
+                
+              associationList =  domain.getRelationships().values();
+              TopupList ();
               StringBuffer strBuf = new StringBuffer();
               // list core types 
               strBuf.append("/**\n* @opt attributes\n* @opt types\n* @hidden\n" +
@@ -119,17 +77,36 @@ public class ClassWriter {
               // print UMLGraph code for all classes
               for ( Iterator it = classList.iterator(); it.hasNext(); ) {
                    metamodel.Class umlclass = (metamodel.Class) it.next();          
-                   strBuf.append(umlclass.dumpUMLGraph());
+                   strBuf.append(umlclass.dumpUMLGraph()); 
               }
               
               strBuf.append("\n");
-            
+              TopupList ();
               return  strBuf.toString();
         }
         
         /** remove a association in association list */
         public static void removeAssociation (Association association)  {
-              associationList.remove(association);
+              list.remove(association);
         }    
+
+        /** return an ArrayList contains all associations */
+        public static ArrayList getAssociationList() {
+              return list;
+        }
+        
+        /** top up association list */
+        private static void TopupList ()  {
+               list.clear();
+               for ( Iterator it = associationList.iterator(); it.hasNext(); ) {
+                    metamodel.Relationship relationalship = (metamodel.Relationship) it.next();   
+                    list.add(relationalship);
+               }
+        }    
+        
+        /**  return a Collection of classes in this domain (or subsystem) */
+        public static Collection getClassList () {
+            return classList;
+        }
         
 }        
