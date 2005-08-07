@@ -448,6 +448,7 @@ public class Interpreter {
         valid_active = valid_passive = false;
         Instance active = null;
         Instance passive = null;
+        Instance linkobject = null;
         
         ObjectReferenceVariable aP = (ObjectReferenceVariable)c.getVariable(a.getActiveObjectName());
         ObjectReferenceVariable pP = (ObjectReferenceVariable)c.getVariable(a.getPassiveObjectName());
@@ -465,13 +466,13 @@ public class Interpreter {
             active = (Instance)i.next();
             if (active.getInstanceClass() == aP_class)
                 valid_active = true;
-            else if (active.getInstanceClass() == pP_class)
+            else if ((active.getInstanceClass() == pP_class) && !(a.getVerbClause()))
                 valid_passive = true;
         }
 
         if(!(valid_active || valid_passive))
             throw new LemRuntimeException("Objects does not have the required instances for association "+a.getAssociation().getName());
-
+       
         i = pc.iterator();        
         while(i.hasNext() && !(valid_passive && valid_active)) {
 
@@ -480,7 +481,7 @@ public class Interpreter {
 
 
                 valid_passive = true;
-            else if (passive.getInstanceClass() == aP_class)
+            else if ((passive.getInstanceClass() == aP_class) && !(a.getVerbClause()))
                 valid_active = true;
         }        
         if(!(valid_active && valid_passive))
@@ -489,7 +490,22 @@ public class Interpreter {
         AssociationInstance aInst = new AssociationInstance(a.getAssociation());
         aInst.setActiveInstance(active);
         aInst.setPassiveInstance(passive);
- 
+        // creating clause is present                
+        if(a.getLinkObjectName() != null) {
+           CreateAction ca = new CreateAction();
+            LinkedList l = new LinkedList();
+            l.add(a.getAssociation().getAssociationClassRole().getAssociationClass()); 
+            ca.setClasses((Collection)l);
+            VariableReference vr = new VariableReference(a.getLinkObjectName());
+            ca.setVariable(vr);
+            runtime.Object obj = null;
+            obj = executeCreateAction(ca, c);
+            if(obj == null)
+                throw new LemRuntimeException("Exception occurred in creating link object.");        
+            aInst.setLinkObjectInstance(obj);
+        }
+
+        
         if(c.containsAssociationInstance(aInst))
             throw new LemRuntimeException("The association already exist between the two objects");        
         c.addAssociationInstance(aInst);
