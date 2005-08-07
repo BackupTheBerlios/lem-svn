@@ -41,7 +41,7 @@ model TestModel is
                                                 if(true) {
 						    relate a to b across R3;
                                                 }
-                                                unrelate a from b across R3;
+                                                unrelate b from a across R3;
 					} end;
 					state unrelateTestClass2 is {
 						objref a;
