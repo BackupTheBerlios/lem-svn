@@ -395,12 +395,18 @@ public class BuilderPass2 extends Visitor {
     
     public Object visit( LEMLinkCreation node, Object data ) throws LemException {
         RelateAction a = new RelateAction();
-        
         VariableReference active = (VariableReference)node.jjtGetChild( 0 ).jjtAccept( this, null );
         VariableReference passive = (VariableReference)node.jjtGetChild( 1 ).jjtAccept( this, null );
-        String assocName = (String)node.jjtGetChild( 2 ).jjtAccept( this, null );
+        Collection association = (Collection)node.jjtGetChild( 2 ).jjtAccept( this, null );
+        String linkObjectName = null;
         
-        Relationship r = currentDomain.getRelationship( assocName );
+        // if there is the optional creating LinkObject clause at the end
+        if(node.jjtGetNumChildren() == 4) {
+            linkObjectName = (String)node.jjtGetChild(3).jjtAccept(this,null);
+        }
+        java.util.Iterator i = association.iterator();
+        String assocName = (String)i.next();
+        Relationship r = currentDomain.getRelationship(assocName);
         
         if( !(r instanceof Association )) {
             throw new LemException( "Relationship "
@@ -409,18 +415,51 @@ public class BuilderPass2 extends Visitor {
         }
         
         Association ra = (Association)r;
+       
+        // if there is an optional verb clause specified
         
-        a.setActiveObjectName( active.getVariableName() );
-        a.setPassiveObjectName( passive.getVariableName() );
-        a.setAssociationClassReference( assocName );
+        if(association.size()==2) {
+            String verbclause = (String)i.next();
+            if(ra.getActivePerspective().getVerbClause().toString().equals(verbclause)) {
+                a.setActiveObjectName( active.getVariableName() );
+                a.setPassiveObjectName( passive.getVariableName() );    
+                System.err.println("TTS: Verb clause present");                                        
+                a.setVerbClause(true);
+            }
+            else if(ra.getPassivePerspective().getVerbClause().toString().equals(verbclause)) {
+                a.setPassiveObjectName( active.getVariableName() );
+                a.setActiveObjectName( passive.getVariableName() ); 
+                System.err.println("TTS: Verb clause present");                 
+                a.setVerbClause(true);
+            }
+            else {     
+                throw new LemException( "Invalid verb clause \""+verbclause+"\"" );                
+            }
+        }
+        else {
+            a.setActiveObjectName( active.getVariableName() );
+            a.setPassiveObjectName( passive.getVariableName() );
+        }       
         a.setAssociation( ra );
-        
+        if(linkObjectName != null)
+            a.setLinkObjectName(linkObjectName);
         return a;
+    }
+    
+    public Object visit( LEMRelationshipReference node, Object data ) throws LemException {    
+        LinkedList ll = new LinkedList();
+        String assocName = (String) node.jjtGetChild( 0 ).jjtAccept(this,  null);
+        ll.add(assocName);
+        if(node.jjtGetNumChildren()==2) {
+            String verb = node.getLastToken().image;
+            ll.add(verb);
+        }
+        
+        return ll;
     }
     
     public Object visit( LEMLinkDeletion node, Object data ) throws LemException {
         UnrelateAction a = new UnrelateAction();
-        
         VariableReference active = (VariableReference)node.jjtGetChild( 0 ).jjtAccept( this, null );
         VariableReference passive = (VariableReference)node.jjtGetChild( 1 ).jjtAccept( this, null );
         String assocName = (String)node.jjtGetChild( 2 ).jjtAccept( this, null );
