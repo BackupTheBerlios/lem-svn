@@ -580,7 +580,6 @@ public class BuilderPass2 extends Visitor {
      * @return
      */
     public Object visit( LEMRelatedTo node, Object data ) throws LemException {
-	throw new LemException("Related To operator not yet implemented\n");
         RelatedToOperation o = null ;
         if( node.jjtGetNumChildren() != 3 ) {
             throw new LemException("Related To is a ternary operator,\n Use:  Related To class1 Across R1 ") ;
