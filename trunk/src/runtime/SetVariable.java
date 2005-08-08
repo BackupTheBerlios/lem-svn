@@ -50,7 +50,9 @@ public class SetVariable extends Variable {
      *@param b the variable to be added.
      */
  
+
    public void addToSet( Variable b ) throws LemRuntimeException {       
        value.add ( b ) ;       
    }   
+
 }
