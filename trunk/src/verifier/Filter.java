@@ -32,23 +32,40 @@ public class Filter {
      *@param colIndex the column to filter the text on
      *@see tableModel
      */
-    public void applyFilter(String text, int colIndex){
+    public void applyFilter(String text, int colIndex, int type){
         newData.removeAllElements();
         Vector tmp = new Vector();
         tmp = tModel.getDataVector();
-        
-        for (int i=0; i<data.size(); i++) {
-            tmp = (Vector) data.get(i);
-            String txt = (String)tmp.get(colIndex);
-            if ((txt.compareToIgnoreCase(text)) == 0) {
-                newData.add(tmp);
+        //removes white space at begining and end
+        String input = text.trim();
+        if (type == 0){
+            for (int i=0; i<data.size(); i++) {
+                tmp = (Vector) data.get(i);
+                String tmp2 = (String)tmp.get(colIndex);
+                String txt = tmp2.trim();
+                if ((txt.equalsIgnoreCase(input))) {
+                    newData.add(tmp);
+                }
             }
-            
+        } else {
+            for (int i=0; i<data.size(); i++) {
+                tmp = (Vector) data.get(i);
+                String tmp2 = (String)tmp.get(colIndex);
+                String txt = tmp2.trim();
+                //txt.contains(input);
+                //txt.equalsIgnoreCase(input);
+                if ((txt.contains(input))) {
+                    newData.add(tmp);
+                }
         }
-     tModel.changeDisplayRows(newData);
-   
+        }
+        tModel.changeDisplayRows(newData);
+        
     }
     
+    /**
+     * Removes the filter from the table model
+     */
     public void removeFilter(){
         newData.removeAllElements();
         tModel.changeDisplayRows(data);
