@@ -32,6 +32,9 @@ public class SelectExpression extends Expression {
     /** The condition of Select Expression, if any or null otherwise */
     private Expression condition = null; 
     
+    /** The relatedToOperation of Select Expression, if any or null otherwise */
+    private RelatedToOperation rto = null; 
+    
     /** Creates a new instance of SelectExpression */
     public SelectExpression(int multiplicity, metamodel.Class theClass, Expression condition ) {        
         this.theClass = theClass;
@@ -39,6 +42,13 @@ public class SelectExpression extends Expression {
         this.condition = condition;  
     }
 
+    /** Creates a new instance of SelectExpression */
+    public SelectExpression(int multiplicity, metamodel.Class theClass, RelatedToOperation rto ) {        
+        this.theClass = theClass;
+        this.multiplicity = multiplicity ; 
+        this.rto = rto ;  
+    }
+    
     public metamodel.Class getSelectedClass() {
         return theClass;
     }
@@ -61,5 +71,13 @@ public class SelectExpression extends Expression {
 
     public void setCondition(Expression condition) {
         this.condition = condition;
+    }
+
+    public RelatedToOperation getRelatedToOperation() {
+        return rto;
+    }
+
+    public void setRelatedToOperation(RelatedToOperation rto) {
+        this.rto = rto;
     }
 }
