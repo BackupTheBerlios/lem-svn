@@ -106,7 +106,7 @@ public class TableModel extends AbstractTableModel {
         tmp.add("OC");
         for( Iterator i = o.getInstances().iterator(); i.hasNext(); ) {
             runtime.Instance in = (runtime.Instance)i.next();
-            instances = instances + in.getInstanceClass().getName() + ", ";
+            instances = instances + in.getInstanceClass().getName() + " ";
         }
         tmp.add(instances);
         for(int i=0;i<7;i++){
@@ -209,7 +209,8 @@ public class TableModel extends AbstractTableModel {
      * @return the vector holding all the rows of the table
      */
     public Vector getDataVector() {
-        return rowData;
+        //return rowData;
+        return filteredData;
     }
     
     /**
