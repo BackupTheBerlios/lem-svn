@@ -18,12 +18,14 @@ public class Filter {
     
     private Vector data = new Vector();
     private Vector newData = new Vector();
-    private TableModel tModel = new TableModel();
-    
+    private TableModel Model;
+    private String text=null;
+    private int colIndex;
+    private int type;
     
     /** Creates a new instance of Filter */
     public Filter(TableModel model) {
-        tModel = model;
+        this.Model = model;
         data = model.getDataVector();
     }
     
@@ -33,42 +35,63 @@ public class Filter {
      *@see tableModel
      */
     public void applyFilter(String text, int colIndex, int type){
+        this.text = text;
+        this.colIndex = colIndex;
+        this.type = type;
         newData.removeAllElements();
         Vector tmp = new Vector();
-        tmp = tModel.getDataVector();
+        tmp = Model.getDataVector();
         //removes white space at begining and end
         String input = text.trim();
-        if (type == 0){
             for (int i=0; i<data.size(); i++) {
                 tmp = (Vector) data.get(i);
-                String tmp2 = (String)tmp.get(colIndex);
+                String tmp2 = ""+ tmp.get(colIndex);
                 String txt = tmp2.trim();
-                if ((txt.equalsIgnoreCase(input))) {
-                    newData.add(tmp);
+                if (type == 0) {
+                    if ((txt.equalsIgnoreCase(input))) {
+                        newData.add(tmp);
+                    }
+                }else {
+                    if (((txt.toLowerCase()).contains(input.toLowerCase()))) {
+                        newData.add(tmp);
+                    }
                 }
             }
-        } else {
-            for (int i=0; i<data.size(); i++) {
-                tmp = (Vector) data.get(i);
-                String tmp2 = (String)tmp.get(colIndex);
-                String txt = tmp2.trim();
-                //txt.contains(input);
-                //txt.equalsIgnoreCase(input);
-                if ((txt.contains(input))) {
-                    newData.add(tmp);
-                }
-        }
-        }
-        tModel.changeDisplayRows(newData);
+        Model.changeDisplayRows(newData);
         
     }
     
+    
+     public void applyFilter(){
+         if(text!=null){
+        newData.removeAllElements();
+        Vector tmp = new Vector();
+        tmp = Model.getDataVector();
+        //removes white space at begining and end
+        String input = text.trim();
+            for (int i=0; i<data.size(); i++) {
+                tmp = (Vector) data.get(i);
+                String tmp2 = ""+ tmp.get(colIndex);
+                String txt = tmp2.trim();
+                if (type == 0) {
+                    if ((txt.equalsIgnoreCase(input))) {
+                        newData.add(tmp);
+                    }
+                }else {
+                    if (((txt.toLowerCase()).contains(input.toLowerCase()))) {
+                        newData.add(tmp);
+                    }
+                }
+            }
+        Model.changeDisplayRows(newData);
+         }
+    }
     /**
      * Removes the filter from the table model
      */
     public void removeFilter(){
         newData.removeAllElements();
-        tModel.changeDisplayRows(data);
+        Model.changeDisplayRows(data);
     }
     
 }
