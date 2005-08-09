@@ -26,7 +26,7 @@ public class Filter {
     /** Creates a new instance of Filter */
     public Filter(TableModel model) {
         this.Model = model;
-        data = model.getDataVector();
+        data = model.getUnfilteredVector();
     }
     
     /** Selects those rows which match the filtering criteria
@@ -34,13 +34,12 @@ public class Filter {
      *@param colIndex the column to filter the text on
      *@see tableModel
      */
-    public void applyFilter(String text, int colIndex, int type){
-        this.text = text;
-        this.colIndex = colIndex;
-        this.type = type;
+    public void applyFilter(String inText, int inColIndex, int inType){
+        text = inText;
+        colIndex = inColIndex;
+        type = inType;
         newData.removeAllElements();
-        Vector tmp = new Vector();
-        tmp = Model.getDataVector();
+        Vector tmp = Model.getUnfilteredVector();
         //removes white space at begining and end
         String input = text.trim();
             for (int i=0; i<data.size(); i++) {
@@ -66,7 +65,7 @@ public class Filter {
          if(text!=null){
         newData.removeAllElements();
         Vector tmp = new Vector();
-        tmp = Model.getDataVector();
+        tmp = Model.getUnfilteredVector();
         //removes white space at begining and end
         String input = text.trim();
             for (int i=0; i<data.size(); i++) {
@@ -91,7 +90,8 @@ public class Filter {
      */
     public void removeFilter(){
         newData.removeAllElements();
-        Model.changeDisplayRows(data);
+        text=null;
+        Model.changeDisplayRows(Model.getUnfilteredVector());
     }
     
 }
