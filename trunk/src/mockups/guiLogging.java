@@ -51,7 +51,6 @@ public class guiLogging extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Mockup");
         setName("????");
-        setResizable(false);
         jButton1.setText("Generate");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -66,7 +65,7 @@ public class guiLogging extends javax.swing.JFrame {
     // </editor-fold>//GEN-END:initComponents
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        newClass.setName("newClass");
+        newClass.setName("ARTC");
         Vector c = new Vector();
         c.add(newClass);
         a.setClasses(c);
@@ -77,7 +76,7 @@ public class guiLogging extends javax.swing.JFrame {
         a = new CreateAction();
         aB = new ActionBlock();
         newClass = new Class();
-        newClass.setName("2");
+        newClass.setName("Controller");
         c = new Vector();
         c.add(newClass);
         a.setClasses(c);
@@ -88,7 +87,7 @@ public class guiLogging extends javax.swing.JFrame {
         a = new CreateAction();
         aB = new ActionBlock();
         newClass = new Class();
-        newClass.setName("Hello");
+        newClass.setName("Plane");
         c = new Vector();
         c.add(newClass);
         c.add(newClass);
