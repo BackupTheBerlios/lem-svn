@@ -10,7 +10,6 @@ import java.awt.Toolkit;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.Random;
 import java.util.Vector;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -36,6 +35,8 @@ import runtime.LemObjectCreationEvent;
  * @author  Simon Franklin
  * @see JContextLoggerPanel
  */
+
+
 public class TableModel extends AbstractTableModel {
     int colSort = 0;
     boolean ascend = true;
@@ -51,6 +52,10 @@ public class TableModel extends AbstractTableModel {
     
     /** The filtered rows of the table */
     private Vector filteredData = new Vector();
+    
+    //Set up the filter for the model
+   public Filter filter = new Filter(this);
+    
     
     //begin iconHeaderRenderer
     /** Creates a new icon header renderer */
@@ -87,7 +92,6 @@ public class TableModel extends AbstractTableModel {
         upIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/down.gif");
         downIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
-        generateGarbage();
         filteredData = rowData;
     }
     
@@ -102,7 +106,7 @@ public class TableModel extends AbstractTableModel {
         runtime.Object o = event.getCreatedObject();
         String instances="";
         
-        tmp.add( new Integer(counter)) ;
+        tmp.add(new Integer(counter)) ;
         tmp.add("OC");
         for( Iterator i = o.getInstances().iterator(); i.hasNext(); ) {
             runtime.Instance in = (runtime.Instance)i.next();
@@ -113,6 +117,12 @@ public class TableModel extends AbstractTableModel {
             tmp.add(null);
         }
         rowData.add(tmp);
+        refreshTable();
+        
+    }
+    
+    public void refreshTable(){
+        filter.applyFilter();
         sortAllRowsBy();
     }
     
@@ -127,7 +137,6 @@ public class TableModel extends AbstractTableModel {
      * @return the number of rows in the table.
      */
     public int getRowCount() {
-        //return rowData.size();
         return filteredData.size();
     }
     
@@ -147,7 +156,6 @@ public class TableModel extends AbstractTableModel {
      * @return the Object / value in the cell.
      */
     public Object getValueAt(int row, int col) {
-        //Vector tmp = (Vector)rowData.get(row);
         Vector tmp = (Vector)filteredData.get(row);
         Object data = tmp.get(col);
         return data;
@@ -156,15 +164,7 @@ public class TableModel extends AbstractTableModel {
     /**
      *  Not implemented as the data in the table is not editable.
      */
-    public void setValueAt(Object value, int row, int col) {
-        /**
-         * Vector tmp = (Vector)rowData.get(row);
-         * Object data = tmp.get(col);
-         * return data;
-         * data[row][col] = value;
-         * fireTableCellUpdated(row, col);
-         */
-    }
+    public void setValueAt(Object value, int row, int col) {}
     
     /**
      * Sorts the data in the table according to the column selected and the value of ascend.
@@ -177,6 +177,13 @@ public class TableModel extends AbstractTableModel {
         fireTableStructureChanged();
     }
     
+    public void removeFilter(){
+        filter.removeFilter();
+    }
+    
+    public void applyFilter(String text, int colIndex, int type ) {
+        filter.applyFilter(text, colIndex, type);
+    }
     
     /**
      * Sorts the rows of a table based on a column, in ascending or descending
@@ -252,36 +259,6 @@ public class TableModel extends AbstractTableModel {
         fireTableStructureChanged();
     }
     
-    
-    /**
-     * Generates some random garbage to test with sorting.
-     */
-    public void generateGarbage() {
-        Vector garbage = new Vector();
-        Random generator = new Random(47); // :o) Im such a nerd
-        String word;
-        int tmp;
-        for(int i=0;i<10;i++) {
-            garbage.add(i+"");
-            for(int x=0;x<9;x++) {
-               tmp=97;
-               tmp=tmp+generator.nextInt(26);
-               word = new Character((char)tmp).toString();
-               tmp=97;
-               tmp=tmp+generator.nextInt(26);
-               word = word + new Character((char)tmp).toString();
-               tmp=97;
-               tmp=tmp+generator.nextInt(26);
-               word = word + new Character((char)tmp).toString();
-               tmp=97;
-               tmp=tmp+generator.nextInt(26);
-               word = word + new Character((char)tmp).toString();
-               garbage.add(word);
-               }
-            rowData.add(garbage);
-            garbage = new Vector();
-        }
-    }
 }
 
 /**
