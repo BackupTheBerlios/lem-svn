@@ -220,6 +220,10 @@ public class TableModel extends AbstractTableModel {
         return filteredData;
     }
     
+    public Vector getUnfilteredVector(){
+        return rowData;
+    }
+    
     /**
      * Sets the text and icon values on the column headers for the icon renderer
      * @param inTable the Table in which the column headers wish to be set.
