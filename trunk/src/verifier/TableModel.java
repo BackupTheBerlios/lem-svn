@@ -259,11 +259,25 @@ public class TableModel extends AbstractTableModel {
     public void generateGarbage() {
         Vector garbage = new Vector();
         Random generator = new Random(47); // :o) Im such a nerd
-        
+        String word;
+        int tmp;
         for(int i=0;i<10;i++) {
-            for(int x=0;x<10;x++) {
-                garbage.add(""+generator.nextInt(10));
-            }
+            garbage.add(i+"");
+            for(int x=0;x<9;x++) {
+               tmp=97;
+               tmp=tmp+generator.nextInt(26);
+               word = new Character((char)tmp).toString();
+               tmp=97;
+               tmp=tmp+generator.nextInt(26);
+               word = word + new Character((char)tmp).toString();
+               tmp=97;
+               tmp=tmp+generator.nextInt(26);
+               word = word + new Character((char)tmp).toString();
+               tmp=97;
+               tmp=tmp+generator.nextInt(26);
+               word = word + new Character((char)tmp).toString();
+               garbage.add(word);
+               }
             rowData.add(garbage);
             garbage = new Vector();
         }
