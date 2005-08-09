@@ -59,8 +59,9 @@ public class ColumnHeaderListener extends MouseAdapter {
                     vLeftColIndex--;
                 }
             }
-            // Calls a sort when a column header is clicked 
+            // Calls a sort when a column header is clicked
             model.sortAllRowsBy(vColIndex);
+            table.getTableHeader().updateUI();
         }
     }
 
