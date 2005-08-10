@@ -22,8 +22,6 @@ import metamodel.Generalisation;
  * @see the Objects at Runtime description at http://xtuml.jdns.org/wiki/index.php/Runtime_object
  */
 public class Object {
-    Interpreter interpreter;
-    
     /** Queue of pending signals for the object */
     LinkedList signalQueue = new LinkedList();
     
@@ -46,8 +44,6 @@ public class Object {
      * not represent a valid type for the new object
      */
     public Object(Collection classes) throws LemRuntimeException {
-        interpreter = new Interpreter(this);
-
         // Do these classes actually participate in the same inheritance
         // hierarchy?
         if( !validClasses( classes )) {
@@ -106,7 +102,7 @@ public class Object {
     /**
      * propogate the next signal to all instances.
      */
-    public void propogateNextSignal() throws LemRuntimeException
+    public boolean propogateNextSignal() throws LemRuntimeException
     {
 	while (true) {
 		if (signalSelfQueue.size() > 0) {
@@ -115,21 +111,17 @@ public class Object {
 		        	Instance in = (Instance)i.next();
 				in.addSignalSelf(s);
 			}
+			return true;
 		} else if (signalQueue.size() > 0) {
 			Signal s = (Signal)signalQueue.remove(0);
 		        for( Iterator i = instances.iterator(); i.hasNext(); ) {
 		        	Instance in = (Instance)i.next();
 				in.addSignal(s);
 			}
-		} else {
-			/* Wait for next signal */
-			/* @todo: if we have multiple threads here, we still
-			 * only want to propogate only one signal to the
-			 * instances.
-			 */
-			continue;
+			return true;
 		}
-		break;
+		
+		return false;
 	}
     }
  

@@ -51,13 +51,13 @@ public class Instance {
     runtime.Object instanceInObject = null;
     
     /** Queue of pending signals for the instance */
-    LinkedList signalQueue = new LinkedList();
+    List signalQueue = new LinkedList();
     
     /**
      * Queue of pending signals to self. All signals from here must be
      * processed before any signals from 'signalQueue'
      */
-    LinkedList signalSelfQueue = new LinkedList();
+    List signalSelfQueue = new LinkedList();
     
 
     /**
@@ -149,8 +149,10 @@ public class Instance {
      */
     public void addSignal(Signal s) throws LemRuntimeException
     {
-	    signalQueue.add(s);
-	    /* todo: a lot more */
+	    synchronized (instanceInObject) {
+		    signalQueue.add(s);
+		    instanceInObject.notify();
+	    }
     }
 
     /**
@@ -158,8 +160,10 @@ public class Instance {
      */
     public void addSignalSelf(Signal s) throws LemRuntimeException
     {
-	    signalSelfQueue.add(s);
-	    /* todo: a lot more */
+	    synchronized (instanceInObject) {
+		    signalSelfQueue.add(s);
+		    instanceInObject.notify();
+	    }
     }
 
     /**
@@ -168,25 +172,29 @@ public class Instance {
      */
     public Signal getNextSignal() throws LemRuntimeException
     {
-	Signal s;
-	while (true) {
-		if (signalSelfQueue.size() > 0) {
-			s = (Signal)signalSelfQueue.remove(0);
-		} else if (signalQueue.size() > 0) {
-			s = (Signal)signalQueue.remove(0);
-		} else {
-			instanceInObject.propogateNextSignal();
-			continue;
+	synchronized (instanceInObject) {
+		while (true) {
+			if (signalSelfQueue.size() > 0) {
+				return (Signal)signalSelfQueue.remove(0);
+			} else if (signalQueue.size() > 0) {
+				return (Signal)signalQueue.remove(0);
+			}
+		
+			if (instanceInObject.propogateNextSignal()) {
+				/** Have a signal */
+				continue;
+			}
+			
+			instanceInObject.wait();
+			/**
+			 * After taking instanceInObject's lock, we must
+			 * always recheck this Instance's queue because
+			 * another instance may have propogated a signal
+			 * from the runtime.Object.
+			 *
+			 * So go back to the top.
+			 */
 		}
-		break;
 	}
-
-	return s;
-    }
-
-    public void processNextSignal() throws LemRuntimeException
-    {
-	Signal s = getNextSignal();
-	/* transition the state machine. Execute it. */
     }
 }
