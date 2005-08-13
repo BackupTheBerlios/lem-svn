@@ -271,6 +271,23 @@ public class StateMachine implements DescribedEntity {
 		}
 		return j;
 	}
+        
+        /**
+	 * Return a count of the number of initialising transitions (across [R514])
+	 *
+	 * @return a count of the number of initialising transitions
+	 */
+	public Transition[] getInitialisingTransitions() {		
+		int j = 0;
+                Transition[] initTransition = new Transition[ getInitialisingTransitionCount() ] ; 
+		for ( int i=0; i < transitions.size(); i++ ) {
+			if ( transitions.get(i) instanceof InitialisingTransition ) {
+                            initTransition[j] = (Transition) transitions.get(j) ; 
+                            j++ ; 
+			}
+		}
+		return initTransition ; 
+	}
 	
 	/**
 	 * Return a count of the number of state transitions (non initilising)
