@@ -487,6 +487,17 @@ public class BuilderPass2 extends Visitor {
         return node.jjtGetChild( 0 ).jjtAccept( this, null );
     }
     
+    public Object visit( LEMReturn node, Object data ) throws LemException {
+        
+        ReturnAction a = new ReturnAction();
+        
+        if( node.jjtGetNumChildren() == 1 ) {
+            a.setExpression( (Expression)node.jjtGetChild( 0 ).jjtAccept( this, null ));
+        }
+        
+        return a;
+    }
+    
     public Object visit( LEMRValue node, Object data ) throws LemException {
         return node.jjtGetChild( 0 ).jjtAccept( this, data );
     }
