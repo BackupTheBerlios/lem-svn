@@ -6,10 +6,12 @@
 
 package runtime;
 
+import com.sun.org.apache.xpath.internal.operations.String;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import metamodel.Association;
 import metamodel.Attribute;
@@ -140,7 +142,7 @@ public class Instance {
      * @param name the attribute name
      * @return the attribute with the given name, or null if it doesn't exist
      */
-    public Variable getAttribute( String name ) {
+    public Variable getAttribute( java.lang.String name ) {
         return (Variable)attributeInstances.get( name );
     }
 
@@ -185,7 +187,8 @@ public class Instance {
 				continue;
 			}
 			
-			instanceInObject.wait();
+                        try {
+                            instanceInObject.wait();                            
 			/**
 			 * After taking instanceInObject's lock, we must
 			 * always recheck this Instance's queue because
@@ -194,6 +197,7 @@ public class Instance {
 			 *
 			 * So go back to the top.
 			 */
+                        } catch (Exception e) {}
 		}
 	}
     }
