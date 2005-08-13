@@ -291,6 +291,7 @@ TOKEN : /* ACTION LANGUAGE IDENTIFIERS */
 | <WHERE: "where">
 | <INSTANCES : "instances">
 | <RELATED : "related">
+| <RETURN : "return">
 | <IF: "if">
 | <ELSE: "else">
 | <ELSEIF: "elseif">
@@ -904,12 +905,13 @@ void Action() : {}
 	| EventGeneration()<SEMI>
 	| EventCancel()<SEMI>
 	| LinkCreation()<SEMI>
-      | LinkDeletion()<SEMI>
+        | LinkDeletion()<SEMI>
 	| IfStatement()
 	| WhileStatement()
 	| ActionBlock()
 	| ForStatement()
 	| Break()
+        | Return()
 }
 
 void ObjectReference() : {}
@@ -1128,6 +1130,12 @@ void Break() : {}
 	<BREAK><SEMI>
 }
 
+void Return() : {}
+{
+        <RETURN> 
+        [ Expression() ] 
+        <SEMI>
+}
 
 /**
  * Expressions. These are side-effect free statements returning a value.
