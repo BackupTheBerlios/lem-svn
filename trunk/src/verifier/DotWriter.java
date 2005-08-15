@@ -32,42 +32,42 @@ import java.io.OutputStreamWriter;
  * @author Toshio Nakamura
  */
 public class DotWriter {
-	
-	/**
-	 * Uses an external dot binary to convert a given set of dot code into a
-	 * PNG file
-	 *
-	 * @param dotCode the dot code to convert
-	 * @param filename the name of the PNG file to write
-	 * @todo add error handling code for dot binary
-	 * @todo use exception classes?
-   */
-	public static void dotToPNG( String dotCode, String filename ) throws
-			IOException {
-		// Get the dot binary's location
-		Parameters params = Parameters.getInstance();
-		String dotBinary = params.getProperty( "eleminator.dotPath" );
-		String[] cmdString = {dotBinary, "-Tpng", "-o" + filename};
-		Runtime rt = Runtime.getRuntime();
-		Process p = null;
-		OutputStreamWriter out = null;
-		InputStreamReader in = null;
-    StringBuffer strBuf = new StringBuffer();
-		int c;
-		
-		// Run dot
-		p = rt.exec( cmdString );
-		// Feed the dot code into the dot binary's standard input
-		out = new OutputStreamWriter( p.getOutputStream() );
-		in = new InputStreamReader( p.getInputStream() );
-		out.write( dotCode );
-		out.close();
-		while (true) {
-			c = in.read();
-			if (c == -1) {
-				break;
-			}
-			strBuf.append( (char)c );
-		}
-	}
+    
+    /**
+     * Uses an external dot binary to convert a given set of dot code into a
+     * PNG file
+     *
+     * @param dotCode the dot code to convert
+     * @param filename the name of the PNG file to write
+     * @todo add error handling code for dot binary
+     * @todo use exception classes?
+     */
+    public static void dotToPNG( String dotCode, String filename ) throws
+            IOException {
+        // Get the dot binary's location
+        Parameters params = Parameters.getInstance();
+        String dotBinary = params.getProperty( "eleminator.dotPath" );
+        String[] cmdString = {dotBinary, "-Tpng", "-o" + filename};
+        Runtime rt = Runtime.getRuntime();
+        Process p = null;
+        OutputStreamWriter out = null;
+        InputStreamReader in = null;
+        StringBuffer strBuf = new StringBuffer();
+        int c;
+        
+        // Run dot
+        p = rt.exec( cmdString );
+        // Feed the dot code into the dot binary's standard input
+        out = new OutputStreamWriter( p.getOutputStream() );
+        in = new InputStreamReader( p.getInputStream() );
+        out.write( dotCode );
+        out.close();
+        while (true) {
+            c = in.read();
+            if (c == -1) {
+                break;
+            }
+            strBuf.append( (char)c );
+        }
+    }
 }
