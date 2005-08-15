@@ -21,7 +21,6 @@
 
 package verifier;
 
-import com.sun.tools.javadoc.Main;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -44,7 +43,7 @@ public class UMLGraphWriter {
      *
      * @param spec the Java class specification, in UMLGraph format
      * @return a UML diagram in dot format
-     * @todo implement this routine
+     * @todo make routine throw exception and not depend on internal try blocks
      */
     public static String specToDot( String spec ) throws IOException {
         Runtime rt = Runtime.getRuntime();
@@ -57,9 +56,8 @@ public class UMLGraphWriter {
         StringBuffer errBuf = new StringBuffer();
         Parameters params = Parameters.getInstance();
         int c;
-               
-        // Set up a temporary file to store the specification
-        
+                
+        // Temporary file to store the input specification
         File specFile = null;
         try {
             specFile = File.createTempFile( "umlSpec", ".java" );
@@ -73,13 +71,26 @@ public class UMLGraphWriter {
             ioe.printStackTrace();
         }
         
+        // Temporary file to store the generated dot code
+        File dotFile = null;
+        try {
+            dotFile = File.createTempFile( "eleminator", ".dot" );
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+        
         // Run Javadoc over the specification and return the resulting dot code
         
-        String javadocPath = 
+        String javadocPath =
                 params.getProperty( "eleminator.javadocPath" );
-        String[] cmdString = {javadocPath, "-docletpath", 
-                params.getProperty( "eleminator.umlgraphPath" ), 
-                "-private", specFile.getAbsolutePath()};
+        
+        String[] cmdString = { javadocPath,
+                "-docletpath", params.getProperty( "eleminator.umlgraphPath" ),
+                "-doclet", params.getProperty( "eleminator.umlgraphDocletName" ),
+                "-output", dotFile.getAbsolutePath(),
+                "-private", specFile.getAbsolutePath()
+        };
+        
         p = rt.exec( cmdString );
         in = new InputStreamReader( p.getInputStream() );
         err = new InputStreamReader( p.getErrorStream() );
@@ -97,8 +108,22 @@ public class UMLGraphWriter {
             }
             errBuf.append( (char)c );
         }
-        System.out.println( strBuf.toString() );
-        System.err.println( errBuf.toString() );
-        return "NOT YET IMPLEMENTED";
+        // START DEBUG
+        //System.out.println( strBuf.toString() );
+        //System.err.println( errBuf.toString() );
+        // END DEBUG
+        
+        // Read and return the generated dot
+        strBuf = new StringBuffer();
+        FileReader fr = new FileReader( dotFile );
+        while (true) {
+            c = fr.read();
+            if (c == -1) {
+                break;
+            }
+            strBuf.append( (char)c ); 
+        }
+        
+        return strBuf.toString();
     }
 }
