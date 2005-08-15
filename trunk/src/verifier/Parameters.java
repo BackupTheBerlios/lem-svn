@@ -117,8 +117,8 @@ public class Parameters {
         String userPropsDir = null; // Directory containing the properties file
         String userPropsPath = null; // Full path, including filename
         
-        if (baseDir.charAt( baseDir.length() - 1) != '/') {
-            baseDir = baseDir + "/";
+        if (baseDir.charAt( baseDir.length() - 1) != System.getProperty( "file.separator" ).charAt( 0 )) {
+            baseDir = baseDir + System.getProperty( "file.separator" );
         }
         userPropsDir = baseDir + this.getDefaultProperty( "eleminator.userPropertiesPath.linux" );
         // Get the full path to the file
