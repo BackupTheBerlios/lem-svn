@@ -41,7 +41,7 @@ public class DotWriter {
 	 * @param filename the name of the PNG file to write
 	 * @todo add error handling code for dot binary
 	 * @todo use exception classes?
-	 */
+   */
 	public static void dotToPNG( String dotCode, String filename ) throws
 			IOException {
 		// Get the dot binary's location
@@ -52,8 +52,7 @@ public class DotWriter {
 		Process p = null;
 		OutputStreamWriter out = null;
 		InputStreamReader in = null;
-		BufferedReader bufRead = null;
-		StringBuffer strBuf = new StringBuffer();
+    StringBuffer strBuf = new StringBuffer();
 		int c;
 		
 		// Run dot
@@ -63,7 +62,6 @@ public class DotWriter {
 		in = new InputStreamReader( p.getInputStream() );
 		out.write( dotCode );
 		out.close();
-		bufRead = new BufferedReader( in );
 		while (true) {
 			c = in.read();
 			if (c == -1) {
