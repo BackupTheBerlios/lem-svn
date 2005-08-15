@@ -55,6 +55,7 @@ public class UMLGraphWriter {
         BufferedReader bufRead = null;
         StringBuffer strBuf = new StringBuffer();
         StringBuffer errBuf = new StringBuffer();
+        Parameters params = Parameters.getInstance();
         int c;
                
         // Set up a temporary file to store the specification
@@ -75,8 +76,10 @@ public class UMLGraphWriter {
         // Run Javadoc over the specification and return the resulting dot code
         
         String javadocPath = 
-                Parameters.getInstance().getProperty( "eleminator.javadocPath" );
-        String[] cmdString = {javadocPath, specFile.getAbsolutePath()};
+                params.getProperty( "eleminator.javadocPath" );
+        String[] cmdString = {javadocPath, "-docletpath", 
+                params.getProperty( "eleminator.umlgraphPath" ), 
+                "-private", specFile.getAbsolutePath()};
         p = rt.exec( cmdString );
         in = new InputStreamReader( p.getInputStream() );
         err = new InputStreamReader( p.getErrorStream() );
