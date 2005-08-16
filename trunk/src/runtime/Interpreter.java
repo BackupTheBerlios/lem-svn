@@ -184,14 +184,9 @@ public class Interpreter {
 	}
 	
         // Notify listeners that the object has been added
-        LemObjectCreationEvent e = new LemObjectCreationEvent( o, a );
-        i = c.getLemEventListeners().iterator();
-	while (i.hasNext()) {
-            LemEventListener l = (LemEventListener)i.next();
-            l.objectCreated(e);
-        }
+	new LemObjectCreationEvent( o, a ).notifyAll( c );
         
-        return o;
+	return o;
     }
     
     /**
