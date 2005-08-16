@@ -59,7 +59,7 @@ public class ScenarioNode extends AbstractDescriptionNode  {
         ConsoleLogger c = new ConsoleLogger(d);
         runtime.Interpreter i = new Interpreter(null);
         try{
-            i.executeBlock(scenario.getActionBlock(),  d);
+            i.interpret(scenario,  d);
         } catch(LemRuntimeException e) {
             System.out.println(e);
         }

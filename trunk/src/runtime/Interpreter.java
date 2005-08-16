@@ -51,6 +51,21 @@ public class Interpreter {
         executeBlock(block, c);
 	domainContext = null; // ensure no other entry point tries to use this
     }
+
+    /**
+     * Interpret the given Scenario by calling executeBlock on Scenario's
+     * main ActionBlock.
+     *
+     * @param s the scenario to interpret
+     * @param c the Context in which the procedure should be interpreted
+     * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
+     */
+    public void interpret(Scenario s, DomainContext c) throws LemRuntimeException {
+	domainContext = c;
+        ActionBlock block = s.getActionBlock();
+        executeBlock(block, c);
+	domainContext = null; // ensure no other entry point tries to use this
+    }
     
     /**
      * Execute the given ActionBlock by setting up the "stack frame" for

@@ -43,14 +43,13 @@ public class InstanceInterpreter extends java.lang.Thread{
      *until there is a signal which would lead it to the next state, it will run the procedure associated
      *with the new state ( only if the new state is not a DeletionState ).
      */
-    public void init() {
+    public boolean init() {
         this.state = RUNNING ;
         metamodel.Class c = instance.getInstanceClass() ;
         metamodel.StateMachine m = c.getStateMachine() ;
         int tCount = m.getInitialisingTransitionCount() ;
 
         try {
-            signal :
             while ( true ) {
 		System.out.println("InstanceInterpreter getting a next signal");
                 Signal s = instance.getNextSignal() ;
@@ -63,39 +62,39 @@ public class InstanceInterpreter extends java.lang.Thread{
                         if (s.getEvent().getName().equals( t.getEvent().getName() )) {
                             metamodel.State newState = t.getToState() ;
                             instance.currentState = newState ;
+			    System.out.println("InstanceInterpreter transitioning state");
                             if ( newState instanceof NonDeletionState) {
+			        System.out.println("InstanceInterpreter executing procedure");
                                 Procedure p = newState.getProcedure() ;
                                 interpreter.interpret( p , context ) ;
-                            }
-                            break signal ;
+				return true;
+                            } else {
+				return false;
+			    }
                         }
                     }
                 }
-                sleep(100) ;
             }
         } catch (Exception e) {
             this.state = STOPPED ;
+	    return false;
         }
-        this.state = STOPPED ;
     }
     
     
     /** will run the thread until it enters a deletionstate **/
     public void run() {
-        init() ;
-        while ( instance.currentState instanceof NonDeletionState && isAlive() ) {
-            advance() ;
-            try {
-                sleep( 100 ) ;
-            }catch (Exception e ) {}
-        }
+        if (!init())
+		return;
+	
+        while ( advance() );
     }
     
     /** Advances the statemachine by one state (if possible)
      *and will run the procedure associated with the new state if the new state is not a
      *DeletionState.
      **/
-    private void advance() {
+    private boolean advance() {
         this.state = RUNNING ;
         metamodel.Class c = instance.getInstanceClass() ;
         metamodel.StateMachine m = c.getStateMachine() ;
@@ -114,17 +113,23 @@ public class InstanceInterpreter extends java.lang.Thread{
                     && t.getFromState().getName().equals(currentState.getName()) ) {
                         metamodel.State newState = t.getToState() ;
                         instance.currentState = newState ;
+			System.out.println("InstanceInterpreter transitioning state");
                         if ( newState instanceof NonDeletionState) {
+			    System.out.println("InstanceInterpreter executing procedure");
                             Procedure p = newState.getProcedure() ;
                             interpreter.interpret( p , context ) ;
-                        }
+                        } else {
+			    return false;
+			}
                     }
                 }
             }
         } catch (Exception e) {
             this.state = STOPPED ;
+	    return false;
         }
         this.state = STOPPED ;
+	return true;
     }
     
     /** This method will stop the interpretion of the current instance
