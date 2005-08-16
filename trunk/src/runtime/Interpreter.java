@@ -26,7 +26,7 @@ public class Interpreter {
      * @todo: this is a bit of a hack. Need some good way to return from the
      * scenario.
      */
-    private LinkedList createdThreads = null;
+    private LinkedList createdThreads = new LinkedList();
 
     /**
      * The object in which we are executing
@@ -36,7 +36,7 @@ public class Interpreter {
     /**
      * The context in which the interpreter runs
      */
-    private DomainContext domainContext = null;
+    private Context context = null;
     
     /** Creates a new instance of Interpreter
      * @param obj is the object that the Interpreter is
@@ -54,11 +54,11 @@ public class Interpreter {
      * @param c the Context in which the procedure should be interpreted
      * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
      */
-    public void interpret(Procedure p, DomainContext c) throws LemRuntimeException {
-	domainContext = c;
+    public void interpret(Procedure p, Context c) throws LemRuntimeException {
+	context = c;
         ActionBlock block = p.getActionBlock();
         executeBlock(block, c);
-	domainContext = null; // ensure no other entry point tries to use this
+	context = null; // ensure no other entry point tries to use this
     }
 
     /**
@@ -69,9 +69,8 @@ public class Interpreter {
      * @param c the Context in which the procedure should be interpreted
      * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
      */
-    public void interpret(Scenario s, DomainContext c) throws LemRuntimeException {
-	createdThreads = new LinkedList();
-	domainContext = c;
+    public void interpret(Scenario s, Context c) throws LemRuntimeException {
+	context = c;
         ActionBlock block = s.getActionBlock();
         executeBlock(block, c);
 	
@@ -89,7 +88,7 @@ public class Interpreter {
 		}
 	}
 	
-	domainContext = null; // ensure no other entry point tries to use this
+	context = null; // ensure no other entry point tries to use this
 	createdThreads = null;
     }
     
@@ -179,7 +178,7 @@ public class Interpreter {
 	while (i.hasNext()) {
 		Instance instance = (Instance)i.next();
 		if (instance.instanceOfClass.isActive()) {
-			InstanceInterpreter instanceThread = new InstanceInterpreter(instance, domainContext);
+			InstanceInterpreter instanceThread = new InstanceInterpreter(instance, context);
 			createdThreads.add(instanceThread);
 		}
 	}
