@@ -9,7 +9,6 @@ options {
     VISITOR_EXCEPTION = "metamodel.LemException";
 //    DEBUG_PARSER           = true;
 //    DEBUG_TOKEN_MANAGER    = true;
-
 }
 
 PARSER_BEGIN(LemParser)
@@ -928,6 +927,7 @@ void VariableReference() : {}
 {
 	LOOKAHEAD(2)
 	  ObjectReference() <DOT> Identifier()
+	| <SELF>
 	| Identifier()
 }
 

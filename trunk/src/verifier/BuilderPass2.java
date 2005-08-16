@@ -807,7 +807,10 @@ public class BuilderPass2 extends Visitor {
      * @return
      */
     public Object visit( LEMVariableReference node, Object data ) throws LemException {
-        if( node.jjtGetNumChildren() == 1 ) {
+	if( node.jjtGetNumChildren() == 0 ) {
+	    // 'self' reference.
+	    return new VariableReference( "self" );
+	} else if( node.jjtGetNumChildren() == 1 ) {
             // bare variable reference
             return new VariableReference( getIdentifier(node.jjtGetChild(0) ));
         } else if( node.jjtGetNumChildren() == 2 ) {
@@ -817,7 +820,7 @@ public class BuilderPass2 extends Visitor {
             return new VariableReference( obj.getVariableName(), variableName );
         }
         
-        throw new LemException( "LEMVariableReference has neither 1 nor 2 children" );
+        throw new LemException( "LEMVariableReference has neither 0, 1 nor 2 children" );
     }
     
     /**
