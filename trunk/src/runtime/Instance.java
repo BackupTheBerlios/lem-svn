@@ -145,14 +145,12 @@ public class Instance {
     }
 
     /**
-     * adds a Signal to this instance's signal queue
+     * adds a Signal to this instance's signal queue.
+     * caller must be synchronized with instanceInObject.
      */
     public void addSignal(Signal s) throws LemRuntimeException
     {
-	    synchronized (instanceInObject) {
-		    signalQueue.add(s);
-		    instanceInObject.notify();
-	    }
+	    signalQueue.add(s);
     }
 
     /**

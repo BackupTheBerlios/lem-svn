@@ -86,8 +86,10 @@ public class Object {
      */
     public void addSignal(Signal s) throws LemRuntimeException
     {
-	    signalQueue.add(s);
-	    /* todo: a lot more */
+	    synchronized (this) {
+	    	signalQueue.add(s);
+	    	this.notify();
+	    }
     }
 
     /**
@@ -95,12 +97,15 @@ public class Object {
      */
     public void addSignalSelf(Signal s) throws LemRuntimeException
     {
-	    signalSelfQueue.add(s);
-	    /* todo: a lot more */
+	    synchronized (this) {
+	        signalSelfQueue.add(s);
+	    	this.notify();
+	    }
     }
 
     /**
      * propogate the next signal to all instances.
+     * Callers must be synchronized on 'this' object.
      */
     public boolean propogateNextSignal() throws LemRuntimeException
     {

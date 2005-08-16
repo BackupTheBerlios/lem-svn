@@ -138,6 +138,7 @@ public class Interpreter {
 	while (i.hasNext()) {
 		Instance instance = (Instance)i.next();
 		if (instance.instanceOfClass.isActive()) {
+			System.out.println("Created an instance interpreter");
 			new InstanceInterpreter(instance, domainContext);
 		}
 	}
