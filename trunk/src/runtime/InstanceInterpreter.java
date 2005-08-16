@@ -36,7 +36,6 @@ public class InstanceInterpreter extends java.lang.Thread{
         this.instance = instance ;
 	context = c;
 	interpreter = new Interpreter(instance.instanceInObject) ;
-        init() ;
         start() ;     
     }
     
@@ -48,11 +47,15 @@ public class InstanceInterpreter extends java.lang.Thread{
         this.state = RUNNING ;
         metamodel.Class c = instance.getInstanceClass() ;
         metamodel.StateMachine m = c.getStateMachine() ;
+        int tCount = m.getInitialisingTransitionCount() ;
+
         try {
             signal :
             while ( true ) {
+		System.out.println("InstanceInterpreter getting a next signal");
                 Signal s = instance.getNextSignal() ;
-                int tCount = m.getInitialisingTransitionCount() ;
+		System.out.println("InstanceInterpreter got a next signal");
+		
                 if ( tCount > 0 ) {
                     Transition[] ts =  m.getInitialisingTransitions() ;
                     for ( int i  = 0 ; i < tCount ; i++) {
@@ -79,8 +82,8 @@ public class InstanceInterpreter extends java.lang.Thread{
     
     /** will run the thread until it enters a deletionstate **/
     public void run() {
+        init() ;
         while ( instance.currentState instanceof NonDeletionState && isAlive() ) {
-            yield() ;
             advance() ;
             try {
                 sleep( 100 ) ;
@@ -97,9 +100,12 @@ public class InstanceInterpreter extends java.lang.Thread{
         metamodel.Class c = instance.getInstanceClass() ;
         metamodel.StateMachine m = c.getStateMachine() ;
         metamodel.State currentState = instance.currentState ;
+        int tCount = m.getStateTransitionCount() ;
+
         try {
+	    System.out.println("InstanceInterpreter getting a next signal");
             Signal s = instance.getNextSignal() ;
-            int tCount = m.getStateTransitionCount() ;
+	    System.out.println("InstanceInterpreter got a next signal");
             if ( tCount > 0 ) {
                 Transition[] ts =  m.getTransitions() ;
                 for ( int i  = 0 ; i < tCount ; i++) {
