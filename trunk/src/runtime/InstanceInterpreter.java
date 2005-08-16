@@ -21,12 +21,12 @@ public class InstanceInterpreter extends java.lang.Thread{
     private Interpreter interpreter;
 
     /** The context in which this thread executes */
-    private DomainContext context;
+    private Context context;
     
     /** Creates a new instance of Interpreter
      * @param instance the instance to which this interpreter belongs.
      */
-    public InstanceInterpreter(runtime.Instance instance, DomainContext c) {
+    public InstanceInterpreter(runtime.Instance instance, Context c) {
         this.instance = instance ;
 	context = c;
 	interpreter = new Interpreter(instance.instanceInObject) ;
