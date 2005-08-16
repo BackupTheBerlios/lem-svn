@@ -51,7 +51,7 @@ public class Filter {
                         newData.add(tmp);
                     }
                 }else {
-                    if (((txt.toLowerCase()).contains(input.toLowerCase()))) {
+                    if (((txt.toLowerCase()).matches(".*" + input.toLowerCase() + ".*"))) {
                         newData.add(tmp);
                     }
                 }
@@ -77,7 +77,7 @@ public class Filter {
                         newData.add(tmp);
                     }
                 }else {
-                    if (((txt.toLowerCase()).contains(input.toLowerCase()))) {
+                    if (((txt.toLowerCase()).matches(".*" + input.toLowerCase() + ".*"))) {
                         newData.add(tmp);
                     }
                 }

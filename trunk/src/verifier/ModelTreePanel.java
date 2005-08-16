@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.DefaultTreeSelectionModel;
 import metamodel.Model;
 
 /**
@@ -22,9 +23,11 @@ public class ModelTreePanel extends javax.swing.JPanel {
     /** Creates new form ModelTreePanel */
     public ModelTreePanel(Model m) {
         initComponents();
+	modelTree.setSelectionModel(new DefaultTreeSelectionModel());
         modelTree.setModel( new DefaultTreeModel( new ModelTreeNode( m )));
         modelTree.setSelectionInterval(0,0);
-        displayDescription(modelTree.getSelectionPath().getLastPathComponent());
+	if (modelTree.getSelectionPath() != null)
+	        displayDescription(modelTree.getSelectionPath().getLastPathComponent());
         SplitPanel.setDividerLocation(175);
         CustomTreeRenderer render = new CustomTreeRenderer();
         modelTree.setCellRenderer(render);
