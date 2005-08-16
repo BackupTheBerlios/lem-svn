@@ -1,0 +1,23 @@
+# Set root looger level and name its appender
+log4j.rootLogger=debug, cmdAppender, fileAppender
+
+#Set appender to a file appender
+log4j.appender.fileAppender=org.apache.log4j.RollingFileAppender
+log4j.appender.fileAppender.File=example.log
+
+log4j.appender.fileAppender.MaxFileSize=100KB
+
+# Set the pattern layout for the appender
+log4j.appender.fileAppender.layout=org.apache.log4j.PatternLayout
+
+# Set the conversion Pattern
+log4j.appender.fileAppender.layout.ConversionPattern=%m%n
+
+#Set appender to a console appender
+log4j.appender.cmdAppender=org.apache.log4j.ConsoleAppender
+
+# Set the pattern layout for the appender
+log4j.appender.cmdAppender.layout=org.apache.log4j.PatternLayout
+
+# Set the conversion Pattern
+log4j.appender.cmdAppender.layout.ConversionPattern=%m%n
