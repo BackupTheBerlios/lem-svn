@@ -10,6 +10,8 @@
 
 package runtime;
 
+import java.util.Iterator;
+
 /**
  * This class represents events that occur during the running of a model. Events
  * include:
@@ -34,4 +36,16 @@ public abstract class LemEvent {
      * @param listener the LemEventListener to notify
      */
     public abstract void notify( LemEventListener listener );
+
+    /**
+     * Notify all listeners of a given Context of this LemEvent's occurrence.
+     *
+     * @param context the Context to notify
+     */
+    public void notifyAll( Context context ) {
+        for( Iterator i = context.getLemEventListeners().iterator();
+                i.hasNext(); ) {
+            notify( (LemEventListener)i.next() );
+        }
+    }
 }
