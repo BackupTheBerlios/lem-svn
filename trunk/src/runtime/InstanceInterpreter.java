@@ -16,11 +16,6 @@ import java.util.HashMap;
 public class InstanceInterpreter extends java.lang.Thread{
     /** the instance to which this Interpreter belongs to **/
     private runtime.Instance instance;
-    /** static constants **/
-    final static int STOPPED = 1 ;
-    final static int RUNNING = 2 ;
-    /** state of the InstanceInterpreter e.g. stopped or running */
-    private int state = STOPPED ;
 
     /** Interpreter associated with this thread of execution */
     private Interpreter interpreter;
@@ -32,7 +27,6 @@ public class InstanceInterpreter extends java.lang.Thread{
      * @param instance the instance to which this interpreter belongs.
      */
     public InstanceInterpreter(runtime.Instance instance, DomainContext c) {
-        this.state = STOPPED ;
         this.instance = instance ;
 	context = c;
 	interpreter = new Interpreter(instance.instanceInObject) ;
@@ -44,7 +38,6 @@ public class InstanceInterpreter extends java.lang.Thread{
      *with the new state ( only if the new state is not a DeletionState ).
      */
     public boolean init() {
-        this.state = RUNNING ;
         metamodel.Class c = instance.getInstanceClass() ;
         metamodel.StateMachine m = c.getStateMachine() ;
         int tCount = m.getInitialisingTransitionCount() ;
@@ -62,7 +55,7 @@ public class InstanceInterpreter extends java.lang.Thread{
                         if (s.getEvent().getName().equals( t.getEvent().getName() )) {
                             metamodel.State newState = t.getToState() ;
                             instance.currentState = newState ;
-			    System.out.println("InstanceInterpreter transitioning state");
+			    System.out.println("InstanceInterpreter transitioning state to " + newState.getName());
                             if ( newState instanceof NonDeletionState) {
 			        System.out.println("InstanceInterpreter executing procedure");
                                 Procedure p = newState.getProcedure() ;
@@ -76,7 +69,6 @@ public class InstanceInterpreter extends java.lang.Thread{
                 }
             }
         } catch (Exception e) {
-            this.state = STOPPED ;
 	    return false;
         }
     }
@@ -95,7 +87,6 @@ public class InstanceInterpreter extends java.lang.Thread{
      *DeletionState.
      **/
     private boolean advance() {
-        this.state = RUNNING ;
         metamodel.Class c = instance.getInstanceClass() ;
         metamodel.StateMachine m = c.getStateMachine() ;
         metamodel.State currentState = instance.currentState ;
@@ -113,11 +104,12 @@ public class InstanceInterpreter extends java.lang.Thread{
                     && t.getFromState().getName().equals(currentState.getName()) ) {
                         metamodel.State newState = t.getToState() ;
                         instance.currentState = newState ;
-			System.out.println("InstanceInterpreter transitioning state");
+			    System.out.println("InstanceInterpreter transitioning state to " + newState.getName());
                         if ( newState instanceof NonDeletionState) {
 			    System.out.println("InstanceInterpreter executing procedure");
                             Procedure p = newState.getProcedure() ;
                             interpreter.interpret( p , context ) ;
+			    return true;
                         } else {
 			    return false;
 			}
@@ -125,27 +117,8 @@ public class InstanceInterpreter extends java.lang.Thread{
                 }
             }
         } catch (Exception e) {
-            this.state = STOPPED ;
 	    return false;
         }
-        this.state = STOPPED ;
-	return true;
+        return true;
     }
-    
-    /** This method will stop the interpretion of the current instance
-     *The interpretor will stop when the a state has been fully executed
-     */
-    public void stopInterpreter() throws Exception {
-        while ( state == RUNNING) {
-            sleep( 100 ) ;
-        }
-        this.stop() ;
-    }
-    
-    /**This method will resume execution of the current state
-    */
-    public void resumeInterpreter() throws Exception {
-        resume() ;
-    }
-    
 }

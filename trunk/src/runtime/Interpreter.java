@@ -20,6 +20,15 @@ import java.util.HashMap;
  */
 public class Interpreter {
     /**
+     * List of active objects created by the interpreter. This is used by
+     * interpretation of a Scenario, so the interpreter can wait for
+     * all created objects to disappear.
+     * @todo: this is a bit of a hack. Need some good way to return from the
+     * scenario.
+     */
+    private LinkedList createdThreads = null;
+
+    /**
      * The object in which we are executing
      */
     private runtime.Object currentObject;
@@ -61,10 +70,27 @@ public class Interpreter {
      * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
      */
     public void interpret(Scenario s, DomainContext c) throws LemRuntimeException {
+	createdThreads = new LinkedList();
 	domainContext = c;
         ActionBlock block = s.getActionBlock();
         executeBlock(block, c);
+	
+	// wait for all created threads.
+	Iterator i = createdThreads.iterator();
+	while (i.hasNext()) {
+		InstanceInterpreter thread = (InstanceInterpreter)i.next();
+		while (true) {
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				continue;
+			}
+			break;
+		}
+	}
+	
 	domainContext = null; // ensure no other entry point tries to use this
+	createdThreads = null;
     }
     
     /**
@@ -153,8 +179,8 @@ public class Interpreter {
 	while (i.hasNext()) {
 		Instance instance = (Instance)i.next();
 		if (instance.instanceOfClass.isActive()) {
-			System.out.println("Created an instance interpreter");
-			new InstanceInterpreter(instance, domainContext);
+			InstanceInterpreter instanceThread = new InstanceInterpreter(instance, domainContext);
+			createdThreads.add(instanceThread);
 		}
 	}
 	
@@ -202,13 +228,12 @@ public class Interpreter {
         
         runtime.Object target = (runtime.Object)((ObjectReferenceVariable)targetRef).getValue();
         
+	System.out.println("Interpreter adding a signal");
         if (target == currentObject) {
             target.addSignalSelf(s);
         } else {
             target.addSignal(s);
         }
-        
-        // todo: Notify listeners that the signal has been generated
     }
     
     /**
@@ -261,7 +286,7 @@ public class Interpreter {
         
         while (true) {
             Variable result = evaluateExpression(loopCond, c);
-            if (!(result.getCoreDataType() instanceof BooleanType)) {
+            if (!(result instanceof BooleanVariable)) {
                 throw new LemRuntimeException("Type mismatch: expected boolean condition");
             }
             if (!((Boolean)((BooleanVariable)result).getValue()).booleanValue())
@@ -552,6 +577,8 @@ public class Interpreter {
     public Variable evaluateSelectExpression(SelectExpression se, Context c) throws LemRuntimeException {
         metamodel.Class selectedClass = se.getSelectedClass() ;
         SetVariable set = new SetVariable() ;
+        RelatedToOperation rto = se.getRelatedToOperation() ;
+        Expression condition = se.getCondition();
         
         do {
             Collection objectList = c.getObjectList();
@@ -564,18 +591,21 @@ public class Interpreter {
                     
                     if ( instance.getInstanceClass() == selectedClass ) {
                         Variable var = VariableFactory.newVariable(ObjectReferenceType.getInstance(), o);
-                        Expression condition = se.getCondition();
-                        RelatedToOperation rto = se.getRelatedToOperation() ;
                         if ( condition != null ) {
+			    Variable result;
                             Context newContext = new Context( c ) ;
                             newContext.addVariable("selected" , var ) ;
-                            if ( evaluateExpression(se.getCondition() , newContext).getType() instanceof BooleanType ) {
-                                if ( !((Boolean)evaluateExpression(se.getCondition() , newContext).getValue()).booleanValue() )
+                            result = evaluateExpression(condition , newContext);
+			    if (result instanceof BooleanVariable) {
+				    
+                                if (((Boolean)((BooleanVariable)result).getValue()).booleanValue())
                                     set.add( var ) ;
                             } else  {
                                 throw new LemRuntimeException("Not a Boolean Expression.") ;
                             }
                             newContext.finish() ;
+			}
+			/*
                         } else if ( rto != null ) {
                             Relationship r = rto.getRelationship() ;
                             metamodel.Class relatedClass = rto.getRelatedClass() ;
@@ -586,8 +616,9 @@ public class Interpreter {
                                 set.add( var ) ;
                             }                            
                         }
+			*/
                     }
-                }
+                } 
             }
             c = c.getParent();
         } while (c != null);

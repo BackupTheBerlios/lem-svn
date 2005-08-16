@@ -37,4 +37,34 @@ public class ObjectReferenceVariable extends Variable {
     public DataType getType() {
         return ObjectReferenceType.getInstance();
     }
+
+    /**
+     * Returns a new BooleanVariable representing whether this ObjectReferenceVariable
+     * refers to the same object as the given ObjectReferenceVariable.
+     *
+     * @param b the ObjectReferenceVariable with which to compare 
+     * @throws runtime.LemRuntimeException if <code>b</code> is not a NumericVariable
+     * @return a new BooleanVariable representing the truth of the equality
+     */
+    public Variable equal( Variable b ) throws LemRuntimeException {
+	boolean ret = (value == (runtime.Object)((ObjectReferenceVariable)b).getValue());
+        
+        if( ret )
+            return new BooleanVariable( "true" );
+        else
+            return new BooleanVariable( "false" );
+    }
+
+    /**
+     * Returns equal( b ).logicalNot().
+     *
+     * @param b the Variable with which to compare
+     * @throws runtime.LemRuntimeException if the call to equal() generates an exception
+     * @return the BooleanVariable representing the truth of this comparison
+     * @see NumericVariable#equal( Variable )
+     */
+    public Variable notEqual(Variable b) throws LemRuntimeException {
+        return equal( b ).logicalNot();
+    }
+
 }
