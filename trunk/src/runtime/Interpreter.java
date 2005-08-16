@@ -19,7 +19,15 @@ import java.util.HashMap;
  * @todo javadoc
  */
 public class Interpreter {
+    /**
+     * The object in which we are executing
+     */
     private runtime.Object currentObject;
+
+    /**
+     * The context in which the interpreter runs
+     */
+    private DomainContext domainContext = null;
     
     /** Creates a new instance of Interpreter
      * @param obj is the object that the Interpreter is
@@ -37,9 +45,11 @@ public class Interpreter {
      * @param c the Context in which the procedure should be interpreted
      * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
      */
-    public void interpret(Procedure p, Context c) throws LemRuntimeException {
+    public void interpret(Procedure p, DomainContext c) throws LemRuntimeException {
+	domainContext = c;
         ActionBlock block = p.getActionBlock();
         executeBlock(block, c);
+	domainContext = null; // ensure no other entry point tries to use this
     }
     
     /**
@@ -111,6 +121,8 @@ public class Interpreter {
      * @return the newly created runtime.Object
      */
     public runtime.Object executeCreateAction( CreateAction a, Context c ) throws LemRuntimeException {
+	Iterator i;
+
         // Create the new object
         runtime.Object o = new runtime.Object( a.getClasses() );
         
@@ -121,9 +133,19 @@ public class Interpreter {
         if( a.getVariable() != null )
             c.addVariable( a.getVariable().getVariableName(), new ObjectReferenceVariable( o ));
         
+	// Set up InstanceThreads
+	i = o.getInstances().iterator();
+	while (i.hasNext()) {
+		Instance instance = (Instance)i.next();
+		if (instance.instanceOfClass.isActive()) {
+			new InstanceInterpreter(instance, domainContext);
+		}
+	}
+	
         // Notify listeners that the object has been added
         LemObjectCreationEvent e = new LemObjectCreationEvent( o, a );
-        for( Iterator i = c.getLemEventListeners().iterator(); i.hasNext(); ) {
+        i = c.getLemEventListeners().iterator();
+	while (i.hasNext()) {
             LemEventListener l = (LemEventListener)i.next();
             l.objectCreated(e);
         }

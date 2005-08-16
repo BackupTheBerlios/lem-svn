@@ -56,6 +56,8 @@ public class AssociationInstance extends Instance {
      */
     public AssociationInstance( Association a ) {
         this.association = a;
+	// @todo: need something like this.
+	//super(a.getAssociationClassRole().getAssociationClass(), o);
     }
     
     public void setActiveInstance( Instance i ) {

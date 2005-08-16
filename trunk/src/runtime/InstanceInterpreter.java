@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Collection;
 import java.util.HashMap;
-import runtime.Context ;
 
 /**
  * This is the main InstanceInterpreter file.
@@ -22,13 +21,21 @@ public class InstanceInterpreter extends java.lang.Thread{
     final static int RUNNING = 2 ;
     /** state of the InstanceInterpreter e.g. stopped or running */
     private int state = STOPPED ;
+
+    /** Interpreter associated with this thread of execution */
+    private Interpreter interpreter;
+
+    /** The context in which this thread executes */
+    private DomainContext context;
     
     /** Creates a new instance of Interpreter
      * @param instance the instance to which this interpreter belongs.
      */
-    public InstanceInterpreter(runtime.Instance instance) {
+    public InstanceInterpreter(runtime.Instance instance, DomainContext c) {
         this.state = STOPPED ;
         this.instance = instance ;
+	context = c;
+	interpreter = new Interpreter(instance.instanceInObject) ;
         init() ;
         start() ;     
     }
@@ -55,9 +62,7 @@ public class InstanceInterpreter extends java.lang.Thread{
                             instance.currentState = newState ;
                             if ( newState instanceof NonDeletionState) {
                                 Procedure p = newState.getProcedure() ;
-                                Context newContext = new Context() ;
-                                Interpreter interpreter = new Interpreter(null) ;
-                                interpreter.interpret( p , newContext ) ;
+                                interpreter.interpret( p , context ) ;
                             }
                             break signal ;
                         }
@@ -105,9 +110,7 @@ public class InstanceInterpreter extends java.lang.Thread{
                         instance.currentState = newState ;
                         if ( newState instanceof NonDeletionState) {
                             Procedure p = newState.getProcedure() ;
-                            Context newContext = new Context() ;
-                            Interpreter interpreter = new Interpreter(null) ;
-                            interpreter.interpret( p , newContext ) ;
+                            interpreter.interpret( p , context ) ;
                         }
                     }
                 }

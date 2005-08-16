@@ -60,13 +60,9 @@ public class Instance {
      * processed before any signals from 'signalQueue'
      */
     List signalSelfQueue = new LinkedList();
-    
-
-    /**
-     * Creates a new instance of Instance.
-     */
-    protected Instance() {
-    }
+ 
+    /** @todo: AssociationInstance needs this to build. Should be deleted though */
+    public Instance() {}
     
     /**
      * Creates a new instance of Instance given the template metamodel.Class
@@ -88,6 +84,7 @@ public class Instance {
      * @param state the state in which this instance should begin
      * @throws runtime.LemRuntimeException in case any class attributes could not be initialised to their default values
      */
+    /* @todo: this shouldn't be used. delete.
     public Instance(metamodel.Class theClass, State state) throws LemRuntimeException {
         instanceOfClass = theClass;
         currentState = state;
@@ -95,7 +92,8 @@ public class Instance {
         initialiseAttributeInstances();
         initialiseAssociationInstances();
     }
-    
+    */
+
     private void initialiseAttributeInstances() throws LemRuntimeException {
         Iterator i = instanceOfClass.getAttributes().values().iterator();
         attributeInstances = new HashMap();

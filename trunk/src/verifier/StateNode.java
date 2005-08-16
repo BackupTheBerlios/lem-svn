@@ -63,6 +63,10 @@ public class StateNode extends AbstractDescriptionNode {
     }
     
     public void executeProcedure() {
+	/**
+	 * @todo: remove the ability to execute an arbitrary procedure.
+	 * Program entry must only be through a scenario
+	 */
         metamodel.Procedure p = this.state.getProcedure();
         runtime.DomainContext d = new DomainContext();
         ConsoleLogger c = new ConsoleLogger(d);
