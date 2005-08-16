@@ -27,5 +27,11 @@ public abstract class LemEvent {
     /** Creates a new instance of LemEvent */
     public LemEvent() {
     }
-    
+
+    /**
+     * Notify the given event listener that this LemEvent has occurred.
+     *
+     * @param listener the LemEventListener to notify
+     */
+    public abstract void notify( LemEventListener listener );
 }

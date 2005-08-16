@@ -55,5 +55,15 @@ public class LemObjectCreationEvent extends LemEvent {
     public metamodel.CreateAction getCreateAction() {
         return action;
     }
-    
+
+    /**
+     * Calls the objectCreated method on the given LemEventListener.
+     * Passes <code>this</code> as the parameter to the objectCreated
+     * method.
+     *
+     * @param listener the LemEventListener to notify
+     */
+    public void notify( LemEventListener listener ) {
+        listener.objectCreated( this );
+    }
 }
