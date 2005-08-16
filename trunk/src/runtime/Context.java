@@ -74,7 +74,7 @@ public class Context {
      * Adds the given object to this context
      * @param inObject the object to add to the context
      */
-    public void addObject(runtime.Object inObject) {
+    public synchronized void addObject(runtime.Object inObject) {
         objectList.add(inObject);
     }
 
@@ -82,7 +82,7 @@ public class Context {
      * Adds the given collection of objects to this context
      * @param inObjects the objects to add to the context
      */
-    public void addObjects(Collection inObjects) throws LemRuntimeException {
+    public synchronized void addObjects(Collection inObjects) throws LemRuntimeException {
         objectList.addAll(inObjects);
 	if (parentContext != null && objectList.size() > 128) {
 		throw new LemRuntimeException("Too many objects on stack.");
@@ -103,7 +103,7 @@ public class Context {
      * @param name the name of the variable
      * @return the variable, or null if there is no variable with that name
      */
-    public Variable getVariable( String name ) {
+    public synchronized Variable getVariable( String name ) {
         Variable v = (Variable)variableList.get( name );
         
         if( v == null && parentContext != null ) {
@@ -120,7 +120,7 @@ public class Context {
      * @param name the identifier of the variable
      * @param variable the variable to be added
      */
-    public void addVariable( String name, Variable variable ) {
+    public synchronized void addVariable( String name, Variable variable ) {
         variableList.put( name, variable );
     }
     

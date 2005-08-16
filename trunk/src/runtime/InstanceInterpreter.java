@@ -60,6 +60,7 @@ public class InstanceInterpreter extends java.lang.Thread{
 			        System.out.println("InstanceInterpreter executing procedure");
                                 Procedure p = newState.getProcedure() ;
                                 interpreter.interpret( p , context ) ;
+			        System.out.println("InstanceInterpreter done with proc");
 				return true;
                             } else {
 				return false;
@@ -80,6 +81,7 @@ public class InstanceInterpreter extends java.lang.Thread{
 		return;
 	
         while ( advance() );
+	System.out.println("InstanceInterpreter finished");
     }
     
     /** Advances the statemachine by one state (if possible)
@@ -109,6 +111,7 @@ public class InstanceInterpreter extends java.lang.Thread{
 			    System.out.println("InstanceInterpreter executing procedure");
                             Procedure p = newState.getProcedure() ;
                             interpreter.interpret( p , context ) ;
+			    System.out.println("InstanceInterpreter done with proc");
 			    return true;
                         } else {
 			    return false;

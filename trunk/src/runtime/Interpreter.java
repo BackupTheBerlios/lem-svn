@@ -205,6 +205,7 @@ public class Interpreter {
      */
     public void executeGenerateAction( GenerateAction a, Context c ) throws LemRuntimeException {
         // Create the new signal
+	System.out.println("execute generate action");
         Signal s = new Signal(a.getEvent());
         LinkedList p = a.getParameters();
         if (p != null) {
@@ -388,7 +389,7 @@ public class Interpreter {
             if (r.getVariableName().equals("self")) {
                 /* special case for self */
                 if (currentObject == null) {
-                    throw new LemRuntimeException("Cannot generate signal to self - not executing within an object");
+                    throw new LemRuntimeException("Cannot reference self - not executing within an object");
                 }
                 
                 try {
@@ -581,6 +582,7 @@ public class Interpreter {
         Expression condition = se.getCondition();
         
         do {
+	    synchronized (c) {
             Collection objectList = c.getObjectList();
             
             for (Iterator i = objectList.iterator(); i.hasNext();) {
@@ -620,6 +622,7 @@ public class Interpreter {
                     }
                 } 
             }
+	    }
             c = c.getParent();
         } while (c != null);
         return set ;
