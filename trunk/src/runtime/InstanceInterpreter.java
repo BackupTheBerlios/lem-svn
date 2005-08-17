@@ -40,33 +40,37 @@ public class InstanceInterpreter extends java.lang.Thread{
     public boolean init() throws LemRuntimeException {
 	metamodel.Class c = instance.getInstanceClass() ;
 	metamodel.StateMachine m = c.getStateMachine() ;
-	int tCount = m.getInitialisingTransitionCount() ;
-	
+	int tCount = m.getInitialisingTransitionCount();
+
+	if ( tCount == 0 )
+		return false;
+
 	while ( true ) {
-	    System.out.println("InstanceInterpreter getting a next signal");
-	    Signal s = instance.getNextSignal() ;
-	    System.out.println("InstanceInterpreter got a next signal");
+		System.out.println("InstanceInterpreter getting a next signal");
+		Signal s = instance.getNextSignal() ;
+		System.out.println("InstanceInterpreter got a next signal");
 	    
-	    if ( tCount > 0 ) {
-		Transition[] ts =  m.getInitialisingTransitions() ;
-		for ( int i  = 0 ; i < tCount ; i++) {
-		    Transition t = ts[i] ;
-		    if (s.getEvent().getName().equals( t.getEvent().getName() )) {
+		Iterator i = m.getTransitionList().iterator();
+		while (i.hasNext()) {
+		    Transition t = (Transition)i.next();
+
+		    /* Skip non-initialising transition */
+		    if ( t.getFromState() != null )
+			    continue;
+
+		    if ( s.getEvent() == t.getEvent() ) {
 			metamodel.State newState = t.getToState() ;
 			instance.currentState = newState ;
 			System.out.println("InstanceInterpreter transitioning state to " + newState.getName());
 			if ( newState instanceof NonDeletionState) {
-			    System.out.println("InstanceInterpreter executing procedure");
 			    Procedure p = newState.getProcedure() ;
 			    interpreter.interpret( p , context ) ;
-			    System.out.println("InstanceInterpreter done with proc");
 			    return true;
 			} else {
 			    return false;
 			}
 		    }
 		}
-	    }
 	}
     }
     
@@ -88,40 +92,39 @@ public class InstanceInterpreter extends java.lang.Thread{
      *and will run the procedure associated with the new state if the new state is not a
      *DeletionState.
      **/
-    private boolean advance() {
-	metamodel.Class c = instance.getInstanceClass() ;
-	metamodel.StateMachine m = c.getStateMachine() ;
-	metamodel.State currentState = instance.currentState ;
-	int tCount = m.getStateTransitionCount() ;
+	private boolean advance() throws LemRuntimeException {
+		metamodel.Class c = instance.getInstanceClass() ;
+		metamodel.StateMachine m = c.getStateMachine() ;
+		metamodel.State currentState = instance.currentState ;
+
+		if (m.getStateTransitionCount() == 0)
+			return false;
 	
-	try {
-	    System.out.println("InstanceInterpreter getting a next signal");
-	    Signal s = instance.getNextSignal() ;
-	    System.out.println("InstanceInterpreter got a next signal");
-	    if ( tCount > 0 ) {
-		Transition[] ts =  m.getTransitions() ;
-		for ( int i  = 0 ; i < tCount ; i++) {
-		    Transition t = ts[i] ;
-		    if (s.getEvent().getName().equals( t.getEvent().getName() )
-		    && t.getFromState().getName().equals(currentState.getName()) ) {
+		System.out.println("InstanceInterpreter getting a next signal");
+		Signal s = instance.getNextSignal() ;
+		System.out.println("InstanceInterpreter got a next signal");
+		Iterator i =  m.getTransitionList().iterator();
+		while (i.hasNext()) {
+		    Transition t = (Transition)i.next();
+		    
+		    /* Skip initialising transition */
+		    if ( t.getFromState() == null )
+			    continue;
+		    
+		    if ( s.getEvent() == t.getEvent()
+			    	&& t.getFromState() == currentState ) {
 			metamodel.State newState = t.getToState() ;
 			instance.currentState = newState ;
 			System.out.println("InstanceInterpreter transitioning state to " + newState.getName());
 			if ( newState instanceof NonDeletionState) {
-			    System.out.println("InstanceInterpreter executing procedure");
 			    Procedure p = newState.getProcedure() ;
 			    interpreter.interpret( p , context ) ;
-			    System.out.println("InstanceInterpreter done with proc");
 			    return true;
 			} else {
 			    return false;
 			}
 		    }
 		}
-	    }
-	} catch (Exception e) {
-	    return false;
+		return true;
 	}
-	return true;
-    }
 }
