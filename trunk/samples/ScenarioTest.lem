@@ -7,17 +7,19 @@ model TestModel is
 				behaviour is
 					state s1 is
 					{
-						objref a;
-						a := select one from instances of A where selected /= self;
-						generate Ev1 to a;
+						for each myobj in select one from instances of A where selected /= self
+						{
+							generate Ev1 to myobj;
+						}
 					}
 					end s1;
 
 					state s2 is
 					{
-						objref a;
-						a := select one from instances of A where selected /= self;
-						generate Ev1 to a;
+						for each myobj in select one from instances of A where selected /= self
+						{
+							generate Ev1 to myobj;
+						}
 					}
 					end s2;
 					
@@ -33,7 +35,7 @@ model TestModel is
 			objref a2;
 			
 			a1 := create A;
-//			a2 := create A;
+			a2 := create A;
 
 			generate Ev1 to a1;
 		}
