@@ -48,12 +48,17 @@ public class ScenarioNode extends AbstractDescriptionNode  {
         executeProcedure.setText("Execute");
         executeProcedure.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                executeScenario();
+		(new Thread() {
+		    public void run() {
+			executeScenario();
+		    }
+		}).start();
             }
         });
         contextMenu.add(executeProcedure);
         return contextMenu;
     }
+    
     public void executeScenario() {
         runtime.DomainContext d = new DomainContext();
         ConsoleLogger c = new ConsoleLogger(d);
