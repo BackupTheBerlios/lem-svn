@@ -1121,7 +1121,7 @@ void ForStatement() : {}
 	<FOR> <EACH>
 	Identifier()
 	<IN>
-	VariableReference()
+	RValue()
 	ActionBlock()	
 }
 
