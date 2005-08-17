@@ -54,4 +54,13 @@ public class ObjectReferenceType extends CoreDataType {
         }
         return instance;
     }
+    
+    /**
+     * Returns the String "objref".
+     *
+     * @return "objref" 
+     */
+    public String toString() {
+	return "objref";
+    }
 }
