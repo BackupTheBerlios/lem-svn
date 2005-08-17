@@ -22,6 +22,7 @@ public class Splasher {
      * Splasher contains the amount of time that the splash window should be 
      * displayed (2000), the target class to be run (verifier.Eleminator) and 
      * the target image to be displayed (splash/eLEMinator.jpg).
+     * @param args command line arguments
      */
     public static void main(String[] args) {
           SplashWindow spl;
