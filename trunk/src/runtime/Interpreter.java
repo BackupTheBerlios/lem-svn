@@ -340,7 +340,7 @@ public class Interpreter {
         
         if( value.getCoreDataType() != destination.getCoreDataType() ) {
             throw new LemRuntimeException( "Type mismatch: evaluated '" + value.getType().getName() + "'"
-                    + ", expected '" + destination.getType() + ", name: " + r.getVariableName() );
+                    + ", expected '" + destination.getType() + "', name: " + r.getVariableName() );
         }
         
         destination.setValue( value.getValue() );
@@ -594,6 +594,7 @@ public class Interpreter {
                             result = evaluateExpression(condition , newContext);
 			    if (result instanceof BooleanVariable) {
 				    
+				// returns true even when result represents "false"?
                                 if (((Boolean)((BooleanVariable)result).getValue()).booleanValue())
                                     set.add( var ) ;
                             } else  {
