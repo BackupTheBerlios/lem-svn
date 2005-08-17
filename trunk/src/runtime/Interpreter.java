@@ -599,7 +599,19 @@ public class Interpreter {
 				    } else  {
 					throw new LemRuntimeException("Not a Boolean Expression.") ;
 				    }
-				    newContext.finish() ;
+				/** @todo:
+				This context should not really be allowed
+				to create new objects, because that might
+				destroy our iterator integrity when those
+				objects are put into their parent context.
+				In fact, even when we don't have any objects
+				to create, this line will make the iterator
+				throw a concurrent modifiction exception
+				but that could be avoided if we only add to
+				the parent set if the finishing context's
+				objectlist is empty.
+				//    newContext.finish() ;
+				*/
 				}
 				
 				if ( goodVariable && rto != null ) {
