@@ -218,7 +218,7 @@ public class Interpreter {
         VariableReference vr = a.getTarget();
         Variable targetRef = getVariable( vr, c );
         if (!(targetRef instanceof ObjectReferenceVariable)) {
-            throw new LemRuntimeException("Type mismatch: expected objref");
+            throw new LemRuntimeException("Type mismatch: expected objref, got " + targetRef.getType().getName());
         }
         
         runtime.Object target = (runtime.Object)((ObjectReferenceVariable)targetRef).getValue();
@@ -308,12 +308,14 @@ public class Interpreter {
         if (!(var instanceof SetVariable)) {
             throw new LemRuntimeException("Type mismatch: expected expression which evaluates to 'set'");
         }
+	System.out.println("for each");
         SetVariable set = (SetVariable)var;
         Iterator i = ((Collection)set.getValue()).iterator();
         while (i.hasNext()) {
+	 	System.out.println("obj");
             Variable select = (Variable)i.next();
             Context newContext = new Context( c );
-            newContext.addVariable(selectName , var );
+            newContext.addVariable(selectName , select );
             executeBlock(block, newContext);
             newContext.finish();
         }
@@ -585,31 +587,36 @@ public class Interpreter {
 			    
 			    if ( instance.getInstanceClass() == selectedClass ) {
 				Variable var = VariableFactory.newVariable(ObjectReferenceType.getInstance(), o);
+				boolean goodVariable = true;
+				
 				if ( condition != null ) {
 				    Variable result;
 				    Context newContext = new Context( c ) ;
 				    newContext.addVariable("selected" , var ) ;
 				    result = evaluateExpression(condition , newContext);
 				    if (result instanceof BooleanVariable) {
-					if (((Boolean)((BooleanVariable)result).getValue()).booleanValue())
-					    set.add( var ) ;
+					if (!((Boolean)((BooleanVariable)result).getValue()).booleanValue()) {
+						goodVariable = false;
+					}
 				    } else  {
 					throw new LemRuntimeException("Not a Boolean Expression.") ;
 				    }
 				    newContext.finish() ;
 				}
-				/*
-				} else if ( rto != null ) {
+				
+				if ( goodVariable && rto != null ) {
 				    Relationship r = rto.getRelationship() ;
 				    metamodel.Class relatedClass = rto.getRelatedClass() ;
 				    metamodel.Class instanceClass = instance.getInstanceClass() ; 
 				    HashMap associations = instanceClass.getAssociations() ; 
-				    if ( associations.containsKey( r.getName() ) && 
-					    ((metamodel.Class) associations.get( r.getName())).getName().equals(relatedClass.getName() ) ) {
-					set.add( var ) ;
+				    if ( ! (associations.containsKey( r.getName() ) && 
+					    ((metamodel.Class) associations.get( r.getName())).getName().equals(relatedClass.getName() ))) {
+					    goodVariable = false;
 				    }                            
 				}
-				*/
+
+				if (goodVariable)
+				        set.addToSet( var ) ;
 			    }
 			} 
 		    }
