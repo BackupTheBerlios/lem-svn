@@ -10,7 +10,7 @@
     <property name="classes.dir" value="${build.dir}/classes" />
     <property name="etc.dir" value="${basedir}/etc" />
     <property name="javacchome"
-        value="/usr/share/java/" />
+        value="/students/u3293115/comp3500/javacc-3.2/" />
     <property name="deploy.name" value="${name}.jar" />
     <property name="lib.dir" value="${basedir}/lib" />
 
@@ -75,19 +75,17 @@
     <javacc target="${src.dir}/parser/LemParser.jj"
     javacchome="${javacchome}"
     outputdirectory="${src.dir}/parser" />
-    <!--
     <exec executable="perl"
       output="${src.dir}/verifier/Visitor.java">
       <arg line="${src.dir}/util/generateVisitor.pl
       ${src.dir}/parser/LemParserVisitor.java"/>
     </exec>
-    -->
     <touch file="${src.dir}/parser/.timestamp" />
   </target>
 
   <target name="compile_one" depends="init">
     <javac srcdir="${src.dir}" destdir="${classes.dir}"
-    debug="false" source="1.4" includes="${filename}" deprecation="true"
+    debug="true" source="1.4" includes="${filename}" deprecation="true"
     optimize="false"/>
   </target>
   
@@ -103,7 +101,7 @@
     <copy file="${src.dir}/splash/eLEMinator.jpg" todir="${classes.dir}/splash"/>
     
     <javac srcdir="${src.dir}" destdir="${classes.dir}"
-        classpathref="build.classpath" debug="false" source="1.4" 
+        classpathref="build.classpath" debug="true" source="1.4" 
         deprecation="true" optimize="false"
         excludes="test/**" />
   </target>
@@ -177,7 +175,7 @@
   
   <target name="compile_tests" depends="compile">
     <javac srcdir="${src.dir}/test" destdir="${classes.dir}"
-        classpathref="build.classpath" debug="false" source="1.4" 
+        classpathref="build.classpath" debug="true" source="1.4" 
         deprecation="true" optimize="false" />
   </target>
   

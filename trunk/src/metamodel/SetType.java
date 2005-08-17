@@ -53,4 +53,14 @@ public class SetType extends CoreDataType {
         }
         return instance;
     }
+
+    /**
+     * Returns the String "set".
+     *
+     * @return "set" 
+     */
+    public String toString() {
+	return "set";
+    }
+
 }

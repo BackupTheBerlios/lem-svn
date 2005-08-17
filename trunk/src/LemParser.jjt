@@ -238,6 +238,7 @@ TOKEN : /* IDENTIFIERS */
 | <PATTERN: "pattern" >
 | <NUMERIC: "numeric" >
 | <OBJREF: "objref" >
+| <SET: "set" >
 | <UNITS: "units" >
 | <LENGTH: "length" >
 | <PRECISION: "precision" >
@@ -487,7 +488,7 @@ void TypeDeclaration() : {
 }
 
 void PrimitiveType() : {}
-{ "arbitrary_id" | "numeric" | "string" | "boolean" | "date" | "objref" }
+{ "arbitrary_id" | "numeric" | "string" | "boolean" | "date" | "objref" | "set" }
 
 void TypeSpecification() : {}
 {
@@ -498,6 +499,7 @@ void TypeSpecification() : {}
 	  | StringTypeSpecification() 
           | DateTypeSpecification()
 	  | ObjectReferenceTypeSpecification()
+	  | SetTypeSpecification()
 	)
 }
 
@@ -535,6 +537,12 @@ void ObjectReferenceTypeSpecification() : {}
 {
 	<OBJREF>
 }
+
+void SetTypeSpecification() : {}
+{
+	<SET>
+}
+
 
 void NumericTypeSpecification() : {}
 {

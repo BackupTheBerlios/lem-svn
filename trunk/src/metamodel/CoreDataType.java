@@ -56,6 +56,7 @@ public abstract class CoreDataType implements DataType {
         register( StringType.getInstance() );
         register( TimestampType.getInstance() );
         register( ObjectReferenceType.getInstance() );
+	register( SetType.getInstance() );
     }
     
     /** Getter for property name.

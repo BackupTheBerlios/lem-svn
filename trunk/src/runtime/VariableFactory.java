@@ -9,6 +9,7 @@ import metamodel.DomainSpecificDataType;
 import metamodel.NumericType;
 import metamodel.ObjectReferenceType;
 import metamodel.StringType;
+import metamodel.SetType;
 
 /**
  * The VariableFactory is responsible for creating new subtypes of the Variable
@@ -40,7 +41,12 @@ public class VariableFactory {
             v = new BooleanVariable( (String)value );
         } else if( c.equals( ObjectReferenceType.getInstance() )) {
             v = new ObjectReferenceVariable( (runtime.Object)value );
-        } else {
+        } else if( c.equals( SetType.getInstance() )) {
+	    if (value != null) {
+		    throw new LemRuntimeException( "VariableFactory unable to create SetVariable with non-null value" );
+	    }
+            v = new SetVariable( null );
+	} else {
             throw new LemRuntimeException( "VariableFactory for type '" + type.getName() + "' unimplemented" );
         }
         
