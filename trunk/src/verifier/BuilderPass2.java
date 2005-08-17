@@ -540,7 +540,7 @@ public class BuilderPass2 extends Visitor {
         ForStatement f = new ForStatement();
         
         f.setSelectVariable( getIdentifier(node.jjtGetChild( 0 )) );
-        f.setSetReference( (VariableReference)node.jjtGetChild( 1 ).jjtAccept( this, null ));
+        f.setSetExpression( (Expression)node.jjtGetChild( 1 ).jjtAccept( this, null ));
 	f.setBlock( (ActionBlock)node.jjtGetChild( 2 ).jjtAccept( this, null ));
         
         return f;
