@@ -9,10 +9,10 @@ model TestModel is
 					{
 						set myset;
 						myset := select one from instances of A where selected /= self;
-						for each myobj in myset
-						{
-							generate Ev1 to myobj;
-						}
+//						for each myobj in myset
+//						{
+//							generate Ev1 to myobj;
+//						}
 					}
 					end s1;
 
@@ -20,10 +20,10 @@ model TestModel is
 					{
 						set myset;
 						myset := select one from instances of A where selected /= self;
-						for each myobj in myset
-						{
-							generate Ev1 to myobj;
-						}
+//						for each myobj in myset
+//						{
+//							generate Ev1 to myobj;
+//						}
 					}
 					end s2;
 					

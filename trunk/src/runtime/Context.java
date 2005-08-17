@@ -19,31 +19,31 @@ public class Context {
     /** 
      * A collection of all runtime objects known to this context
      */
-    Collection objectList = new ArrayList();
+    private Collection objectList = new ArrayList();
     
     /**
      * A collection of all variables local to the context
      *
      * @todo Should this be a HashMap?
      */
-    HashMap variableList = new HashMap();
+    private HashMap variableList = new HashMap();
     
     /**
      * A collection of LemEventListener instances interested in 
      * receiving notification of events occuring within this context.
      */
-    Collection listeners = new ArrayList();
+    private Collection listeners = new ArrayList();
 
     /**
      * This context's parent.
      */
-    Context parentContext = null;
+    private Context parentContext = null;
 
     /**
      * A collection of AssociationInstances known to this context.
      */
-    HashMap associationInstances = new HashMap();
-    HashMap removedAssociations = new HashMap();
+    private HashMap associationInstances = new HashMap();
+    private HashMap removedAssociations = new HashMap();
     
     /**
      * The nullary Context constructor. Creates a new Context with no objects,
@@ -129,11 +129,13 @@ public class Context {
      * all visible objects for participation in all relevant associations,
      * etc.
      */
-    public void finish() throws LemRuntimeException {
+    public synchronized void finish() throws LemRuntimeException {
 	if (parentContext != null) {
-		parentContext.addObjects(objectList);
-                parentContext.addAssociationInstance(associationInstances);
-                parentContext.removeAssociationInstance(removedAssociations);
+		synchronized (parentContext) {
+			parentContext.addObjects(objectList);
+	                parentContext.addAssociationInstance(associationInstances);
+	                parentContext.removeAssociationInstance(removedAssociations);
+		}
 	}
     }
     

@@ -308,11 +308,9 @@ public class Interpreter {
         if (!(var instanceof SetVariable)) {
             throw new LemRuntimeException("Type mismatch: expected expression which evaluates to 'set'");
         }
-	System.out.println("for each");
         SetVariable set = (SetVariable)var;
         Iterator i = ((Collection)set.getValue()).iterator();
         while (i.hasNext()) {
-	 	System.out.println("obj");
             Variable select = (Variable)i.next();
             Context newContext = new Context( c );
             newContext.addVariable(selectName , select );
