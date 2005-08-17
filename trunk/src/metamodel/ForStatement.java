@@ -8,7 +8,7 @@ package metamodel;
  */
 public class ForStatement extends Action {
 	private String selectVariable;
-	private VariableReference setReference;
+	private Expression setExpression;
 	private ActionBlock block;
     
 	/** Creates a new instance of IfStatement */
@@ -21,8 +21,8 @@ public class ForStatement extends Action {
 	}
 
 	/** returns the loop set variable */
-	public VariableReference getSetReference() {
-		return setReference;
+	public Expression getSetExpression() {
+		return setExpression;
 	}
 
 	/** returns the loop block */
@@ -36,8 +36,8 @@ public class ForStatement extends Action {
 	}
 
 	/** sets the loop st variable */
-	public void setSetReference(VariableReference s) {
-		setReference = s;
+	public void setSetExpression(Expression e) {
+		setExpression = e;
 	}
 
 	/** sets the loop's block */
