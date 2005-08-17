@@ -303,13 +303,12 @@ public class Interpreter {
     public void executeForStatement( ForStatement a, Context c ) throws LemRuntimeException {
         String selectName = a.getSelectVariable();
         ActionBlock block = a.getBlock();
-        VariableReference setRef = a.getSetReference();
-        Variable var = getVariable( setRef, c );
-        SetVariable set;
+        Expression setExp = a.getSetExpression();
+        Variable var = evaluateExpression( setExp, c );
         if (!(var instanceof SetVariable)) {
-            throw new LemRuntimeException("Type mismatch: expected set variable");
+            throw new LemRuntimeException("Type mismatch: expected expression which evaluates to 'set'");
         }
-        set = (SetVariable)var;
+        SetVariable set = (SetVariable)var;
         Iterator i = ((Collection)set.getValue()).iterator();
         while (i.hasNext()) {
             Variable select = (Variable)i.next();
