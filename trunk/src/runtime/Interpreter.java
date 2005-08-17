@@ -570,56 +570,53 @@ public class Interpreter {
     
     public Variable evaluateSelectExpression(SelectExpression se, Context c) throws LemRuntimeException {
         metamodel.Class selectedClass = se.getSelectedClass() ;
-        SetVariable set = new SetVariable() ;
         RelatedToOperation rto = se.getRelatedToOperation() ;
         Expression condition = se.getCondition();
-        
-        do {
+	SetVariable set = new SetVariable() ;
+	do {
 	    synchronized (c) {
-            Collection objectList = c.getObjectList();
-            
-            for (Iterator i = objectList.iterator(); i.hasNext();) {
-                runtime.Object o = (runtime.Object)i.next();
-                
-                for (Iterator j = o.getInstances().iterator(); j.hasNext();) {
-                    Instance instance = (Instance)j.next();
-                    
-                    if ( instance.getInstanceClass() == selectedClass ) {
-                        Variable var = VariableFactory.newVariable(ObjectReferenceType.getInstance(), o);
-                        if ( condition != null ) {
-			    Variable result;
-                            Context newContext = new Context( c ) ;
-                            newContext.addVariable("selected" , var ) ;
-                            result = evaluateExpression(condition , newContext);
-			    if (result instanceof BooleanVariable) {
-				    
-				// returns true even when result represents "false"?
-                                if (((Boolean)((BooleanVariable)result).getValue()).booleanValue())
-                                    set.add( var ) ;
-                            } else  {
-                                throw new LemRuntimeException("Not a Boolean Expression.") ;
-                            }
-                            newContext.finish() ;
-			}
-			/*
-                        } else if ( rto != null ) {
-                            Relationship r = rto.getRelationship() ;
-                            metamodel.Class relatedClass = rto.getRelatedClass() ;
-                            metamodel.Class instanceClass = instance.getInstanceClass() ; 
-                            HashMap associations = instanceClass.getAssociations() ; 
-                            if ( associations.containsKey( r.getName() ) && 
-                                    ((metamodel.Class) associations.get( r.getName())).getName().equals(relatedClass.getName() ) ) {
-                                set.add( var ) ;
-                            }                            
-                        }
-			*/
-                    }
-                } 
-            }
+		    Collection objectList = c.getObjectList();
+		    
+		    for (Iterator i = objectList.iterator(); i.hasNext();) {
+			runtime.Object o = (runtime.Object)i.next();
+			
+			for (Iterator j = o.getInstances().iterator(); j.hasNext();) {
+			    Instance instance = (Instance)j.next();
+			    
+			    if ( instance.getInstanceClass() == selectedClass ) {
+				Variable var = VariableFactory.newVariable(ObjectReferenceType.getInstance(), o);
+				if ( condition != null ) {
+				    Variable result;
+				    Context newContext = new Context( c ) ;
+				    newContext.addVariable("selected" , var ) ;
+				    result = evaluateExpression(condition , newContext);
+				    if (result instanceof BooleanVariable) {
+					if (((Boolean)((BooleanVariable)result).getValue()).booleanValue())
+					    set.add( var ) ;
+				    } else  {
+					throw new LemRuntimeException("Not a Boolean Expression.") ;
+				    }
+				    newContext.finish() ;
+				}
+				/*
+				} else if ( rto != null ) {
+				    Relationship r = rto.getRelationship() ;
+				    metamodel.Class relatedClass = rto.getRelatedClass() ;
+				    metamodel.Class instanceClass = instance.getInstanceClass() ; 
+				    HashMap associations = instanceClass.getAssociations() ; 
+				    if ( associations.containsKey( r.getName() ) && 
+					    ((metamodel.Class) associations.get( r.getName())).getName().equals(relatedClass.getName() ) ) {
+					set.add( var ) ;
+				    }                            
+				}
+				*/
+			    }
+			} 
+		    }
 	    }
-            c = c.getParent();
-        } while (c != null);
-        return set ;
+	    c = c.getParent();
+	} while (c != null);
+	return set;
     }
     
     /**
