@@ -1,4 +1,4 @@
-/* 
+/*
  * DeleteAction.java
  *
  * Copyright (C) 2005 James Ring
@@ -29,34 +29,34 @@ import java.util.Iterator;
  * @author sjr
  */
 public class DeleteAction extends Action {
-    
-    /**
-     * The reference to the variable which will contain a reference to the
-     * victim object. 
-     */
-    VariableReference variable = null;
-    
-    /** Creates a new instance of DeleteAction */
-    public DeleteAction() {
-    }
-    
-    /**
-     * Gets the reference to the variable which will contain a reference to the 
-     * victim object.
-     *
-     * @return the variable reference
-     */
-    public VariableReference getVariable() {
-        return variable;
-    }
 
-    /**
-     * Sets the reference to the variable which will contain a reference to the
-     * victim object.
-     *
-     * @param variable the variable reference
-     */
-    public void setVariable(VariableReference variable) {
-        this.variable = variable;
-    }
+	/**
+	 * The reference to the variable which will contain a reference to the
+	 * victim object. 
+	 */
+	VariableReference variable = null;
+
+	/** Creates a new instance of DeleteAction */
+	public DeleteAction() {
+	}
+
+	/**
+	 * Gets the reference to the variable which will contain a reference to the 
+	 * victim object.
+	 *
+	 * @return the variable reference
+	 */
+	public VariableReference getVariable() {
+		return variable;
+	}
+
+	/**
+	 * Sets the reference to the variable which will contain a reference to the
+	 * victim object.
+	 *
+	 * @param variable the variable reference
+	 */
+	public void setVariable(VariableReference variable) {
+		this.variable = variable;
+	}
 }
