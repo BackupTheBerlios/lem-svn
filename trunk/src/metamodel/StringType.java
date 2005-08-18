@@ -19,12 +19,6 @@
  * USA. 
  */
 
-/*
- * StringType.java
- *
- * Created on January 31, 2004, 12:27 PM
- */
-
 package metamodel;
 /**
  * A class representing the String core data type. This class is a singleton. 

@@ -19,12 +19,6 @@
  * USA. 
  */
 
-/*
- * TimestampType.java
- *
- * Created on January 31, 2004, 12:37 PM
- */
-
 package metamodel;
 /**
  * A class representing the Timestamp core data type. This class is a singleton. 

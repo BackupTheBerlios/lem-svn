@@ -19,12 +19,6 @@
  * USA. 
  */
 
-/*
- * RealType.java
- *
- * Created on January 31, 2004, 12:32 PM
- */
-
 package metamodel;
 /**
  * A class representing the Real core data type. This class is a singleton. 

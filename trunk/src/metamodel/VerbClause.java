@@ -19,12 +19,6 @@
  * USA. 
  */
 
-/*
- * VerbClause.java
- *
- * Created on April 28, 2004, 4:45 AM
- */
-
 package metamodel;
 /**
  * Represents the VerbClause used to describe a perspective of an association
