@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <project name="lem" default="jarfile" basedir=".">
 
+    <property file="build.properties" />
     <property name="name" value="lem" />
     <property name="src.dir" value="${basedir}/src" />
     <property name="model.dir" value="${basedir}/model" />
@@ -9,8 +10,6 @@
     <property name="build.dir" value="${basedir}/build" />
     <property name="classes.dir" value="${build.dir}/classes" />
     <property name="etc.dir" value="${basedir}/etc" />
-    <property name="javacchome"
-        value="/students/u3293115/comp3500/javacc-3.2/" />
     <property name="deploy.name" value="${name}.jar" />
     <property name="lib.dir" value="${basedir}/lib" />
 
@@ -69,17 +68,19 @@
   
   <target name="generate" depends="init,cleanjjt_maybe">
     <jjtree target="${src.dir}/LemParser.jjt"
-    javacchome="${javacchome}"
+    javacchome="${javacc.home}"
     outputdirectory="${src.dir}/parser" />
 
     <javacc target="${src.dir}/parser/LemParser.jj"
-    javacchome="${javacchome}"
+    javacchome="${javacc.home}"
     outputdirectory="${src.dir}/parser" />
+
     <exec executable="perl"
       output="${src.dir}/verifier/Visitor.java">
       <arg line="${src.dir}/util/generateVisitor.pl
       ${src.dir}/parser/LemParserVisitor.java"/>
     </exec>
+
     <touch file="${src.dir}/parser/.timestamp" />
   </target>
 
@@ -144,12 +145,12 @@
       <link href="http://java.sun.com/products/jdk/1.4/docs/api" />
     </javadoc>
     <jjdoc target="${src.dir}/LemParser.jjt"
-    javacchome="${javacchome}"
+	    javacchome="${javacc.home}"
     outputfile="${doc.dir}/jjdoc/LemParser.html"
     onetable="false" />
   </target>
   
-  <target name="run" depends="init">
+  <target name="run" depends="compile">
     <java classname="splash.Splasher" fork="true"
     classpathref="run.classpath"/>
   </target>
