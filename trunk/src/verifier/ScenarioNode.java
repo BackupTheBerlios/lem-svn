@@ -5,6 +5,8 @@
  */
 package verifier;
 
+import java.awt.BorderLayout;
+import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import metamodel.Scenario;
@@ -60,10 +62,19 @@ public class ScenarioNode extends AbstractDescriptionNode  {
     }
     
     public void executeScenario() {
+	JDialog dlg = new JDialog();
+	
         runtime.DomainContext d = new DomainContext();
         ConsoleLogger c = new ConsoleLogger(d);
         runtime.Interpreter i = new Interpreter(null);
-        try{
+
+	JContextLoggerPanel p = new JContextLoggerPanel( d );
+	
+	dlg.getContentPane().setLayout( new BorderLayout() );
+	dlg.getContentPane().add( p, BorderLayout.CENTER );
+	dlg.setVisible( true );
+	
+	try{
             i.interpret(scenario,  d);
         } catch(LemRuntimeException e) {
             System.out.println(e);
