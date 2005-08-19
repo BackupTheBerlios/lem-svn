@@ -53,7 +53,7 @@ public interface LemEventListener {
      *  attribute changed values.
      * @param attributeName The name of the attribute which has changed.
      */
-//    void attributeChange(LemEvent event, String attributeName);
+    void attributeChange(LemAttributeChangeEvent event);
     
     /**
      * Called by the runtime when a DeleteAction has been executed successfully
