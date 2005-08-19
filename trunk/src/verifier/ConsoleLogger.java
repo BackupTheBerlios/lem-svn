@@ -79,10 +79,13 @@ public class ConsoleLogger implements runtime.LemEventListener {
 	
 	/**
 	 * Called by the runtime when an AssignmentAction has been executed.
+	 * Prints old value and new value to console.
 	 * @param e The event representing the attribute change
 	 */
 	public void attributeChange(LemAttributeChangeEvent e) {
-		/*Hello*/
+		String message = " AC ";
+		logger.debug(counter + message + e.getOldValue() + " --> " + e.getNewValue());
+		counter ++;
 	}
 	
 }
