@@ -35,6 +35,11 @@ public class BuilderPass2 extends Visitor {
      * A reference to the class in which we're currently visiting nodes
      */
     private metamodel.Class currentClass = null;
+
+   /**
+     * A reference to the action block in which we're currently visiting nodes
+     */    
+    private ActionBlock currentBlock = null;
     
     /**
      * Creates a new instance of ModelFitout
@@ -224,12 +229,27 @@ public class BuilderPass2 extends Visitor {
     public Object visit( LEMActionBlock node, Object data ) throws LemException {
 //        ActionBlock a = (ActionBlock)getMapper().getObject(node);
         ActionBlock a = new ActionBlock();
-        LinkedList varDecls = (LinkedList)node.jjtGetChild( 0 ).jjtAccept(this, data);
+        
+        // set the ActionBlock we are visiting as the current block
+        if(currentBlock != null)
+            a.setParent(currentBlock);
+        currentBlock = a;
+        
+        // visit the variable declaration within this block
+        LinkedList varDecls = (LinkedList)node.jjtGetChild( 0 ).jjtAccept(this, data); 
+        for( int i = 0; i < varDecls.size(); i++ ) {
+            VariableDeclaration v = (VariableDeclaration)varDecls.get(i);
+            if(!a.addVariableDeclaration(v))
+                throw new LemException("Double declaration of variable: " +v.getVariableName() );
+        }
+        
+        // visit the actions within this block
         LinkedList stmts = (LinkedList)node.jjtGetChild( 1 ).jjtAccept(this, data);
         
-        for( int i = 0; i < varDecls.size(); i++ ) {
-            a.addVariableDeclaration( (VariableDeclaration)varDecls.get( i ));
-        }
+        // reset the current block to the parent so that all local variables used
+        // within this block is no longer valid
+        if(a.getParent() != null)
+            currentBlock = a.getParent();
         
         for( int i = 0; i < stmts.size(); i++ ) {
             a.addAction( (Action)stmts.get( i ));
@@ -807,12 +827,13 @@ public class BuilderPass2 extends Visitor {
      * @return
      */
     public Object visit( LEMVariableReference node, Object data ) throws LemException {
-	if( node.jjtGetNumChildren() == 0 ) {
-	    // 'self' reference.
-	    return new VariableReference( "self" );
-	} else if( node.jjtGetNumChildren() == 1 ) {
+        if( node.jjtGetNumChildren() == 1 ) {
             // bare variable reference
-            return new VariableReference( getIdentifier(node.jjtGetChild(0) ));
+            String variableName = getIdentifier(node.jjtGetChild(0) );
+            if(!currentBlock.isValidVariable(variableName)) {
+                throw new LemException("Undeclared variable.");
+            }
+            return new VariableReference(variableName );
         } else if( node.jjtGetNumChildren() == 2 ) {
             // object.variable-style reference, eg. "publisher.name"
             VariableReference obj = (VariableReference)visit( (LEMObjectReference)node.jjtGetChild(0), null );
@@ -820,7 +841,7 @@ public class BuilderPass2 extends Visitor {
             return new VariableReference( obj.getVariableName(), variableName );
         }
         
-        throw new LemException( "LEMVariableReference has neither 0, 1 nor 2 children" );
+        throw new LemException( "LEMVariableReference has neither 1 nor 2 children" );
     }
     
     /**
