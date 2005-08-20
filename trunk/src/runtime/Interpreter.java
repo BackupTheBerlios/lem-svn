@@ -1,5 +1,25 @@
 /*
- * Interpreter.java
+ * Interpreter.java - An optional brief description of the file
+ * This Class interprets and executes Action Language in given cotexts.
+ * Copyright (C) 2005 sjr
+ * Copyright (C) 2004 Nick Piggin
+ * Copyright (C) 2004 Thuan Seah
+ * Copyright (C) 2004 Shuku Torabi
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
  */
 
 package runtime;
@@ -11,6 +31,7 @@ import java.util.LinkedList;
 import java.util.Collection;
 import java.util.ArrayList ;
 import java.util.HashMap;
+
 
 /**
  * This is the main interpreter file.
@@ -27,12 +48,12 @@ public class Interpreter {
      * scenario.
      */
     private LinkedList createdThreads = new LinkedList();
-
+    
     /**
      * The object in which we are executing
      */
     private runtime.Object currentObject;
-
+    
     /**
      * The context in which the interpreter runs
      */
@@ -46,6 +67,11 @@ public class Interpreter {
         currentObject = obj;
     }
     
+    /** start interpreting ... */
+    public void run() {
+        
+    }
+    
     /**
      * Interpret the given Procedure by calling executeBlock on Procedure's
      * main ActionBlock.
@@ -55,12 +81,12 @@ public class Interpreter {
      * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
      */
     public void interpret(Procedure p, Context c) throws LemRuntimeException {
-	context = c;
+        context = c;
         ActionBlock block = p.getActionBlock();
         executeBlock(block, c);
-	context = null; // ensure no other entry point tries to use this
+        context = null; // ensure no other entry point tries to use this
     }
-
+    
     /**
      * Interpret the given Scenario by calling executeBlock on Scenario's
      * main ActionBlock.
@@ -70,26 +96,26 @@ public class Interpreter {
      * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
      */
     public void interpret(Scenario s, Context c) throws LemRuntimeException {
-	context = c;
+        context = c;
         ActionBlock block = s.getActionBlock();
         executeBlock(block, c);
-	
-	// wait for all created threads.
-	Iterator i = createdThreads.iterator();
-	while (i.hasNext()) {
-		InstanceInterpreter thread = (InstanceInterpreter)i.next();
-		while (true) {
-			try {
-				thread.join();
-			} catch (InterruptedException e) {
-				continue;
-			}
-			break;
-		}
-	}
-	
-	context = null; // ensure no other entry point tries to use this
-	createdThreads = null;
+        
+        // wait for all created threads.
+        Iterator i = createdThreads.iterator();
+        while (i.hasNext()) {
+            InstanceInterpreter thread = (InstanceInterpreter)i.next();
+            while (true) {
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    continue;
+                }
+                break;
+            }
+        }
+        
+        context = null; // ensure no other entry point tries to use this
+        createdThreads = null;
     }
     
     /**
@@ -161,8 +187,8 @@ public class Interpreter {
      * @return the newly created runtime.Object
      */
     public runtime.Object executeCreateAction( CreateAction a, Context c ) throws LemRuntimeException {
-	Iterator i;
-
+        Iterator i;
+        
         // Create the new object
         runtime.Object o = new runtime.Object( a.getClasses() );
         
@@ -173,20 +199,20 @@ public class Interpreter {
         if( a.getVariable() != null )
             c.addVariable( a.getVariable().getVariableName(), new ObjectReferenceVariable( o ));
         
-	// Set up InstanceThreads
-	i = o.getInstances().iterator();
-	while (i.hasNext()) {
-		Instance instance = (Instance)i.next();
-		if (instance.instanceOfClass.isActive()) {
-			InstanceInterpreter instanceThread = new InstanceInterpreter(instance, context);
-			createdThreads.add(instanceThread);
-		}
-	}
-	
-        // Notify listeners that the object has been added
-	new LemObjectCreationEvent( o, a ).notifyAll( c );
+        // Set up InstanceThreads
+        i = o.getInstances().iterator();
+        while (i.hasNext()) {
+            Instance instance = (Instance)i.next();
+            if (instance.instanceOfClass.isActive()) {
+                InstanceInterpreter instanceThread = new InstanceInterpreter(instance, context);
+                createdThreads.add(instanceThread);
+            }
+        }
         
-	return o;
+        // Notify listeners that the object has been added
+        new LemObjectCreationEvent( o, a ).notifyAll( c );
+        
+        return o;
     }
     
     /**
@@ -199,8 +225,21 @@ public class Interpreter {
      */
     public void executeGenerateAction( GenerateAction a, Context c ) throws LemRuntimeException {
         // Create the new signal
-	System.out.println("execute generate action");
-        Signal s = new Signal(a.getEvent());
+        int delayTime = 0 ;
+        System.out.println("execute generate action");
+        Expression delayExpression = a.getDelayTime() ;
+        if ( delayExpression != null) {
+            System.out.println("Delay not null !") ; 
+            Variable v = evaluateExpression( delayExpression, c ) ;
+            String delay = (String) v.getValue() ;
+            try{
+                delayTime = Integer.parseInt( delay ) ;                                
+                System.out.println("Delay time is :" + delay) ; 
+            }catch (Exception e) {
+                throw new LemRuntimeException("Delay time should be a number or a numerical Expression.") ;
+            }
+        }
+        Signal s = new Signal(a.getEvent() , delayTime );
         LinkedList p = a.getParameters();
         if (p != null) {
             LinkedList passedValues = new LinkedList();
@@ -223,12 +262,13 @@ public class Interpreter {
         
         runtime.Object target = (runtime.Object)((ObjectReferenceVariable)targetRef).getValue();
         
-	System.out.println("Interpreter adding a signal");
-        if (target == currentObject) {
-            target.addSignalSelf(s);
-        } else {
-            target.addSignal(s);
-        }
+        System.out.println("Interpreter adding a signal");
+        //if (target == currentObject) {
+        //    target.addSignalSelf(s);
+        //} else {
+        //    target.addSignal(s);
+        //}
+        java.lang.Thread sg = new SignalGenerator(s ,target, currentObject) ;         
     }
     
     /**
@@ -529,8 +569,8 @@ public class Interpreter {
         
         if(!(valid_active || valid_passive))
             throw new LemRuntimeException("Objects does not have the required instances for association "+a.getAssociation().getName());
-        i = pc.iterator();        
-
+        i = pc.iterator();
+        
         while(i.hasNext() && !(valid_passive && valid_active)) {
             
             passive = (Instance)i.next();
@@ -547,22 +587,22 @@ public class Interpreter {
         AssociationInstance aInst = new AssociationInstance(a.getAssociation());
         aInst.setActiveInstance(active);
         aInst.setPassiveInstance(passive);
-
-        // creating clause is present                
+        
+        // creating clause is present
         if(a.getLinkObjectName() != null) {
-           CreateAction ca = new CreateAction();
+            CreateAction ca = new CreateAction();
             LinkedList l = new LinkedList();
-            l.add(a.getAssociation().getAssociationClassRole().getAssociationClass()); 
+            l.add(a.getAssociation().getAssociationClassRole().getAssociationClass());
             ca.setClasses((Collection)l);
             VariableReference vr = new VariableReference(a.getLinkObjectName());
             ca.setVariable(vr);
             runtime.Object obj = null;
             obj = executeCreateAction(ca, c);
             if(obj == null)
-                throw new LemRuntimeException("Exception occurred in creating link object.");        
+                throw new LemRuntimeException("Exception occurred in creating link object.");
             aInst.setLinkObjectInstance(obj);
         }
-
+        
         if(c.containsAssociationInstance(aInst))
             throw new LemRuntimeException("The association already exist between the two objects");
         c.addAssociationInstance(aInst);
@@ -572,68 +612,68 @@ public class Interpreter {
         metamodel.Class selectedClass = se.getSelectedClass() ;
         RelatedToOperation rto = se.getRelatedToOperation() ;
         Expression condition = se.getCondition();
-	SetVariable set = new SetVariable() ;
-	do {
-	    synchronized (c) {
-		    Collection objectList = c.getObjectList();
-		    
-		    for (Iterator i = objectList.iterator(); i.hasNext();) {
-			runtime.Object o = (runtime.Object)i.next();
-			
-			for (Iterator j = o.getInstances().iterator(); j.hasNext();) {
-			    Instance instance = (Instance)j.next();
-			    
-			    if ( instance.getInstanceClass() == selectedClass ) {
-				Variable var = VariableFactory.newVariable(ObjectReferenceType.getInstance(), o);
-				boolean goodVariable = true;
-				
-				if ( condition != null ) {
-				    Variable result;
-				    Context newContext = new Context( c ) ;
-				    newContext.addVariable("selected" , var ) ;
-				    result = evaluateExpression(condition , newContext);
-				    if (result instanceof BooleanVariable) {
-					if (!((Boolean)((BooleanVariable)result).getValue()).booleanValue()) {
-						goodVariable = false;
-					}
-				    } else  {
-					throw new LemRuntimeException("Not a Boolean Expression.") ;
-				    }
-				/** @todo:
-				This context should not really be allowed
-				to create new objects, because that might
-				destroy our iterator integrity when those
-				objects are put into their parent context.
-				In fact, even when we don't have any objects
-				to create, this line will make the iterator
-				throw a concurrent modifiction exception
-				but that could be avoided if we only add to
-				the parent set if the finishing context's
-				objectlist is empty.
-				//    newContext.finish() ;
-				*/
-				}
-				
-				if ( goodVariable && rto != null ) {
-				    Relationship r = rto.getRelationship() ;
-				    metamodel.Class relatedClass = rto.getRelatedClass() ;
-				    metamodel.Class instanceClass = instance.getInstanceClass() ; 
-				    HashMap associations = instanceClass.getAssociations() ; 
-				    if ( ! (associations.containsKey( r.getName() ) && 
-					    ((metamodel.Class) associations.get( r.getName())).getName().equals(relatedClass.getName() ))) {
-					    goodVariable = false;
-				    }                            
-				}
-
-				if (goodVariable)
-				        set.addToSet( var ) ;
-			    }
-			} 
-		    }
-	    }
-	    c = c.getParent();
-	} while (c != null);
-	return set;
+        SetVariable set = new SetVariable() ;
+        do {
+            synchronized (c) {
+                Collection objectList = c.getObjectList();
+                
+                for (Iterator i = objectList.iterator(); i.hasNext();) {
+                    runtime.Object o = (runtime.Object)i.next();
+                    
+                    for (Iterator j = o.getInstances().iterator(); j.hasNext();) {
+                        Instance instance = (Instance)j.next();
+                        
+                        if ( instance.getInstanceClass() == selectedClass ) {
+                            Variable var = VariableFactory.newVariable(ObjectReferenceType.getInstance(), o);
+                            boolean goodVariable = true;
+                            
+                            if ( condition != null ) {
+                                Variable result;
+                                Context newContext = new Context( c ) ;
+                                newContext.addVariable("selected" , var ) ;
+                                result = evaluateExpression(condition , newContext);
+                                if (result instanceof BooleanVariable) {
+                                    if (!((Boolean)((BooleanVariable)result).getValue()).booleanValue()) {
+                                        goodVariable = false;
+                                    }
+                                } else  {
+                                    throw new LemRuntimeException("Not a Boolean Expression.") ;
+                                }
+                                /** @todo:
+                                 * This context should not really be allowed
+                                 * to create new objects, because that might
+                                 * destroy our iterator integrity when those
+                                 * objects are put into their parent context.
+                                 * In fact, even when we don't have any objects
+                                 * to create, this line will make the iterator
+                                 * throw a concurrent modifiction exception
+                                 * but that could be avoided if we only add to
+                                 * the parent set if the finishing context's
+                                 * objectlist is empty.
+                                 * //    newContext.finish() ;
+                                 */
+                            }
+                            
+                            if ( goodVariable && rto != null ) {
+                                Relationship r = rto.getRelationship() ;
+                                metamodel.Class relatedClass = rto.getRelatedClass() ;
+                                metamodel.Class instanceClass = instance.getInstanceClass() ;
+                                HashMap associations = instanceClass.getAssociations() ;
+                                if ( ! (associations.containsKey( r.getName() ) &&
+                                        ((metamodel.Class) associations.get( r.getName())).getName().equals(relatedClass.getName() ))) {
+                                    goodVariable = false;
+                                }
+                            }
+                            
+                            if (goodVariable)
+                                set.addToSet( var ) ;
+                        }
+                    }
+                }
+            }
+            c = c.getParent();
+        } while (c != null);
+        return set;
     }
     
     /**
