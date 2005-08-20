@@ -407,8 +407,9 @@ public class BuilderPass2 extends Visitor {
         VariableReference vr = (VariableReference)node.jjtGetChild(2).jjtAccept(this, null);
         a.setTarget(vr);
         
-        /* todo: delay! */
-        
+        metamodel.Expression delay = (metamodel.Expression) node.jjtGetChild(3).jjtAccept(this, null);
+        a.setDelayTime ( delay ) ; 
+                
         return a;
     }
     
