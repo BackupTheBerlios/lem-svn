@@ -29,6 +29,7 @@ import java.util.Iterator;
 import metamodel.Event;
 import metamodel.EventSignature;
 import metamodel.Parameter;
+import metamodel.Expression ; 
 
 /**
  * This class represents a LEM runtime signal. When the model is being executed,
@@ -49,7 +50,7 @@ public class Signal {
 	public Signal(Event e) throws LemRuntimeException {
 		event = e;
 		parameters = null;
-                this.setDelayTime(0) ; 
+                this.delayTime = 0 ;  
 	}
 
         /**
