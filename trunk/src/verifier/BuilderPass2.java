@@ -835,7 +835,10 @@ public class BuilderPass2 extends Visitor {
      * @return
      */
     public Object visit( LEMVariableReference node, Object data ) throws LemException {
-        if( node.jjtGetNumChildren() == 1 ) {
+        if( node.jjtGetNumChildren() == 0 ) {
+	    // 'self' reference.
+	    return new VariableReference( "self" );  
+        } else if( node.jjtGetNumChildren() == 1 ) {
             // bare variable reference
             String variableName = getIdentifier(node.jjtGetChild(0) );
             if(!currentBlock.isValidVariable(variableName)) {
@@ -846,10 +849,14 @@ public class BuilderPass2 extends Visitor {
             // object.variable-style reference, eg. "publisher.name"
             VariableReference obj = (VariableReference)visit( (LEMObjectReference)node.jjtGetChild(0), null );
             String variableName = getIdentifier( node.jjtGetChild(1));
+            if(!currentBlock.isValidVariable(obj.getVariableName()) && !variableName.equals("self")) {
+                throw new LemException("Undeclared variable.");
+            }            
             return new VariableReference( obj.getVariableName(), variableName );
         }
-        
-        throw new LemException( "LEMVariableReference has neither 1 nor 2 children" );        
+
+        throw new LemException( "LEMVariableReference has neither 1 nor 2 children" );
+
     }
     
     /**
