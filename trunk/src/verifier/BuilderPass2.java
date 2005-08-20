@@ -413,6 +413,13 @@ public class BuilderPass2 extends Visitor {
         return a;
     }
     
+    public Object visit(LEMWithDelay node, Object data) throws LemException {
+        if( node.jjtGetNumChildren() > 0 )
+            return node.jjtGetChild( 0 ).jjtAccept( this, null );
+        
+        return null;
+    }
+    
     
     public Object visit( LEMLinkCreation node, Object data ) throws LemException {
         RelateAction a = new RelateAction();
@@ -842,7 +849,7 @@ public class BuilderPass2 extends Visitor {
             return new VariableReference( obj.getVariableName(), variableName );
         }
         
-        throw new LemException( "LEMVariableReference has neither 1 nor 2 children" );
+        throw new LemException( "LEMVariableReference has neither 1 nor 2 children" );        
     }
     
     /**
