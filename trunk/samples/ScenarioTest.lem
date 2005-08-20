@@ -11,7 +11,7 @@ model TestModel is
 						myset := select one from instances of A where selected /= self;
 						for each myobj in myset
 						{
-							generate Ev1 to myobj;
+							generate Ev1 to myobj with delay 10000;
 						}
 					}
 					end s1;
