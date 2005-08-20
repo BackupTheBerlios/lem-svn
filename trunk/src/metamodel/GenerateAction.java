@@ -15,7 +15,8 @@ public class GenerateAction extends Action {
 	private Event event = null;
 	private VariableReference target = null;
 	private LinkedList parameters = null;
-	
+        private Expression delayTime = null ; 
+        
 	/** Creates a new instance of GenerateAction */
 	public GenerateAction() {
 	}
@@ -64,4 +65,12 @@ public class GenerateAction extends Action {
 	public LinkedList getParameters() {
 		return parameters;
 	}
+
+    public Expression getDelayTime() {
+        return delayTime;
+    }
+
+    public void setDelayTime(Expression delayTime) {
+        this.delayTime = delayTime;
+    }
 }
