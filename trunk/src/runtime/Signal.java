@@ -1,8 +1,26 @@
 /*
- * Object.java
+ * FileName.java - An optional brief description of the file
  *
- * Created on 28 July 2005, 17:43
+ * Copyright (C) 2005 Nick Piggin
+ * Copyright (C) 2004 Shuku Torabi
+ *
+ * This program is free software; you can redistribute it and/or  
+ * modify it under the terms of the GNU General Public License  
+ * as published by the Free Software Foundation; either version 2  
+ * of the License, or (at your option) any later version.  
+ *  
+ * This program is distributed in the hope that it will be useful,  
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of  
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  
+ * GNU General Public License for more details.  
+ * 
+ * You should have received a copy of the GNU General Public License  
+ * along with this program; if not, write to the Free Software  
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,  
+ * USA. 
  */
+
+
 
 package runtime;
 
@@ -19,9 +37,9 @@ import metamodel.Parameter;
  * @see the Signals at Runtime description at http://xtuml.jdns.org/wiki/index.php/TODO!!
  */
 public class Signal {
-	Event event;
-	LinkedList parameters;
-	
+	private Event event;
+	private LinkedList parameters;
+        private int delayTime ;  
 	/**
 	 * Creates a new instance of Signal.
 	 *
@@ -31,9 +49,21 @@ public class Signal {
 	public Signal(Event e) throws LemRuntimeException {
 		event = e;
 		parameters = null;
-
+                this.setDelayTime(0) ; 
 	}
 
+        /**
+	 * Creates a new instance of Signal with delay.
+	 *
+	 * @param Event The event to which this signal is associated.
+	 * @throws LemRuntimeException if ...
+	 */
+	public Signal(Event e, int delay) throws LemRuntimeException {
+		event = e;
+		parameters = null;                
+                this.setDelayTime(delay) ; 
+	}
+        
 	/**
 	 * Returns the event to which this signal is associated.
 	 */
@@ -78,4 +108,12 @@ public class Signal {
 			}
 		}
 	}
+
+    public int getDelayTime() {
+        return delayTime;
+    }
+
+    public void setDelayTime(int delayTime) {
+        this.delayTime = delayTime;
+    }
 }
