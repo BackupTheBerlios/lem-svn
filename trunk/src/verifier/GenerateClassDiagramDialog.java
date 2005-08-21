@@ -23,10 +23,8 @@ package verifier;
 
 import java.awt.Component;
 import java.awt.Frame;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
@@ -227,7 +225,7 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 	private void subsystemListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subsystemListActionPerformed
 		// Update the selection
 		JComboBox cb = (JComboBox)evt.getSource();
-				
+		
 		Subsystem s = selectedDomain.getSubsystem( (String)cb.getSelectedItem() );
 		if (s == null) {
 			selectedSubsystem = null;
@@ -248,29 +246,39 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 			} else { // 'Normal' case
 				String dotCode = null;
 				String javaSpec = null;
-				// The user has selected all the classes in the domain
-				if (isSelectedSubsystem == false) {
-					javaSpec = ClassWriter.dumpUMLGraph( selectedDomain, selectedDomain.getClasses().values() );
-					// The user has selected a specific subsystem
-				} else {
-					javaSpec = ClassWriter.dumpUMLGraph( selectedDomain, selectedSubsystem.getClasses().values() );
-				}
-				try {
-					dotCode = UMLGraphWriter.specToDot( javaSpec );
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-				}
-				//System.out.println( dotCode );
-				// Generate the graph image
-				try {
-					DotWriter.dotToPNG( dotCode, filenameField.getText() );
-					JOptionPane.showMessageDialog( this, "Diagram generated successfully.", "Success!",
-							JOptionPane.INFORMATION_MESSAGE );
-				} catch (IOException ioe) {
-					JOptionPane.showMessageDialog( this, ioe.toString(), "Error",
+				
+				ArrayList classes = new ArrayList();
+				int i;
+				int[] selected = classList.getSelectedIndices();
+				if (selected.length == 0) {
+					JOptionPane.showMessageDialog( this, "No classes selected", "Error",
 							JOptionPane.ERROR_MESSAGE );
+				} else {
+					// Get the selected classes
+					for (i = 0; i < selected.length; i++) {
+						//System.err.println( (String)(classList.getModel().getElementAt( selected[i] ) ) );
+						classes.add( selectedDomain.getClass(
+								(String)(classList.getModel().getElementAt( selected[i] ) ) ) );
+					}
+					// START DEBUG
+					for ( Iterator it = classes.iterator(); it.hasNext(); ) {
+						metamodel.Class umlclass = (metamodel.Class) it.next();
+						System.err.println( umlclass.getName() );
+						System.err.println( umlclass.dumpUMLGraph() );
+					}
+					// STOP DEBUG
+					dotCode = ClassWriter.dumpUMLGraph( selectedDomain, classes );
+					System.err.println(dotCode);
+					try {
+						DotWriter.dotToPNG( dotCode, filenameField.getText() );
+						JOptionPane.showMessageDialog( this, "Diagram generated successfully.", "Success!",
+								JOptionPane.INFORMATION_MESSAGE );
+					} catch (IOException ioe) {
+						JOptionPane.showMessageDialog( this, ioe.toString(), "Error",
+								JOptionPane.ERROR_MESSAGE );
+					}
+					this.dispose();
 				}
-				this.dispose();
 			}
 		}
 	}//GEN-LAST:event_generateButtonActionPerformed
@@ -337,7 +345,7 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 					subsystemList.addItem( s.getName() );
 				}
 			}
-		}	
+		}
 		subsystemList.setSelectedIndex( 0 );
 		isSelectedSubsystem = false;
 		selectedSubsystem = null;
@@ -369,8 +377,10 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 				listModel.addElement( ( (metamodel.Class)( classIter.next() )).getName() );
 			}
 		}
-		
 		classList.setModel( listModel );
+		
+		// Include all classes in the list by default
+		classList.setSelectionInterval(0, classList.getModel().getSize() - 1 );
 	}
 	
 	private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
