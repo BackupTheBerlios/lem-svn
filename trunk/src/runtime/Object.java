@@ -38,6 +38,8 @@ import metamodel.Generalisation;
  * @see the Objects at Runtime description at http://xtuml.jdns.org/wiki/index.php/Runtime_object
  */
 public class Object {
+	Refcount refcount = new Refcount();
+	
 	/** Queue of pending signals for the object */
 	LinkedList signalQueue = new LinkedList();
 	
