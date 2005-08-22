@@ -34,15 +34,20 @@ import java.util.ArrayList;
  */
 public class ClassWriter {
 
-        /**  store all classes in this domain for a subsystem */
-        private static Collection classList;
+        /**  store classes selected  */
+        private static Collection selectedClassList;
 
+        /**  store all classes in this domain */
+        private static Collection allClassList;
+        
         /**  store all associations in in this domain for a subsystem */
         private static  Collection associationList;
         
         /**  store all associations in in this domain for a subsystem */
         private static ArrayList list = new ArrayList();
         
+//private static boolean a= true;
+//private static boolean b= false;             
         /**
 	 * Generates UMLGraph code for class diagrams. Note that this procedure only
 	 * supports diagrams involving classes from a single domain.
@@ -55,8 +60,9 @@ public class ClassWriter {
 	 */
 	public static String dumpUMLGraph( Domain domain, Collection aClassList ) {
 
-              classList = aClassList;
-                
+              selectedClassList = aClassList;
+              allClassList = domain.getClasses().values();
+              
               associationList =  domain.getRelationships().values();
               TopupList ();
               StringBuffer strBuf = new StringBuffer();
@@ -75,9 +81,13 @@ public class ClassWriter {
               strBuf.append("\n");strBuf.append("\n");
              
               // print UMLGraph code for all classes
-              for ( Iterator it = classList.iterator(); it.hasNext(); ) {
-                   metamodel.Class umlclass = (metamodel.Class) it.next();          
-                   strBuf.append(umlclass.dumpUMLGraph()); 
+              for ( Iterator it = allClassList.iterator(); it.hasNext(); ) {
+                   metamodel.Class umlclass = (metamodel.Class) it.next();   
+                   // decide  whether a class is selected or not
+                   if (selectedClassList.contains(umlclass)) 
+                      strBuf.append(umlclass.dumpUMLGraph(true)); 
+                   else
+                      strBuf.append(umlclass.dumpUMLGraph(false)); 
               }
               
               strBuf.append("\n");
@@ -106,7 +116,7 @@ public class ClassWriter {
         
         /**  return a Collection of classes in this domain (or subsystem) */
         public static Collection getClassList () {
-            return classList;
+            return allClassList;
         }
         
 }        

@@ -603,7 +603,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
      /**
      *@Return UMLGraph string  of this class, including relationships and attributes 
      */
-     public String dumpUMLGraph() { 
+     public String dumpUMLGraph (boolean isSelected) { 
       
           StringBuffer strBuf = new StringBuffer( );
           Collection associationList; 
@@ -613,8 +613,12 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
           if (!associations.isEmpty() || !generalisationRoles.isEmpty()) { 
                   // add ParticipatingClass option
                   strBuf.append("/**\n");
-                  // set color for this class
-                  strBuf.append("*  @opt nodefillcolor \"#FFFF99\"\n");
+                  
+                  // set color for selected class
+                  if (isSelected)
+                     strBuf.append(" *  @opt nodefillcolor \"#FFFF99\"\n");
+         //         else
+         //            strBuf.append(" *  @opt nodefillcolor \"#FFFF99\"\n");
            
                   // add associations for a class   
                   for ( Iterator it = associations.values().iterator(); it.hasNext(); ) {
@@ -624,13 +628,13 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
                            // decide which side Multiplicity belongs to 
                            if (this.name == asso.getPassivePerspective().
                                    getAttachedClassRole().getParticipant().getName()) {
-                               strBuf.append("*  @assoc " + 
+                               strBuf.append(" *  @assoc " + 
                                        asso.getActivePerspective().getMultiplicity().getSymbolic() + " " +
                                        asso.getName() + " " +
                                        asso.getPassivePerspective().getMultiplicity().getSymbolic() + " ");
                            }
                            else {
-                                strBuf.append("*  @assoc " + 
+                                strBuf.append(" *  @assoc " + 
                                        asso.getPassivePerspective().getMultiplicity().getSymbolic() + " " +
                                        asso.getName() + " " +
                                        asso.getActivePerspective().getMultiplicity().getSymbolic() + " ");
@@ -655,9 +659,9 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
                   for ( Iterator it = generalisationRoles.values().iterator(); it.hasNext(); ) {
                        GeneralisationRole generalisationRole = (GeneralisationRole) it.next();
                        if (this.name != generalisationRole.getGeneralisation().getSuperclass().getName())
-                           strBuf.append("*  @extends " + generalisationRole.getGeneralisation().getSuperclass().getName() + "\n");
+                           strBuf.append(" *  @extends " + generalisationRole.getGeneralisation().getSuperclass().getName() + "\n");
                   }       
-                  strBuf.append("*/\n");
+                  strBuf.append(" */\n");
 
 
                   // add ParticipantingClass 
@@ -679,8 +683,8 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
                     // add  AssociationClass option
                     strBuf.append("/**\n");
                     // set color for this class
-                    strBuf.append("*  @opt nodefillcolor \"#FFFF99\"\n"); 
-                    strBuf.append("*  @tagvalue " + "Association " +  asso.getName() + "\n*/\n" );
+                    strBuf.append(" *  @opt nodefillcolor \"#FFFF99\"\n"); 
+                    strBuf.append(" *  @tagvalue " + "Association " +  asso.getName() + "\n*/\n" );
                     strBuf.append("class " + associationClass.getName().toUpperCase()  + " {\n");
                     // add atributes
                     for ( Iterator it = associationClass.attributes.values().iterator(); it.hasNext(); ) {
