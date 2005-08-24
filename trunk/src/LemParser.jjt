@@ -1034,16 +1034,6 @@ void EventCancel() : {}
 }
 
 /**
- * Statements returning some value
- */
-void RValue() : {}
-{
-	  Expression()
-	| ObjectCreation()
-	| SelectStatement()
-}
-
-/**
  * Statements that can be assigned some value
  */
 void LValue() : {}
@@ -1053,7 +1043,7 @@ void LValue() : {}
 
 void AttributeAssignment() : {}
 {
-	LValue() <IS_ASSIGNED> RValue()
+	LValue() <IS_ASSIGNED> Expression()
 }
 
 /**
@@ -1129,7 +1119,7 @@ void ForStatement() : {}
 	<FOR> <EACH>
 	Identifier()
 	<IN>
-	RValue()
+	Expression()
 	ActionBlock()	
 }
 
@@ -1146,7 +1136,7 @@ void Return() : {}
 }
 
 /**
- * Expressions. These are side-effect free statements returning a value.
+ * Expressions. These are statements returning a value.
  */
 void Expression() : {}
 { 
@@ -1262,7 +1252,8 @@ void Primary() : {}
 	Literal()
 	| VariableReference()
 	| ParenthesizedPrimary()
-//	| Expression()
+	| ObjectCreation()
+	| SelectStatement()
 }
 
 void ParenthesizedPrimary() : {}

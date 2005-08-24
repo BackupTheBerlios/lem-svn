@@ -195,10 +195,6 @@ public class Interpreter {
         // Add it to the context
         c.addObject(o);
         
-        // Add the object reference to the context
-        if( a.getVariable() != null )
-            c.addVariable( a.getVariable().getVariableName(), new ObjectReferenceVariable( o ));
-        
         // Set up InstanceThreads
         i = o.getInstances().iterator();
         while (i.hasNext()) {
@@ -371,10 +367,8 @@ public class Interpreter {
     public Variable executeAssignmentAction( AssignmentAction a, Context c ) throws LemRuntimeException {
         VariableReference r = a.getVariableReference();
         String name = r.getObjectName();
-        
         Variable destination = getVariable( r, c );
-        
-        // At this point, we evaluate the expression no matter what
+
         Variable value = evaluateExpression( a.getExpression(), c );
         
         if( value.getCoreDataType() != destination.getCoreDataType() ) {
@@ -456,6 +450,10 @@ public class Interpreter {
         } else if (e instanceof SelectExpression) {
             SelectExpression se = (SelectExpression) e;
             return evaluateSelectExpression( se, c );
+	} else if (e instanceof CreateAction) {
+	    CreateAction ca = (CreateAction)e;
+	    runtime.Object o = executeCreateAction( ca, c );
+	    return new ObjectReferenceVariable(o);
         } else if( e instanceof BinaryOperation ) {
             BinaryOperation o = (BinaryOperation) e;
             Variable left = evaluateExpression( o.getLeft(), c );
@@ -589,6 +587,7 @@ public class Interpreter {
         aInst.setPassiveInstance(passive);
         
         // creating clause is present
+	/* @todo this needs fixing
         if(a.getLinkObjectName() != null) {
             CreateAction ca = new CreateAction();
             LinkedList l = new LinkedList();
@@ -601,7 +600,7 @@ public class Interpreter {
             if(obj == null)
                 throw new LemRuntimeException("Exception occurred in creating link object.");
             aInst.setLinkObjectInstance(obj);
-        }
+        } */
         
         if(c.containsAssociationInstance(aInst))
             throw new LemRuntimeException("The association already exist between the two objects");

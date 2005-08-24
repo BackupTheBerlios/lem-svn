@@ -27,7 +27,7 @@ package metamodel;
  *
  * @author sjr
  */
-public abstract class Expression {
+public abstract class Expression extends Action {
     
     /**
      * This expression's type

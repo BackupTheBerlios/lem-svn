@@ -526,33 +526,17 @@ public class BuilderPass2 extends Visitor {
         return a;
     }
     
-    public Object visit( LEMRValue node, Object data ) throws LemException {
-        return node.jjtGetChild( 0 ).jjtAccept( this, data );
-    }
-    
     public Object visit( LEMAttributeAssignment node, Object data ) throws LemException {
-        Node n = node.jjtGetChild( 1 );
-        
+        AssignmentAction a = new AssignmentAction();
+
         VariableReference r = (VariableReference)(node.jjtGetChild( 0 ).jjtAccept( this, null ));
         
-        // The visiting the RValue (2nd child) can either return a CreateAction (not an expression)
-        // or an Expression...
-        
-        Object o = node.jjtGetChild( 1 ).jjtAccept(this, data);
-        
-        if( o instanceof CreateAction ) {
-            ((CreateAction)o).setVariable( r );
-            return o;
-        } else {
-            // Otherwise, o is an Expression
-//	    ActionBlock ablock = (ActionBlock)data;
-            AssignmentAction a = new AssignmentAction();
-            a.setVariableReference( r );
-            a.setExpression((Expression) o);
-//            ablock.addAction( a );
+        Expression e = (Expression)(node.jjtGetChild( 1 ).jjtAccept(this, data));
+
+        a.setVariableReference( r );
+        a.setExpression( e );
             
-            return a;
-        }
+        return a;
     }
     
     public Object visit( LEMWhileStatement node, Object data ) throws LemException {
@@ -841,17 +825,19 @@ public class BuilderPass2 extends Visitor {
         } else if( node.jjtGetNumChildren() == 1 ) {
             // bare variable reference
             String variableName = getIdentifier(node.jjtGetChild(0) );
+	    /* @todo: uncomment and make this work
             if(!currentBlock.isValidVariable(variableName)) {
                 throw new LemException("Undeclared variable.");
-            }
+            } */
             return new VariableReference(variableName );
         } else if( node.jjtGetNumChildren() == 2 ) {
             // object.variable-style reference, eg. "publisher.name"
             VariableReference obj = (VariableReference)visit( (LEMObjectReference)node.jjtGetChild(0), null );
             String variableName = getIdentifier( node.jjtGetChild(1));
+	    /* @todo: uncomment and make this work
             if(!currentBlock.isValidVariable(obj.getVariableName()) && !variableName.equals("self")) {
                 throw new LemException("Undeclared variable.");
-            }            
+            } */           
             return new VariableReference( obj.getVariableName(), variableName );
         }
 

@@ -37,20 +37,13 @@ import java.util.Iterator;
  * This is the xtUML object creation action.
  * @author sjr
  */
-public class CreateAction extends Action {
+public class CreateAction extends Expression {
     
     /**
      * A new object containing an instance of these classes will be created when 
      * this CreateAction is executed.
      */
     Collection classes = null;
-    
-    /**
-     * The reference to the variable which will contain a reference to the newly
-     * created object. May be null if the "create object" statement did not specify
-     * an attribute reference.
-     */
-    VariableReference variable = null;
     
     /** Creates a new instance of CreateAction */
     public CreateAction() {
@@ -74,25 +67,5 @@ public class CreateAction extends Action {
      */
     public Collection getClasses() {
 	    return classes;
-    }
-
-    /**
-     * Gets the reference to the variable which will contain a reference to the 
-     * newly created object.
-     *
-     * @return the variable reference
-     */
-    public VariableReference getVariable() {
-        return variable;
-    }
-
-    /**
-     * Sets the reference to the variable which will contain a reference to the
-     * newly created object.
-     *
-     * @param variable the variable reference
-     */
-    public void setVariable(VariableReference variable) {
-        this.variable = variable;
     }
 }
