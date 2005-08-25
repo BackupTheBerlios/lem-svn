@@ -117,6 +117,10 @@ public class Object {
 		}
 	}
 	
+	public int references() {
+		return refcount.references();
+	}
+	
 	/**
 	 * adds a Signal to this object's signal queue
 	 */

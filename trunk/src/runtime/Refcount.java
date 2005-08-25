@@ -72,4 +72,9 @@ public class Refcount
 		else
 			return false;
 	}
+
+	public synchronized int references()
+	{
+		return num;
+	}
 }
