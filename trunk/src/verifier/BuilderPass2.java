@@ -357,7 +357,6 @@ public class BuilderPass2 extends Visitor {
     }
     
     /**
-     *
      * @param node
      * @param data
      * @throws metamodel.LemException
@@ -370,12 +369,27 @@ public class BuilderPass2 extends Visitor {
         Collection c = (Collection)(node.jjtGetChild(0).jjtAccept(this, null));
         
         a.setClasses(c);
-//        ActionBlock ablock = (ActionBlock)data;
-//        ablock.addAction( a );
         
         return a;
     }
     
+    /**
+     * @param node
+     * @param data
+     * @throws metamodel.LemException
+     * @return
+     */
+    public Object visit( LEMObjectDeletion node, Object data ) throws LemException {
+	DeleteAction a = new DeleteAction();
+        getMapper().add(node, a);
+        
+        VariableReference vr = (VariableReference)node.jjtGetChild(0).jjtAccept(this, null);
+        
+        a.setVariable(vr);
+        
+        return a;
+    }
+
     /**
      * Returns a LinkedList of Expressions as parameters.
      */
