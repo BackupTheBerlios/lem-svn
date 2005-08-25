@@ -146,25 +146,24 @@ public class Object {
 	 * Callers must be synchronized on 'this' object.
 	 */
 	public boolean propogateNextSignal() throws LemRuntimeException {
-		while ( true ) {
-			if ( signalSelfQueue.size() > 0 ) {
-				Signal s = (Signal) signalSelfQueue.remove( 0 );
-				for ( Iterator i = instances.iterator(); i.hasNext(); ) {
-					Instance in = ( Instance ) i.next();
-					in.addSignalSelf( s );
-				}
-				return true;
-			} else if ( signalQueue.size() > 0 ) {
-				Signal s = (Signal) signalQueue.remove( 0 );
-				for ( Iterator i = instances.iterator(); i.hasNext(); ) {
-					Instance in = ( Instance ) i.next();
-					in.addSignal( s );
-				}
-				return true;
+		if ( signalSelfQueue.size() > 0 ) {
+			Signal s = (Signal) signalSelfQueue.remove( 0 );
+			for ( Iterator i = instances.iterator(); i.hasNext(); ) {
+				Instance in = ( Instance ) i.next();
+				in.addSignalSelf( s );
 			}
-			
-			return false;
+			return true;
+
+		} else if ( signalQueue.size() > 0 ) {
+			Signal s = (Signal) signalQueue.remove( 0 );
+			for ( Iterator i = instances.iterator(); i.hasNext(); ) {
+				Instance in = ( Instance ) i.next();
+				in.addSignal( s );
+			}
+			return true;
 		}
+		
+		return false;
 	}
 	
 	/**

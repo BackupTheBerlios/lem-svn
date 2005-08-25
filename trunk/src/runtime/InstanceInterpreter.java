@@ -31,7 +31,8 @@ import java.util.HashMap;
  * This is the main InstanceInterpreter file.
  * @author shuku
  */
-public class InstanceInterpreter extends java.lang.Thread{
+public class InstanceInterpreter extends java.lang.Thread {
+
     /** the instance to which this Interpreter belongs to **/
     private runtime.Instance instance;
     
@@ -47,6 +48,7 @@ public class InstanceInterpreter extends java.lang.Thread{
     public InstanceInterpreter(runtime.Instance instance, Context c) {
 	this.instance = instance ;
 	context = c;
+	instance.instanceInObject.get();
 	interpreter = new Interpreter(instance.instanceInObject) ;
 	start() ;
     }
@@ -96,14 +98,14 @@ public class InstanceInterpreter extends java.lang.Thread{
     /** will run the thread until it enters a deletionstate **/
     public void run() {
 	try {
-	    if (!init())
-		return;
-	    
-	    while ( advance() );
+	    if (init()) {
+	    	while ( advance() );
+	    }
 	    System.out.println("InstanceInterpreter finished");
 	} catch( LemRuntimeException e ) {
 	    e.printStackTrace();
 	}
+	instance.instanceInObject.put();
     }
     
     /** Advances the statemachine by one state (if possible)

@@ -32,6 +32,12 @@ model TestModel is
 					on Ev1 transition from s2 to s1;
 				end behaviour;
 			end;
+
+			class B is
+				attribute attr1 is numeric;
+				attribute attr2 is numeric;
+			end;
+
 		end TestSubsystem;
 
 		scenario TestSignals is {
@@ -52,10 +58,10 @@ model TestModel is
 			 * problem
 			 */
 			while (true) {
-				objref a;
+				objref b;
 			
-				a := create A;
-				delete a;
+				b := create B;
+				delete b;
 			}
 		}
 
