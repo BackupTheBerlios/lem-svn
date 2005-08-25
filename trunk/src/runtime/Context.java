@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Every Action in LEM executes in some sort of "context".
@@ -35,13 +36,16 @@ public class Context {
      * A collection of all runtime objects known to this context
      */
     private Collection objectList = new ArrayList();
-    
+ 
     /**
      * A collection of all variables local to the context
-     *
-     * @todo Should this be a HashMap?
      */
-    private HashMap variableList = new HashMap();
+    private List variableList = new LinkedList();
+
+    /**
+     * A map of all variables local to the context
+     */
+    private HashMap variableMap = new HashMap();
     
     /**
      * A collection of LemEventListener instances interested in 
@@ -119,7 +123,7 @@ public class Context {
      * @return the variable, or null if there is no variable with that name
      */
     public synchronized Variable getVariable( String name ) {
-        Variable v = (Variable)variableList.get( name );
+        Variable v = (Variable)variableMap.get( name );
         
         if( v == null && parentContext != null ) {
             // Search parent contexts
@@ -136,7 +140,12 @@ public class Context {
      * @param variable the variable to be added
      */
     public synchronized void addVariable( String name, Variable variable ) {
-        variableList.put( name, variable );
+        variableMap.put( name, variable );
+	variableList.add( variable );
+    }
+    
+    public List getVariableList() {
+	return variableList;
     }
     
     /**
