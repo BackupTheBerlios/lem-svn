@@ -100,11 +100,21 @@ public class Object {
 	}
 	
 	/**
-	 * getRefcount returns the object's Refcount.
-	 * @returns the object's refcount.
+	 * get takes a reference to the object.
+	 * @todo: should Object inherit a "refcounted object class" ?
 	 */
-	public Refcount getRefcount() {
-		return refcount;
+	public void get() {
+		refcount.get();
+	}
+	
+	/**
+	 * put drops a reference to the object.
+	 * If the last reference is dropped, various things get cleaned up.
+	 */
+	public void put() {
+		if (refcount.put()) {
+			/* @todo: must drop associations here */
+		}
 	}
 	
 	/**

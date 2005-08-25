@@ -13,6 +13,7 @@ package runtime;
 import metamodel.DataType;
 import metamodel.SetType;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -20,7 +21,7 @@ import java.util.LinkedList;
  * @author Shuku
  */
 public class SetVariable extends Variable {
-
+    private boolean refcounted = false;
     private Collection value;
     
     /** Creates a new instance of StringVariable */
@@ -28,7 +29,32 @@ public class SetVariable extends Variable {
         this.setValue(new LinkedList()) ; 
     }
     
-    public SetVariable( Collection o) {
+    public void get() throws LemRuntimeException {
+	    if (refcounted) {
+		    throw new LemRuntimeException("Tried to get SetVariable that is already refcounted");
+	    }
+	    refcounted = true;
+
+	    Iterator i = value.iterator();
+	    while (i.hasNext()) {
+		    Variable v = (Variable)i.next();
+		    v.get();
+	    }
+    }
+
+    public void put() throws LemRuntimeException {
+	    if (refcounted) {
+		    refcounted = false;
+
+		    Iterator i = value.iterator();
+		    while (i.hasNext()) {
+			    Variable v = (Variable)i.next();
+			    v.put();
+		    }
+	    }
+    }
+    
+    public SetVariable( Collection o ) {
 	this.setValue(o) ; 
     }
 
@@ -49,10 +75,10 @@ public class SetVariable extends Variable {
      *to make sure the types in a set match each other 
      *@param b the variable to be added.
      */
- 
-
    public void addToSet( Variable b ) throws LemRuntimeException {       
-       value.add ( b ) ;       
+	if (refcounted)
+		b.get();
+	value.add ( b ) ;       
    }   
 
 }

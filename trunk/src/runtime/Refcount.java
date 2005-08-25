@@ -54,6 +54,8 @@ public class Refcount
 			throw new Error("Tried to get zero refcount");
 
 		num++;
+
+		System.out.println("get: Refcount variable has " + num + " references");
 	}
 
 	public synchronized boolean put() throws Error
@@ -63,6 +65,8 @@ public class Refcount
 			throw new Error("Tried to put zero refcount");
 
 		num--;
+
+		System.out.println("put: Refcount variable has " + num + " references");
 		if (num == 0)
 			return true;
 		else

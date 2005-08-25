@@ -146,6 +146,14 @@ public class Interpreter {
             Action a = (Action)i.next();
             executeAction(a, localContext);
         }
+
+	/* Clean up local variables */
+	i = localContext.getVariableList().iterator();
+	while (i.hasNext()) {
+		Variable v = (Variable)i.next();
+		v.put();
+	}
+			
         localContext.finish();
     }
     
@@ -350,7 +358,17 @@ public class Interpreter {
             Variable select = (Variable)i.next();
             Context newContext = new Context( c );
             newContext.addVariable(selectName , select );
+
             executeBlock(block, newContext);
+	    
+	    /* Clean up local variables */
+	    Iterator j = newContext.getVariableList().iterator();
+	    while (j.hasNext()) {
+		Variable v = (Variable)j.next();
+		if (v != select)
+			v.put();
+	    }
+
             newContext.finish();
         }
     }
@@ -366,17 +384,18 @@ public class Interpreter {
      */
     public Variable executeAssignmentAction( AssignmentAction a, Context c ) throws LemRuntimeException {
         VariableReference r = a.getVariableReference();
-        String name = r.getObjectName();
         Variable destination = getVariable( r, c );
 
         Variable value = evaluateExpression( a.getExpression(), c );
         
         if( value.getCoreDataType() != destination.getCoreDataType() ) {
-            throw new LemRuntimeException( "Type mismatch: evaluated '" + value.getType().getName() + "'"
-                    + ", expected '" + destination.getType() + "', name: " + r.getVariableName() );
+	    String name = r.getObjectName();
+            throw new LemRuntimeException( "Type mismatch: evaluated '" + value.getType().getName() + "', expected '" + destination.getType() + "', name: " + r.getVariableName() );
         }
         
+	destination.put();
         destination.setValue( value.getValue() );
+	destination.get();
         return destination;
     }
     

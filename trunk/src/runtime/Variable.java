@@ -36,13 +36,11 @@ public abstract class Variable {
 	
 	public Variable() {
 	}
-	
-	/**
-	 * The finish routine should be called when a Variable
-	 * goes out of scope. This can be used for refcounting,
-	 * however the default implementation does nothing.
-	 */
-	public void finish() {
+
+	public void get() throws LemRuntimeException {
+	}
+
+	public void put() throws LemRuntimeException {
 	}
 	
 	/**
