@@ -288,6 +288,8 @@ public class Interpreter {
         runtime.Object target = (runtime.Object)((ObjectReferenceVariable)targetRef).getValue();
         
         System.out.println("Interpreter adding a signal");
+	//@todo: this must be fixed, signals with no delay need to be
+	//done here like this!
         //if (target == currentObject) {
         //    target.addSignalSelf(s);
         //} else {
