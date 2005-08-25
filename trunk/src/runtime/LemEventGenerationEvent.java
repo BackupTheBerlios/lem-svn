@@ -47,6 +47,6 @@ public class LemEventGenerationEvent extends LemEvent {
     * @param listener The listener to notify
     */
     public void notify(LemEventListener listener) {
-	listener.eventGenerated(this);
+	//listener.eventGenerated(this);
     }    
 }
