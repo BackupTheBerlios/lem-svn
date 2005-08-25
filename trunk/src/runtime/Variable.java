@@ -38,6 +38,14 @@ public abstract class Variable {
 	}
 	
 	/**
+	 * The finish routine should be called when a Variable
+	 * goes out of scope. This can be used for refcounting,
+	 * however the default implementation does nothing.
+	 */
+	public void finish() {
+	}
+	
+	/**
 	 * Gets the value associated with this getType() instance
 	 *
 	 * @return the value associated with this getType() instance
