@@ -88,7 +88,8 @@ public class Eleminator extends javax.swing.JFrame {
 			themeComboBox.addItem(new ThemeItem(li[i].getName(),li[i].getClassName()));
 		}
 		
-		setBounds(0,0,640,480);
+		setSize(640, 480);
+		doLayout();
 		setTitle("eLEMinator");
 		URL imageURL = getClass().getClassLoader().getResource("verifier/lem.jpg");
 		Image lem = Toolkit.getDefaultToolkit().getImage(imageURL);
