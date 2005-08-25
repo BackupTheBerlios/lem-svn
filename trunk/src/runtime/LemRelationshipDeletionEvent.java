@@ -47,6 +47,6 @@ public class LemRelationshipDeletionEvent extends LemEvent {
     * @param listener The listener to notify
     */
     public void notify(LemEventListener listener) {
-	listener.relationshipDeletion(this);
+	//listener.relationshipDeletion(this);
     }    
 }

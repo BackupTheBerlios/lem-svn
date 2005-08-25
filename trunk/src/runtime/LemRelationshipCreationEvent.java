@@ -47,6 +47,6 @@ public class LemRelationshipCreationEvent extends LemEvent {
     * @param listener The listener to notify
     */
     public void notify(LemEventListener listener) {
-	listener.relationshipCreation(this);
+	//listener.relationshipCreation(this);
     }    
 }
