@@ -98,6 +98,18 @@ public class Context {
     }
 
     /**
+     * Adds the given object to this context
+     * @param inObject the object to add to the context
+     */
+    public synchronized void delObject(runtime.Object o) throws LemRuntimeException {
+        if (!objectList.remove(o)) {
+		if (parentContext == null)
+			throw new LemRuntimeException("Tried to delete non-existant object");
+		parentContext.delObject(o);
+	}
+    }
+
+    /**
      * Adds the given collection of objects to this context
      * @param inObjects the objects to add to the context
      */

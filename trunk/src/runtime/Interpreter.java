@@ -166,6 +166,8 @@ public class Interpreter {
     public void executeAction( Action a, Context c ) throws LemRuntimeException {
         if ( a instanceof CreateAction )
             executeCreateAction((CreateAction)a, c);
+	else if (a instanceof DeleteAction )
+	    executeDeleteAction((DeleteAction)a, c);
         else if( a instanceof AssignmentAction )
             executeAssignmentAction((AssignmentAction)a, c);
         else if( a instanceof IfStatement )
@@ -219,6 +221,25 @@ public class Interpreter {
         return o;
     }
     
+    /**
+     * Execute the given DeleteAction in the given Context.
+     *
+     * @param a the DeleteAction to execute
+     * @param c the Context in which to execute the action
+     * @throws runtime.LemRuntimeException
+     */
+    public void executeDeleteAction( DeleteAction a, Context c ) throws LemRuntimeException {
+	ObjectReferenceVariable targetRef =
+			(ObjectReferenceVariable)getVariable( a.getVariable(), c );
+        runtime.Object target = (runtime.Object)targetRef.getValue();
+	c.delObject(target);
+	target.put();
+
+        // Notify listeners that the object has been deleted
+        //@todo: can't do this because target may be deleted by now!
+	//new LemObjectDeletionEvent( target, a ).notifyAll( c );
+    }
+
     /**
      * Execute the given GenerateAction in the given Context.
      *
