@@ -107,7 +107,7 @@ public class Object {
 	/**
 	 * adds a Signal to this object's signal queue
 	 */
-	public void addSignal( Signal s ) throws LemRuntimeException {
+	public void addSignal( Signal s ) {
 		synchronized ( this ) {
 			signalQueue.add( s );
 			this.notify();
@@ -117,7 +117,7 @@ public class Object {
 	/**
 	 * adds a Signal to this object's "self" signal queue - ie. signals to self.
 	 */
-	public void addSignalSelf( Signal s ) throws LemRuntimeException {
+	public void addSignalSelf( Signal s ) {
 		synchronized ( this ) {
 			signalSelfQueue.add( s );
 			this.notify();

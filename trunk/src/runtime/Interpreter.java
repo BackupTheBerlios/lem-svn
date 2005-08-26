@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.Collection;
 import java.util.ArrayList ;
 import java.util.HashMap;
+import java.math.BigDecimal;
 
 
 /**
@@ -241,34 +242,19 @@ public class Interpreter {
      * constructor
      */
     public void executeGenerateAction( GenerateAction a, Context c ) throws LemRuntimeException {
-        // Create the new signal
-        int delayTime = 0 ;
-        System.out.println("execute generate action");
-        Expression delayExpression = a.getDelayTime() ;
-        if ( delayExpression != null) {
-            System.out.println("Delay not null !") ; 
-            Variable v = evaluateExpression( delayExpression, c ) ;
-            String delay = (String) v.getValue() ;
-            try{
-                delayTime = Integer.parseInt( delay ) ;                                
-                System.out.println("Delay time is :" + delay) ; 
-            }catch (Exception e) {
-                throw new LemRuntimeException("Delay time should be a number or a numerical Expression.") ;
-            }
-        }
-        Signal s = new Signal(a.getEvent() , delayTime );
         LinkedList p = a.getParameters();
+	LinkedList passedValues = null;
+
         if (p != null) {
-            LinkedList passedValues = new LinkedList();
+            passedValues = new LinkedList();
             
             /* Evaluate parameters - pass by value obviously */
-            for (Iterator i = p.iterator(); i.hasNext();) {
+            Iterator i = p.iterator();
+	    while(i.hasNext()) {
                 Expression e = (Expression)i.next();
                 Variable result = evaluateExpression(e, c);
                 passedValues.add(result);
             }
-            
-            s.setParameters(passedValues);
         }
         
         VariableReference vr = a.getTarget();
@@ -278,16 +264,35 @@ public class Interpreter {
         }
         
         runtime.Object target = (runtime.Object)((ObjectReferenceVariable)targetRef).getValue();
-        
+
+        Expression delayExpression = a.getDelayTime() ;
+        if ( delayExpression != null ) {
+            Variable v = evaluateExpression( delayExpression, c ) ;
+	    if (!(v instanceof NumericVariable)) {
+            	throw new LemRuntimeException("Type mismatch: expected numeric, got " + v.getType().getName());
+	    }
+            BigDecimal delay = (BigDecimal)v.getValue() ;
+	    DelayedSignal s = new DelayedSignal(a.getEvent());
+	    if (passedValues != null)
+        	s.setParameters(passedValues);
+	    s.setDelay(delay);
+	    s.setTarget(target);
+	    
+            System.out.println("Interpreter adding a signal with delay: " + delay) ; 
+	    java.lang.Thread sg = new SignalGenerator(s, currentObject);
+	    return;
+        }
+
+        // Create the new signal
         System.out.println("Interpreter adding a signal");
-	//@todo: this must be fixed, signals with no delay need to be
-	//done here like this!
-        //if (target == currentObject) {
-        //    target.addSignalSelf(s);
-        //} else {
-        //    target.addSignal(s);
-        //}
-        java.lang.Thread sg = new SignalGenerator(s ,target, currentObject) ;         
+        Signal s = new Signal(a.getEvent());
+	if (passedValues != null)
+        	s.setParameters(passedValues);
+        if (target == currentObject) {
+            target.addSignalSelf(s);
+        } else {
+            target.addSignal(s);
+        }
     }
     
     /**

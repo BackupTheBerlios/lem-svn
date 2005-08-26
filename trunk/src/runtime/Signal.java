@@ -35,12 +35,11 @@ import metamodel.Expression ;
  * This class represents a LEM runtime signal. When the model is being executed,
  * instances of this class are created in response to Events being encountered.
  * @author npiggin
- * @see the Signals at Runtime description at http://xtuml.jdns.org/wiki/index.php/TODO!!
  */
 public class Signal {
 	private Event event;
 	private LinkedList parameters;
-        private int delayTime ;  
+
 	/**
 	 * Creates a new instance of Signal.
 	 *
@@ -50,19 +49,6 @@ public class Signal {
 	public Signal(Event e) throws LemRuntimeException {
 		event = e;
 		parameters = null;
-                this.delayTime = 0 ;  
-	}
-
-        /**
-	 * Creates a new instance of Signal with delay.
-	 *
-	 * @param Event The event to which this signal is associated.
-	 * @throws LemRuntimeException if ...
-	 */
-	public Signal(Event e, int delay) throws LemRuntimeException {
-		event = e;
-		parameters = null;                
-                this.setDelayTime(delay) ; 
 	}
         
 	/**
@@ -109,12 +95,4 @@ public class Signal {
 			}
 		}
 	}
-
-    public int getDelayTime() {
-        return delayTime;
-    }
-
-    public void setDelayTime(int delayTime) {
-        this.delayTime = delayTime;
-    }
 }
