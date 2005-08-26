@@ -32,7 +32,7 @@ public class ObjectReferenceVariable extends Variable {
     public java.lang.Object getValue() {
         return value;
     }
-    
+
     public DataType getType() {
         return ObjectReferenceType.getInstance();
     }

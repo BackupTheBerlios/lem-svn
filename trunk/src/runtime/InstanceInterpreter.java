@@ -103,6 +103,11 @@ public class InstanceInterpreter extends java.lang.Thread {
 	    }
 	    System.out.println("InstanceInterpreter finished");
 	    if (instance.instanceInObject.getRunningInterpretersRefcount().put()) {
+		/**
+		 * If this is the last running interpreter, then delete the
+		 * object from the global object pool (analogous to a delete
+		 * object action for passive objects)
+		 */
 	    	context.delObject(instance.instanceInObject);
 	    }
 	} catch( LemRuntimeException e ) {
