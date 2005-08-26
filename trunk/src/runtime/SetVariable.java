@@ -21,37 +21,11 @@ import java.util.LinkedList;
  * @author Shuku
  */
 public class SetVariable extends Variable {
-    private boolean refcounted = false;
     private Collection value;
     
     /** Creates a new instance of StringVariable */
     public SetVariable() {
         this.setValue(new LinkedList()) ; 
-    }
-    
-    public void get() throws LemRuntimeException {
-	    if (refcounted) {
-		    throw new LemRuntimeException("Tried to get SetVariable that is already refcounted");
-	    }
-	    refcounted = true;
-
-	    Iterator i = value.iterator();
-	    while (i.hasNext()) {
-		    Variable v = (Variable)i.next();
-		    v.get();
-	    }
-    }
-
-    public void put() throws LemRuntimeException {
-	    if (refcounted) {
-		    refcounted = false;
-
-		    Iterator i = value.iterator();
-		    while (i.hasNext()) {
-			    Variable v = (Variable)i.next();
-			    v.put();
-		    }
-	    }
     }
     
     public SetVariable( Collection o ) {
@@ -76,8 +50,6 @@ public class SetVariable extends Variable {
      *@param b the variable to be added.
      */
    public void addToSet( Variable b ) throws LemRuntimeException {       
-	if (refcounted)
-		b.get();
 	value.add ( b ) ;       
    }   
 

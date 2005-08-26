@@ -37,12 +37,6 @@ public abstract class Variable {
 	public Variable() {
 	}
 
-	public void get() throws LemRuntimeException {
-	}
-
-	public void put() throws LemRuntimeException {
-	}
-	
 	/**
 	 * Gets the value associated with this getType() instance
 	 *

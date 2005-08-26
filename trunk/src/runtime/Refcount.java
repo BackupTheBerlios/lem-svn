@@ -34,7 +34,7 @@ public class Refcount
 	 */
 	public Refcount()
 	{
-		num = 1;
+		num = 0;
 	}
 
 	/**
@@ -49,10 +49,6 @@ public class Refcount
 	
 	public synchronized void get() throws Error
 	{
-		/* It's a bug to get an object that has no references to it */
-		if (num == 0)
-			throw new Error("Tried to get zero refcount");
-
 		num++;
 
 		System.out.println("get: Refcount variable has " + num + " references");

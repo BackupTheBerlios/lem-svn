@@ -38,8 +38,6 @@ import metamodel.Generalisation;
  * @see the Objects at Runtime description at http://xtuml.jdns.org/wiki/index.php/Runtime_object
  */
 public class Object {
-	private Refcount refcount = new Refcount();
-	
 	/** Queue of pending signals for the object */
 	LinkedList signalQueue = new LinkedList();
 	
@@ -51,6 +49,8 @@ public class Object {
 	
 	//    InstanceAttribute attributes[] = null;
 	Collection instances = new LinkedList();
+	
+	private Refcount runningInterpreters = new Refcount();
 	
 	/**
 	 * Creates a new instance of Object. The object will contain instances
@@ -99,26 +99,9 @@ public class Object {
 		}
 	}
 	
-	/**
-	 * get takes a reference to the object.
-	 * @todo: should Object inherit a "refcounted object class" ?
-	 */
-	public void get() {
-		refcount.get();
-	}
-	
-	/**
-	 * put drops a reference to the object.
-	 * If the last reference is dropped, various things get cleaned up.
-	 */
-	public void put() {
-		if (refcount.put()) {
-			/* @todo: must drop associations here */
-		}
-	}
-	
-	public int references() {
-		return refcount.references();
+	public Refcount getRunningInterpretersRefcount()
+	{
+		return runningInterpreters;
 	}
 	
 	/**

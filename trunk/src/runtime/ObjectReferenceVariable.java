@@ -18,37 +18,11 @@ import metamodel.ObjectReferenceType;
  * @author sjr
  */
 public class ObjectReferenceVariable extends Variable {
-    private boolean refcounted = false;
     runtime.Object value = null;
     
     /** Creates a new instance of ObjectReferenceVariable */
     public ObjectReferenceVariable( runtime.Object o ) throws LemRuntimeException {
         setValue( o );
-    }
-    
-    public void get() throws LemRuntimeException {
-	    if (refcounted) {
-		    throw new LemRuntimeException("Tried to get ObjectReferenceVariable that already has a reference to the Object");
-	    }
-	    if (value == null) {
-		    throw new LemRuntimeException("Tried to get ObjectReferenceVariable with no value");
-	    }
-	    value.get();
-	    refcounted = true;
-    }
-
-    public void put() throws LemRuntimeException {
-	    if (refcounted) {
-		    refcounted = false;
-		    value.put();
-		    value = null;
-	    }
-    }
-    
-    protected void finalize() throws Throwable {
-	    if (value != null) {
-		    throw new LemRuntimeException("Destroyed ObjectReferenceVariable left not finished");
-	    }
     }
     
     public void setValue( java.lang.Object o ) {

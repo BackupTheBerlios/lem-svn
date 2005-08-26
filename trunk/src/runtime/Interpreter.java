@@ -146,13 +146,6 @@ public class Interpreter {
             Action a = (Action)i.next();
             executeAction(a, localContext);
         }
-
-	/* Clean up local variables */
-	i = localContext.getVariableList().iterator();
-	while (i.hasNext()) {
-		Variable v = (Variable)i.next();
-		v.put();
-	}
 			
         localContext.finish();
     }
@@ -233,7 +226,6 @@ public class Interpreter {
 			(ObjectReferenceVariable)getVariable( a.getVariable(), c );
         runtime.Object target = (runtime.Object)targetRef.getValue();
 	c.delObject(target);
-	target.put();
 
         // Notify listeners that the object has been deleted
         //@todo: can't do this because target may be deleted by now!
@@ -384,14 +376,6 @@ public class Interpreter {
 
             executeBlock(block, newContext);
 	    
-	    /* Clean up local variables */
-	    Iterator j = newContext.getVariableList().iterator();
-	    while (j.hasNext()) {
-		Variable v = (Variable)j.next();
-		if (v != select)
-			v.put();
-	    }
-
             newContext.finish();
         }
     }
@@ -416,9 +400,7 @@ public class Interpreter {
             throw new LemRuntimeException( "Type mismatch: evaluated '" + value.getType().getName() + "', expected '" + destination.getType() + "', name: " + r.getVariableName() );
         }
         
-	destination.put();
         destination.setValue( value.getValue() );
-	destination.get();
         return destination;
     }
     

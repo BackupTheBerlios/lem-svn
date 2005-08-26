@@ -48,7 +48,7 @@ public class InstanceInterpreter extends java.lang.Thread {
     public InstanceInterpreter(runtime.Instance instance, Context c) {
 	this.instance = instance ;
 	context = c;
-	instance.instanceInObject.get();
+	instance.instanceInObject.getRunningInterpretersRefcount().get();
 	interpreter = new Interpreter(instance.instanceInObject) ;
 	start() ;
     }
@@ -102,10 +102,12 @@ public class InstanceInterpreter extends java.lang.Thread {
 	    	while ( advance() );
 	    }
 	    System.out.println("InstanceInterpreter finished");
+	    if (instance.instanceInObject.getRunningInterpretersRefcount().put()) {
+	    	context.delObject(instance.instanceInObject);
+	    }
 	} catch( LemRuntimeException e ) {
 	    e.printStackTrace();
 	}
-	instance.instanceInObject.put();
     }
     
     /** Advances the statemachine by one state (if possible)
