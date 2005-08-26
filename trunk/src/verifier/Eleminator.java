@@ -89,6 +89,7 @@ public class Eleminator extends javax.swing.JFrame {
 		}
 		
 		setSize(640, 480);
+		setLocationByPlatform( true );
 		doLayout();
 		setTitle("eLEMinator");
 		URL imageURL = getClass().getClassLoader().getResource("verifier/lem.jpg");
