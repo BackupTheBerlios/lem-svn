@@ -47,6 +47,7 @@ public class Signal {
 	 * @throws LemRuntimeException if ...
 	 */
 	public Signal(Event e) throws LemRuntimeException {
+		System.out.println("Signal(" + e + ")");
 		event = e;
 		parameters = null;
 	}

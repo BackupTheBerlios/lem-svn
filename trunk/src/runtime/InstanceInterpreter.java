@@ -69,11 +69,14 @@ public class InstanceInterpreter extends java.lang.Thread {
 		System.out.println("InstanceInterpreter getting a next signal");
 		Signal s = instance.getNextSignal() ;
 		System.out.println("InstanceInterpreter got a next signal");
-	    
+
 		Iterator i = m.getTransitionList().iterator();
 		while (i.hasNext()) {
 		    Transition t = (Transition)i.next();
 
+		    System.out.println("1");
+		    System.out.println(s.getEvent());
+		    
 		    /* Skip non-initialising transition */
 		    if ( t.getFromState() != null )
 			    continue;
@@ -130,7 +133,8 @@ public class InstanceInterpreter extends java.lang.Thread {
 		System.out.println("InstanceInterpreter getting a next signal");
 		Signal s = instance.getNextSignal() ;
 		System.out.println("InstanceInterpreter got a next signal");
-		Iterator i =  m.getTransitionList().iterator();
+
+		Iterator i = m.getTransitionList().iterator();
 		while (i.hasNext()) {
 		    Transition t = (Transition)i.next();
 		    

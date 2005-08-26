@@ -272,27 +272,27 @@ public class Interpreter {
             	throw new LemRuntimeException("Type mismatch: expected numeric, got " + v.getType().getName());
 	    }
             BigDecimal delay = (BigDecimal)v.getValue() ;
-	    DelayedSignal s = new DelayedSignal(a.getEvent());
+	    DelayedSignal ds = new DelayedSignal(a.getEvent());
 	    if (passedValues != null)
-        	s.setParameters(passedValues);
-	    s.setDelay(delay);
-	    s.setTarget(target);
+        	ds.setParameters(passedValues);
+	    ds.setDelay(delay);
+	    ds.setTarget(target);
 	    
             System.out.println("Interpreter adding a signal with delay: " + delay) ; 
-	    java.lang.Thread sg = new SignalGenerator(s, currentObject);
-	    return;
-        }
-
-        // Create the new signal
-        System.out.println("Interpreter adding a signal");
-        Signal s = new Signal(a.getEvent());
-	if (passedValues != null)
-        	s.setParameters(passedValues);
-        if (target == currentObject) {
-            target.addSignalSelf(s);
+	    java.lang.Thread sg = new SignalGenerator(ds, currentObject);
         } else {
-            target.addSignal(s);
-        }
+            // Create the new signal
+            System.out.println("Interpreter adding a signal");
+            Signal s = new Signal(a.getEvent());
+	    System.out.println(s.getEvent());
+	    if (passedValues != null)
+        	   s.setParameters(passedValues);
+            if (target == currentObject) {
+                   target.addSignalSelf(s);
+            } else {
+                   target.addSignal(s);
+            }
+	}
     }
     
     /**

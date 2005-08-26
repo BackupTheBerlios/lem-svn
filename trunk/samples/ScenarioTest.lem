@@ -49,7 +49,7 @@ model TestModel is
 			a2 := create A;
 
 			generate Ev1 to a1;
-			generate Ev1 to a2;
+			/* generate Ev1 to a2; */
 		}
 
 		scenario TestDeletion is {
