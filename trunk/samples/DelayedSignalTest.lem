@@ -1,0 +1,40 @@
+model TestModel is
+	domain TestDomain is
+		subsystem TestSubsystem is
+			class A is
+				event Ev1;
+				
+				behaviour is
+					state s1 is
+					{
+					        generate Ev1 to self with delay 1000;					
+					}
+					end s1;
+
+					state s2 is
+					{											
+					         generate Ev1 to self;				
+					}
+					end s2;
+					
+					on Ev1 transition from creation state to s1;
+					on Ev1 transition from s1 to s2;
+					on Ev1 transition from s2 to s1;
+				end behaviour;
+			end;
+		
+		end TestSubsystem;
+
+		scenario TestSignals is {
+			/* Create a signal storm! */
+			objref a1;
+			objref a2;
+			
+			a1 := create A;
+			a2 := create A;
+
+			generate Ev1 to a1;			
+		}
+
+	end TestDomain;
+end TestModel;
