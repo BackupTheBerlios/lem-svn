@@ -66,10 +66,10 @@ public class InstanceInterpreter extends java.lang.Thread {
 		return false;
 
 	while ( true ) {
-		System.out.println("InstanceInterpreter getting a next signal");
+		//System.out.println("InstanceInterpreter getting a next signal");
 		Signal s = instance.getNextSignal() ;
-		System.out.println("InstanceInterpreter got a next signal");
-
+ 
+		//System.out.println("InstanceInterpreter got a next signal");
 		Iterator i = m.getTransitionList().iterator();
 		while (i.hasNext()) {
 		    Transition t = (Transition)i.next();
