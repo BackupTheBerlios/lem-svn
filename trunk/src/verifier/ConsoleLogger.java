@@ -9,6 +9,9 @@ import java.util.Iterator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import runtime.LemAttributeChangeEvent;
+import runtime.LemRelationshipCreationEvent;
+import runtime.LemRelationshipDeletionEvent;
+import runtime.LemEventGenerationEvent;
 
 /**
  * Receives all activity by the runtime and logs desired activity to the console
@@ -87,5 +90,36 @@ public class ConsoleLogger implements runtime.LemEventListener {
 		logger.debug(counter + message + e.getOldValue() + " --> " + e.getNewValue());
 		counter ++;
 	}
-	
+        
+	 public void relationshipDeletion(LemRelationshipDeletionEvent event) {
+                String message = " RD ";
+                runtime.AssociationInstance a = event.getCreatedRelationship();
+                message = message + event.getUnrelateAction().getActiveObjectName();
+                message = message + " unrelates from ";
+                message = message + event.getUnrelateAction().getPassiveObjectName();                
+                message = message + " across " + a.getAssociation().getName();
+                logger.debug(counter + message);
+                counter++;
+	 }        
+        
+	public void relationshipCreation(LemRelationshipCreationEvent event) {
+                String message = " RC ";
+                runtime.AssociationInstance a = event.getCreatedRelationship();
+                message = message + event.getRelateAction().getActiveObjectName();
+                message = message + " relates to ";
+                message = message + event.getRelateAction().getPassiveObjectName();                
+                message = message + " across " + a.getAssociation().getName();
+                logger.debug(counter + message);
+                counter++;
+	}
+        
+        public void eventGenerated(LemEventGenerationEvent event) {
+               String message = " EG ";
+                message = "Object ID ";
+                message = message + " generated signal ";
+                message = message + " Signal name ";                
+                message = message + "Object ID";
+                logger.debug(counter + message);
+                counter++;            
+        }        
 }
