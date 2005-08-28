@@ -41,6 +41,27 @@ public class ActionBlock {
         variableDeclarations.put(v.getVariableName(), v);
         return true;
     }
+    
+    /**
+     * to retrieve the variable type given a variable name
+     */
+    public DataType getVariableType(String variableName) {
+        if(containsVariable(variableName)) {
+            return ((VariableDeclaration)variableDeclarations.get(variableName)).getVariableType();
+        }
+        else if(parent != null) {
+            return parent.getVariableType(variableName);
+        }
+        return null;
+    }
+    
+     /** removes a variable declaration from the block 
+     */
+    public void removeVariableDeclaration(VariableDeclaration v) {
+        if(containsVariable(v.getVariableName())) {
+            variableDeclarations.remove(v.getVariableName());
+        }
+    }
 
     public boolean isValidVariable(String variable) {
         if(containsVariable(variable))
