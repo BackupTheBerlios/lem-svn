@@ -42,6 +42,15 @@ public class BuilderPass2 extends Visitor {
     private ActionBlock currentBlock = null;
     
     /**
+     * flag to indicate if we are in a scenario or a procedure
+     */
+    private boolean inScenario = false;
+    
+    /**
+     * flag to indicate if we are in a select statement
+     */
+    private boolean inSelect = false;
+    /**
      * Creates a new instance of ModelFitout
      *
      * @param aMapper from a previous BuilderPass2
@@ -89,11 +98,11 @@ public class BuilderPass2 extends Visitor {
     
     public Object visit( LEMScenarioDeclaration node, Object data ) throws LemException {
         Scenario s = new Scenario();
-        
+        inScenario = true;
         s.setName( getIdentifier( node.jjtGetChild( 0 )));
         s.setDescription( (String)node.jjtGetChild( 1 ).jjtAccept( this, null ));
         s.setActionBlock( (ActionBlock)node.jjtGetChild( 2 ).jjtAccept( this, null ));
-        
+        inScenario = false;
         return s;
     }
     
@@ -151,8 +160,11 @@ public class BuilderPass2 extends Visitor {
         int multiplicity = ((Integer)node.jjtGetChild( 0 ).jjtAccept( this, null )).intValue();
         String fromClassName = getIdentifier(node.jjtGetChild(1));
         String lastToken = node.getLastToken().toString() ;
+        // adds selected to the list of valid variables
+        inSelect = true;
 	Expression condition = (Expression)node.jjtGetChild(2).jjtAccept( this, data );                
-        
+        // selected is no longer valid after here
+        inSelect = false;
         metamodel.Class fromClass = getClass( fromClassName );        
         
         if( fromClass == null )
@@ -464,14 +476,12 @@ public class BuilderPass2 extends Visitor {
             String verbclause = (String)i.next();
             if(ra.getActivePerspective().getVerbClause().toString().equals(verbclause)) {
                 a.setActiveObjectName( active.getVariableName() );
-                a.setPassiveObjectName( passive.getVariableName() );    
-                System.err.println("TTS: Verb clause present");                                        
+                a.setPassiveObjectName( passive.getVariableName() );                                            
                 a.setVerbClause(true);
             }
             else if(ra.getPassivePerspective().getVerbClause().toString().equals(verbclause)) {
                 a.setPassiveObjectName( active.getVariableName() );
-                a.setActiveObjectName( passive.getVariableName() ); 
-                System.err.println("TTS: Verb clause present");                 
+                a.setActiveObjectName( passive.getVariableName() );                  
                 a.setVerbClause(true);
             }
             else {     
@@ -564,11 +574,14 @@ public class BuilderPass2 extends Visitor {
 
     public Object visit( LEMForStatement node, Object data ) throws LemException {
         ForStatement f = new ForStatement();
-        
-        f.setSelectVariable( getIdentifier(node.jjtGetChild( 0 )) );
+        String selectVariable = getIdentifier(node.jjtGetChild( 0 )) ;
+        f.setSelectVariable( selectVariable );
+        VariableDeclaration selected = new VariableDeclaration(CoreDataType.findByName("objref"), selectVariable);                
+        if(!currentBlock.addVariableDeclaration(selected))
+            throw new LemException("Double declaration of variable: " +selectVariable );        
         f.setSetExpression( (Expression)node.jjtGetChild( 1 ).jjtAccept( this, null ));
 	f.setBlock( (ActionBlock)node.jjtGetChild( 2 ).jjtAccept( this, null ));
-        
+        currentBlock.removeVariableDeclaration(selected);
         return f;
     }
     
@@ -821,6 +834,17 @@ public class BuilderPass2 extends Visitor {
      * @return
      */
     public Object visit( LEMObjectReference node, Object data ) throws LemException {
+        String objectName = node.getFirstToken().image;
+        if(inScenario && objectName.equals("self"))
+            throw new LemException("Undefined use of self in Scenario");
+        if(!objectName.equals("self") && !(objectName.equals("selected") && inSelect)) {
+            if(!currentBlock.isValidVariable(objectName))
+                throw new LemException("Undeclared object "+objectName);
+            else {
+                if(!(currentBlock.getVariableType(objectName) instanceof ObjectReferenceType))
+                    throw new LemException(objectName+ " is not an object reference");
+            }
+        }
         return new VariableReference(node.getFirstToken().image);
     }
     
@@ -833,25 +857,23 @@ public class BuilderPass2 extends Visitor {
      * @return
      */
     public Object visit( LEMVariableReference node, Object data ) throws LemException {
-        if( node.jjtGetNumChildren() == 0 ) {
+        if( node.jjtGetNumChildren() == 0) {
 	    // 'self' reference.
+            if(inScenario)
+                throw new LemException("Undefined used of self in Scenario");
 	    return new VariableReference( "self" );  
         } else if( node.jjtGetNumChildren() == 1 ) {
             // bare variable reference
             String variableName = getIdentifier(node.jjtGetChild(0) );
-	    /* @todo: uncomment and make this work
             if(!currentBlock.isValidVariable(variableName)) {
-                throw new LemException("Undeclared variable.");
-            } */
+                if(!(variableName.equals("selected") && inSelect))
+                    throw new LemException("Undeclared variable "+variableName);
+            } 
             return new VariableReference(variableName );
         } else if( node.jjtGetNumChildren() == 2 ) {
             // object.variable-style reference, eg. "publisher.name"
             VariableReference obj = (VariableReference)visit( (LEMObjectReference)node.jjtGetChild(0), null );
-            String variableName = getIdentifier( node.jjtGetChild(1));
-	    /* @todo: uncomment and make this work
-            if(!currentBlock.isValidVariable(obj.getVariableName()) && !variableName.equals("self")) {
-                throw new LemException("Undeclared variable.");
-            } */           
+            String variableName = getIdentifier( node.jjtGetChild(1));      
             return new VariableReference( obj.getVariableName(), variableName );
         }
 
