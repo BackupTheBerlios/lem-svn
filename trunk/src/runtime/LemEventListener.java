@@ -28,7 +28,7 @@ public interface LemEventListener {
      * @param ev the LemEventGenerationEvent which represents the circumstances
      * of the generated event
      */
-//    void eventGenerated(EventObject ev);
+    void eventGenerated(LemEventGenerationEvent ev);
     
     /**
      * The logListener can notify the logger that a receiveEvent has occured.
@@ -62,7 +62,7 @@ public interface LemEventListener {
      * @param event The LemRelationshipDeletionEvent representing the circumstances
      * in which the relationship was deleted.
      */
-//    void relationshipDeletion(LemRelationshipDeletionEvent event);
+    void relationshipDeletion(LemRelationshipDeletionEvent event);
     
     /**
      * Called by the runtime when a CreatAction has been executed successfully
@@ -71,7 +71,7 @@ public interface LemEventListener {
      * @param event the LemRelationshipCreationEvent representing the circumstances
      * in which the relationship is created.
      */
-//    void relationshipCreation(LemRelationshipCreationEvent event);
+    void relationshipCreation(LemRelationshipCreationEvent event);
     
     /**
      * Called by the runtime when a CreateAction has been executed successfully
