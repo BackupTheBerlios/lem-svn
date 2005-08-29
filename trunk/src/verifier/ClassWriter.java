@@ -40,20 +40,21 @@ public class ClassWriter {
         /**  store all classes in this domain */
         private static Collection allClassList;
         
-        /**  store all associations in in this domain for a subsystem */
+        /**  store all associations in this domain */
         private static  Collection associationList;
         
-        /**  store all associations in in this domain for a subsystem */
+        /**  store all associations in in this domain  */
         private static ArrayList list = new ArrayList();
         
-//private static boolean a= true;
-//private static boolean b= false;             
+         /**  a flag to indicate a class is selected or not  */
+        private static boolean isSelected = true;
+           
         /**
 	 * Generates UMLGraph code for class diagrams. Note that this procedure only
 	 * supports diagrams involving classes from a single domain.
 	 *
 	 * @param domain the domain inside which the class of interest reside
-	 * @param classList a list of class names (in String format)
+	 * @param aClassList a list of class names (in String format)
 	 * that should  be included in the diagram
 	 * @todo fill in UMLGraph generation code
 	 * @todo print the class list
@@ -64,7 +65,7 @@ public class ClassWriter {
               allClassList = domain.getClasses().values();
               
               associationList =  domain.getRelationships().values();
-              TopupList ();
+              TopUpList ();
               StringBuffer strBuf = new StringBuffer();
               // list core types 
               strBuf.append("/**\n* @opt attributes\n* @opt types\n* @hidden\n" +
@@ -85,28 +86,38 @@ public class ClassWriter {
                    metamodel.Class umlclass = (metamodel.Class) it.next();   
                    // decide  whether a class is selected or not
                    if (selectedClassList.contains(umlclass)) 
-                      strBuf.append(umlclass.dumpUMLGraph(true)); 
+                      strBuf.append(umlclass.dumpUMLGraph(isSelected)); 
                    else
-                      strBuf.append(umlclass.dumpUMLGraph(false)); 
+                      strBuf.append(umlclass.dumpUMLGraph(!isSelected)); 
               }
               
               strBuf.append("\n");
-              TopupList ();
+              TopUpList ();
               return  strBuf.toString();
         }
         
-        /** remove a association in association list */
+        /**  
+         *  Remove a association in association list
+         *
+         *  @param association a assocoation in the association list
+         */
         public static void removeAssociation (Association association)  {
               list.remove(association);
         }    
 
-        /** return an ArrayList contains all associations */
+        /** 
+         *  Return an ArrayList contains all associations 
+         *  
+         *  @return a ArrayList 
+         */
         public static ArrayList getAssociationList() {
               return list;
         }
         
-        /** top up association list */
-        private static void TopupList ()  {
+        /** 
+         *  Top up association list
+         */
+        private static void TopUpList ()  {
                list.clear();
                for ( Iterator it = associationList.iterator(); it.hasNext(); ) {
                     metamodel.Relationship relationalship = (metamodel.Relationship) it.next();   
@@ -114,9 +125,13 @@ public class ClassWriter {
                }
         }    
         
-        /**  return a Collection of classes in this domain (or subsystem) */
-        public static Collection getClassList () {
-            return allClassList;
+        /**  
+         *   Return a Collection of selected classes
+         *
+         *   @return a collection of Class
+         */
+        public static Collection getSelectedClassList () {
+            return selectedClassList;
         }
         
 }        

@@ -601,13 +601,15 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
     
     
      /**
-     *@Return UMLGraph string  of this class, including relationships and attributes 
-     */
+      * Return UMLGraph string  of this class, including relationships and attributes  
+      *
+      * @param isSelected a flag to indicate whether this class is be selected
+      * @Return UMLGraph string  of this class, including relationships and attributes 
+      */
      public String dumpUMLGraph (boolean isSelected) { 
       
           StringBuffer strBuf = new StringBuffer( );
           Collection associationList; 
-          
            
           // for all non-AssociationClasses
           if (!associations.isEmpty() || !generalisationRoles.isEmpty()) { 
@@ -617,8 +619,6 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
                   // set color for selected class
                   if (isSelected)
                      strBuf.append(" *  @opt nodefillcolor \"#FFFF99\"\n");
-         //         else
-         //            strBuf.append(" *  @opt nodefillcolor \"#FFFF99\"\n");
            
                   // add associations for a class   
                   for ( Iterator it = associations.values().iterator(); it.hasNext(); ) {
@@ -672,27 +672,29 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
                        strBuf.append("   " + attribute.getType().getName() +  " " + attribute.getName() + ";\n");
                   }
                   strBuf.append("}\n\n");
-          }
+          } // end if
           
           // add AssociationClass
           for (Iterator lit = list.listIterator();lit.hasNext();)  {
+              
                Association asso = (Association) lit.next();
                Class associationClass = asso.getAssociationClassRole().getAssociationClass();
-               // only display the AssociationClass in selected domain (subsystem)
-               if (verifier.ClassWriter.getClassList().contains(associationClass)) {
-                    // add  AssociationClass option
-                    strBuf.append("/**\n");
-                    // set color for this class
+               // add  AssociationClass option
+               strBuf.append("/**\n");
+                    
+               // set color for this class
+               if (verifier.ClassWriter.getSelectedClassList().contains(associationClass)) 
                     strBuf.append(" *  @opt nodefillcolor \"#FFFF99\"\n"); 
-                    strBuf.append(" *  @tagvalue " + "Association " +  asso.getName() + "\n*/\n" );
-                    strBuf.append("class " + associationClass.getName().toUpperCase()  + " {\n");
-                    // add atributes
-                    for ( Iterator it = associationClass.attributes.values().iterator(); it.hasNext(); ) {
-                        Attribute attribute = (Attribute) it.next();
-                        strBuf.append("   " + attribute.getType().getName() +  " " + attribute.getName() + ";\n");
-                    }
-                    strBuf.append("}\n\n");
-               }            
+                    
+               strBuf.append(" *  @tagvalue " + "Association " +  asso.getName() + "\n*/\n" );
+               strBuf.append("class " + associationClass.getName().toUpperCase()  + " {\n");
+               // add atributes
+                for ( Iterator it = associationClass.attributes.values().iterator(); it.hasNext(); ) {
+                Attribute attribute = (Attribute) it.next();
+                    strBuf.append("   " + attribute.getType().getName() +  " " + attribute.getName() + ";\n");
+                }
+                strBuf.append("}\n\n");
+               
           } // end for
           list.clear();
 	  return strBuf.toString();
