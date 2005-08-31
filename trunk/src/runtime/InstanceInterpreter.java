@@ -47,6 +47,8 @@ public class InstanceInterpreter extends java.lang.Thread {
      */
     public InstanceInterpreter(runtime.Instance instance, Context c) {
 	this.instance = instance ;
+        
+        setName(getName() + " (" + instance.getInstanceClass().getName() + ")" );
 	context = c;
 	instance.instanceInObject.getRunningInterpretersRefcount().get();
 	interpreter = new Interpreter(instance.instanceInObject) ;
