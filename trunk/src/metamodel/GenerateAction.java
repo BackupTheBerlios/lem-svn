@@ -12,7 +12,7 @@ import java.util.LinkedList;
  * @author npiggin
  */
 public class GenerateAction extends Action {
-	private Event event = null;
+	private String eventName = null;
 	private VariableReference target = null;
 	private LinkedList parameters = null;
         private Expression delayTime = null ; 
@@ -22,19 +22,19 @@ public class GenerateAction extends Action {
 	}
 	
 	/**
-	 * Sets the event for which a signal is to be generated.
-	 * @param e the event.
+	 * Sets the name of the event for which a signal is to be generated.
+	 * @param e the event name.
 	 */
-	public void setEvent( Event e ) {
-		event = e;
+	public void setEventName( String eventName ) {
+		this.eventName = eventName;
 	}
 	
 	/**
-	 * Gets the event for which a signal is to be generated.
+	 * Gets the event name for which a signal is to be generated.
 	 * @return the event.
 	 */
-	public Event getEvent() {
-		return event;
+	public String getEventName() {
+		return eventName;
 	}
 
 	/**
