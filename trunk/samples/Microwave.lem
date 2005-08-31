@@ -9,15 +9,47 @@ model TestModel is
 	 			attribute Voltage "voltage" is numeric;
 				attribute Power "power" is numeric;
 				attribute Capacity "capacity" is numeric;
-	          		end;
+	          		end Oven;
                       
                       		class Plate is
 	 			attribute Size "size" is numeric;
-	          		end;
+
+                                  event startRotation;
+                                  event stopRotation;
+
+                                  behaviour is
+                                    state still
+                                         "turn plate motor off" is
+                                    end still;
+                                    state rotating 
+                                         "turn plate motor on" is
+                                    end rotating;
+
+                                  on startRotation transition from still to rotating;
+                                  on stopRotation transition from rotating to still;
+                                  end behaviour;
+	          		end Plate;
 
                       		class Beeper is
 		 		attribute Type "type" is string;
-	          		end;
+
+                                  event soundBeeper;
+                                  event beeperTimeExpired;
+
+                                  behaviour is
+				     state silent 
+                                         "turn beeper off" is
+                                    end silent;
+                                    state sounding 
+                                         "turn beeper on" is
+                                     // generate beeperTimeExpired;
+                                    end sounding;
+                                 
+
+                                  on soundBeeper transition from silent to sounding;
+                                  on beeperTimeExpired transition from sounding to silent;
+                                  end behaviour;
+	          		end Beeper;
 
                       		association R1 is "a record of the fact that each Oven has a Beeper" 
 				Oven "has" 1..1 Beeper;
