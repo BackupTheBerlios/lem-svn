@@ -173,10 +173,7 @@ public class Instance {
 	 * adds a Signal to this instances's "self" signal queue - ie. signals to self.
 	 */
 	public void addSignalSelf( Signal s ) throws LemRuntimeException {
-		synchronized ( instanceInObject ) {
-			signalSelfQueue.add( s );
-			instanceInObject.notify();
-		}
+		signalSelfQueue.add( s );
 	}
 
 	/**
