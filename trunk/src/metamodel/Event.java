@@ -128,5 +128,14 @@ public class Event implements DescribedEntity {
         this.signature = aSignature;
         aSignature.setEvent( this );
     }
+
+    /** 
+     * Returns the name of this event.
+     *
+     * @return the name
+     */
+    public String toString() {
+	    return getName();
+    }
 }
 
