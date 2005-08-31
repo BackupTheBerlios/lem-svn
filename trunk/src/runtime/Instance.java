@@ -164,6 +164,7 @@ public class Instance {
 	/**
 	 * adds a Signal to this instance's signal queue.
 	 * caller must be synchronized with instanceInObject.
+	 *
 	 */
 	public void addSignal( Signal s ) throws LemRuntimeException {
 		signalQueue.add( s );
@@ -181,21 +182,30 @@ public class Instance {
 	 * instance's signal queue, otherwise return null.
 	 */
 	public Signal getNextSignal() throws LemRuntimeException {
-		synchronized ( instanceInObject ) {
+		synchronized( instanceInObject ) {	
 			while ( true ) {
 				if ( signalSelfQueue.size() > 0 ) {
-					return ( Signal ) signalSelfQueue.remove( 0 );
+					System.out.println( Thread.currentThread().getName() + " took a self-signal off the queue!" );
+					return (Signal) signalSelfQueue.remove( 0 );
 				} else if ( signalQueue.size() > 0 ) {
-					return ( Signal ) signalQueue.remove( 0 );
+					System.out.println( Thread.currentThread().getName() + " took a signal off the queue!" );
+					return (Signal) signalQueue.remove( 0 );
 				}
 
+				System.out.println( Thread.currentThread().getName() + " propogating a signal" );
 				if ( instanceInObject.propogateNextSignal() ) {
 					/** Have a signal */
+					System.out.println( Thread.currentThread().getName() + " has a signal!" );
 					continue;
 				}
 
 				try {
+					System.out.println( Thread.currentThread().getName() 
+									+ " waiting patiently for a signal." );
 					instanceInObject.wait();
+
+					System.out.println( Thread.currentThread().getName()
+									+ " woke up! Any signals?" );
 					/**
 					 * After taking instanceInObject's lock, we must
 					 * always recheck this Instance's queue because
