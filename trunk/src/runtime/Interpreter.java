@@ -264,15 +264,21 @@ public class Interpreter {
         }
         
         runtime.Object target = (runtime.Object)((ObjectReferenceVariable)targetRef).getValue();
+	// Find the event to be fired on the given object
+	Event e = target.findEvent( a.getEventName(), a.getParameters() );
+	if( e == null ) {
+		// TODO: Don't use single-arg constructor for LemRuntimeException
+		throw new LemRuntimeException( "Could not find named event" );
+	}
 
-        Expression delayExpression = a.getDelayTime() ;
+        Expression delayExpression = a.getDelayTime();
         if ( delayExpression != null ) {
-            Variable v = evaluateExpression( delayExpression, c ) ;
+            Variable v = evaluateExpression( delayExpression, c );
 	    if (!(v instanceof NumericVariable)) {
             	throw new LemRuntimeException("Type mismatch: expected numeric, got " + v.getType().getName());
 	    }
-            BigDecimal delay = (BigDecimal)v.getValue() ;
-	    DelayedSignal ds = new DelayedSignal(a.getEvent());
+            BigDecimal delay = (BigDecimal)v.getValue();
+	    DelayedSignal ds = new DelayedSignal( e );
 	    if (passedValues != null)
         	ds.setParameters(passedValues);
 	    ds.setDelay(delay);
@@ -283,7 +289,7 @@ public class Interpreter {
         } else {
             // Create the new signal
             System.out.println("Interpreter adding a signal");
-            Signal s = new Signal(a.getEvent());
+            Signal s = new Signal( e );
 	    System.out.println(s.getEvent());
 	    if (passedValues != null)
         	   s.setParameters(passedValues);
