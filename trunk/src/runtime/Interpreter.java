@@ -244,6 +244,8 @@ public class Interpreter {
 		LinkedList p = a.getParameters();
 		LinkedList passedValues = null;
 
+		System.out.println( Thread.currentThread().getName() + " enters executeGenerateAction" );
+		
 		if ( p != null ) {
 			passedValues = new LinkedList();
 
@@ -708,8 +710,10 @@ public class Interpreter {
 			}
 			c = c.getParent();
 		} while ( c != null );
-		return set
-			       ;
+
+		System.out.println( Thread.currentThread().getName() + " selected " + ((LinkedList)set.getValue()).size() + " references" );
+		return set;
+
 	}
 
 	/**
