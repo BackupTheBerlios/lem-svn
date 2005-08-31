@@ -68,11 +68,13 @@ public class InstanceInterpreter extends java.lang.Thread {
 			return false;
 
 		while ( true ) {
-			//System.out.println("InstanceInterpreter getting a next signal");
+			System.out.println(Thread.currentThread().getName() + " [init] InstanceInterpreter getting a next signal");
 			Signal s = instance.getNextSignal() ;
 
-			//System.out.println("InstanceInterpreter got a next signal");
+			System.out.println(Thread.currentThread().getName() + " [init] InstanceInterpreter got a next signal");
 			Iterator i = m.getTransitionList().iterator();
+			
+			System.out.println(Thread.currentThread().getName() + " [init] InstanceInterpreter looking for an initial transition");
 			while ( i.hasNext() ) {
 				Transition t = ( Transition ) i.next();
 
@@ -86,7 +88,7 @@ public class InstanceInterpreter extends java.lang.Thread {
 				if ( s.getEvent() == t.getEvent() ) {
 					metamodel.State newState = t.getToState() ;
 					instance.currentState = newState ;
-					System.out.println( "InstanceInterpreter transitioning state to " + newState.getName() );
+					System.out.println( Thread.currentThread().getName() + " [init] InstanceInterpreter transitioning state to " + newState.getName() );
 					if ( newState instanceof NonDeletionState ) {
 						Procedure p = newState.getProcedure() ;
 						interpreter.interpret( p , context ) ;
@@ -133,31 +135,35 @@ public class InstanceInterpreter extends java.lang.Thread {
 		if ( m.getStateTransitionCount() == 0 )
 			return false;
 
-		System.out.println( "InstanceInterpreter getting a next signal" );
-		Signal s = instance.getNextSignal() ;
-		System.out.println( "InstanceInterpreter got a next signal" );
+		System.out.println( Thread.currentThread().getName() + " InstanceInterpreter getting a next signal" );
+		Signal s = instance.getNextSignal();
+		System.out.println( Thread.currentThread().getName() + " InstanceInterpreter got a next signal" );
 
 		Iterator i = m.getTransitionList().iterator();
+		System.out.println( Thread.currentThread().getName() + " InstanceInterpreter searching for a Transition" );
 		while ( i.hasNext() ) {
-			Transition t = ( Transition ) i.next();
+			Transition t = (Transition)i.next();
 
 			/* Skip initialising transition */
 			if ( t.getFromState() == null )
 				continue;
 
+			System.out.println( s.getEvent().hashCode() + " == " + t.getEvent().hashCode() + " ??" );
 			if ( s.getEvent() == t.getEvent()
 			        && t.getFromState() == currentState ) {
-				metamodel.State newState = t.getToState() ;
-				instance.currentState = newState ;
+				metamodel.State newState = t.getToState();
+				instance.currentState = newState;
 				System.out.println( "InstanceInterpreter transitioning state to " + newState.getName() );
 				if ( newState instanceof NonDeletionState ) {
-					Procedure p = newState.getProcedure() ;
-					interpreter.interpret( p , context ) ;
+					Procedure p = newState.getProcedure();
+					interpreter.interpret( p, context );
 					return true;
 				} else {
 					return false;
 				}
 			}
+
+			System.out.println( Thread.currentThread().getName() + " InstanceInterpreter couldn't find a transition!" );
 		}
 		return true;
 	}
