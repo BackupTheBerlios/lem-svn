@@ -217,4 +217,28 @@ public class Object {
 	public Collection getInstances() {
 		return instances;
 	}
+
+	/**
+	 * Finds the first event which matches the given event name
+	 * and parameter list in this Object. Instances are searched
+	 * for events in an arbitrary order.
+	 *
+	 * @param name the event name
+	 * @param params the parameter list
+	 * @todo the search only matches event names, not event name + parameter
+	 * list
+	 */
+	public metamodel.Event findEvent( String name, LinkedList params ) {
+		Iterator i = instances.iterator();
+		
+		while( i.hasNext() ) {
+			Instance inst = (Instance)i.next();
+			metamodel.Class c = inst.getInstanceClass();
+			metamodel.Event e = c.getEvent( name );
+			if( e != null )
+				return e;
+		}
+		
+		return null;
+	}
 }
