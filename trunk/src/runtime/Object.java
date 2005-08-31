@@ -109,7 +109,9 @@ public class Object {
 	 */
 	public synchronized void addSignal( Signal s ) {
 		signalQueue.add( s );
-		this.notify();
+		System.out.println( Thread.currentThread().getName() 
+			+ " added a signal and notifyAll()ing" );
+		notifyAll();
 	}
 	
 	/**
@@ -117,14 +119,16 @@ public class Object {
 	 */
 	public synchronized void addSignalSelf( Signal s ) {
 		signalSelfQueue.add( s );
-		this.notify();
+		System.out.println( Thread.currentThread().getName() 
+			+ " added a self-signal and notifyAll()ing" );
+		notifyAll();
 	}
 	
 	/**
 	 * propogate the next signal to all instances.
 	 * Callers must be synchronized on 'this' object.
 	 */
-	public boolean propogateNextSignal() throws LemRuntimeException {
+	public synchronized boolean propogateNextSignal() throws LemRuntimeException {
 		if ( signalSelfQueue.size() > 0 ) {
 			Signal s = (Signal) signalSelfQueue.remove( 0 );
 			for ( Iterator i = instances.iterator(); i.hasNext(); ) {
@@ -141,7 +145,7 @@ public class Object {
 			}
 			return true;
 		}
-		
+
 		return false;
 	}
 	
