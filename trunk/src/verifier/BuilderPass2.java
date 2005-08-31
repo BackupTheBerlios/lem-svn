@@ -421,11 +421,8 @@ public class BuilderPass2 extends Visitor {
         GenerateAction a = new GenerateAction();
         getMapper().add(node, a);
         
-        metamodel.Class theClass = currentClass;
-        
         String eventName = getIdentifier(node.jjtGetChild(0));
-        Event e = theClass.getEvent(eventName);
-        a.setEvent(e);
+        a.setEventName( eventName );
         
         LinkedList p = (LinkedList)node.jjtGetChild(1).jjtAccept(this, null);
         a.setParameters(p);
