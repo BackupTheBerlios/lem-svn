@@ -38,10 +38,12 @@ import metamodel.Generalisation;
  * @see the Objects at Runtime description at http://xtuml.jdns.org/wiki/index.php/Runtime_object
  */
 public class Object {
+        
+        /** this arbitrary id, will uniquely identify this object **/
+        private Integer objectId ; 
 	/** Queue of pending signals for the object */
-	LinkedList signalQueue = new LinkedList();
-	
-	/**
+	LinkedList signalQueue = new LinkedList();	          
+        /**
 	 * Queue of pending signals to self. All signals from here must be
 	 * processed before any signals from 'signalQueue'
 	 */
@@ -64,6 +66,9 @@ public class Object {
 	public Object( Collection classes ) throws LemRuntimeException {
 		// Do these classes actually participate in the same inheritance
 		// hierarchy?
+                objectId = ArbitraryIdVariable.getInstance() ;             
+                System.out.println( objectId + " : Object Created") ;     
+                
 		if ( !validClasses( classes ) ) {
 			throw new LemRuntimeException( "Specified class list will not produce a valid Object" );
 		}
@@ -241,4 +246,9 @@ public class Object {
 		
 		return null;
 	}
+        
+        /** this method will return the uniqueId of this object **/
+        public Integer getObjectId() {
+            return objectId ; 
+        }
 }
