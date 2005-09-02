@@ -37,6 +37,8 @@ import metamodel.Expression ;
  * @author npiggin
  */
 public class Signal {
+        /** this arbitrary id, will uniquely identify this signal **/
+        private Integer signalId ; 
 	private Event event;
 	private LinkedList parameters;
 
@@ -46,11 +48,17 @@ public class Signal {
 	 * @param Event The event to which this signal is associated.
 	 * @throws LemRuntimeException if ...
 	 */
-	public Signal(Event e) throws LemRuntimeException {
-		System.out.println("Signal(" + e + ")");
+	public Signal(Event e) throws LemRuntimeException {		
 		event = e;
 		parameters = null;
+                signalId = ArbitraryIdVariable.getInstance() ; 
+                System.out.println(signalId + " : Signal(" + e + ")");
 	}
+        
+        /** this method will return the uniqueId of this signal **/
+        public Integer getSignalId() {
+            return signalId ; 
+        }
         
 	/**
 	 * Returns the event to which this signal is associated.
