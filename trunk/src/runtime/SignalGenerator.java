@@ -42,7 +42,7 @@ public class SignalGenerator extends java.lang.Thread {
     
     /** Creates a new instance of SignalGenerator */
     public SignalGenerator(DelayedSignal signal, runtime.Object sender) {
-        this.signal = signal  ;
+        this.signal = signal  ;        
         this.senderObject = sender;
         this.created = Calendar.getInstance() ;
 //        System.out.println( created.getTime().getTime() ) ;
@@ -68,11 +68,14 @@ public class SignalGenerator extends java.lang.Thread {
         } while (sleepMs > 0);
         
         runtime.Object target = signal.getTarget();
+        Integer signalId = signal.getSignalId() ; 
+        Integer targetObjectId = target.getObjectId() ; 
+        System.out.println("Delayed Signal " + signalId + " Was generated to object " + targetObjectId ) ; 
         if (target == senderObject) {
             target.addSignalSelf(signal);
         } else {
             target.addSignal(signal);
         }
-        System.out.println("--Delayed Signal Generated !--") ;
+        //System.out.println("--Delayed Signal Generated !--") ;
     }
 }
