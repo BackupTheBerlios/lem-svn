@@ -50,6 +50,7 @@ public class BuilderPass2 extends Visitor {
      * flag to indicate if we are in a select statement
      */
     private boolean inSelect = false;
+            
     /**
      * Creates a new instance of ModelFitout
      *
@@ -210,14 +211,20 @@ public class BuilderPass2 extends Visitor {
     
     public Object visit( LEMActionList node, Object data ) throws LemException {
         LinkedList actions = new LinkedList();
+        boolean encounteredBreak = false;
         
         for( int i = 0; i < node.jjtGetNumChildren(); i++ ) {
+            if(encounteredBreak)
+                throw new LemException("Unreachable statement");
             Object o = node.jjtGetChild( i ).jjtAccept(this, data);
             
-            if( o != null && o instanceof Action )
+            if( o != null && o instanceof Action ) {
                 actions.add( o );
+                if(o instanceof BreakStatement) {
+                    encounteredBreak = true;
+                }
+            }
         }
-        
         return actions;
     }
     
@@ -565,7 +572,6 @@ public class BuilderPass2 extends Visitor {
         
         w.setCondition( (Expression)node.jjtGetChild( 0 ).jjtAccept(this, null ));
         w.setBlock( (ActionBlock)node.jjtGetChild( 1 ).jjtAccept( this, null ));
-        
         return w;
     }
 
@@ -582,6 +588,11 @@ public class BuilderPass2 extends Visitor {
         return f;
     }
     
+    public Object visit(LEMBreak node, Object data ) throws LemException {
+        if(!hasLoopAncestorNode(node))
+            throw new LemException("break outside loop");            
+        return new BreakStatement();
+    }
    
     public Object visit( LEMIfStatement node, Object data ) throws LemException {
         IfStatement theIf = new IfStatement();
@@ -834,7 +845,7 @@ public class BuilderPass2 extends Visitor {
         String objectName = node.getFirstToken().image;
         if(inScenario && objectName.equals("self"))
             throw new LemException("Undefined use of self in Scenario");
-        if(!objectName.equals("self") && !(objectName.equals("selected") && inSelect)) {
+        if(!objectName.equals("self") && !(objectName.equals("selected") && hasSelectAncestorNode(node))) {
             if(!currentBlock.isValidVariable(objectName))
                 throw new LemException("Undeclared object "+objectName);
             else {
@@ -863,7 +874,7 @@ public class BuilderPass2 extends Visitor {
             // bare variable reference
             String variableName = getIdentifier(node.jjtGetChild(0) );
             if(!currentBlock.isValidVariable(variableName)) {
-                if(!(variableName.equals("selected") && inSelect))
+                if(!(variableName.equals("selected") && hasSelectAncestorNode(node)))
                     throw new LemException("Undeclared variable "+variableName);
             } 
             return new VariableReference(variableName );
@@ -1162,7 +1173,6 @@ public class BuilderPass2 extends Visitor {
      * @return
      */
     public Object visit(LEMBaseAttribute node, Object data) throws LemException {
-        
         Attribute attribute = (Attribute) getMapper().getObject( node );
         super.visit( node, attribute );
         
@@ -1437,5 +1447,32 @@ public class BuilderPass2 extends Visitor {
      */
     private String getIdentifier( Node identifierNode ) throws LemException {
         return (String)identifierNode.jjtAccept( this, null );
+    }
+    
+    /**
+     * returns true if the any of the ancestor node of the given node is a for or while loop
+     *
+     * @param myNode the node which we are interested in.
+     *
+     * @return true if ancestor is a for or while loop
+     */
+    private boolean hasLoopAncestorNode(Node myNode) {
+        Node parentNode = myNode.jjtGetParent();
+        if((parentNode instanceof LEMWhileStatement) || (parentNode instanceof LEMForStatement))
+            return true;
+        if(parentNode instanceof LEMProcedure)
+            return false;
+        else
+            return hasLoopAncestorNode(parentNode);
+    }
+    
+    private boolean hasSelectAncestorNode(Node myNode) {
+        Node parentNode = myNode.jjtGetParent();
+        if( parentNode instanceof LEMSelectStatement )
+            return true;
+        if(parentNode instanceof LEMProcedure)
+            return false;
+        else
+            return hasSelectAncestorNode(parentNode);
     }
 }
