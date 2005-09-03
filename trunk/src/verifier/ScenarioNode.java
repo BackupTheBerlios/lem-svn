@@ -13,17 +13,24 @@ import metamodel.Scenario;
 import runtime.DomainContext;
 import runtime.Interpreter;
 import runtime.LemRuntimeException;
+import javax.swing.JPanel ;
 /**
  *
  * @author David Gavin
  */
 public class ScenarioNode extends AbstractDescriptionNode  {
-   Scenario scenario; 
+    Scenario scenario;
+    private ModelTreePanel view ;
     /** Creates a new instance of ScenarioNode */
     public ScenarioNode(Scenario scenario) {
         this.scenario = scenario;
     }
-        /**
+    
+    public void setView(ModelTreePanel view) {
+        this.view = view ;
+    }
+    
+    /**
      * Returns name property of LEM State object.
      * @return the State name.
      */
@@ -41,44 +48,47 @@ public class ScenarioNode extends AbstractDescriptionNode  {
             return "" ;
     }
     /**
-    * Returns the ContextMenu based on the LEM State object.
-    * @return the State ContextMenu.
-    */
+     * Returns the ContextMenu based on the LEM State object.
+     * @return the State ContextMenu.
+     */
     public JPopupMenu getContextMenu() {
         JPopupMenu contextMenu = new JPopupMenu();
         JMenuItem executeProcedure = new JMenuItem();
         executeProcedure.setText("Execute");
         executeProcedure.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-		(new Thread() {
-		    public void run() {
-			executeScenario();
-		    }
-		}).start();
+                view.integrateLogger( executeScenario() ) ;
+//                (new Thread() {
+//                    public void run() {
+//                        executeScenario();
+//                    }
+//                }).start();
+                
             }
         });
         contextMenu.add(executeProcedure);
         return contextMenu;
     }
     
-    public void executeScenario() {
-	JDialog dlg = new JDialog();
-	
+    public JContextLoggerPanel executeScenario() {
+        //JDialog dlg = new JDialog();
+        
         runtime.DomainContext d = new DomainContext();
         ConsoleLogger c = new ConsoleLogger(d);
         runtime.Interpreter i = new Interpreter(null);
-
-	JContextLoggerPanel p = new JContextLoggerPanel( d );
-	
-	dlg.getContentPane().setLayout( new BorderLayout() );
-	dlg.getContentPane().add( p, BorderLayout.CENTER );
-	dlg.setVisible( true );
-	
-	try{
+        
+        JContextLoggerPanel p = new JContextLoggerPanel( d );
+        
+        //dlg.getContentPane().setLayout( new BorderLayout() );
+        //dlg.getContentPane().add( p, BorderLayout.CENTER );
+        //dlg.setVisible( true );
+        
+        try{
             i.interpret(scenario,  d);
         } catch(LemRuntimeException e) {
             System.out.println(e);
         }
+        return p ; 
     }
     
 }
