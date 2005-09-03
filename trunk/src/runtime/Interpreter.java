@@ -234,11 +234,17 @@ public class Interpreter {
         ObjectReferenceVariable targetRef =
                 ( ObjectReferenceVariable ) getVariable( a.getVariable(), c );
         runtime.Object target = ( runtime.Object ) targetRef.getValue();
+        Integer objectId = new Integer(target.getObjectId().intValue());
+        Collection className = new LinkedList();
+        java.util.Iterator i = target.getInstances().iterator();
+        while(i.hasNext()) {
+            Instance inst = (Instance)i.next();
+            className.add(inst.getInstanceClass().getName());
+        }
         c.delObject( target );
         
         // Notify listeners that the object has been deleted
-        //@todo: can't do this because target may be deleted by now!
-        //new LemObjectDeletionEvent( target, a ).notifyAll( c );
+        new LemObjectDeletionEvent( objectId, className ).notifyAll( c );
     }
     
     /**
