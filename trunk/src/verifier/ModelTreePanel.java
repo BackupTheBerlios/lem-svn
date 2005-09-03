@@ -147,8 +147,7 @@ public class ModelTreePanel extends javax.swing.JPanel {
         
     }
     
-    public void integrateLogger( JContextLoggerPanel p ) {
-        
+    public void integrateLogger( JContextLoggerPanel p ) {       
         SplitPanel.setRightComponent( p ) ; 
         //SplitPanel.remove( descriptionArea ) ; 
     }
