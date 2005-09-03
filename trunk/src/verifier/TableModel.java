@@ -103,14 +103,12 @@ public class TableModel extends AbstractTableModel {
      */
     public void objectCreated(LemObjectCreationEvent event, int counter){
         Vector tmp = new Vector();
-        runtime.Object o = event.getCreatedObject();
         String instances="";
         
         tmp.add(new Integer(counter)) ;
         tmp.add("OC");
-        for( Iterator i = o.getInstances().iterator(); i.hasNext(); ) {
-            runtime.Instance in = (runtime.Instance)i.next();
-            instances = instances + in.getInstanceClass().getName() + " ";
+        for( Iterator i = event.getObjectClassName().iterator(); i.hasNext(); ) {
+            instances = instances + i.next().toString() + " ";
         }
         tmp.add(instances);
         for(int i=0;i<7;i++){
@@ -118,7 +116,6 @@ public class TableModel extends AbstractTableModel {
         }
         rowData.add(tmp);
         refreshTable();
-        
     }
     
     public void refreshTable(){
