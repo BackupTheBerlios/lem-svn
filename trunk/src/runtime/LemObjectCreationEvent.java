@@ -29,7 +29,6 @@ public class LemObjectCreationEvent extends LemEvent {
     /** Creates a new instance of LemObjectCreationEvent
      * 
      * @param o the newly created object
-     * @param a the CreateAction which caused the creation of this object
      */
     public LemObjectCreationEvent( runtime.Object o) {
         java.util.Iterator i = o.getInstances().iterator();
