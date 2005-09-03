@@ -89,7 +89,7 @@ public interface LemEventListener {
      * @param event The LemObjectDeletionEvent representing the circumstances
      *  in which the existing object was deleted
      */
-//    void objectDeletion( LemObjectDeletionEvent event);
+    void objectDeleted( LemObjectDeletionEvent event);
     
     /**
      * Called by the runtime when an ReclassificationAction has been executed
