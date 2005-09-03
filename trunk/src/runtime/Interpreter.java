@@ -211,7 +211,7 @@ public class Interpreter {
         }
         
         // Notify listeners that the object has been added
-        new LemObjectCreationEvent( o, a ).notifyAll( c );
+        new LemObjectCreationEvent( o ).notifyAll( c );
         
         return o;
     }
