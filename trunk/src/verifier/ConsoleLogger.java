@@ -66,19 +66,31 @@ public class ConsoleLogger implements runtime.LemEventListener {
 	 **/
 	
 	public void objectCreated(runtime.LemObjectCreationEvent event) {
-		/* runtime.Object o = event.getCreatedObject();
-		String message = " OC ";
-		for( Iterator i = o.getInstances().iterator(); i.hasNext(); ) {
-			runtime.Instance in = (runtime.Instance)i.next();
-			
-			message = message + in.getInstanceClass().getName() + ", ";
+		String message = " OC - ClassName=";
+		for( Iterator i = event.getObjectClassName().iterator(); i.hasNext(); ) {
+			message = message + i.next().toString() + ", ";
 		}
 		
-		logger.debug(counter + message);*/
+		logger.debug(counter + message);
 		counter ++;
 	}
 	
-	
+	/**
+	 * Called by the runtime when a CreateAction has been implemented
+	 * and a new object has been created.
+	 * A log message is then written to the console and the text file
+	 *
+	 * @param event The Object Creation event to be logged
+	 **/
+	public void objectDeleted(runtime.LemObjectDeletionEvent event) {
+		String message = " OD - ClassName=";
+		for( Iterator i = event.getObjectClassName().iterator(); i.hasNext(); ) {
+			message = message + i.next().toString() + ", ";
+		}
+		
+		logger.debug(counter + message);
+		counter ++;
+	}	
 	
 	/**
 	 * Called by the runtime when an AssignmentAction has been executed.
