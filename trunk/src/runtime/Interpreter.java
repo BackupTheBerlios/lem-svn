@@ -62,6 +62,11 @@ public class Interpreter {
      */
     private Context context = null;
     
+    /**
+     * A quick hack to enable breaking of loops
+     */
+    private boolean hasBreak = false;
+    
     /** Creates a new instance of Interpreter
      * @param obj is the object that the Interpreter is
      * executing the procedures for.
@@ -144,9 +149,9 @@ public class Interpreter {
         
         /* Execute actions */
         i = actions.iterator();
-        while ( i.hasNext() ) {
-            Action a = ( Action ) i.next();
-            executeAction( a, localContext );
+        while( i.hasNext() && !hasBreak) {
+            Action a = (Action)i.next();
+            executeAction(a, localContext);
         }
         
         localContext.finish();
@@ -160,23 +165,25 @@ public class Interpreter {
      */
     public void executeAction( Action a, Context c ) throws LemRuntimeException {
         if ( a instanceof CreateAction )
-            executeCreateAction( ( CreateAction ) a, c );
-        else if ( a instanceof DeleteAction )
-            executeDeleteAction( ( DeleteAction ) a, c );
-        else if ( a instanceof AssignmentAction )
-            executeAssignmentAction( ( AssignmentAction ) a, c );
-        else if ( a instanceof IfStatement )
-            executeIfStatement( ( IfStatement ) a, c );
-        else if ( a instanceof WhileStatement )
-            executeWhileStatement( ( WhileStatement ) a, c );
-        else if ( a instanceof ForStatement )
-            executeForStatement( ( ForStatement ) a, c );
-        else if ( a instanceof GenerateAction )
-            executeGenerateAction( ( GenerateAction ) a, c );
-        else if ( a instanceof RelateAction )
-            executeRelateAction( ( RelateAction ) a, c );
-        else if ( a instanceof UnrelateAction )
-            executeUnrelateAction( ( UnrelateAction ) a, c );
+            executeCreateAction((CreateAction)a, c);
+	else if (a instanceof DeleteAction )
+	    executeDeleteAction((DeleteAction)a, c);
+        else if( a instanceof AssignmentAction )
+            executeAssignmentAction((AssignmentAction)a, c);
+        else if( a instanceof IfStatement )
+            executeIfStatement((IfStatement)a, c);
+        else if( a instanceof WhileStatement )
+            executeWhileStatement((WhileStatement)a, c);
+        else if( a instanceof ForStatement )
+            executeForStatement((ForStatement)a, c);
+        else if( a instanceof GenerateAction )
+            executeGenerateAction((GenerateAction)a, c);
+        else if(a instanceof RelateAction )
+            executeRelateAction((RelateAction)a, c);
+        else if(a instanceof UnrelateAction )
+            executeUnrelateAction((UnrelateAction)a, c);
+        else if(a instanceof BreakStatement)
+            executeBreakStatement((BreakStatement)a, c);
         else {
             throw new LemRuntimeException( "executeAction encountered unknown action" );
         }
@@ -363,9 +370,13 @@ public class Interpreter {
             if ( !( ( Boolean ) ( ( BooleanVariable ) result ).getValue() ).booleanValue() )
                 break;
             
+            if(hasBreak)
+                break;
+            
             /* Condition evaluated to true */
             executeBlock( block, c );
         }
+        hasBreak = false;
     }
     
     /**
@@ -384,11 +395,10 @@ public class Interpreter {
         if ( !( var instanceof SetVariable ) ) {
             throw new LemRuntimeException( "Type mismatch: expected expression which evaluates to 'set'" );
         }
-        SetVariable set
-                = ( SetVariable ) var;
-        Iterator i = ( ( Collection ) set.getValue() ).iterator();
-        while ( i.hasNext() ) {
-            Variable select = ( Variable ) i.next();
+        SetVariable set = (SetVariable)var;
+        Iterator i = ((Collection)set.getValue()).iterator();
+        while (i.hasNext() && !hasBreak) {
+            Variable select = (Variable)i.next();
             Context newContext = new Context( c );
             newContext.addVariable( selectName , select );
             
@@ -396,6 +406,19 @@ public class Interpreter {
             
             newContext.finish();
         }
+        hasBreak = false;
+    }
+    
+    /**
+     * Execute the given BreakStatement in the given Context.
+     *
+     * @param a the BreakStatement to execute
+     * @param c the Context in which to execute the action
+     * @throws runtime.LemRuntimeException thrown by the metamodel.Object
+     * constructor
+     */
+    public void executeBreakStatement( BreakStatement a, Context c ) throws LemRuntimeException {    
+        hasBreak = true;
     }
     
     /**
