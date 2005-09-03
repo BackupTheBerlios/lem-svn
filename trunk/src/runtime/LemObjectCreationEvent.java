@@ -17,45 +17,47 @@ package runtime;
  * @author sjr
  */
 public class LemObjectCreationEvent extends LemEvent {
-    
-    /**
-     * The newly created object
+    /*
+     * A list of the class names for all the instances in the object
      */
-    runtime.Object createdObject;
-    
-    /**
-     * The CreateAction that was responsible for creating this object
+    private java.util.Collection className = new java.util.LinkedList();
+    /*
+     * A Integer value of the object's unique Id
      */
-    metamodel.CreateAction action;
-    
+    private Integer objectId;
+
     /** Creates a new instance of LemObjectCreationEvent
      * 
      * @param o the newly created object
      * @param a the CreateAction which caused the creation of this object
      */
-    public LemObjectCreationEvent( runtime.Object o, metamodel.CreateAction a ) {
-        this.createdObject = o;
-        this.action = a;
+    public LemObjectCreationEvent( runtime.Object o) {
+        java.util.Iterator i = o.getInstances().iterator();
+        while(i.hasNext()) {
+            Instance inst = (Instance)i.next();
+            className.add(inst.getInstanceClass().getName());
+        }
+        objectId = o.getObjectId();
     }
     
     /**
-     * Returns the newly created object
+     * Returns the class names of all instances in this object
      *
-     * @return the newly created object
+     * @return a list of class names
      */
-    public runtime.Object getCreatedObject() { 
-        return createdObject;
-    }
-    
-    /** 
-     * Returns the CreateAction responsible for creating the new object
-     *
-     * @return the CreateAction responsible for creating the new object
-     */
-    public metamodel.CreateAction getCreateAction() {
-        return action;
+    public java.util.Collection getObjectClassName() { 
+        return className;
     }
 
+    /**
+     * Returns the object id of the object involved
+     *
+     * @return an Integer representation of the object Id
+     */    
+    public Integer getObjectId() {
+        return objectId;
+    }
+    
     /**
      * Calls the objectCreated method on the given LemEventListener.
      * Passes <code>this</code> as the parameter to the objectCreated
