@@ -19,16 +19,16 @@ import metamodel.Domain;
 public class DomainNode extends AbstractDescriptionNode {
         /**The LEM domain object that DomainNode contains*/	
 	Domain domain;
-	
+	private ModelTreePanel view ; 
 	/** 
          * Creates a new instance of DomainNode. Creates SubsystemNode branches 
          * based on LEM Domain object and lists all RelationshipNodes of Domain 
          * under a default tree node named relationshipLevel.
          * @param d the LEM Domain object.
          */
-	public DomainNode( Domain d ) {
+	public DomainNode( Domain d , ModelTreePanel view ) {
 		this.domain = d;
-		
+		this.view = view ; 
 		Iterator i = d.getSubsystems().values().iterator();
 		while( i.hasNext() ) {
 			add( new SubsystemNode( (metamodel.Subsystem)i.next() ));
@@ -48,11 +48,20 @@ public class DomainNode extends AbstractDescriptionNode {
                 if(i.hasNext()){
                     DefaultMutableTreeNode scenarioLevel = new DefaultMutableTreeNode( "Scenarios" );
                     while( i.hasNext() ) {
-                    	scenarioLevel.add( new ScenarioNode( (metamodel.Scenario)i.next() ));
+                        ScenarioNode s = new ScenarioNode( (metamodel.Scenario)i.next() ) ;
+                        s.setView ( view ) ; 
+                        scenarioLevel.add( s );
+                    	//scenarioLevel.add( new ScenarioNode( (metamodel.Scenario)i.next() ));
                     }
                     add( scenarioLevel );
                 }
 	}
+        
+        public void setView(ModelTreePanel view) {
+            this.view = view ; 
+        }
+        
+        
 	/**
          * Returns name property of LEM Domain object.
          * @return the Domain name.
