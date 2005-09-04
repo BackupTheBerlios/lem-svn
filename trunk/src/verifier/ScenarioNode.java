@@ -70,13 +70,7 @@ public class ScenarioNode extends AbstractDescriptionNode  {
                         executeScenario( d ) ; 
                     }
                 } ;
-                scenarioExecuter.start() ;                                                
-//                (new Thread() {
-//                    public void run() {
-//                        executeScenario();
-//                    }
-//                }).start();
-                
+                scenarioExecuter.start() ;                                                               
             }
         });
         contextMenu.add(executeProcedure);
@@ -93,12 +87,9 @@ public class ScenarioNode extends AbstractDescriptionNode  {
    }
     
     public JContextLoggerPanel loggerPanel( DomainContext d) {
-        //JDialog dlg = new JDialog();        
-        //runtime.DomainContext d = new DomainContext();
-        ConsoleLogger c = new ConsoleLogger(d);
-        //runtime.Interpreter i = new Interpreter(null);        
-        JContextLoggerPanel p = new JContextLoggerPanel( d );        
-       
+        //JDialog dlg = new JDialog();                
+        ConsoleLogger c = new ConsoleLogger(d);        
+        JContextLoggerPanel p = new JContextLoggerPanel( d );               
         //dlg.getContentPane().setLayout( new BorderLayout() );
         //dlg.getContentPane().add( p, BorderLayout.CENTER );
         //dlg.setVisible( true );               
