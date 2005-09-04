@@ -42,6 +42,11 @@ public class ScenarioNode extends AbstractDescriptionNode  {
      * @return the State description.
      */
     public String getDescription()  {
+//                (new Thread() {
+//                    public void run() {
+//                        executeScenario();
+//                    }
+//
         if (scenario.getDescription() != null)
             return trim(scenario.getDescription()) ;
         else
@@ -57,7 +62,15 @@ public class ScenarioNode extends AbstractDescriptionNode  {
         executeProcedure.setText("Execute");
         executeProcedure.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                view.integrateLogger( executeScenario() ) ;
+                // view.integrateLogger( executeScenario() ) ;
+                Thread scenarioExecuter = new Thread () {
+                    public void run() {
+                        runtime.DomainContext d = new DomainContext();
+                        view.integrateLogger( loggerPanel( d ) );
+                        executeScenario( d ) ; 
+                    }
+                } ;
+                scenarioExecuter.start() ;                                                
 //                (new Thread() {
 //                    public void run() {
 //                        executeScenario();
@@ -70,25 +83,26 @@ public class ScenarioNode extends AbstractDescriptionNode  {
         return contextMenu;
     }
     
-    public JContextLoggerPanel executeScenario() {
-        //JDialog dlg = new JDialog();
-        
-        runtime.DomainContext d = new DomainContext();
-        ConsoleLogger c = new ConsoleLogger(d);
+    public void executeScenario( runtime.Context d) {
         runtime.Interpreter i = new Interpreter(null);
-        
-        JContextLoggerPanel p = new JContextLoggerPanel( d );
-        
-        //dlg.getContentPane().setLayout( new BorderLayout() );
-        //dlg.getContentPane().add( p, BorderLayout.CENTER );
-        //dlg.setVisible( true );
-        
         try{
             i.interpret(scenario,  d);
         } catch(LemRuntimeException e) {
             System.out.println(e);
         }
-        return p ; 
+   }
+    
+    public JContextLoggerPanel loggerPanel( DomainContext d) {
+        //JDialog dlg = new JDialog();        
+        //runtime.DomainContext d = new DomainContext();
+        ConsoleLogger c = new ConsoleLogger(d);
+        //runtime.Interpreter i = new Interpreter(null);        
+        JContextLoggerPanel p = new JContextLoggerPanel( d );        
+       
+        //dlg.getContentPane().setLayout( new BorderLayout() );
+        //dlg.getContentPane().add( p, BorderLayout.CENTER );
+        //dlg.setVisible( true );               
+        return p ;
     }
     
 }
