@@ -8,7 +8,7 @@ package verifier;
 
 import java.awt.event.MouseEvent;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultTreeSelectionModel;
@@ -147,7 +147,7 @@ public class ModelTreePanel extends javax.swing.JPanel {
         
     }
     
-    public void integrateLogger( JContextLoggerPanel p ) {       
+    public void integrateLogger( JPanel p ) {       
         SplitPanel.setRightComponent( p ) ; 
         //SplitPanel.remove( descriptionArea ) ; 
     }
