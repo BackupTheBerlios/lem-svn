@@ -104,23 +104,51 @@ public class ConsoleLogger implements runtime.LemEventListener {
 	}
         
 	 public void relationshipDeletion(LemRelationshipDeletionEvent event) {
-                String message = " RD ";
-                runtime.AssociationInstance a = event.getCreatedRelationship();
-                message = message + event.getUnrelateAction().getActiveObjectName();
-                message = message + " unrelates from ";
-                message = message + event.getUnrelateAction().getPassiveObjectName();                
-                message = message + " across " + a.getAssociation().getName();
+                // testing message starts
+                String message = " RD - Association Instance Id: "+event.getAssociationId().intValue()+"\n";
+                message = message + "Active object id: "+event.getActiveObjectId().intValue()+ "\n";
+                message = message + "Class Names: ";
+                Iterator i = event.getActiveObjectNames().iterator();
+                while(i.hasNext()) {
+                    message = message + i.next().toString() + ", ";
+                }
+                message = message + "\n";
+                message = message + "Passive object id: "+event.getPassiveObjectId().intValue()+"\n";
+                message = message + "Class Names: ";
+                i = event.getPassiveObjectNames().iterator();
+                while(i.hasNext()) {
+                    message = message + i.next().toString() + ", ";
+                }              
+                if(event.getLinkObjectId() != null) {
+                    message = message + "\n" + "Link object id: "+event.getLinkObjectId().intValue()+"\n";
+                }
+                // testing message ends
+                
                 logger.debug(counter + message);
                 counter++;
 	 }        
         
 	public void relationshipCreation(LemRelationshipCreationEvent event) {
-                String message = " RC ";
-                runtime.AssociationInstance a = event.getCreatedRelationship();
-                message = message + event.getRelateAction().getActiveObjectName();
-                message = message + " relates to ";
-                message = message + event.getRelateAction().getPassiveObjectName();                
-                message = message + " across " + a.getAssociation().getName();
+                // testing message starts
+                String message = " RC - Association Instance Id: "+event.getAssociationId().intValue()+"\n";
+                message = message + "Active object id: "+event.getActiveObjectId().intValue()+ "\n";
+                message = message + "Class Names: ";
+                Iterator i = event.getActiveObjectNames().iterator();
+                while(i.hasNext()) {
+                    message = message + i.next().toString() + ", ";
+                }
+                message = message + "\n";
+                message = message + "Passive object id: "+event.getPassiveObjectId().intValue()+"\n";
+                message = message + "Class Names: ";
+                i = event.getPassiveObjectNames().iterator();
+                while(i.hasNext()) {
+                    message = message + i.next().toString() + ", ";
+                }              
+                if(event.getLinkObjectId() != null) {
+                    message = message + "\n" + "Link object id: "+event.getLinkObjectId().intValue()+"\n";
+                }
+                // testing message ends
+                
                 logger.debug(counter + message);
                 counter++;
 	}
