@@ -614,17 +614,17 @@ public class Interpreter {
         valid_active = valid_passive = false;
         Instance active = null;
         Instance passive = null;
-        Instance linkobject = null;
+        runtime.Object obj = null;
         
-        ObjectReferenceVariable aP = ( ObjectReferenceVariable ) c.getVariable( a.getActiveObjectName() );
-        ObjectReferenceVariable pP = ( ObjectReferenceVariable ) c.getVariable( a.getPassiveObjectName() );
+        runtime.Object aP = (runtime.Object)(( ObjectReferenceVariable ) c.getVariable( a.getActiveObjectName() )).getValue();
+        runtime.Object pP = (runtime.Object)(( ObjectReferenceVariable ) c.getVariable( a.getPassiveObjectName() )).getValue();
         
         // retrieve the names of the classes participating in the association
         metamodel.Class aP_class = a.getAssociation().getActivePerspective().getDomainClass();
         metamodel.Class pP_class = a.getAssociation().getPassivePerspective().getDomainClass();
         
-        Collection ac = ( ( runtime.Object ) aP.getValue() ).getInstances();
-        Collection pc = ( ( runtime.Object ) pP.getValue() ).getInstances();
+        Collection ac = aP.getInstances();
+        Collection pc = pP.getInstances();
         
         
         Iterator i = ac.iterator();
@@ -658,24 +658,31 @@ public class Interpreter {
         aInst.setPassiveInstance( passive );
         
         // creating clause is present
-                /* @todo this needs fixing
-                       if(a.getLinkObjectName() != null) {
-                           CreateAction ca = new CreateAction();
-                           LinkedList l = new LinkedList();
-                           l.add(a.getAssociation().getAssociationClassRole().getAssociationClass());
-                           ca.setClasses((Collection)l);
-                           VariableReference vr = new VariableReference(a.getLinkObjectName());
-                           ca.setVariable(vr);
-                           runtime.Object obj = null;
-                           obj = executeCreateAction(ca, c);
-                           if(obj == null)
-                               throw new LemRuntimeException("Exception occurred in creating link object.");
-                           aInst.setLinkObjectInstance(obj);
-                       } */
+        if(a.getLinkObjectName() != null) {
+            CreateAction ca = new CreateAction();
+            LinkedList l = new LinkedList();
+            l.add(a.getAssociation().getAssociationClassRole().getAssociationClass());
+            ca.setClasses((Collection)l);
+            obj = executeCreateAction(ca, c);
+            if(obj == null)
+                throw new LemRuntimeException("Exception occurred in creating link object.");
+            aInst.setLinkObjectInstance(obj);
+        }
         
-        if ( c.containsAssociationInstance( aInst ) )
+        if ( c.containsAssociationInstance( aInst ) != null )
             throw new LemRuntimeException( "The association already exist between the two objects" );
         c.addAssociationInstance( aInst );
+        
+        // create a new LemEvent and notify all listeners
+        int object_id1 = aP.getObjectId().intValue();
+        Collection class_name1 = aP.getClassNames();        
+        int object_id2 = pP.getObjectId().intValue();   
+        Collection class_name2 = pP.getClassNames();        
+        int association_id = aInst.getAssociationId().intValue();
+        if(obj == null)
+            new LemRelationshipCreationEvent( object_id1, class_name1, object_id2, class_name2, association_id ).notifyAll( c );
+        else 
+            new LemRelationshipCreationEvent( object_id1, class_name1, object_id2, class_name2, association_id, obj.getObjectId().intValue()).notifyAll( c );            
     }
     
     public Variable evaluateSelectExpression( SelectExpression se, Context c ) throws LemRuntimeException {
@@ -765,15 +772,15 @@ public class Interpreter {
         Instance active = null;
         Instance passive = null;
         
-        ObjectReferenceVariable aP = ( ObjectReferenceVariable ) c.getVariable( a.getActiveObjectName() );
-        ObjectReferenceVariable pP = ( ObjectReferenceVariable ) c.getVariable( a.getPassiveObjectName() );
-        
+        runtime.Object aP = (runtime.Object)(( ObjectReferenceVariable ) c.getVariable( a.getActiveObjectName() )).getValue();
+        runtime.Object pP = (runtime.Object)(( ObjectReferenceVariable ) c.getVariable( a.getPassiveObjectName() )).getValue();        
+
         // retrieve the names of the classes participating in the association
         metamodel.Class aP_class = a.getAssociation().getActivePerspective().getDomainClass();
         metamodel.Class pP_class = a.getAssociation().getPassivePerspective().getDomainClass();
         
-        Collection ac = ( ( runtime.Object ) aP.getValue() ).getInstances();
-        Collection pc = ( ( runtime.Object ) pP.getValue() ).getInstances();
+        Collection ac = aP.getInstances();
+        Collection pc = pP.getInstances();
         
         Iterator i = ac.iterator();
         while ( i.hasNext() && !( valid_passive || valid_active ) ) {
@@ -801,11 +808,21 @@ public class Interpreter {
         AssociationInstance aInst = new AssociationInstance( a.getAssociation() );
         aInst.setActiveInstance( active );
         aInst.setPassiveInstance( passive );
-        
-        if ( !c.containsAssociationInstance( aInst ) )
+        AssociationInstance aInst2 = c.containsAssociationInstance( aInst );
+        if ( aInst2 == null)
             throw new LemRuntimeException( "The association does not exist between the two objects" );
         
-        c.removeAssociationInstance( aInst );
+        c.removeAssociationInstance( aInst2 );
+        // create a new LemEvent and notify all listeners
+        int object_id1 = aP.getObjectId().intValue();
+        Collection class_name1 = aP.getClassNames();        
+        int object_id2 = pP.getObjectId().intValue();   
+        Collection class_name2 = pP.getClassNames();        
+        int association_id = aInst2.getAssociationId().intValue();
+        if(aInst2.getLinkObjectInstance() == null)
+            new LemRelationshipDeletionEvent( object_id1, class_name1, object_id2, class_name2, association_id ).notifyAll( c );
+        else 
+            new LemRelationshipDeletionEvent( object_id1, class_name1, object_id2, class_name2, association_id, aInst2.getLinkObjectInstance().getObjectId().intValue()).notifyAll( c );                    
     }
     
 }
