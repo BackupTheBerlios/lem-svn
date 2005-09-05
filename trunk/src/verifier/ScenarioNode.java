@@ -66,8 +66,10 @@ public class ScenarioNode extends AbstractDescriptionNode  {
                 Thread scenarioExecuter = new Thread () {
                     public void run() {
                         runtime.DomainContext d = new DomainContext();
-                        view.integrateLogger( loggerPanel( d ) );
-                        executeScenario( d ) ; 
+                        runtime.Interpreter i = new Interpreter(null);
+						ScenarioExecuter se = new ScenarioExecuter( loggerPanel(d) , i, scenario) ;                         
+						view.integrateLogger( se );						
+						executeScenario( d , i) ; 
                     }
                 } ;
                 scenarioExecuter.start() ;                                                               
@@ -77,8 +79,8 @@ public class ScenarioNode extends AbstractDescriptionNode  {
         return contextMenu;
     }
     
-    public void executeScenario( runtime.Context d) {
-        runtime.Interpreter i = new Interpreter(null);
+    public void executeScenario(  runtime.Context d, Interpreter i) {
+        //runtime.InstanceInterpreter i = new runtime.InstanceInterpreter() ;                        
         try{
             i.interpret(scenario,  d);
         } catch(LemRuntimeException e) {
