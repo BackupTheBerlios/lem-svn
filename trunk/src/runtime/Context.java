@@ -261,14 +261,15 @@ public class Context {
         }
     }
     
-    public boolean containsAssociationInstance(AssociationInstance a) {
-        if(associationInstances.containsKey(a.getAssociation()))
-            if(((LinkedList)associationInstances.get(a.getAssociation())).contains(a))
-                return true;
-        
+    public AssociationInstance containsAssociationInstance(AssociationInstance a) {
+        if(associationInstances.containsKey(a.getAssociation())) {
+            int index = ( (LinkedList)associationInstances.get(a.getAssociation()) ).indexOf(a);
+            if(index != -1)
+                return (AssociationInstance)( (LinkedList)associationInstances.get(a.getAssociation()) ).get(index);
+        }
         if(parentContext != null)
             return parentContext.containsAssociationInstance(a);
         
-        return false;
+        return null;
     }
 }
