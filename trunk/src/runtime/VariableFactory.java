@@ -5,6 +5,7 @@ import metamodel.BooleanType;
 import metamodel.ArbitraryIdType;
 import metamodel.CoreDataType;
 import metamodel.DataType;
+import metamodel.DateType;
 import metamodel.DomainSpecificDataType;
 import metamodel.NumericType;
 import metamodel.ObjectReferenceType;
@@ -39,6 +40,8 @@ public class VariableFactory {
             return new NumericVariable( type, (String)value );
         } else if( c.equals( BooleanType.getInstance() )) {
             v = new BooleanVariable( (String)value );
+        } else if( c.equals(DateType.getInstance() )) {
+            v = new DateVariable((String)value);           
         } else if( c.equals( ObjectReferenceType.getInstance() )) {
             v = new ObjectReferenceVariable( (runtime.Object)value );
         } else if( c.equals( SetType.getInstance() )) {
@@ -70,6 +73,8 @@ public class VariableFactory {
             v = new NumericVariable( "0" );
         } else if( c.equals( BooleanType.getInstance() )) {
             v = new BooleanVariable( "true" );
+        } else if( c.equals(DateType.getInstance() )) {
+            v = new DateVariable();                
         } else if( c.equals( ObjectReferenceType.getInstance() )) {
             v = new ObjectReferenceVariable( null );
         } else {
