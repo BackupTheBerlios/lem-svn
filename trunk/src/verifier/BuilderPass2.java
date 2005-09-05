@@ -424,6 +424,16 @@ public class BuilderPass2 extends Visitor {
         return parameters;
     }
     
+    public Object visit(LEMEventCancel node, Object data) throws LemException {
+	    CancelAction a = new CancelAction();
+	    getMapper().add(node, a);
+
+	    String eventName = getIdentifier(node.jjtGetChild(0));
+	    a.setEventName( eventName );
+
+	    return a;
+    }
+    
     public Object visit(LEMEventGeneration node, Object data) throws LemException {
         GenerateAction a = new GenerateAction();
         getMapper().add(node, a);

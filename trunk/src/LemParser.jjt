@@ -1023,14 +1023,14 @@ void WithDelay() : {}
 }
 
 /**
- * TODO: what kind of signals can we cancel? Ones to self only?
+ * May only cancel delayed signals to self.
  */
 void EventCancel() : {}
 {
 	<CANCEL>
 	Identifier()
 	<TO>
-	ObjectReference()
+	<SELF>
 }
 
 /**

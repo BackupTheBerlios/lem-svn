@@ -70,13 +70,13 @@ public class Instance {
 	runtime.Object instanceInObject = null;
 
 	/** Queue of pending signals for the instance */
-	List signalQueue = new LinkedList();
+	private List signalQueue = new LinkedList();
 
 	/**
 	 * Queue of pending signals to self. All signals from here must be
 	 * processed before any signals from 'signalQueue'
 	 */
-	List signalSelfQueue = new LinkedList();
+	private List signalSelfQueue = new LinkedList();
 
 	/** @todo: AssociationInstance needs this to build. Should be deleted though */
 	public Instance() {}
@@ -164,14 +164,14 @@ public class Instance {
 	/**
 	 * adds a Signal to this instance's signal queue.
 	 * caller must be synchronized with instanceInObject.
-	 *
 	 */
 	public void addSignal( Signal s ) throws LemRuntimeException {
 		signalQueue.add( s );
 	}
 
 	/**
-	 * adds a Signal to this instances's "self" signal queue - ie. signals to self.
+	 * adds a Signal to this instances's "self" signal queue
+	 * ie. signals to self.
 	 */
 	public void addSignalSelf( Signal s ) throws LemRuntimeException {
 		signalSelfQueue.add( s );

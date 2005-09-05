@@ -178,6 +178,8 @@ public class Interpreter {
             executeForStatement((ForStatement)a, c);
         else if( a instanceof GenerateAction )
             executeGenerateAction((GenerateAction)a, c);
+	else if( a instanceof CancelAction )
+	    executeCancelAction((CancelAction)a, c);
         else if(a instanceof RelateAction )
             executeRelateAction((RelateAction)a, c);
         else if(a instanceof UnrelateAction )
@@ -248,6 +250,21 @@ public class Interpreter {
     }
     
     /**
+     * Execute the given CancelAction in the given Context.
+     *
+     * @param a the CancelAction to execute
+     * @param c the Context in which to execute the action
+     * @throws runtime.LemRuntimeException
+     */
+    public void executeCancelAction( CancelAction a, Context c ) throws LemRuntimeException {
+        // Find the event to be fired on the given object
+        Event e = currentObject.findEvent( a.getEventName(), null );
+	if (!currentObject.cancelDelayedSignalSelf(e)) {
+		throw new LemRuntimeException("Could not cancel a signal");
+	}
+    }
+    
+    /**
      * Execute the given GenerateAction in the given Context.
      *
      * @param a the GenerateAction to execute
@@ -258,8 +275,6 @@ public class Interpreter {
     public void executeGenerateAction( GenerateAction a, Context c ) throws LemRuntimeException {
         LinkedList p = a.getParameters();
         LinkedList passedValues = null;
-        
-        System.out.println( Thread.currentThread().getName() + " enters executeGenerateAction" );
         
         if ( p != null ) {
             passedValues = new LinkedList();
@@ -287,6 +302,7 @@ public class Interpreter {
             throw new LemRuntimeException( "Could not find named event" );
         }
         
+        // Create the new signal
         Expression delayExpression = a.getDelayTime();
         if ( delayExpression != null ) {
             Variable v = evaluateExpression( delayExpression, c );
@@ -294,21 +310,20 @@ public class Interpreter {
                 throw new LemRuntimeException( "Type mismatch: expected numeric, got " + v.getType().getName() );
             }
             BigDecimal delay = ( BigDecimal ) v.getValue();
-            DelayedSignal ds = new DelayedSignal( e );
+            DelayedSignal ds = new DelayedSignal( e, target, delay );
             if ( passedValues != null )
                 ds.setParameters( passedValues );
-            ds.setDelay( delay );
-            ds.setTarget( target );
-            
-            //System.out.println( "Interpreter adding a signal with delay: " + delay ) ;
-            java.lang.Thread sg = new SignalGenerator( ds, currentObject );
+
+            if ( target == currentObject ) {
+                currentObject.addDelayedSignalSelf( ds );
+            } else {
+                currentObject.addDelayedSignal( ds );
+            }
+
         } else {
-            // Create the new signal
-            //System.out.println( "Interpreter adding a signal" );
             Signal s = new Signal( e );
             Integer signalId = s.getSignalId() ;
             Integer targetObjectId = target.getObjectId() ;
-            System.out.println("Signal " + signalId + " Was generated to object " + targetObjectId ) ;
             System.out.println( s.getEvent() );
             if ( passedValues != null )
                 s.setParameters( passedValues );

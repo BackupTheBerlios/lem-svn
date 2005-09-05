@@ -22,7 +22,6 @@
 package runtime;
 
 import metamodel.Event;
-
 import java.math.BigDecimal;
 
 /**
@@ -33,7 +32,7 @@ import java.math.BigDecimal;
  */
 public class DelayedSignal extends Signal {
 	private runtime.Object target;
-	private BigDecimal delay;
+	private long deliveryTime;
 	
 	public DelayedSignal(Event e) throws LemRuntimeException {
 		super(e);
@@ -51,22 +50,14 @@ public class DelayedSignal extends Signal {
 	public DelayedSignal(Event e, runtime.Object o, BigDecimal t) throws LemRuntimeException {
 		super(e);
 		target = o;
-		delay = t;
+		deliveryTime = System.currentTimeMillis() + t.longValue();
 	}
 
 	public runtime.Object getTarget() {
 		return target;
 	}
 
-	public void setTarget(runtime.Object t) {
-		target = t;
-	}
-
-	public BigDecimal getDelay() {
-		return delay;
-	}
-
-	public void setDelay(BigDecimal d) {
-		delay = d;
+	public long getDeliveryTime() {
+		return deliveryTime;
 	}
 }

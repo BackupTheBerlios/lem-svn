@@ -34,48 +34,22 @@ public class SignalGenerator extends java.lang.Thread {
     /** The senderObject sending the signal **/
     private runtime.Object senderObject = null ;
     
-    /** Signal which shall be sent to the target **/
-    private runtime.DelayedSignal signal = null ;
-    
-    /** time which the signal has been created **/
-    private Calendar created = null ;
-    
     /** Creates a new instance of SignalGenerator */
-    public SignalGenerator(DelayedSignal signal, runtime.Object sender) {
-        this.signal = signal  ;        
+    public SignalGenerator(runtime.Object sender) {
         this.senderObject = sender;
-        this.created = Calendar.getInstance() ;
-//        System.out.println( created.getTime().getTime() ) ;
         start() ;
     }
     
-    public void run() {
-        long sleepMs;
-        do {
-            Calendar rightNow = Calendar.getInstance() ;
-            sleepMs = signal.getDelay().longValue() -
-                    (rightNow.getTime().getTime() - created.getTime().getTime());
-            if (sleepMs > 0) {
-                try {
-                    sleep(sleepMs);
-                } catch (InterruptedException e) {
-                            /*
-                             * InterruptedException is OK. We'll just go
-                             * around again and recalculate time
-                             */
-                }
-            }
-        } while (sleepMs > 0);
-        
-        runtime.Object target = signal.getTarget();
-        Integer signalId = signal.getSignalId() ; 
-        Integer targetObjectId = target.getObjectId() ; 
-        System.out.println("Delayed Signal " + signalId + " Was generated to object " + targetObjectId ) ; 
-        if (target == senderObject) {
-            target.addSignalSelf(signal);
-        } else {
-            target.addSignal(signal);
-        }
-        //System.out.println("--Delayed Signal Generated !--") ;
-    }
+	public void run() {
+		while (true) {
+			DelayedSignal s = senderObject.getNextDelayedSignal();
+			if (s == null)
+				return;
+		    
+			runtime.Object target = s.getTarget();
+		        Integer signalId = s.getSignalId() ; 
+		        Integer targetObjectId = target.getObjectId() ; 
+			target.addSignal(s);
+		}
+	}
 }
