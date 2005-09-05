@@ -49,6 +49,12 @@ public class AssociationInstance extends Instance {
      * A reference to the link object instance participating in this association
      */      
     Object linkobject = null;
+    
+    /**
+     * A unique association id to identify this association instance
+     */
+    private Integer association_id;
+    
     /**
      * Create a new instance of the given Association.
      *
@@ -56,33 +62,64 @@ public class AssociationInstance extends Instance {
      */
     public AssociationInstance( Association a ) {
         this.association = a;
+        association_id = ArbitraryIdVariable.getInstance();
 	// @todo: need something like this.
 	//super(a.getAssociationClassRole().getAssociationClass(), o);
     }
     
+    /**
+     * Default empty constructor
+     */
+    public AssociationInstance() {}
+    
+    /**
+     * function to set the active object participating in the association
+     */
     public void setActiveInstance( Instance i ) {
         this.active = i;
     }
         
+    /**
+     * function to set the passive object participating in the association
+     */
     public void setPassiveInstance( Instance i ) {
         this.passive = i;
     }
     
+    /**
+     * function to set the link object for this association instance if any
+     */
     public void setLinkObjectInstance( Object i ) {
         this.linkobject = i;
     }    
     
+    /** 
+     * function to retrieve a reference to the active object
+     */
     public Instance getActiveInstance() {
         return active;
     }
         
+    /**
+     * function to retrieve a reference to the passive object
+     */
     public Instance getPassiveInstance() {
         return passive;
     }    
     
+    /**
+     * function to retrieve a reference to the link object
+     */
     public Object getLinkObjectInstance() {
         return linkobject;
     }    
+    
+    /**
+     * function to retrieve the unique id for this instance
+     */
+    public Integer getAssociationId() {
+        return association_id;
+    }
     
     /** 
      * Get the Association of which this AssociationInstance is an instance.
@@ -93,6 +130,9 @@ public class AssociationInstance extends Instance {
         return association;
     }
     
+    /**
+     * function to define equality between two association instances
+     */
     public boolean equals(java.lang.Object o) {
         boolean a,p, as;
         a = p = as = false;
