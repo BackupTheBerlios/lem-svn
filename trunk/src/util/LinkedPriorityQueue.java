@@ -19,6 +19,8 @@
  * USA. 
  */
 
+package util;
+
 import java.util.LinkedList;
 
 
