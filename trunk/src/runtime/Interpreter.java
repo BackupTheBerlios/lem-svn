@@ -42,7 +42,7 @@ import java.math.BigDecimal;
  * @todo javadoc
  */
 public class Interpreter {
-    
+
     /**
      * List of active objects created by the interpreter. This is used by
      * interpretation of a Scenario, so the interpreter can wait for
@@ -52,6 +52,9 @@ public class Interpreter {
      */
     private LinkedList createdThreads = new LinkedList();
     
+/** keeps a record of all the InstanceInterpreters running **/
+	private ArrayList instanceInterpreters = null;
+
     /**
      * The object in which we are executing
      */
@@ -73,6 +76,7 @@ public class Interpreter {
      */
     public Interpreter( runtime.Object obj ) {
         currentObject = obj;
+		instanceInterpreters = new ArrayList() ; 
     }
     
     /** start interpreting ... */
@@ -95,35 +99,37 @@ public class Interpreter {
     }
     
     /**
-     * Interpret the given Scenario by calling executeBlock on Scenario's
-     * main ActionBlock.
-     *
-     * @param s the scenario to interpret
-     * @param c the Context in which the procedure should be interpreted
-     * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
-     */
-    public void interpret( Scenario s, Context c ) throws LemRuntimeException {
-        context = c;
-        ActionBlock block = s.getActionBlock();
-        executeBlock( block, c );
-        
-        // wait for all created threads.
-        Iterator i = createdThreads.iterator();
-        while ( i.hasNext() ) {
-            InstanceInterpreter thread = ( InstanceInterpreter ) i.next();
-            while ( true ) {
-                try {
-                    thread.join();
-                } catch ( InterruptedException e ) {
-                    continue;
-                }
-                break;
-            }
-        }
-        
-        context = null; // ensure no other entry point tries to use this
-        createdThreads = null;
-    }
+	 * Interpret the given Scenario by calling executeBlock on Scenario's
+	 * main ActionBlock.
+	 *
+	 * @param s the scenario to interpret
+	 * @param c the Context in which the procedure should be interpreted
+	 * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
+	 */
+	public void interpret( Scenario s, Context c ) throws LemRuntimeException {
+		context = c;
+		ActionBlock block = s.getActionBlock();
+		executeBlock( block, c );
+		
+		// wait for all created threads.
+		Iterator i = createdThreads.iterator();
+		while ( i.hasNext() ) {
+			InstanceInterpreter thread = ( InstanceInterpreter ) i.next();
+			instanceInterpreters.add(thread);
+			thread.setScenario(s) ;
+			while ( true ) {
+				try {
+					thread.join();
+				} catch ( InterruptedException e ) {
+					continue;
+				}
+				break;
+			}
+		}
+		
+		context = null; // ensure no other entry point tries to use this
+		createdThreads = null;
+	}
     
     /**
      * Execute the given ActionBlock by setting up the "stack frame" for
@@ -178,8 +184,8 @@ public class Interpreter {
             executeForStatement((ForStatement)a, c);
         else if( a instanceof GenerateAction )
             executeGenerateAction((GenerateAction)a, c);
-	else if( a instanceof CancelAction )
-	    executeCancelAction((CancelAction)a, c);
+	//else if( a instanceof CancelAction )
+	  //  executeCancelAction((CancelAction)a, c);
         else if(a instanceof RelateAction )
             executeRelateAction((RelateAction)a, c);
         else if(a instanceof UnrelateAction )
@@ -255,14 +261,14 @@ public class Interpreter {
      * @param a the CancelAction to execute
      * @param c the Context in which to execute the action
      * @throws runtime.LemRuntimeException
-     */
+     
     public void executeCancelAction( CancelAction a, Context c ) throws LemRuntimeException {
         // Find the event to be fired on the given object
         Event e = currentObject.findEvent( a.getEventName(), null );
 	if (!currentObject.cancelDelayedSignalSelf(e)) {
 		throw new LemRuntimeException("Could not cancel a signal");
 	}
-    }
+    }*/
     
     /**
      * Execute the given GenerateAction in the given Context.
@@ -840,4 +846,39 @@ public class Interpreter {
             new LemRelationshipDeletionEvent( object_id1, class_name1, object_id2, class_name2, association_id, aInst2.getLinkObjectInstance().getObjectId().intValue()).notifyAll( c );                    
     }
     
+	/** pause execution of this instance if it belongs to the given scenario.
+	 *@param scenario, the scenario to be pause
+	 */
+	public void pause( Scenario scenario) {
+		for (int i = 0 ; i < instanceInterpreters.size() ; i++) {
+			if ( ((InstanceInterpreter) instanceInterpreters.get(i)).getScenario() == scenario ) {
+				( (InstanceInterpreter) instanceInterpreters.get(i)).pauseExecution();  
+			}
+		}
+	}
+	
+	/** resume execution of this instance if it belongs to the given scenario.
+	 *@param scenario, the scenario to be resumed
+	 */
+	
+	public void resume( Scenario scenario) {
+		for (int i = 0 ; i < instanceInterpreters.size() ; i++) {
+			if ( ((InstanceInterpreter) instanceInterpreters.get(i)).getScenario() == scenario ) {
+				( (InstanceInterpreter) instanceInterpreters.get(i)).resumeExecution();  
+			}
+		}
+	}
+	
+	/** stop execution of this instance if it belongs to the given scenario.
+	 *@param scenario, the scenario to be stopped
+	 */
+	
+	public void stop( Scenario scenario) {
+		for (int i = 0 ; i < instanceInterpreters.size() ; i++) {
+			if ( ((InstanceInterpreter) instanceInterpreters.get(i)).getScenario() == scenario ) {
+				( (InstanceInterpreter) instanceInterpreters.get(i)).stopExecution();  
+			}
+		}
+	}
+	
 }
