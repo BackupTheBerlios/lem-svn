@@ -251,4 +251,17 @@ public class Object {
         public Integer getObjectId() {
             return objectId ; 
         }
+        
+        /**
+         * function to return the class names of all instances in this object
+         */
+        public Collection getClassNames() {
+            Collection c = new LinkedList();
+            Iterator i = instances.iterator();
+            while(i.hasNext()) {
+                Instance inst = (Instance)i.next();
+                c.add(inst.getInstanceClass().getName());
+            }
+            return c;
+        }
 }
