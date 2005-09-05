@@ -239,6 +239,17 @@ public class Domain implements DescribedEntity {
     public Map getScenarios() {
         return scenarios;
     }
+
+    /**
+     * Get the named scenario from the domain, or null if it does not exist.
+     *
+     * @return the named scenario
+     */
+    public Scenario getScenario( String name ) {
+	return (Scenario)scenarios.get( name );
+    }
+	
+    
     
     /**
      * Retrieve a class given its name 
@@ -393,5 +404,4 @@ public class Domain implements DescribedEntity {
         else 
             return result;
     }
-    
 }
