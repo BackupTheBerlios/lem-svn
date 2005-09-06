@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.ArrayList;
 
 /**
- * Generates dot code for class diagrams.
+ * Generates UMLGraph code for class diagrams.
  *
  * @author Toshio Nakamura
  */
