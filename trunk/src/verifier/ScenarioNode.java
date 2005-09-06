@@ -68,7 +68,9 @@ public class ScenarioNode extends AbstractDescriptionNode  {
                         runtime.DomainContext d = new DomainContext();
                         runtime.Interpreter i = new Interpreter(null);
 						ScenarioExecuter se = new ScenarioExecuter( loggerPanel(d) , i, scenario) ;                         
-						view.integrateLogger( se );						
+						LoggerFrame loggerWindow = new LoggerFrame(se);			
+						loggerWindow.setVisible(true);
+						loggerWindow.setBounds(0,0,600,400);
 						executeScenario( d , i) ; 
                     }
                 } ;
