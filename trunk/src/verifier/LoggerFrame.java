@@ -6,20 +6,34 @@
 
 package verifier;
 
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.net.URL;
+
 /**
  *
  * @author  David Gavin
  */
 public class LoggerFrame extends javax.swing.JFrame {
 	private ScenarioExecuter scenarioExec;
+        private ModelTreePanel mtp;
 	/** Creates new form LoggerFrame */
-	public LoggerFrame(ScenarioExecuter inScenarioExec) {
+	public LoggerFrame() {
 		initComponents();
-		scenarioExec = inScenarioExec;
-		this.add(scenarioExec);
-		this.setTitle(scenarioExec.getScenarioName());
+                URL imageURL = getClass().getClassLoader().getResource("verifier/lem.jpg");
+		Image lem = Toolkit.getDefaultToolkit().getImage(imageURL);
+		setIconImage(lem);
 	}
-	
+	public void setScenarioExecutor(ScenarioExecuter inScenarioExec){
+            scenarioExec = inScenarioExec;
+		this.add(scenarioExec);
+		this.setTitle(scenarioExec.getScenarioName()+" Scenario");
+        }
+        
+        public void setParent(ModelTreePanel inMTP)
+        {
+            mtp=inMTP;
+        }
 	/** This method is called from within the constructor to
 	 * initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is
@@ -41,6 +55,7 @@ public class LoggerFrame extends javax.swing.JFrame {
 
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
 	 scenarioExec.killScenario();
+         mtp.killLogger(this);
 	}//GEN-LAST:event_formWindowClosing
 	
     // Variables declaration - do not modify//GEN-BEGIN:variables
