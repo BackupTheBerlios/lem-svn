@@ -7,8 +7,8 @@
 package verifier;
 
 import java.awt.event.MouseEvent;
+import javax.swing.JFrame;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultTreeSelectionModel;
@@ -35,7 +35,6 @@ public class ModelTreePanel extends javax.swing.JPanel {
         SplitPanel.setDividerLocation(175);
         CustomTreeRenderer render = new CustomTreeRenderer();
         modelTree.setCellRenderer(render);
-        
         /*
         if((m.getDescription()!=null)&&(m.getDescription()!=""))
         {
@@ -147,9 +146,12 @@ public class ModelTreePanel extends javax.swing.JPanel {
         
     }
     
-    public void integrateLogger( JPanel p ) {       
-        SplitPanel.setRightComponent( p ) ; 
-        //SplitPanel.remove( descriptionArea ) ; 
+    public void spawnLogger( JFrame log ) {       
+        ((Eleminator)this.getParent().getParent().getParent().getParent()).newWindow(log);
+    }
+    
+    public void killLogger( JFrame log){
+        ((Eleminator)this.getParent().getParent().getParent().getParent()).killWindow(log);
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
