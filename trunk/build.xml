@@ -154,7 +154,19 @@
     <java classname="splash.Splasher" fork="true"
     classpathref="run.classpath"/>
   </target>
-  
+
+  <target name="runCmdline" depends="compile">
+	<fail message="You must specify the file to load" unless="modelFile"/>
+	<fail message="You must specify the domain name" unless="domainName"/>
+    	<fail message="You must specify the scenario to run" unless="scenarioName"/>
+    	<java classname="verifier.Cmdline" fork="false"
+		    classpathref="run.classpath">
+		    <arg line="${modelFile}"/>
+		    <arg line="${domainName}"/>
+		    <arg line="${scenarioName}"/>
+    </java>
+  </target>
+ 
   <target name="runjar" depends="init">
     <java jar="build/lem.jar" fork="true" classpathref="build.classpath" />
   </target>
