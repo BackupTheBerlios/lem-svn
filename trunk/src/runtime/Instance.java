@@ -182,18 +182,18 @@ public class Instance {
 	 * instance's signal queue, otherwise return null.
 	 */
 	public Signal getNextSignal() throws LemRuntimeException {
-		synchronized( instanceInObject ) {	
-			while ( true ) {
-				if ( signalSelfQueue.size() > 0 ) {
-					return (Signal) signalSelfQueue.remove( 0 );
-				} else if ( signalQueue.size() > 0 ) {
-					return (Signal) signalQueue.remove( 0 );
-				}
-
-				if ( instanceInObject.propogateNextSignal() ) {
-					/** Have a signal */
+		synchronized (instanceInObject) {	
+			while (true) {
+				if (signalSelfQueue.size() > 0)
+					return (Signal)signalSelfQueue.remove(0);
+				if (instanceInObject.propogateNextSignalSelf())
 					continue;
-				}
+					
+				if (signalQueue.size() > 0)
+					return (Signal)signalQueue.remove(0);
+
+				if (instanceInObject.propogateNextSignal())
+					continue;
 
 				try {
 					instanceInObject.wait();
