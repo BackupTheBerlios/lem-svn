@@ -528,7 +528,8 @@ public class BuilderPass2 extends Visitor {
         UnrelateAction a = new UnrelateAction();
         VariableReference active = (VariableReference)node.jjtGetChild( 0 ).jjtAccept( this, null );
         VariableReference passive = (VariableReference)node.jjtGetChild( 1 ).jjtAccept( this, null );
-        String assocName = (String)node.jjtGetChild( 2 ).jjtAccept( this, null );
+        Collection association = (Collection)node.jjtGetChild( 2 ).jjtAccept( this, null );        
+        /*String assocName = (String)node.jjtGetChild( 2 ).jjtAccept( this, null );
         
         Relationship r = currentDomain.getRelationship( assocName );
         if( !(r instanceof Association )) {
@@ -542,7 +543,42 @@ public class BuilderPass2 extends Visitor {
         
         a.setActiveObjectName( active.getVariableName() );
         a.setPassiveObjectName( passive.getVariableName() );
-        a.setAssociationClassReference( assocName );
+        a.setAssociationClassReference( assocName );*/
+        
+        java.util.Iterator i = association.iterator();
+        String assocName = (String)i.next();
+        Relationship r = currentDomain.getRelationship(assocName);
+        
+        if( !(r instanceof Association )) {
+            throw new LemException( "Relationship "
+                    + assocName
+                    + " is not an Association", node.getFirstToken(), "LEM_E_01041" );
+        }
+        
+        Association ra = (Association)r;
+       
+        // if there is an optional verb clause specified
+        
+        if(association.size()==2) {
+            String verbclause = (String)i.next();
+            if(ra.getActivePerspective().getVerbClause().toString().equals(verbclause)) {
+                a.setActiveObjectName( active.getVariableName() );
+                a.setPassiveObjectName( passive.getVariableName() );                                            
+                a.setVerbClause(true);
+            }
+            else if(ra.getPassivePerspective().getVerbClause().toString().equals(verbclause)) {
+                a.setPassiveObjectName( active.getVariableName() );
+                a.setActiveObjectName( passive.getVariableName() );                  
+                a.setVerbClause(true);
+            }
+            else {     
+                throw new LemException( "Invalid verb clause \""+verbclause+"\"" );                
+            }
+        }
+        else {
+            a.setActiveObjectName( active.getVariableName() );
+            a.setPassiveObjectName( passive.getVariableName() );
+        }               
         a.setAssociation( ra );
         
         return a;
