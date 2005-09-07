@@ -19,16 +19,17 @@ import metamodel.Domain;
 public class DomainNode extends AbstractDescriptionNode {
         /**The LEM domain object that DomainNode contains*/	
 	Domain domain;
-	private ModelTreePanel view ; 
+	private Eleminator eleminator ; 
+	
 	/** 
          * Creates a new instance of DomainNode. Creates SubsystemNode branches 
          * based on LEM Domain object and lists all RelationshipNodes of Domain 
          * under a default tree node named relationshipLevel.
          * @param d the LEM Domain object.
          */
-	public DomainNode( Domain d , ModelTreePanel view ) {
+	public DomainNode( Domain d , Eleminator inEleminator ) {
 		this.domain = d;
-		this.view = view ; 
+		eleminator = inEleminator ; 
 		Iterator i = d.getSubsystems().values().iterator();
 		while( i.hasNext() ) {
 			add( new SubsystemNode( (metamodel.Subsystem)i.next() ));
@@ -48,8 +49,8 @@ public class DomainNode extends AbstractDescriptionNode {
                 if(i.hasNext()){
                     DefaultMutableTreeNode scenarioLevel = new DefaultMutableTreeNode( "Scenarios" );
                     while( i.hasNext() ) {
-                        ScenarioNode s = new ScenarioNode( (metamodel.Scenario)i.next() ) ;
-                        s.setView ( view ) ; 
+                        ScenarioNode s = new ScenarioNode( (metamodel.Scenario)i.next() ) ;                        
+						s.setLEM( getEleminator() )  ; 
                         scenarioLevel.add( s );
                     	//scenarioLevel.add( new ScenarioNode( (metamodel.Scenario)i.next() ));
                     }
@@ -57,10 +58,7 @@ public class DomainNode extends AbstractDescriptionNode {
                 }
 	}
         
-        public void setView(ModelTreePanel view) {
-            this.view = view ; 
-        }
-        
+       
         
 	/**
          * Returns name property of LEM Domain object.
@@ -86,5 +84,13 @@ public class DomainNode extends AbstractDescriptionNode {
 	public JPopupMenu getContextMenu() {
 		JPopupMenu ContextMenu = new JPopupMenu();
 		return ContextMenu;
+	}
+
+	public Eleminator getEleminator() {
+		return eleminator;
+	}
+
+	public void setEleminator(Eleminator eleminator) {
+		this.eleminator = eleminator;
 	}
 }

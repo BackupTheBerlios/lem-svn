@@ -62,11 +62,13 @@ public class Eleminator extends javax.swing.JFrame {
 	Vector models = new Vector();
 	Model activeModel = null;
 	File workingDirectory = null;
-	ModelTreePanel MTP = new ModelTreePanel(new Model());
+	ModelTreePanel MTP = new ModelTreePanel(new Model(), this);
+	
         int windowCounter = 0;
 	
 	/** Creates new form Eleminator */
 	public Eleminator() {
+		MTP.setEleminator( this ) ; 
 		getContentPane().add( MTP, BorderLayout.CENTER );
 		try{
 			String nativeLook = UIManager.getSystemLookAndFeelClassName();
@@ -251,7 +253,8 @@ public class Eleminator extends javax.swing.JFrame {
 							JOptionPane.INFORMATION_MESSAGE );
 					workingDirectory = jfc.getSelectedFile().getParentFile();
 					getContentPane().remove(MTP);
-					MTP = new ModelTreePanel(m);
+					MTP = new ModelTreePanel(m,this);
+					MTP.setEleminator( this ) ; 
 					getContentPane().add(MTP, BorderLayout.CENTER);
 					try{
 						ObjectOutputStream Out = new ObjectOutputStream(new FileOutputStream(System.getProperty("user.home")+"/"+"WorkSpace.dat"));
@@ -328,7 +331,7 @@ public class Eleminator extends javax.swing.JFrame {
 								JOptionPane.INFORMATION_MESSAGE );
 						workingDirectory = jfc.getSelectedFile().getParentFile();
 						getContentPane().remove(MTP);
-						MTP = new ModelTreePanel(m);
+						MTP = new ModelTreePanel(m, this);
 						getContentPane().add(MTP, BorderLayout.CENTER);
 						try{
 							ObjectOutputStream Out = new ObjectOutputStream(new FileOutputStream(System.getProperty("user.home")+"/"+"WorkSpace.dat"));

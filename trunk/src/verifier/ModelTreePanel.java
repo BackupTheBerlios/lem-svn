@@ -7,7 +7,6 @@
 package verifier;
 
 import java.awt.event.MouseEvent;
-import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultTreeModel;
@@ -21,11 +20,14 @@ import metamodel.Model;
 public class ModelTreePanel extends javax.swing.JPanel {
     private JPopupMenu contextMenu = new JPopupMenu();
     private Object currentContextObject = null;
+	private Eleminator eleminator ; 
+	
     /** Creates new form ModelTreePanel */
-    public ModelTreePanel(Model m) {
+    public ModelTreePanel(Model m, Eleminator inEleminator) {
+		eleminator = inEleminator;
         initComponents();      
 	modelTree.setSelectionModel(new DefaultTreeSelectionModel());
-        ModelTreeNode modelTreeNode = new ModelTreeNode( m , this) ; 
+        ModelTreeNode modelTreeNode = new ModelTreeNode( m , eleminator) ; 
         //modelTreeNode.setView( this ) ; 
         modelTree.setModel( new DefaultTreeModel( modelTreeNode ));
         //modelTree.setModel( new DefaultTreeModel( new ModelTreeNode( m )));
@@ -146,13 +148,14 @@ public class ModelTreePanel extends javax.swing.JPanel {
         
     }
     
-    public void spawnLogger( JFrame log ) {       
-        ((Eleminator)this.getParent().getParent().getParent().getParent()).newWindow(log);
+    public Eleminator getEleminator() {       
+        return eleminator ; //((Eleminator)this.getParent().getParent().getParent().getParent());
     }
-    
-    public void killLogger( JFrame log){
-        ((Eleminator)this.getParent().getParent().getParent().getParent()).killWindow(log);
-    }
+
+	public void setEleminator(Eleminator eleminator) {
+		this.eleminator = eleminator;
+	}
+
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSplitPane SplitPanel;

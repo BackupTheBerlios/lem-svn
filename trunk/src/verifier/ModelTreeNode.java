@@ -19,28 +19,25 @@ import metamodel.Model;
 public class ModelTreeNode extends AbstractDescriptionNode {
     /**LEM Model object that ModelTreeNode contains*/
     Model model;
-    private ModelTreePanel view ;
+    private Eleminator eleminator;
     /**
      * Creates a new instance of ModelTreeNode. Creates DomainNode branches
      * based on LEM Model object.
      * @param m the LEM Model object.
      */
-    public ModelTreeNode( Model m , ModelTreePanel view ) {
-        this.model = m;
-        this.view = view ; 
+    public ModelTreeNode( Model m , Eleminator inEleminator ) {
+        model = m;
+        eleminator = inEleminator; 
+		System.out.println(eleminator.toString());
         Iterator i = m.getDomains().values().iterator();
-        
         while( i.hasNext() ) {
-            DomainNode d = new DomainNode((Domain)i.next() , view) ;
+            DomainNode d = new DomainNode((Domain)i.next() , eleminator) ;
             //d.setView(view) ;
             add( d ) ;
             //add( new DomainNode( (Domain)i.next() ));
         }
     }
     
-    public void setView(ModelTreePanel view) {
-        this.view = view ;
-    }
     /**
      * Returns name property of LEM Model object.
      * @return the Model name.

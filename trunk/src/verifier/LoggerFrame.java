@@ -9,6 +9,7 @@ package verifier;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.net.URL;
+import metamodel.Scenario;
 
 /**
  *
@@ -16,24 +17,25 @@ import java.net.URL;
  */
 public class LoggerFrame extends javax.swing.JFrame {
 	private ScenarioExecuter scenarioExec;
-        private ModelTreePanel mtp;
+	private Eleminator lem;
 	/** Creates new form LoggerFrame */
-	public LoggerFrame() {
+	public LoggerFrame(Scenario inScenario) {
 		initComponents();
-                URL imageURL = getClass().getClassLoader().getResource("verifier/lem.jpg");
+		URL imageURL = getClass().getClassLoader().getResource("verifier/lem.jpg");
 		Image lem = Toolkit.getDefaultToolkit().getImage(imageURL);
 		setIconImage(lem);
-	}
-	public void setScenarioExecutor(ScenarioExecuter inScenarioExec){
-            scenarioExec = inScenarioExec;
+		scenarioExec = new ScenarioExecuter(inScenario);
 		this.add(scenarioExec);
-		this.setTitle(scenarioExec.getScenarioName()+" Scenario");
-        }
-        
-        public void setParent(ModelTreePanel inMTP)
-        {
-            mtp=inMTP;
-        }
+		this.setTitle(inScenario.getName()+" Scenario");
+	}
+	
+	public void setParent(Eleminator inLem) {
+		lem=inLem;
+	}
+	public void startExecutor() {
+		new Thread(scenarioExec).start();
+		
+	}
 	/** This method is called from within the constructor to
 	 * initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is
@@ -52,10 +54,10 @@ public class LoggerFrame extends javax.swing.JFrame {
         pack();
     }
     // </editor-fold>//GEN-END:initComponents
-
+	
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-	 scenarioExec.killScenario();
-         mtp.killLogger(this);
+		scenarioExec.killScenario();
+		lem.killWindow(this);
 	}//GEN-LAST:event_formWindowClosing
 	
     // Variables declaration - do not modify//GEN-BEGIN:variables
