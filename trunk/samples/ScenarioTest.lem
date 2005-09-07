@@ -4,13 +4,15 @@ model TestModel is
 			class A is
 				attribute current_delay is numeric;
 				event Ev1;
+				event Ev2;
 				
 				behaviour is
 					state s1 is
 					{
 						set myset;
-//						generate Ev1 to self with delay 1000;
-//						cancel Ev1 to self;
+						
+						// After 10s delay time, give up and kill the model.
+						generate Ev2 to self with delay 10000;
 
 						myset := select one from instances of A where selected /= self;
 						for each myobj in myset
@@ -18,23 +20,37 @@ model TestModel is
 							generate Ev1 to myobj with delay self.current_delay;
 						}
 						self.current_delay := self.current_delay * 2;
-					}
-					end s1;
+					} end s1;
 
 					state s2 is
 					{
 						set myset;
+						
+						cancel Ev2 to self;
+						
 						myset := select one from instances of A where selected /= self;
 						for each myobj in myset
 						{
 							generate Ev1 to myobj;
 						}
-					}
-					end s2;
+					} end s2;
+
+					deletion state s3 is
+					{
+						set myset;
+						
+						myset := select one from instances of A where selected /= self;
+						for each myobj in myset
+						{
+							generate Ev2 to myobj;
+						}
+					} end s3;
 					
 					on Ev1 transition from creation state to s1;
 					on Ev1 transition from s1 to s2;
 					on Ev1 transition from s2 to s1;
+					on Ev2 transition from s1 to s3;
+					on Ev2 transition from s2 to s3;
 				end behaviour;
 			end;
 
