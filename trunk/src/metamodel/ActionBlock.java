@@ -55,20 +55,11 @@ public class ActionBlock {
         return null;
     }
     
-     /** removes a variable declaration from the block 
-     */
-    public void removeVariableDeclaration(VariableDeclaration v) {
-        if(containsVariable(v.getVariableName())) {
-            variableDeclarations.remove(v.getVariableName());
-        }
-    }
-
     public boolean isValidVariable(String variable) {
         if(containsVariable(variable))
             return true;
-        else if(parent != null) {
+        else if(parent != null)
             return parent.isValidVariable(variable);
-        }
         return false;
     }
     
