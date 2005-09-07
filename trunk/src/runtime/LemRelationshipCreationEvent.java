@@ -23,24 +23,14 @@ public class LemRelationshipCreationEvent extends LemEvent {
     private Integer object_id1;
     
     /**
-     * the names of all classes object1 is an instance of
-     */
-    private Collection object_name1 = null;
-    
-    /**
      * the unique alpha-numeric object id for object 2
      */
     private Integer object_id2;
     
-    /*
-     * the names of all classes object2 is an instance of
-     */
-    private Collection object_name2 = null;
-    
     /**
-     * the unique alpha-numeric association id for the association instance
+     * the alpha-numeric association label for the association
      */
-    private Integer association_id;
+    private String association_label=null;
     
     /**
      * the unique alpha-numeric object id for the link object
@@ -48,21 +38,17 @@ public class LemRelationshipCreationEvent extends LemEvent {
     private Integer linkobject_id=null;
     
     /** Creates a new instance of LemRelateEvent for events with no link object */
-    public LemRelationshipCreationEvent(int id1, Collection c1, int id2, Collection c2, int id3) {
+    public LemRelationshipCreationEvent(int id1, int id2, String name) {
         object_id1 = new Integer(id1);
-        object_name1 = new LinkedList(c1);
         object_id2 = new Integer(id2);
-        object_name2 = new LinkedList(c2);
-        association_id = new Integer(id3);
+        association_label = name;
     }
 
     /** Creates a new instance of LemRelateEvent for events with link object */
-    public LemRelationshipCreationEvent(int id1, Collection c1, int id2, Collection c2, int id3, int id4) {
+    public LemRelationshipCreationEvent(int id1, int id2, String name, int id4) {
         object_id1 = new Integer(id1);
-        object_name1 = new LinkedList(c1);
         object_id2 = new Integer(id2);
-        object_name2 = new LinkedList(c2);
-        association_id = new Integer(id3);
+        association_label = name;
         linkobject_id = new Integer(id4);
     }    
     
@@ -83,22 +69,8 @@ public class LemRelationshipCreationEvent extends LemEvent {
     /**
      * function to return the unique object id of the association instance
      */
-    public Integer getAssociationId() {
-        return association_id;
-    }    
-    
-    /**
-     * function to return the list of classes that made up the active object
-     */
-    public Collection getActiveObjectNames() {
-        return object_name1;
-    }    
-    
-    /**
-     * function to return the list of classes that made up the passive object
-     */
-    public Collection getPassiveObjectNames() {
-        return object_name2;
+    public String getAssociationLabel() {
+        return association_label;
     }    
     
     /**
