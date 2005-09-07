@@ -184,8 +184,8 @@ public class Interpreter {
             executeForStatement((ForStatement)a, c);
         else if( a instanceof GenerateAction )
             executeGenerateAction((GenerateAction)a, c);
-	//else if( a instanceof CancelAction )
-	  //  executeCancelAction((CancelAction)a, c);
+	else if( a instanceof CancelAction )
+	    executeCancelAction((CancelAction)a, c);
         else if(a instanceof RelateAction )
             executeRelateAction((RelateAction)a, c);
         else if(a instanceof UnrelateAction )
@@ -261,6 +261,7 @@ public class Interpreter {
      * @param a the CancelAction to execute
      * @param c the Context in which to execute the action
      * @throws runtime.LemRuntimeException
+     */
      
     public void executeCancelAction( CancelAction a, Context c ) throws LemRuntimeException {
         // Find the event to be fired on the given object
@@ -268,7 +269,7 @@ public class Interpreter {
 	if (!currentObject.cancelDelayedSignalSelf(e)) {
 		throw new LemRuntimeException("Could not cancel a signal");
 	}
-    }*/
+    }
     
     /**
      * Execute the given GenerateAction in the given Context.
