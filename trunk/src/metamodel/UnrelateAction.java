@@ -50,6 +50,11 @@ public class UnrelateAction extends Action {
      */
     protected Association association;
     
+    /**
+     * boolean value to indicate if verb clause is provided
+     **/    
+    protected boolean verbClause = false;
+    
     /** Creates a new instance of RelateAction */
     public UnrelateAction() {
     }
@@ -129,4 +134,21 @@ public class UnrelateAction extends Action {
         this.association = association;
     }
     
+    /**
+     * Get the verb clause indicating direction of association if any.
+     *
+     * @return the verb clause
+     */
+    public boolean getVerbClause() {
+        return verbClause;
+    }    
+    
+    /**
+     * Set the verb clause that indicates direction of association.
+     *
+     * @param the verb clause
+     */
+    public void setVerbClause(boolean clause) {
+        this.verbClause = clause;
+    }        
 }
