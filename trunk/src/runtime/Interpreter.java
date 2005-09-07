@@ -70,6 +70,11 @@ public class Interpreter {
      */
     private boolean hasBreak = false;
     
+    /**
+     * A quick hack to differentiate between an attribute read and write 
+     */
+    private boolean attributeWrite = false;
+    
     /** Creates a new instance of Interpreter
      * @param obj is the object that the Interpreter is
      * executing the procedures for.
@@ -459,16 +464,24 @@ public class Interpreter {
      * undefined objects, occur
      */
     public Variable executeAssignmentAction( AssignmentAction a, Context c ) throws LemRuntimeException {
+        String name = "";
+        attributeWrite = true;
         VariableReference r = a.getVariableReference();
         Variable destination = getVariable( r, c );
-        
+        attributeWrite = false;
         Variable value = evaluateExpression( a.getExpression(), c );
         
         if ( value.getCoreDataType() != destination.getCoreDataType() ) {
-            String name = r.getObjectName();
-            throw new LemRuntimeException( "Type mismatch: evaluated '" + value.getType().getName() + "', expected '" + destination.getType() + "', name: " + r.getVariableName() );
+            throw new LemRuntimeException( "Type mismatch: evaluated '" + value.getType().getName() + "', expected '" + destination.getType().getName() + "', name: " + r.getVariableName() );
         }
         
+        // notify all logger if the assignment action is an attribute change
+        name = r.getObjectName();
+        if(name != null) {
+            int id = ((runtime.Object)c.getVariable( name ).getValue()).getObjectId().intValue();
+            name = r.getVariableName();
+            new LemAttributeChangeEvent(id, name, destination.getValue(), value.getValue()).notifyAll( c );
+        }
         destination.setValue( value.getValue() );
         return destination;
     }
@@ -501,9 +514,14 @@ public class Interpreter {
             runtime.Object source = ( runtime.Object ) ( v.getValue() );
             
             // Now we've got the target object. We need to get the named attribute from that object.
-            destination = source.getAttribute( r.getVariableName() );
+            String attribute_name = r.getVariableName();
+            destination = source.getAttribute( attribute_name );
             if ( destination == null ) {
                 throw new LemRuntimeException( "Attribute '" + r.getVariableName() + "' not defined on object named '" + name + "'" );
+            }
+            // we are reading a atribute
+            if(!attributeWrite) { 
+                new LemAttributeReadEvent(source.getObjectId().intValue(), attribute_name, destination.getValue()).notifyAll( c );
             }
         } else {
             if ( r.getVariableName().equals( "self" ) ) {
@@ -634,6 +652,8 @@ public class Interpreter {
         // correct type
         boolean valid_active, valid_passive;
         valid_active = valid_passive = false;
+        int active_id, passive_id;
+        active_id = passive_id = 0;
         Instance active = null;
         Instance passive = null;
         runtime.Object obj = null;
@@ -652,10 +672,14 @@ public class Interpreter {
         Iterator i = ac.iterator();
         while ( i.hasNext() && !( valid_passive || valid_active ) ) {
             active = ( Instance ) i.next();
-            if ( active.getInstanceClass() == aP_class )
+            if ( active.getInstanceClass() == aP_class ) {
                 valid_active = true;
-            else if ( ( active.getInstanceClass() == pP_class ) && !( a.getVerbClause() ) )
+                active_id = aP.getObjectId().intValue();
+            }
+            else if ( ( active.getInstanceClass() == pP_class ) && !( a.getVerbClause() ) ) {
                 valid_passive = true;
+                passive_id = aP.getObjectId().intValue();                
+            }
         }
         
         if ( !( valid_active || valid_passive ) )
@@ -665,12 +689,14 @@ public class Interpreter {
         while ( i.hasNext() && !( valid_passive && valid_active ) ) {
             
             passive = ( Instance ) i.next();
-            if ( passive.getInstanceClass() == pP_class )
-                
-                
+            if ( passive.getInstanceClass() == pP_class ) {
                 valid_passive = true;
-            else if ( ( passive.getInstanceClass() == aP_class ) && !( a.getVerbClause() ) )
+                passive_id = pP.getObjectId().intValue();                
+            }
+            else if ( ( passive.getInstanceClass() == aP_class ) && !( a.getVerbClause() ) ) {
                 valid_active = true;
+                active_id = pP.getObjectId().intValue();                
+            }
         }
         if ( !( valid_active && valid_passive ) )
             throw new LemRuntimeException( "Objects does not have the required instances for association " + a.getAssociation().getName() );
@@ -696,15 +722,10 @@ public class Interpreter {
         c.addAssociationInstance( aInst );
         
         // create a new LemEvent and notify all listeners
-        int object_id1 = aP.getObjectId().intValue();
-        Collection class_name1 = aP.getClassNames();        
-        int object_id2 = pP.getObjectId().intValue();   
-        Collection class_name2 = pP.getClassNames();        
-        int association_id = aInst.getAssociationId().intValue();
         if(obj == null)
-            new LemRelationshipCreationEvent( object_id1, class_name1, object_id2, class_name2, association_id ).notifyAll( c );
+            new LemRelationshipCreationEvent( active_id, passive_id, a.getAssociation().getName() ).notifyAll( c );
         else 
-            new LemRelationshipCreationEvent( object_id1, class_name1, object_id2, class_name2, association_id, obj.getObjectId().intValue()).notifyAll( c );            
+            new LemRelationshipCreationEvent( active_id, passive_id, a.getAssociation().getName(), obj.getObjectId().intValue()).notifyAll( c );            
     }
     
     public Variable evaluateSelectExpression( SelectExpression se, Context c ) throws LemRuntimeException {
@@ -791,6 +812,8 @@ public class Interpreter {
         // verify the action is valid
         boolean valid_active, valid_passive;
         valid_active = valid_passive = false;
+        int active_id, passive_id;
+        active_id = passive_id = 0;
         Instance active = null;
         Instance passive = null;
         
@@ -807,10 +830,14 @@ public class Interpreter {
         Iterator i = ac.iterator();
         while ( i.hasNext() && !( valid_passive || valid_active ) ) {
             active = ( Instance ) i.next();
-            if ( active.getInstanceClass() == aP_class )
+            if ( active.getInstanceClass() == aP_class ) {
                 valid_active = true;
-            else if ( active.getInstanceClass() == pP_class )
+                active_id = aP.getObjectId().intValue();
+            }
+            else if (( active.getInstanceClass() == pP_class ) && !( a.getVerbClause())) {
                 valid_passive = true;
+                passive_id = aP.getObjectId().intValue();                
+            }
         }
         if ( !( valid_active || valid_passive ) )
             throw new LemRuntimeException( "Objects does not have the required instances for association " + a.getAssociation().getName() );
@@ -818,10 +845,14 @@ public class Interpreter {
         i = pc.iterator();
         while ( i.hasNext() && !( valid_passive && valid_active ) ) {
             passive = ( Instance ) i.next();
-            if ( passive.getInstanceClass() == pP_class )
+            if ( passive.getInstanceClass() == pP_class ) {
                 valid_passive = true;
-            else if ( passive.getInstanceClass() == aP_class )
+                passive_id = pP.getObjectId().intValue();                
+            }
+            else if (( passive.getInstanceClass() == aP_class ) && !( a.getVerbClause()) ) {
                 valid_active = true;
+                active_id = pP.getObjectId().intValue();                            
+            }
         }
         if ( !( valid_active && valid_passive ) )
             throw new LemRuntimeException( "Objects does not have the required instances for association " + a.getAssociation().getName() );
@@ -835,16 +866,13 @@ public class Interpreter {
             throw new LemRuntimeException( "The association does not exist between the two objects" );
         
         c.removeAssociationInstance( aInst2 );
-        // create a new LemEvent and notify all listeners
-        int object_id1 = aP.getObjectId().intValue();
-        Collection class_name1 = aP.getClassNames();        
-        int object_id2 = pP.getObjectId().intValue();   
-        Collection class_name2 = pP.getClassNames();        
+        
+        // create a new LemEvent and notify all listeners    
         int association_id = aInst2.getAssociationId().intValue();
         if(aInst2.getLinkObjectInstance() == null)
-            new LemRelationshipDeletionEvent( object_id1, class_name1, object_id2, class_name2, association_id ).notifyAll( c );
+            new LemRelationshipDeletionEvent( active_id, passive_id, a.getAssociation().getName() ).notifyAll( c );
         else 
-            new LemRelationshipDeletionEvent( object_id1, class_name1, object_id2, class_name2, association_id, aInst2.getLinkObjectInstance().getObjectId().intValue()).notifyAll( c );                    
+            new LemRelationshipDeletionEvent( active_id, passive_id, a.getAssociation().getName(), aInst2.getLinkObjectInstance().getObjectId().intValue()).notifyAll( c );                    
     }
     
 	/** pause execution of this instance if it belongs to the given scenario.
