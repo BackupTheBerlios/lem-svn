@@ -90,18 +90,19 @@ public class InstanceInterpreter extends java.lang.Thread {
                     continue;
                 
                 if ( s.getEvent() == t.getEvent() ) {
-                    metamodel.State newState = t.getToState() ;
-                    instance.currentState = newState ;
-                    System.out.println( Thread.currentThread().getName()
-                        + " [init] transitioning state to " + newState.getName() );
+                    metamodel.State newState = t.getToState();
+                    instance.currentState = newState;
+                    Procedure p = newState.getProcedure();
 
-                    if ( newState instanceof NonDeletionState ) {
-                        Procedure p = newState.getProcedure() ;
-                        interpreter.interpret( p , context ) ;
+                    System.out.println( Thread.currentThread().getName()
+                      + " [init] transitioning state to " + newState.getName());
+		    
+                    interpreter.interpret( p , context );
+
+                    if ( newState instanceof NonDeletionState )
                         return true;
-                    } else {
+                    else
                         return false;
-                    }
                 }
             }
         }
@@ -117,7 +118,7 @@ public class InstanceInterpreter extends java.lang.Thread {
                     if (flag == PLAY) {
                         if ( !advance() )
                             break ;
-                    }else if ( flag == STOP) {
+                    } else if (flag == STOP) {
                         break execution ; 
                     }
                 }
@@ -161,18 +162,20 @@ public class InstanceInterpreter extends java.lang.Thread {
                 continue;
             
             if ( s.getEvent() == t.getEvent()
-            && t.getFromState() == currentState ) {
+            			&& t.getFromState() == currentState ) {
                 metamodel.State newState = t.getToState();
                 instance.currentState = newState;
-                System.out.println( Thread.currentThread().getName()
-                + " transitioning state to " + newState.getName() );
-                if ( newState instanceof NonDeletionState ) {
-                    Procedure p = newState.getProcedure();
-                    interpreter.interpret( p, context );
+                Procedure p = newState.getProcedure();
+
+               	System.out.println( Thread.currentThread().getName()
+                	+ " transitioning state to " + newState.getName() );
+
+                interpreter.interpret( p, context );
+
+                if ( newState instanceof NonDeletionState )
                     return true;
-                } else {
+                else
                     return false;
-                }
             }
         }
         return true;
