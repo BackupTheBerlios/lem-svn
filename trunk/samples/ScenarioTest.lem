@@ -2,20 +2,22 @@ model TestModel is
 	domain TestDomain is
 		subsystem TestSubsystem is
 			class A is
+				attribute current_delay is numeric;
 				event Ev1;
 				
 				behaviour is
 					state s1 is
 					{
 						set myset;
-						generate Ev1 to self with delay 1000;
-						cancel Ev1 to self;
+//						generate Ev1 to self with delay 1000;
+//						cancel Ev1 to self;
 
 						myset := select one from instances of A where selected /= self;
 						for each myobj in myset
 						{
-							generate Ev1 to myobj with delay 500;
+							generate Ev1 to myobj with delay self.current_delay;
 						}
+						self.current_delay := self.current_delay * 2;
 					}
 					end s1;
 
@@ -25,7 +27,7 @@ model TestModel is
 						myset := select one from instances of A where selected /= self;
 						for each myobj in myset
 						{
-							generate Ev1 to myobj with delay 2000;
+							generate Ev1 to myobj;
 						}
 					}
 					end s2;
@@ -59,8 +61,10 @@ model TestModel is
 			
 			a1 := create A;
 			a2 := create A;
+			a1.current_delay := 1;
+			a2.current_delay := 1;
 
-			/* generate Ev1 to a1; */
+			generate Ev1 to a1;
 			/* generate Ev1 to a2; */
 		}
 
@@ -75,6 +79,7 @@ model TestModel is
                         a1.attr2 := a1.attr1;
                 }
 
+/*
                 scenario TestRelateUnrelate is {
                         objref a1;
                         objref b1;
@@ -85,7 +90,7 @@ model TestModel is
                         
                         unrelate b1 from a1 across R1."is passive";
                 }
-
+*/
 		scenario TestDeletion is {
 			/* 
 			 * Attempt to invoke a memory/refcount leak or other
