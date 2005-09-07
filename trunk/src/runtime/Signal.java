@@ -52,7 +52,6 @@ public class Signal {
 		event = e;
 		parameters = null;
                 signalId = ArbitraryIdVariable.getInstance() ; 
-                System.out.println(signalId + " : Signal(" + e + ")");
 	}
         
         /** this method will return the uniqueId of this signal **/

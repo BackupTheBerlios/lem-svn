@@ -185,27 +185,18 @@ public class Instance {
 		synchronized( instanceInObject ) {	
 			while ( true ) {
 				if ( signalSelfQueue.size() > 0 ) {
-					System.out.println( Thread.currentThread().getName() + " took a self-signal off the queue!" );
 					return (Signal) signalSelfQueue.remove( 0 );
 				} else if ( signalQueue.size() > 0 ) {
-					System.out.println( Thread.currentThread().getName() + " took a signal off the queue!" );
 					return (Signal) signalQueue.remove( 0 );
 				}
 
-				System.out.println( Thread.currentThread().getName() + " propogating a signal" );
 				if ( instanceInObject.propogateNextSignal() ) {
 					/** Have a signal */
-					System.out.println( Thread.currentThread().getName() + " has a signal!" );
 					continue;
 				}
 
 				try {
-					System.out.println( Thread.currentThread().getName() 
-									+ " waiting patiently for a signal." );
 					instanceInObject.wait();
-
-					System.out.println( Thread.currentThread().getName()
-									+ " woke up! Any signals?" );
 					/**
 					 * After taking instanceInObject's lock, we must
 					 * always recheck this Instance's queue because
@@ -215,7 +206,6 @@ public class Instance {
 					 * So go back to the top.
 					 */
 				} catch ( Exception e ) {
-					System.out.println( "Some weirdo exception occurred" );
 					e.printStackTrace();
 				}
 			}

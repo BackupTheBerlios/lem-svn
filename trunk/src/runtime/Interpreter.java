@@ -326,6 +326,7 @@ public class Interpreter {
             if ( passedValues != null )
                 ds.setParameters( passedValues );
 
+	    System.out.println(currentObject.getObjectId() + " generating delayed signal (" + delay + ") to " + target.getObjectId());
             if ( target == currentObject ) {
                 currentObject.addDelayedSignalSelf( ds );
             } else {
@@ -336,9 +337,14 @@ public class Interpreter {
             Signal s = new Signal( e );
             Integer signalId = s.getSignalId() ;
             Integer targetObjectId = target.getObjectId() ;
-            System.out.println( s.getEvent() );
             if ( passedValues != null )
                 s.setParameters( passedValues );
+
+	    if (currentObject == null)
+		    System.out.print("[main]");
+	    else
+		    System.out.print(currentObject.getObjectId());
+	    System.out.println(" generating signal to " + target.getObjectId());
             if ( target == currentObject ) {
                 target.addSignalSelf( s );
             } else {

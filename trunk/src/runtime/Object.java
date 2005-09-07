@@ -157,6 +157,7 @@ public class Object {
 							System.currentTimeMillis();
 						if (delay <= 0) {
 							delayedSignalQueue.remove(sig);
+							System.out.println(objectId + " got a delayed signal with delivery time " + sig.getDeliveryTime());
 							return sig;
 						}
 
@@ -214,8 +215,6 @@ public class Object {
 	 */
 	public synchronized void addSignal( Signal s ) {
 		signalQueue.add( s );
-		System.out.println( Thread.currentThread().getName() 
-			+ " added a signal and notifyAll()ing" );
 		notifyAll();
 	}
 	
@@ -225,8 +224,6 @@ public class Object {
 	 */
 	public synchronized void addSignalSelf( Signal s ) {
 		signalSelfQueue.add( s );
-		System.out.println( Thread.currentThread().getName() 
-			+ " added a self-signal and notifyAll()ing" );
 		notifyAll();
 	}
 	
