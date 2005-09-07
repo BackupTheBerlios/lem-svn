@@ -98,8 +98,15 @@ public class Interpreter {
      */
     public void interpret( Procedure p, Context c ) throws LemRuntimeException {
         context = c;
+
+        LocalContext stateContext = new LocalContext( c );
+	Variable selfVar = VariableFactory.newVariable( ObjectReferenceType.getInstance(), currentObject );
+	stateContext.addVariable( "self" , selfVar ) ;
+
         ActionBlock block = p.getActionBlock();
-        executeBlock( block, c );
+        executeBlock( block, stateContext );
+	stateContext.finish();
+
         context = null; // ensure no other entry point tries to use this
     }
     
@@ -530,20 +537,7 @@ public class Interpreter {
                 new LemAttributeReadEvent(source.getObjectId().intValue(), attribute_name, destination.getValue()).notifyAll( c );
             }
         } else {
-            if ( r.getVariableName().equals( "self" ) ) {
-                /* special case for self */
-                if ( currentObject == null ) {
-                    throw new LemRuntimeException( "Cannot reference self - not executing within an object" );
-                }
-                
-                try {
-                    destination = VariableFactory.newVariable( CoreDataType.findByName( "objref" ), currentObject );
-                } catch ( LemException e ) {
-                    throw new LemRuntimeException( "todo" );
-                }
-            } else {
-                destination = c.getVariable( r.getVariableName() );
-            }
+		destination = c.getVariable( r.getVariableName() );
         }
         
         return destination;
