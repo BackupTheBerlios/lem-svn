@@ -28,24 +28,13 @@ public class ModelTreePanel extends javax.swing.JPanel {
         initComponents();      
 	modelTree.setSelectionModel(new DefaultTreeSelectionModel());
         ModelTreeNode modelTreeNode = new ModelTreeNode( m , eleminator) ; 
-        //modelTreeNode.setView( this ) ; 
         modelTree.setModel( new DefaultTreeModel( modelTreeNode ));
-        //modelTree.setModel( new DefaultTreeModel( new ModelTreeNode( m )));
         modelTree.setSelectionInterval(0,0);
 	if (modelTree.getSelectionPath() != null)
 	        displayDescription(modelTree.getSelectionPath().getLastPathComponent());
         SplitPanel.setDividerLocation(175);
         CustomTreeRenderer render = new CustomTreeRenderer();
         modelTree.setCellRenderer(render);
-        /*
-        if((m.getDescription()!=null)&&(m.getDescription()!=""))
-        {
-            DescriptionArea.setText(m.getDescription());
-        }
-        else
-        {
-            DescriptionArea.setText("No Description");
-        }*/
     }
     
     /** This method is called from within the constructor to
@@ -147,16 +136,7 @@ public class ModelTreePanel extends javax.swing.JPanel {
         }
         
     }
-    
-    public Eleminator getEleminator() {       
-        return eleminator ; //((Eleminator)this.getParent().getParent().getParent().getParent());
-    }
-
-	public void setEleminator(Eleminator eleminator) {
-		this.eleminator = eleminator;
-	}
-
-    
+       
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSplitPane SplitPanel;
     private javax.swing.JTextPane descriptionArea;

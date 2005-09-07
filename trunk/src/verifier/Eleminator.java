@@ -59,17 +59,15 @@ import javax.xml.transform.stream.*;
  * @author  sjr
  */
 public class Eleminator extends javax.swing.JFrame {
-	Vector windows = new Vector();
-	Vector models = new Vector();
-	Model activeModel = null;
-	File workingDirectory = null;
-	ModelTreePanel MTP = new ModelTreePanel(new Model(), this);
-	
-        int windowCounter = 0;
+	private Vector models = new Vector();
+	private Model activeModel = null;
+	private File workingDirectory = null;
+	private ModelTreePanel MTP = new ModelTreePanel(new Model(), this);
+        private Vector windows = new Vector();
+        private int windowCounter = 0;
 	
 	/** Creates new form Eleminator */
 	public Eleminator() {
-		MTP.setEleminator( this ) ; 
 		getContentPane().add( MTP, BorderLayout.CENTER );
 		try{
 			String nativeLook = UIManager.getSystemLookAndFeelClassName();
@@ -256,7 +254,6 @@ public class Eleminator extends javax.swing.JFrame {
 					workingDirectory = jfc.getSelectedFile().getParentFile();
 					getContentPane().remove(MTP);
 					MTP = new ModelTreePanel(m,this);
-					MTP.setEleminator( this ) ; 
 					getContentPane().add(MTP, BorderLayout.CENTER);
 					try{
 						ObjectOutputStream Out = new ObjectOutputStream(new FileOutputStream(System.getProperty("user.home")+"/"+"WorkSpace.dat"));
@@ -294,6 +291,10 @@ public class Eleminator extends javax.swing.JFrame {
 						ThemeItem newLook = (ThemeItem)themeComboBox.getSelectedItem();
 						UIManager.setLookAndFeel(newLook.getClassName());
 						SwingUtilities.updateComponentTreeUI(this);
+                                                for(int i = 0; i<windows.size(); i++) {
+                                                    SwingUtilities.updateComponentTreeUI((JFrame)windows.get(i));
+                                                }
+                                                
 					} catch(Exception e){}
         }//GEN-LAST:event_themeComboBoxItemStateChanged
 				
@@ -432,22 +433,22 @@ public class Eleminator extends javax.swing.JFrame {
                 public void newWindow(JFrame window){
                     JMenuItem showWindow = new JMenuItem();
                     windowMenu.setEnabled(true);
-                    showWindow.setText(window.getTitle()+" "+(windowCounter+1));
-                    window.setTitle(window.getTitle()+" "+(windowCounter+1));
+                    showWindow.setText((windowCounter+1)+" - "+window.getTitle());
+                    window.setTitle((windowCounter+1)+" - "+window.getTitle());
                     windowCounter++;
                     showWindow.addActionListener(new LEMMenuListener(window));
                     windowMenu.add(showWindow);
-                    windows.add(showWindow);
+                    windows.add(window);
                 }
-                public void killWindow(JFrame window){
-                    for(int i=0; i<windows.size();i++) {
-                        if(window.getTitle().matches(((JMenuItem)windows.get(i)).getText())) {
-                            windowMenu.remove(((JMenuItem)windows.get(i)));
-                            windows.remove(i);
+                public void killWindow(JFrame window){                    
+                    for(int i=0; i<windowMenu.getItemCount();i++) {
+                        if(window.getTitle().matches(windowMenu.getItem(i).getText())) {
+                            windowMenu.remove(i);
+                            windows.remove(window);
                             break;
                         }
                     }
-                    if(windows.isEmpty()){
+                    if(windowMenu.getItemCount()==0){
                         windowMenu.setEnabled(false);
                     }
                 }

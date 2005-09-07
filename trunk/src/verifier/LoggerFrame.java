@@ -17,21 +17,21 @@ import metamodel.Scenario;
  */
 public class LoggerFrame extends javax.swing.JFrame {
 	private ScenarioExecuter scenarioExec;
-	private Eleminator lem;
+	private Eleminator eleminator;
 	/** Creates new form LoggerFrame */
-	public LoggerFrame(Scenario inScenario) {
+	public LoggerFrame(Scenario inScenario, Eleminator inEleminator) {
 		initComponents();
+                eleminator= inEleminator;
 		URL imageURL = getClass().getClassLoader().getResource("verifier/lem.jpg");
 		Image lem = Toolkit.getDefaultToolkit().getImage(imageURL);
 		setIconImage(lem);
 		scenarioExec = new ScenarioExecuter(inScenario);
 		this.add(scenarioExec);
-		this.setTitle(inScenario.getName()+" Scenario");
+		this.setTitle(inScenario.getName());
+                eleminator.newWindow(this);
+                
 	}
 	
-	public void setParent(Eleminator inLem) {
-		lem=inLem;
-	}
 	public void startExecutor() {
 		new Thread(scenarioExec).start();
 		
@@ -57,7 +57,7 @@ public class LoggerFrame extends javax.swing.JFrame {
 	
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
 		scenarioExec.killScenario();
-		lem.killWindow(this);
+		eleminator.killWindow(this);
 	}//GEN-LAST:event_formWindowClosing
 	
     // Variables declaration - do not modify//GEN-BEGIN:variables

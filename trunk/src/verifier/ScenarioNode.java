@@ -20,10 +20,11 @@ import javax.swing.JPanel ;
  */
 public class ScenarioNode extends AbstractDescriptionNode  {
 	private Scenario scenario;
-	private Eleminator LEM;
+	private Eleminator eleminator;
 	/** Creates a new instance of ScenarioNode */
-	public ScenarioNode(Scenario scenario) {
+	public ScenarioNode(Scenario scenario, Eleminator inEleminator) {
 		this.scenario = scenario;
+                eleminator = inEleminator;
 	}
 	
 	/**
@@ -55,8 +56,7 @@ public class ScenarioNode extends AbstractDescriptionNode  {
 		executeProcedure.setText("Execute");
 		executeProcedure.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {								
-				LoggerFrame loggerWindow = new LoggerFrame(scenario);
-				loggerWindow.setParent(getLEM());
+				LoggerFrame loggerWindow = new LoggerFrame(scenario, eleminator);
 				loggerWindow.setVisible(true);
 				loggerWindow.setBounds(0,0,640,480);
 				loggerWindow.startExecutor();
@@ -65,25 +65,5 @@ public class ScenarioNode extends AbstractDescriptionNode  {
 		contextMenu.add(executeProcedure);
 		return contextMenu;
 	}
-	
-	
-	/*
-	public JContextLoggerPanel loggerPanel( DomainContext d) {
-		//JDialog dlg = new JDialog();
-		ConsoleLogger c = new ConsoleLogger(d);
-		JContextLoggerPanel p = new JContextLoggerPanel( d );
-		//dlg.getContentPane().setLayout( new BorderLayout() );
-		//dlg.getContentPane().add( p, BorderLayout.CENTER );
-		//dlg.setVisible( true );
-		return p ;
-	}*/
-
-	public Eleminator getLEM() {
-		return LEM;
-	}
-
-	public void setLEM(Eleminator LEM) {
-		this.LEM = LEM;
-	}
-	
+		
 }

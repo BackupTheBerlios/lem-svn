@@ -18,7 +18,7 @@ import metamodel.Domain;
  */
 public class DomainNode extends AbstractDescriptionNode {
         /**The LEM domain object that DomainNode contains*/	
-	Domain domain;
+	private Domain domain;
 	private Eleminator eleminator ; 
 	
 	/** 
@@ -49,8 +49,7 @@ public class DomainNode extends AbstractDescriptionNode {
                 if(i.hasNext()){
                     DefaultMutableTreeNode scenarioLevel = new DefaultMutableTreeNode( "Scenarios" );
                     while( i.hasNext() ) {
-                        ScenarioNode s = new ScenarioNode( (metamodel.Scenario)i.next() ) ;                        
-						s.setLEM( getEleminator() )  ; 
+                        ScenarioNode s = new ScenarioNode( (metamodel.Scenario)i.next(), eleminator ) ;                        
                         scenarioLevel.add( s );
                     	//scenarioLevel.add( new ScenarioNode( (metamodel.Scenario)i.next() ));
                     }
@@ -86,11 +85,4 @@ public class DomainNode extends AbstractDescriptionNode {
 		return ContextMenu;
 	}
 
-	public Eleminator getEleminator() {
-		return eleminator;
-	}
-
-	public void setEleminator(Eleminator eleminator) {
-		this.eleminator = eleminator;
-	}
 }

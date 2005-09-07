@@ -18,7 +18,7 @@ import metamodel.Model;
  */
 public class ModelTreeNode extends AbstractDescriptionNode {
     /**LEM Model object that ModelTreeNode contains*/
-    Model model;
+    private Model model;
     private Eleminator eleminator;
     /**
      * Creates a new instance of ModelTreeNode. Creates DomainNode branches
@@ -28,13 +28,10 @@ public class ModelTreeNode extends AbstractDescriptionNode {
     public ModelTreeNode( Model m , Eleminator inEleminator ) {
         model = m;
         eleminator = inEleminator; 
-		System.out.println(eleminator.toString());
         Iterator i = m.getDomains().values().iterator();
         while( i.hasNext() ) {
             DomainNode d = new DomainNode((Domain)i.next() , eleminator) ;
-            //d.setView(view) ;
             add( d ) ;
-            //add( new DomainNode( (Domain)i.next() ));
         }
     }
     
