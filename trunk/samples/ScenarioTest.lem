@@ -41,6 +41,15 @@ model TestModel is
 				attribute attr2 is numeric;
 			end;
 
+			/////////////////////////////////////////////////////////////////
+			// RELATIONSHIPS                                               //  
+			/////////////////////////////////////////////////////////////////
+		
+			association R1 is "a record of the fact that each book has a publisher" 
+				A "is active" 0..* B;
+                                B "is passive" 1..1 A;
+			end R1;
+
 		end TestSubsystem;
 
 		scenario TestSignals is {
@@ -51,9 +60,31 @@ model TestModel is
 			a1 := create A;
 			a2 := create A;
 
-			generate Ev1 to a1;
+			/* generate Ev1 to a1; */
 			/* generate Ev1 to a2; */
 		}
+
+                scenario TestAttributeReadWrite is {
+                        objref a1;
+                        numeric x;
+                        numeric y;
+                        y := 20;
+                        a1 := create B;
+                        x := a1.attr1;
+                        a1.attr1 := y;
+                        a1.attr2 := a1.attr1;
+                }
+
+                scenario TestRelateUnrelate is {
+                        objref a1;
+                        objref b1;
+
+                        a1 := create A;
+                        b1 := create B;
+                        relate b1 to a1 across R1."is passive";
+                        
+                        unrelate b1 from a1 across R1."is passive";
+                }
 
 		scenario TestDeletion is {
 			/* 
