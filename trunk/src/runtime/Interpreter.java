@@ -84,10 +84,6 @@ public class Interpreter {
 		instanceInterpreters = new ArrayList() ; 
     }
     
-    /** start interpreting ... */
-    public void run() {
-    }
-    
     /**
      * Interpret the given Procedure by calling executeBlock on Procedure's
      * main ActionBlock.
@@ -444,8 +440,8 @@ public class Interpreter {
         SetVariable set = (SetVariable)var;
         Iterator i = ((Collection)set.getValue()).iterator();
         while (i.hasNext() && !hasBreak) {
-            Variable select = (Variable)i.next();
-            Context newContext = new Context( c );
+            ObjectReferenceVariable select = (ObjectReferenceVariable)i.next();
+            Context newContext = new LocalContext( c );
             newContext.addVariable( selectName , select );
             
             executeBlock( block, newContext );
@@ -538,6 +534,9 @@ public class Interpreter {
             }
         } else {
 		destination = c.getVariable( r.getVariableName() );
+		if (destination == null)
+			throw new LemRuntimeException("Variable " + r.getVariableName() + " is NULL");
+
         }
         
         return destination;
@@ -729,14 +728,14 @@ public class Interpreter {
     }
     
     public Variable evaluateSelectExpression( SelectExpression se, Context c ) throws LemRuntimeException {
+	Context objContext = c;
         metamodel.Class selectedClass = se.getSelectedClass() ;
         RelatedToOperation rto = se.getRelatedToOperation() ;
         Expression condition = se.getCondition();
-        SetVariable set
-                = new SetVariable() ;
+        SetVariable set = new SetVariable() ;
         do {
-            synchronized ( c ) {
-                Collection objectList = c.getObjectList();
+            synchronized ( objContext ) {
+                Collection objectList = objContext.getObjectList();
                 
                 for ( Iterator i = objectList.iterator(); i.hasNext(); ) {
                     runtime.Object o = ( runtime.Object ) i.next();
@@ -750,7 +749,7 @@ public class Interpreter {
                             
                             if ( condition != null ) {
                                 Variable result;
-                                Context newContext = new Context( c ) ;
+                                Context newContext = new LocalContext( c ) ;
                                 newContext.addVariable( "selected" , var ) ;
                                 result = evaluateExpression( condition , newContext );
                                 if ( result instanceof BooleanVariable ) {
@@ -792,8 +791,8 @@ public class Interpreter {
                     }
                 }
             }
-            c = c.getParent();
-        } while ( c != null );
+            objContext = objContext.getParent();
+        } while ( objContext != null );
         
         System.out.println( Thread.currentThread().getName() + " selected " + ((LinkedList)set.getValue()).size() + " references" );
         return set;

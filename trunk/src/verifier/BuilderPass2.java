@@ -605,12 +605,12 @@ public class BuilderPass2 extends Visitor {
 		ForStatement f = new ForStatement();
 		String selectVariable = getIdentifier( node.jjtGetChild( 0 ) ) ;
 		f.setSelectVariable( selectVariable );
-		VariableDeclaration selected = new VariableDeclaration( CoreDataType.findByName( "objref" ), selectVariable );
-		if ( !currentBlock.addVariableDeclaration( selected ) )
-			throw new LemException( "Double declaration of variable: " + selectVariable );
+//		VariableDeclaration selected = new VariableDeclaration( CoreDataType.findByName( "objref" ), selectVariable );
+//		if ( !currentBlock.addVariableDeclaration( selected ) )
+//			throw new LemException( "Double declaration of variable: " + selectVariable );
 		f.setSetExpression( ( Expression ) node.jjtGetChild( 1 ).jjtAccept( this, null ) );
 		f.setBlock( ( ActionBlock ) node.jjtGetChild( 2 ).jjtAccept( this, null ) );
-		currentBlock.removeVariableDeclaration( selected );
+//		currentBlock.removeVariableDeclaration( selected );
 		return f;
 	}
 
@@ -868,6 +868,7 @@ public class BuilderPass2 extends Visitor {
 	 * @return
 	 */
 	public Object visit( LEMObjectReference node, Object data ) throws LemException {
+		/*
 		String objectName = node.getFirstToken().image;
 		if ( inScenario && objectName.equals( "self" ) )
 			throw new LemException( "Undefined use of self in Scenario" );
@@ -879,6 +880,7 @@ public class BuilderPass2 extends Visitor {
 					throw new LemException( objectName + " is not an object reference" );
 			}
 		}
+		*/
 		return new VariableReference( node.getFirstToken().image );
 	}
 
@@ -899,10 +901,12 @@ public class BuilderPass2 extends Visitor {
 		} else if ( node.jjtGetNumChildren() == 1 ) {
 			// bare variable reference
 			String variableName = getIdentifier( node.jjtGetChild( 0 ) );
+			/*
 			if ( !currentBlock.isValidVariable( variableName ) ) {
 				if ( !( variableName.equals( "selected" ) && hasSelectAncestorNode( node ) ) )
 					throw new LemException( "Undeclared variable " + variableName );
 			}
+			*/
 			return new VariableReference( variableName );
 		} else if ( node.jjtGetNumChildren() == 2 ) {
 			// object.variable-style reference, eg. "publisher.name"
