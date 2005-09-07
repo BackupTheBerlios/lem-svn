@@ -24,49 +24,74 @@ package runtime;
 /**
  * Instances of this event are passed to listeners when an attribute has changed.
  * @author James Greenhalgh
+ * @co-author Thuan Seah Tan
  * @see AssignmentAction
  */
 public class LemAttributeChangeEvent extends LemEvent {
-	
-	private runtime.Object object;
-	private Variable oldValue;
-	private Variable newValue;
+	/**
+         * the unique alpha numeric object id of the object
+         */
+	private Integer object_id;
+        
+        /**
+         * the name of the attribute
+         */
+	private String attribute_name;
+        
+        /**
+         * the old value of the attribute
+         */
+	private java.lang.Object old_value;
+        
+        /**
+         * the new value of the attribute
+         */
+        private java.lang.Object new_value;
 	
 	/**
 	 * Creates a new instance of LemAttributeChangeEvent
-	 * @param o 
-	 * @param oldValue 
-	 * @param newValue 
+	 * @param id the unique alpha numeric object id of the object
+	 * @param name the name of the attribute
+	 * @param oldValue the old value of the attribute
+         * @param newValue the new value of the attribute
 	 */
-	public LemAttributeChangeEvent(runtime.Object o, Variable oldValue, Variable newValue) {
-		this.object = o;
-		this.oldValue = oldValue;
-		this.newValue = newValue;
+	public LemAttributeChangeEvent(int id, String name, java.lang.Object oldValue, java.lang.Object newValue) {
+		object_id = new Integer(id);
+                attribute_name = name;
+                old_value = oldValue;
+                new_value = newValue;
 	}
 
 	/**
-	 * Returns the object on which the attribute changed
-	 * @return the object
+	 * Returns the unique alpha numeric object id of the object on which 
+         * the attribute changed
+	 * @return an Integer object with the object id
 	 */
-	public runtime.Object getObject() {
-		return object;
+	public Integer getObjectId() {
+		return object_id;
 	}
 
-
+        /**
+        * function to retrieve the name of the attribute
+        */
+        public String getAttributeName() {
+            return attribute_name;
+        }
+        
 	/**
 	 * Return the old value of the attribute
 	 * @return the old value of the attribute
 	 */
-	public Variable getOldValue() {
-		return oldValue;
+	public java.lang.Object getOldValue() {
+		return old_value;
 	}
 
 	/**
 	 * Return the new value of the attribute
 	 * @return the new value of the attribute
 	 */
-	public Variable getNewValue() {
-		return newValue;
+	public java.lang.Object getNewValue() {
+		return new_value;
 	}
 
 	/**
