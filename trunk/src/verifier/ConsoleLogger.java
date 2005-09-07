@@ -12,6 +12,7 @@ import runtime.LemAttributeChangeEvent;
 import runtime.LemRelationshipCreationEvent;
 import runtime.LemRelationshipDeletionEvent;
 import runtime.LemEventGenerationEvent;
+import runtime.LemAttributeReadEvent;
 
 /**
  * Receives all activity by the runtime and logs desired activity to the console
@@ -83,6 +84,7 @@ public class ConsoleLogger implements runtime.LemEventListener {
 	 * @param event The Object Creation event to be logged
 	 **/
 	public void objectDeleted(runtime.LemObjectDeletionEvent event) {
+                // testing message starts
 		String message = " OD - ClassName=";
 		for( Iterator i = event.getObjectClassName().iterator(); i.hasNext(); ) {
 			message = message + i.next().toString() + ", ";
@@ -91,37 +93,48 @@ public class ConsoleLogger implements runtime.LemEventListener {
 		logger.debug(counter + message);
 		counter ++;
 	}	
-	
+
+        /**
+        * Called by the runtime when reading an attribute's value
+        * 
+        * @param event The event representing the circumstances in which the
+        *  attribute is read.
+        */
+        public void attributeRead(LemAttributeReadEvent event) {
+                // testing message starts
+                String message = " AR \n";
+                message = message + "Object id: "+event.getObjectId().intValue()+"\n";
+                message = message + "Attribute name: "+event.getAttributeName()+"\n";
+                message = message + "Attribute value: "+event.getValue()+"\n";
+                logger.debug(counter + message);
+                counter++;
+        }
+        
 	/**
 	 * Called by the runtime when an AssignmentAction has been executed.
 	 * Prints old value and new value to console.
 	 * @param e The event representing the attribute change
 	 */
-	public void attributeChange(LemAttributeChangeEvent e) {
-		String message = " AC ";
-		logger.debug(counter + message + e.getOldValue() + " --> " + e.getNewValue());
+	public void attributeChange(LemAttributeChangeEvent event) {
+                // testing message starts
+                String message = " AC \n";
+                message = message + "Object id: "+event.getObjectId().intValue()+"\n";
+                message = message + "Attribute name: "+event.getAttributeName()+"\n";
+                message = message + "Attribute old value: "+event.getOldValue()+"\n";                
+                message = message + "Attribute new value: "+event.getNewValue()+"\n";                                
+		logger.debug(counter + message);
 		counter ++;
 	}
         
 	 public void relationshipDeletion(LemRelationshipDeletionEvent event) {
                 // testing message starts
-                String message = " RD - Association Instance Id: "+event.getAssociationId().intValue()+"\n";
+                String message = " RD \n";
                 message = message + "Active object id: "+event.getActiveObjectId().intValue()+ "\n";
-                message = message + "Class Names: ";
-                Iterator i = event.getActiveObjectNames().iterator();
-                while(i.hasNext()) {
-                    message = message + i.next().toString() + ", ";
-                }
-                message = message + "\n";
                 message = message + "Passive object id: "+event.getPassiveObjectId().intValue()+"\n";
-                message = message + "Class Names: ";
-                i = event.getPassiveObjectNames().iterator();
-                while(i.hasNext()) {
-                    message = message + i.next().toString() + ", ";
-                }              
                 if(event.getLinkObjectId() != null) {
-                    message = message + "\n" + "Link object id: "+event.getLinkObjectId().intValue()+"\n";
+                    message = message + "Link object id: "+event.getLinkObjectId().intValue()+"\n";
                 }
+                message = message + "Association: " + event.getAssociationLabel();
                 // testing message ends
                 
                 logger.debug(counter + message);
@@ -130,23 +143,13 @@ public class ConsoleLogger implements runtime.LemEventListener {
         
 	public void relationshipCreation(LemRelationshipCreationEvent event) {
                 // testing message starts
-                String message = " RC - Association Instance Id: "+event.getAssociationId().intValue()+"\n";
+                String message = " RC \n";
                 message = message + "Active object id: "+event.getActiveObjectId().intValue()+ "\n";
-                message = message + "Class Names: ";
-                Iterator i = event.getActiveObjectNames().iterator();
-                while(i.hasNext()) {
-                    message = message + i.next().toString() + ", ";
-                }
-                message = message + "\n";
                 message = message + "Passive object id: "+event.getPassiveObjectId().intValue()+"\n";
-                message = message + "Class Names: ";
-                i = event.getPassiveObjectNames().iterator();
-                while(i.hasNext()) {
-                    message = message + i.next().toString() + ", ";
-                }              
                 if(event.getLinkObjectId() != null) {
-                    message = message + "\n" + "Link object id: "+event.getLinkObjectId().intValue()+"\n";
+                    message = message + "Link object id: "+event.getLinkObjectId().intValue()+"\n";
                 }
+                message = message + "Association: " + event.getAssociationLabel();
                 // testing message ends
                 
                 logger.debug(counter + message);
