@@ -21,7 +21,8 @@
 
 package verifier;
 
-import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
+//import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
+import javax.xml.transform.TransformerFactory;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -93,7 +94,8 @@ public class Eleminator extends javax.swing.JFrame {
 		}
 		
 		setSize(640, 480);
-		setLocationByPlatform( true );
+		// only in java 1.5
+		// setLocationByPlatform( true );
 		doLayout();
 		setTitle("eLEMinator");
 		URL imageURL = getClass().getClassLoader().getResource("verifier/lem.jpg");
@@ -405,7 +407,7 @@ public class Eleminator extends javax.swing.JFrame {
 			
 			
 			// Initialize Saxon
-			TransformerFactory factory = TransformerFactoryImpl.newInstance();
+			TransformerFactory factory = TransformerFactory.newInstance();
 			stylesheet = factory.newTemplates(new StreamSource(styledata));
 			
 			// Apply the transformation
