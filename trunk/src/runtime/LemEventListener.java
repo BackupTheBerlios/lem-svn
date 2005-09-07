@@ -47,6 +47,14 @@ public interface LemEventListener {
 //    void transitionEvent(LemEvent event);
     
     /**
+     * Called by the runtime when reading an attribute's value
+     * 
+     * @param event The event representing the circumstances in which the
+     *  attribute is read.
+     */
+    void attributeRead(LemAttributeReadEvent event);
+    
+    /**
      * Called by the runtime when an attribute's value has changed.
      *
      * @param event The event representing the circumstances in which the
