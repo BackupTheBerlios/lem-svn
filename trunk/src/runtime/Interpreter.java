@@ -247,6 +247,7 @@ public class Interpreter {
      * @throws runtime.LemRuntimeException
      */
     public void executeDeleteAction( DeleteAction a, Context c ) throws LemRuntimeException {
+        int object_id=0;
         ObjectReferenceVariable targetRef =
                 ( ObjectReferenceVariable ) getVariable( a.getVariable(), c );
         runtime.Object target = ( runtime.Object ) targetRef.getValue();
@@ -257,10 +258,11 @@ public class Interpreter {
             Instance inst = (Instance)i.next();
             className.add(inst.getInstanceClass().getName());
         }
+        object_id = target.getObjectId().intValue();
         c.delObject( target );
         
         // Notify listeners that the object has been deleted
-        new LemObjectDeletionEvent( objectId, className ).notifyAll( c );
+        new LemObjectDeletionEvent( object_id, className ).notifyAll( c );
     }
     
     /**
@@ -479,7 +481,7 @@ public class Interpreter {
         Variable destination = getVariable( r, c );
         attributeWrite = false;
         Variable value = evaluateExpression( a.getExpression(), c );
-        
+       
         if ( value.getCoreDataType() != destination.getCoreDataType() ) {
             throw new LemRuntimeException( "Type mismatch: evaluated '" + value.getType().getName() + "', expected '" + destination.getType().getName() + "', name: " + r.getVariableName() );
         }
@@ -487,7 +489,12 @@ public class Interpreter {
         // notify all logger if the assignment action is an attribute change
         name = r.getObjectName();
         if(name != null) {
-            int id = ((runtime.Object)c.getVariable( name ).getValue()).getObjectId().intValue();
+            int id=0;
+            if(name.equals("self")) {
+                id = currentObject.getObjectId().intValue();
+            } else {
+                id = ((runtime.Object)c.getVariable( name ).getValue()).getObjectId().intValue();
+            }
             name = r.getVariableName();
             new LemAttributeChangeEvent(id, name, destination.getValue(), value.getValue()).notifyAll( c );
         }
@@ -507,6 +514,19 @@ public class Interpreter {
         Variable destination;
         
         if ( name != null ) {
+            // if variable the attribute of the current object
+            if(name.equals("self") && (currentObject != null)) {
+                String attribute_name = r.getVariableName();
+                destination = currentObject.getAttribute( attribute_name );
+                if ( destination == null ) {
+                    throw new LemRuntimeException( "Attribute '" + r.getVariableName() + "' not defined on object named '" + name + "'" );
+                }
+                // we are reading a atribute
+                if(!attributeWrite) { 
+                    new LemAttributeReadEvent(currentObject.getObjectId().intValue(), attribute_name, destination.getValue()).notifyAll( c );
+                }
+                return destination;
+            }            
             // Look up the object reference in the current context
             Variable v = c.getVariable( name );
             if ( v == null ) {
