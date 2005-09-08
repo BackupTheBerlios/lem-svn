@@ -90,8 +90,11 @@ public class InstanceInterpreter extends java.lang.Thread {
                     continue;
                 
                 if ( s.getEvent() == t.getEvent() ) {
-                    metamodel.State newState = t.getToState();
-                    instance.currentState = newState;
+                    metamodel.State newState = t.getToState() ;
+                    int id = instance.instanceInObject.getObjectId().intValue();
+                    instance.currentState = newState ;
+                    String to = instance.currentState.getName();
+                    new LemStateTransitionEvent(id, "init", to).notifyAll( context );
                     Procedure p = newState.getProcedure();
 
                     System.out.println( Thread.currentThread().getName()
@@ -164,7 +167,10 @@ public class InstanceInterpreter extends java.lang.Thread {
             if ( s.getEvent() == t.getEvent()
             			&& t.getFromState() == currentState ) {
                 metamodel.State newState = t.getToState();
+                String from = instance.currentState.getName();
+                String to = newState.getName();
                 instance.currentState = newState;
+                new LemStateTransitionEvent(id, from, to).notifyAll( context );
                 Procedure p = newState.getProcedure();
 
                	System.out.println( Thread.currentThread().getName()
