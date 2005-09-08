@@ -29,8 +29,8 @@ public class LemObjectDeletionEvent extends LemEvent {
      * 
      * @param o the object to be deleted
      */
-    public LemObjectDeletionEvent( Integer id, java.util.Collection c) {
-        objectId = id;
+    public LemObjectDeletionEvent( int id, java.util.Collection c) {
+        objectId = new Integer(id);
         className.addAll(c);
     }
     
