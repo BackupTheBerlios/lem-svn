@@ -13,6 +13,7 @@ import runtime.LemRelationshipCreationEvent;
 import runtime.LemRelationshipDeletionEvent;
 import runtime.LemEventGenerationEvent;
 import runtime.LemAttributeReadEvent;
+import runtime.LemStateTransitionEvent;
 
 /**
  * Receives all activity by the runtime and logs desired activity to the console
@@ -67,11 +68,12 @@ public class ConsoleLogger implements runtime.LemEventListener {
 	 **/
 	
 	public void objectCreated(runtime.LemObjectCreationEvent event) {
-		String message = " OC - ClassName=";
+		String message = " OC \n";
+                message = message + "Object id:"+event.getObjectId().intValue()+"\n";
+                message = message + "ClassName=";
 		for( Iterator i = event.getObjectClassName().iterator(); i.hasNext(); ) {
 			message = message + i.next().toString() + ", ";
 		}
-		
 		logger.debug(counter + message);
 		counter ++;
 	}
@@ -84,12 +86,13 @@ public class ConsoleLogger implements runtime.LemEventListener {
 	 * @param event The Object Creation event to be logged
 	 **/
 	public void objectDeleted(runtime.LemObjectDeletionEvent event) {
-                // testing message starts
-		String message = " OD - ClassName=";
+ 		// testing message
+                String message = " OD \n";
+                message = message + "Object id:"+event.getObjectId().intValue()+"\n";
+                message = message + "ClassName=";
 		for( Iterator i = event.getObjectClassName().iterator(); i.hasNext(); ) {
 			message = message + i.next().toString() + ", ";
 		}
-		
 		logger.debug(counter + message);
 		counter ++;
 	}	
@@ -126,6 +129,13 @@ public class ConsoleLogger implements runtime.LemEventListener {
 		counter ++;
 	}
         
+        /**
+        * Called by the runtime when a DeleteAction has been executed successfully
+        * and an existing relationship has been deleted.
+        *
+        * @param event The LemRelationshipDeletionEvent representing the circumstances
+        * in which the relationship was deleted.
+        */        
 	 public void relationshipDeletion(LemRelationshipDeletionEvent event) {
                 // testing message starts
                 String message = " RD \n";
@@ -141,6 +151,13 @@ public class ConsoleLogger implements runtime.LemEventListener {
                 counter++;
 	 }        
         
+         /**
+         * Called by the runtime when a CreatAction has been executed successfully
+         * and a new relationship has been created.
+         *
+         * @param event the LemRelationshipCreationEvent representing the circumstances
+         * in which the relationship is created.
+         */        
 	public void relationshipCreation(LemRelationshipCreationEvent event) {
                 // testing message starts
                 String message = " RC \n";
@@ -164,5 +181,24 @@ public class ConsoleLogger implements runtime.LemEventListener {
                 message = message + "Object ID";
                 logger.debug(counter + message);
                 counter++;            
-        }        
+        }    
+        
+        /**
+        * Called by the runtime when an event recieved by an object has caused a
+        * transition from one state to the next.
+        *
+        * @param event The event representing the circumstance in which the object
+        * transitioned between states
+        */
+        public void transitionEvent(LemStateTransitionEvent event) {     
+                // testing message starts
+                String message = " ST \n";
+                message = message + "Object id: "+event.getObjectId().intValue()+ "\n";
+                message = message + "From state: " + event.getFromState() + "\n";
+                message = message + "To state: " + event.getToState() + "\n";
+                // testing message ends
+                
+                logger.debug(counter + message);
+                counter++;            
+        }
 }
