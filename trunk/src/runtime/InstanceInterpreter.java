@@ -167,6 +167,7 @@ public class InstanceInterpreter extends java.lang.Thread {
             if ( s.getEvent() == t.getEvent()
             			&& t.getFromState() == currentState ) {
                 metamodel.State newState = t.getToState();
+                int id = instance.instanceInObject.getObjectId().intValue();
                 String from = instance.currentState.getName();
                 String to = newState.getName();
                 instance.currentState = newState;
