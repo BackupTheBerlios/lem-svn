@@ -44,7 +44,7 @@ public interface LemEventListener {
      * @param event The event representing the circumstance in which the object
      * transitioned between states
      */
-//    void transitionEvent(LemEvent event);
+    void transitionEvent(LemStateTransitionEvent event);
     
     /**
      * Called by the runtime when reading an attribute's value
