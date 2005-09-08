@@ -892,32 +892,33 @@ public class BuilderPass2 extends Visitor {
 	 * @throws metamodel.LemException
 	 * @return
 	 */
-	public Object visit( LEMVariableReference node, Object data ) throws LemException {
-		if ( node.jjtGetNumChildren() == 0 ) {
-			// 'self' reference.
-			if ( inScenario )
-				throw new LemException( "Undefined used of self in Scenario" );
-			return new VariableReference( "self" );
-		} else if ( node.jjtGetNumChildren() == 1 ) {
-			// bare variable reference
-			String variableName = getIdentifier( node.jjtGetChild( 0 ) );
-			/*
-			if ( !currentBlock.isValidVariable( variableName ) ) {
-				if ( !( variableName.equals( "selected" ) && hasSelectAncestorNode( node ) ) )
-					throw new LemException( "Undeclared variable " + variableName );
-			}
-			*/
-			return new VariableReference( variableName );
-		} else if ( node.jjtGetNumChildren() == 2 ) {
-			// object.variable-style reference, eg. "publisher.name"
-			VariableReference obj = ( VariableReference ) visit( ( LEMObjectReference ) node.jjtGetChild( 0 ), null );
-			String variableName = getIdentifier( node.jjtGetChild( 1 ) );
-			return new VariableReference( obj.getVariableName(), variableName );
-		}
 
-		throw new LemException( "LEMVariableReference has neither 1 nor 2 children" );
+    	public Object visit( LEMVariableReference node, Object data ) throws LemException {
+        	if( node.jjtGetNumChildren() == 0) {
+	    	// 'self' reference.
+            	if(inScenario)
+            	    throw new LemException("Undefined used of self in Scenario");
+		    return new VariableReference( "self" );  
+      	  	} else if( node.jjtGetNumChildren() == 1 ) {
+            	// bare variable reference
+            	String variableName = getIdentifier(node.jjtGetChild(0) );
+            	if(!currentBlock.isValidVariable(variableName)) {
+            	    if((currentClass.getAttribute(variableName) != null) && !(inScenario)) {
+            	        return new VariableReference("self", variableName);
+            	    }else if(!(variableName.equals("selected") && hasSelectAncestorNode(node)))
+            	        throw new LemException("Undeclared variable "+variableName);
+          	  } 
+           	 return new VariableReference(variableName );
+        	} else if( node.jjtGetNumChildren() == 2 ) {
+      	  	    // object.variable-style reference, eg. "publisher.name"
+        	    VariableReference obj = (VariableReference)visit( (LEMObjectReference)node.jjtGetChild(0), null );
+        	    String variableName = getIdentifier( node.jjtGetChild(1));      
+        	    return new VariableReference( obj.getVariableName(), variableName );
+        	}
 
-	}
+        	throw new LemException( "LEMVariableReference has neither 1 nor 2 children" );
+
+    	}
 
 	/**
 	 * Visit a LEMLiteral node. Return the instance of metamodel.Literal representing
