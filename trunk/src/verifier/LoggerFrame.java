@@ -10,7 +10,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.net.URL;
 import metamodel.Scenario;
-
+import java.lang.Thread ;
 /**
  *
  * @author  David Gavin
@@ -21,21 +21,33 @@ public class LoggerFrame extends javax.swing.JFrame {
 	/** Creates new form LoggerFrame */
 	public LoggerFrame(Scenario inScenario, Eleminator inEleminator) {
 		initComponents();
-                eleminator= inEleminator;
+		eleminator= inEleminator;
 		URL imageURL = getClass().getClassLoader().getResource("verifier/lem.jpg");
 		Image lem = Toolkit.getDefaultToolkit().getImage(imageURL);
 		setIconImage(lem);
-		scenarioExec = new ScenarioExecuter(inScenario);
+		scenarioExec = new ScenarioExecuter(inScenario, this) ;
 		this.add(scenarioExec);
 		this.setTitle(inScenario.getName());
-                eleminator.newWindow(this);
-                
+		eleminator.newWindow(this);
+		
 	}
 	
 	public void startExecutor() {
-		new Thread(scenarioExec).start();
-		
+		new Thread(scenarioExec).start() ;		
 	}
+	
+	public ScenarioExecuter getScenarioExec() {
+		return scenarioExec;
+	}
+	
+	public ContextTreePanel getContextTree() {
+		return scenarioExec.getContextTree();
+	}
+	
+	public DescriptionPanel getDescriptionPane() {
+		return scenarioExec.getDescriptionPane() ;
+	}
+	
 	/** This method is called from within the constructor to
 	 * initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is
