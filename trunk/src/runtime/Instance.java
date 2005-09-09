@@ -211,4 +211,8 @@ public class Instance {
 			}
 		}
 	}
+
+	public runtime.Object getInstanceInObject() {
+		return instanceInObject;
+	}
 }
