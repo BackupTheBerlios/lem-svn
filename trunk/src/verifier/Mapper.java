@@ -27,7 +27,6 @@ public class Mapper {
     public Mapper() {
     }
     
-    
     /**
      * Add the supplied node and model to the map
      * 
@@ -58,7 +57,4 @@ public class Mapper {
     public Object getObject ( SimpleNode node ) {
         return nodeToModel.get( node );
     }
-    
-    
-    
 }
