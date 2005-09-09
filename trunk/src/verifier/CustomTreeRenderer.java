@@ -107,9 +107,15 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
             setIcon(transitionIcon);
         } else if (value instanceof EventNode){
             setIcon(eventIcon);
-        } else if (value instanceof ScenarioNode){
+        }else if (value instanceof ScenarioNode ){
             setIcon(scenarioIcon);
         }
+		/** below this we have instances of objects used in the ContextTreePanel **/
+		else if (value instanceof ScenarioContextNode){
+            setIcon(scenarioIcon);
+        }else if (value instanceof ObjectNode) {
+			setIcon(classIcon) ; 
+		}
         
         return this;
     }   
