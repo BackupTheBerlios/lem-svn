@@ -276,6 +276,7 @@ TOKEN : /* ACTION LANGUAGE IDENTIFIERS */
 | <RECLASSIFY: "reclassify">
 | <OF: "of">
 | <CREATE: "create">
+| <ATOMIC: "atomic">
 | <DELETE: "delete">
 | <WITH: "with">
 | <WHILE: "while">
@@ -913,6 +914,7 @@ void Action() : {}
 	| EventCancel()<SEMI>
 	| LinkCreation()<SEMI>
         | LinkDeletion()<SEMI>
+	| CreationTransaction()
 	| IfStatement()
 	| WhileStatement()
 	| ActionBlock()
@@ -939,9 +941,17 @@ void VariableReference() : {}
 	| Identifier()
 }
 
+void CreationTransaction() : {}
+{
+	<ATOMIC>
+	<CREATION>
+	ActionBlock()
+}
+
 void ObjectCreation() : {}  
 {
-	<CREATE> ClassList()
+	<CREATE>
+	ClassList()
 }	
 
 // ClassList must match at least one class.. is this what we want?

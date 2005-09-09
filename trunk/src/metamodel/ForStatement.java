@@ -11,7 +11,7 @@ public class ForStatement extends Action {
 	private Expression setExpression;
 	private ActionBlock block;
     
-	/** Creates a new instance of IfStatement */
+	/** Creates a new instance of ForStatement */
 	public ForStatement() {
 	}
 

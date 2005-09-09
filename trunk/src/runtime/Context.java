@@ -31,22 +31,7 @@ import java.util.List;
  * Every Action in LEM executes in some sort of "context".
  * @author u4128551
  */
-public class Context {
-    /** 
-     * A collection of all runtime objects known to this context
-     */
-    private Collection objectList = new ArrayList();
- 
-    /**
-     * A collection of all variables local to the context
-     */
-    private List variableList = new LinkedList();
-
-    /**
-     * A map of all variables local to the context
-     */
-    private HashMap variableMap = new HashMap();
-    
+public abstract class Context {
     /**
      * A collection of LemEventListener instances interested in 
      * receiving notification of events occuring within this context.
@@ -54,31 +39,25 @@ public class Context {
     private Collection listeners = new ArrayList();
 
     /**
-     * This context's parent.
-     */
-    private Context parentContext = null;
-
-    /**
      * A collection of AssociationInstances known to this context.
      */
     private HashMap associationInstances = new HashMap();
     private HashMap removedAssociations = new HashMap();
-    
+
     /**
-     * The nullary Context constructor. Creates a new Context with no objects,
-     * no listeners and a null list of local variables
+     * This context's parent.
      */
-    public Context() {
-    }
-    
+    protected Context parentContext;
+
     /**
      * Creates a new instance of Context. Contexts are hierarchical,
      * so the parent context is passed in as a parameter.
      * @param inContext the parent context
      */
-    public Context(Context inContext) {
+    protected Context(Context inContext) {
         parentContext = inContext;
-        listeners.addAll( inContext.getLemEventListeners() );
+	if (inContext != null)
+	        listeners.addAll( inContext.getLemEventListeners() );
     }
 
     /**
@@ -93,56 +72,34 @@ public class Context {
      * Adds the given object to this context
      * @param inObject the object to add to the context
      */
-    public synchronized void addObject(runtime.Object inObject) {
-        objectList.add(inObject);
+    public void addObject(runtime.Object inObject) {
+        parentContext.addObject(inObject);
     }
 
     /**
      * Adds the given object to this context
      * @param inObject the object to add to the context
      */
-    public synchronized void delObject(runtime.Object o) throws LemRuntimeException {
-        if (!objectList.remove(o)) {
-		if (parentContext == null)
-			throw new LemRuntimeException("Tried to delete non-existant object");
-		parentContext.delObject(o);
-	}
+    public void delObject(runtime.Object o) throws LemRuntimeException {
+	parentContext.delObject(o);
     }
 
     /**
      * Adds the given collection of objects to this context
      * @param inObjects the objects to add to the context
      */
-    public synchronized void addObjects(Collection inObjects) throws LemRuntimeException {
-        objectList.addAll(inObjects);
-	if (parentContext != null && objectList.size() > 128) {
-		throw new LemRuntimeException("Too many objects on stack.");
-	}
+    public void addObjects(Collection inObjects) throws LemRuntimeException {
+	parentContext.addObjects(inObjects);
     }
 
-    /**
-     * Returns the list of objects in this context
-     * @returns the list of objects.
-     */
-    public Collection getObjectList() {
-	    return objectList;
-    }
-    
     /**
      * Gets the named variable from this context or any parent contexts.
      *
      * @param name the name of the variable
      * @return the variable, or null if there is no variable with that name
      */
-    public synchronized Variable getVariable( String name ) {
-        Variable v = (Variable)variableMap.get( name );
-        
-        if( v == null && parentContext != null ) {
-            // Search parent contexts
-            v = parentContext.getVariable( name );
-        }
-        
-        return v;
+    public Variable getVariable(String name) {
+	    return null;
     }
     
     /**
@@ -151,13 +108,8 @@ public class Context {
      * @param name the identifier of the variable
      * @param variable the variable to be added
      */
-    public synchronized void addVariable( String name, Variable variable ) {
-        variableMap.put( name, variable );
-	variableList.add( variable );
-    }
-    
-    public List getVariableList() {
-	return variableList;
+    public void addVariable(String name, Variable variable) {
+	    throw new Error("addVariable not implemented");
     }
     
     /**
@@ -165,15 +117,7 @@ public class Context {
      * all visible objects for participation in all relevant associations,
      * etc.
      */
-    public synchronized void finish() throws LemRuntimeException {
-	if (parentContext != null) {
-		synchronized (parentContext) {
-			parentContext.addObjects(objectList);
-	                parentContext.addAssociationInstance(associationInstances);
-	                parentContext.removeAssociationInstance(removedAssociations);
-		}
-	}
-    }
+    public void finish() throws LemRuntimeException {}
     
     /**
      * Adds the given LemEventListener to the list of listeners. This listener

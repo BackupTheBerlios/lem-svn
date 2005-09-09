@@ -614,6 +614,13 @@ public class BuilderPass2 extends Visitor {
 		return f;
 	}
 
+	public Object visit( LEMCreationTransaction node, Object data ) throws LemException {
+		CreationTransaction ct = new CreationTransaction();
+		ct.setBlock((ActionBlock)node.jjtGetChild(0).jjtAccept(this, null));
+		return ct;
+	}
+
+
 	public Object visit( LEMBreak node, Object data ) throws LemException {
 		if ( !hasLoopAncestorNode( node ) )
 			throw new LemException( "break outside loop" );

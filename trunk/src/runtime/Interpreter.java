@@ -180,6 +180,8 @@ public class Interpreter {
     public void executeAction( Action a, Context c ) throws LemRuntimeException {
         if ( a instanceof CreateAction )
             executeCreateAction((CreateAction)a, c);
+	else if (a instanceof CreationTransaction)
+	    executeCreationTransaction((CreationTransaction)a, c);
 	else if (a instanceof DeleteAction )
 	    executeDeleteAction((DeleteAction)a, c);
         else if( a instanceof AssignmentAction )
@@ -359,6 +361,21 @@ public class Interpreter {
     }
     
     /**
+     * Execute the given CreationTransaction in the given Context.
+     *
+     * @param a the CreationTransaction to execute
+     * @param c the Context in which to execute the action
+     * @throws runtime.LemRuntimeException
+     */
+    public void executeCreationTransaction(CreationTransaction ct, Context c)
+	    				throws LemRuntimeException {
+	TransactionContext tc = new TransactionContext(c);
+	ActionBlock block = ct.getBlock();
+        executeBlock( block, tc );
+	tc.finish();
+    }
+
+    /**
      * Execute the given IfStatement in the given Context.
      *
      * @param a the IfStatement to execute
@@ -385,10 +402,10 @@ public class Interpreter {
                 
             }
             
-                        /* Fallthrough: either condition is Null (we've hit the else
-                         * part), or the conditional result has evaluated True.
-                         * Execute the associated action block and break the loop.
-                         */
+            /* Fallthrough: either condition is Null (we've hit the else
+             * part), or the conditional result has evaluated True.
+             * Execute the associated action block and break the loop.
+             */
             executeBlock( block, c );
             break;
         }
@@ -748,75 +765,64 @@ public class Interpreter {
     }
     
     public Variable evaluateSelectExpression( SelectExpression se, Context c ) throws LemRuntimeException {
-	Context objContext = c;
         metamodel.Class selectedClass = se.getSelectedClass() ;
         RelatedToOperation rto = se.getRelatedToOperation() ;
         Expression condition = se.getCondition();
         SetVariable set = new SetVariable() ;
-        do {
-            synchronized ( objContext ) {
-                Collection objectList = objContext.getObjectList();
+	
+	Context tmp = c;
+        while (tmp.getParent() != null)
+		tmp = tmp.getParent();
+	DomainContext domainContext = (DomainContext)tmp;
+		
+        synchronized ( domainContext ) {
+            Collection objectList = domainContext.getObjectList();
                 
-                for ( Iterator i = objectList.iterator(); i.hasNext(); ) {
-                    runtime.Object o = ( runtime.Object ) i.next();
+            for ( Iterator i = objectList.iterator(); i.hasNext(); ) {
+                runtime.Object o = ( runtime.Object ) i.next();
                     
-                    for ( Iterator j = o.getInstances().iterator(); j.hasNext(); ) {
-                        Instance instance = ( Instance ) j.next();
+                for (Iterator j = o.getInstances().iterator(); j.hasNext();) {
+                    Instance instance = ( Instance ) j.next();
                         
-                        if ( instance.getInstanceClass() == selectedClass ) {
-                            Variable var = VariableFactory.newVariable( ObjectReferenceType.getInstance(), o );
-                            boolean goodVariable = true;
+                    if ( instance.getInstanceClass() == selectedClass ) {
+                        Variable var = VariableFactory.newVariable( ObjectReferenceType.getInstance(), o );
+                        boolean goodVariable = true;
                             
-                            if ( condition != null ) {
-                                Variable result;
-                                Context newContext = new LocalContext( c ) ;
-                                newContext.addVariable( "selected" , var ) ;
-                                result = evaluateExpression( condition , newContext );
-                                if ( result instanceof BooleanVariable ) {
-                                    if ( !( ( Boolean ) ( ( BooleanVariable ) result ).getValue() ).booleanValue() ) {
-                                        goodVariable = false;
-                                    }
-                                } else {
-                                    throw new LemRuntimeException( "Not a Boolean Expression." ) ;
-                                }
-                                /** @todo:
-                                 * This context should not really be allowed
-                                 * to create new objects, because that might
-                                 * destroy our iterator integrity when those
-                                 * objects are put into their parent context.
-                                 * In fact, even when we don't have any objects
-                                 * to create, this line will make the iterator
-                                 * throw a concurrent modifiction exception
-                                 * but that could be avoided if we only add to
-                                 * the parent set if the finishing context's
-                                 * objectlist is empty.
-                                 * //    newContext.finish() ;
-                                 */
-                            }
-                            
-                            if ( goodVariable && rto != null ) {
-                                Relationship r = rto.getRelationship() ;
-                                metamodel.Class relatedClass = rto.getRelatedClass() ;
-                                metamodel.Class instanceClass = instance.getInstanceClass() ;
-                                HashMap associations = instanceClass.getAssociations() ;
-                                if ( ! ( associations.containsKey( r.getName() ) &&
-                                        ( ( metamodel.Class ) associations.get( r.getName() ) ).getName().equals( relatedClass.getName() ) ) ) {
+                        if ( condition != null ) {
+                            Variable result;
+                            Context newContext = new LocalContext( c ) ;
+                            newContext.addVariable( "selected" , var ) ;
+                            result = evaluateExpression(condition, newContext);
+                            if ( result instanceof BooleanVariable ) {
+                                if (!((Boolean) ((BooleanVariable) result).getValue()).booleanValue()) {
                                     goodVariable = false;
                                 }
+                            } else {
+                                throw new LemRuntimeException( "Not a Boolean Expression." ) ;
                             }
-                            
-                            if ( goodVariable )
-                                set.addToSet( var ) ;
+			    newContext.finish() ;
                         }
+                            
+                        if ( goodVariable && rto != null ) {
+                            Relationship r = rto.getRelationship() ;
+                            metamodel.Class relatedClass = rto.getRelatedClass() ;
+                            metamodel.Class instanceClass = instance.getInstanceClass() ;
+                            HashMap associations = instanceClass.getAssociations() ;
+                            if ( ! ( associations.containsKey( r.getName() ) &&
+                                    ( ( metamodel.Class ) associations.get( r.getName() ) ).getName().equals( relatedClass.getName() ) ) ) {
+                                goodVariable = false;
+                            }
+                        }
+                            
+                        if ( goodVariable )
+                            set.addToSet( var ) ;
                     }
                 }
             }
-            objContext = objContext.getParent();
-        } while ( objContext != null );
+        }
         
         System.out.println( Thread.currentThread().getName() + " selected " + ((LinkedList)set.getValue()).size() + " references" );
         return set;
-        
     }
     
     /**
