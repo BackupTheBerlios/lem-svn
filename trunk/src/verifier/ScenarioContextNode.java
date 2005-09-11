@@ -10,10 +10,9 @@
 
 package verifier;
 import java.util.Iterator;
-import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
-import metamodel.Scenario;
 import runtime.Context ; 
+import runtime.DomainContext;
 
 
 /**
@@ -29,9 +28,13 @@ public class ScenarioContextNode extends AbstractDescriptionNode {
 	/** Creates a new instance of ScenarioContextNode */
 	public ScenarioContextNode(Context c, LoggerFrame frame) {
 		this.frame = frame ; 
-		this.context = c ; 
+		this.context = c ;                 
+                while ((c.getParent()) != null) {
+                    c = c.getParent() ;
+                }
+                DomainContext d = (DomainContext) c ; 
 		System.out.println("outside the loop"); 
-		Iterator i = context.getObjectList().iterator() ; 
+		Iterator i = d.getObjectList().iterator() ; 
 		while( i.hasNext() ) {
 			System.out.println("inside the loop"); 
 			add( new ObjectNode( (runtime.Object)i.next(), frame)) ;			
