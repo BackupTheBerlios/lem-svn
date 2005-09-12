@@ -118,11 +118,13 @@ public class InstanceInterpreter extends java.lang.Thread {
     public void run() {
         try {
 	    boolean ret;
+	    instance.isActive = true;
             ret = init();
             while (ret) {
                     ret = advance();
 	    }
-	    
+	    instance.isActive = false;
+
             System.out.println( "InstanceInterpreter finished" );
 	    synchronized (instance.instanceInObject) {
 		    instance.drainSignals(context.debugObject);

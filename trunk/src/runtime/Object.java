@@ -44,13 +44,13 @@ public class Object {
         private Integer objectId;
 
 	/** Queue of pending signals for the object */
-	LinkedList signalQueue = new LinkedList();
+	private LinkedList signalQueue = new LinkedList();
 
         /**
 	 * Queue of pending signals to self. All signals from here must be
 	 * processed before any signals from 'signalQueue'
 	 */
-	LinkedList signalSelfQueue = new LinkedList();
+	private LinkedList signalSelfQueue = new LinkedList();
 	
 	/**
 	 * Delayed Signal generator thread for sending signals to other
@@ -139,7 +139,17 @@ public class Object {
 		}
 	}
 	
-	public void drainSignals(Debug debug) {
+	public synchronized void drainSignals(Debug debug) {
+		while (signalQueue.size() > 0) {
+			signalQueue.remove(0);
+			debug.delEntity();
+		}
+
+		while (signalSelfQueue.size() > 0) {
+			signalSelfQueue.remove(0);
+			debug.delEntity();
+		}
+
 		synchronized (delayedSignalQueue) {
 			while (delayedSignalQueue.size() > 0) {
 				delayedSignalQueue.remove(0);
@@ -281,8 +291,10 @@ public class Object {
 			Signal s = (Signal)signalSelfQueue.remove(0);
 			for ( Iterator i = instances.iterator(); i.hasNext(); ) {
 				Instance in = ( Instance ) i.next();
-				in.addSignalSelf( s );
-				debugObject.addEntity();
+				if (in.isActive) {
+					in.addSignalSelf( s );
+					debugObject.addEntity();
+				}
 			}
 			debugObject.delEntity();
 			return true;
@@ -302,8 +314,10 @@ public class Object {
 			Signal s = (Signal) signalQueue.remove( 0 );
 			for ( Iterator i = instances.iterator(); i.hasNext(); ) {
 				Instance in = ( Instance ) i.next();
-				in.addSignal( s );
-				debugObject.addEntity();
+				if (in.isActive) {
+					in.addSignal( s );
+					debugObject.addEntity();
+				}
 			}
 			debugObject.delEntity();
 			return true;

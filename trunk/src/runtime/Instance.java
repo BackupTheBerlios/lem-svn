@@ -69,6 +69,9 @@ public class Instance {
 	 */
 	runtime.Object instanceInObject = null;
 
+	/** Does the instance have a running state machine? */
+	public boolean isActive = false;
+
 	/** Queue of pending signals for the instance */
 	private List signalQueue = new LinkedList();
 
