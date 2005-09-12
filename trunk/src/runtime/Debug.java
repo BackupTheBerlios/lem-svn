@@ -21,6 +21,8 @@
 
 package runtime;
 
+import java.util.Iterator;
+
 /**
  * This class is a debugging interface into the state of the running model.
  *
@@ -40,16 +42,39 @@ public class Debug {
 	 * model will have entered a quiescent state, as there will be
 	 * nothing to trigger further execution (external entities excluded).
 	 */
-	private Refcount liveSignals;
+	private Refcount liveEntities;
 
-	public Debug() {
+	/**
+	 * The DomainContext which this Debug object is associated with.
+	 */
+	DomainContext context;
+
+	public Debug(DomainContext c) {
 		state = RUNNING;
-		liveSignals = new Refcount();
+		liveEntities = new Refcount();
+		context = c;
 	}
 
+	public synchronized boolean isRunning() {
+		return (state == RUNNING);
+	}
+	
+	public void notifyAllObjects() {
+		synchronized (context) {
+			Iterator i = context.getObjectList().iterator();
+			while (i.hasNext()) {
+				runtime.Object o = (runtime.Object)i.next();
+				synchronized (o) {
+					o.notifyAll();
+				}
+			}
+		}
+	}
+	
 	public synchronized void runModel() {
 		state = RUNNING;
 		notifyAll();
+		notifyAllObjects();
 	}
 	
 	public synchronized void pauseModel() {
@@ -61,7 +86,7 @@ public class Debug {
 	}
 	
 	public synchronized boolean isQuiescentState() {
-		return (liveSignals.references() == 0);
+		return (liveEntities.references() == 0);
 	}
 	
 	public synchronized void waitQuiescentState() {
@@ -79,7 +104,7 @@ public class Debug {
 		notifyAll();
 	}
 	
-	public synchronized boolean nextState() {
+	public synchronized boolean nextStep() {
 		while (state != RUNNING) {
 			if (state == STOPPED)
 				return false;
@@ -88,6 +113,7 @@ public class Debug {
 				throw new Error("startState found weird state");
 			}
 			try {
+            			System.out.println(Thread.currentThread().getName() + " thread paused");
 				wait();
 			} catch (InterruptedException e) {
 				/** these can be ignored */
@@ -97,14 +123,14 @@ public class Debug {
 		return true;
 	}
 
-	public synchronized void addSignal() {
-		liveSignals.get();
-		System.out.println("added signal, " + liveSignals.references() + "live signals");
+	public synchronized void addEntity() {
+		liveEntities.get();
+		System.out.println("added an entity, " + liveEntities.references() + " live entities");
 	}
 
-	public synchronized void delSignal() {
-		if (liveSignals.put())
+	public synchronized void delEntity() {
+		System.out.println("deleted an entity, " + (liveEntities.references() - 1) + " live entities");
+		if (liveEntities.put())
 			enterQuiescentState();
-		System.out.println("deleted a signal, " + liveSignals.references() + "live signals");
 	}
 }

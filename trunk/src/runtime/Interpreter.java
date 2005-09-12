@@ -281,7 +281,7 @@ public class Interpreter {
 	if (!currentObject.cancelDelayedSignalSelf(e)) {
 		throw new LemRuntimeException("Could not cancel a signal");
 	}
-	context.debugObject.delSignal();
+	context.debugObject.delEntity();
     }
     
     /**
@@ -296,7 +296,7 @@ public class Interpreter {
         LinkedList p = a.getParameters();
         LinkedList passedValues = null;
 
-	context.debugObject.addSignal();
+	context.debugObject.addEntity();
 
         if ( p != null ) {
             passedValues = new LinkedList();

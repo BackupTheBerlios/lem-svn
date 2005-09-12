@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * @author sjr
  */
 public class DomainContext extends Context {
-    public Debug debugObject = new Debug();
+    public Debug debugObject;
 
     /** 
      * A collection of all runtime objects known to this context
@@ -31,6 +31,7 @@ public class DomainContext extends Context {
     /** Creates a new instance of DomainContext */
     public DomainContext() {
 	    super(null);
+	    debugObject = new Debug(this);
     }
 
     /**

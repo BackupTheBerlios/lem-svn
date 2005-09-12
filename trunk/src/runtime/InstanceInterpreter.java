@@ -70,8 +70,12 @@ public class InstanceInterpreter extends java.lang.Thread {
             return false;
         
         while ( true ) {
+	    Signal s;
             System.out.println(Thread.currentThread().getName() + " [init] InstanceInterpreter getting a next signal");
-            Signal s = instance.getNextSignal(context.debugObject);
+	    do {
+		    context.debugObject.nextStep();
+	            s = instance.getNextSignal(context.debugObject);
+	    } while (s == null);
             
             System.out.println(Thread.currentThread().getName() + " [init] InstanceInterpreter got a next signal");
 
@@ -96,13 +100,16 @@ public class InstanceInterpreter extends java.lang.Thread {
                       + " [init] transitioning state to " + newState.getName());
 		    
                     interpreter.interpret( p , context );
-
+		    
+		    context.debugObject.delEntity();
                     if ( newState instanceof NonDeletionState )
                         return true;
                     else
                         return false;
                 }
             }
+
+            context.debugObject.delEntity();
         }
     }
     
@@ -111,24 +118,24 @@ public class InstanceInterpreter extends java.lang.Thread {
     public void run() {
         try {
 	    boolean ret;
-	    context.debugObject.nextState();
             ret = init();
-	    context.debugObject.delSignal();
             while (ret) {
-	            context.debugObject.nextState();
                     ret = advance();
-	            context.debugObject.delSignal();
 	    }
 	    
             System.out.println( "InstanceInterpreter finished" );
-            if ( instance.instanceInObject.getRunningInterpretersRefcount().put() ) {
-                /**
-                 * If this is the last running interpreter, then delete the
-                 * object from the global object pool (analogous to a delete
-                 * object action for passive objects)
-                 */
-                context.delObject( instance.instanceInObject );
-            }
+	    synchronized (instance.instanceInObject) {
+		    instance.drainSignals(context.debugObject);
+	            if (instance.instanceInObject.getRunningInterpretersRefcount().put()) {
+	                /**
+	                 * If this is the last running interpreter, then delete
+			 * the object from the global object pool (analogous to
+			 * a delete object action for passive objects)
+	                 */
+	                context.delObject( instance.instanceInObject );
+			instance.instanceInObject.drainSignals(context.debugObject);
+	            }
+	    }
         } catch ( LemRuntimeException e ) {
             e.printStackTrace();
         }
@@ -147,7 +154,12 @@ public class InstanceInterpreter extends java.lang.Thread {
             return false;
         
         System.out.println( Thread.currentThread().getName() + " InstanceInterpreter getting a next signal" );
-        Signal s = instance.getNextSignal(context.debugObject);
+	Signal s;
+	do {
+	    context.debugObject.nextStep();
+	    s = instance.getNextSignal(context.debugObject);
+	} while (s == null);
+
         System.out.println( Thread.currentThread().getName() + " InstanceInterpreter got a next signal" );
         
         Iterator i = m.getTransitionList().iterator();
@@ -173,12 +185,14 @@ public class InstanceInterpreter extends java.lang.Thread {
 
                 interpreter.interpret( p, context );
 
+		context.debugObject.delEntity();
                 if ( newState instanceof NonDeletionState )
                     return true;
                 else
                     return false;
             }
         }
+	context.debugObject.delEntity();
         return true;
     }
     

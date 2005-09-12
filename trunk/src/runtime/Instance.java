@@ -161,6 +161,17 @@ public class Instance {
 		return ( Variable ) attributeInstances.get( name );
 	}
 
+	public void drainSignals(Debug debug) {
+		while (signalSelfQueue.size() > 0) {
+			signalSelfQueue.remove(0);
+			debug.delEntity();
+		}
+		while (signalQueue.size() > 0) {
+			signalQueue.remove(0);
+			debug.delEntity();
+		}
+	}
+	
 	/**
 	 * adds a Signal to this instance's signal queue.
 	 * caller must be synchronized with instanceInObject.
@@ -184,6 +195,9 @@ public class Instance {
 	public Signal getNextSignal(Debug debugObject) throws LemRuntimeException {
 		synchronized (instanceInObject) {	
 			while (true) {
+				if (!debugObject.isRunning())
+					return null;
+
 				if (signalSelfQueue.size() > 0)
 					return (Signal)signalSelfQueue.remove(0);
 				if (instanceInObject.propogateNextSignalSelf(debugObject))

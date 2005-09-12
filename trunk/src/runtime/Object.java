@@ -139,6 +139,17 @@ public class Object {
 		}
 	}
 	
+	public void drainSignals(Debug debug) {
+		while (delayedSignalQueue.size() > 0) {
+			delayedSignalQueue.remove(0);
+			debug.delEntity();
+		}
+		while (delayedSignalSelfQueue.size() > 0) {
+			delayedSignalSelfQueue.remove(0);
+			debug.delEntity();
+		}
+	}
+
 	public void delDelayedSignal(DelayedSignal s) {
 		synchronized (delayedSignalQueue) {
 			delayedSignalQueue.remove(s);
@@ -253,9 +264,9 @@ public class Object {
 			for ( Iterator i = instances.iterator(); i.hasNext(); ) {
 				Instance in = ( Instance ) i.next();
 				in.addSignalSelf( s );
-				debugObject.addSignal();
+				debugObject.addEntity();
 			}
-			debugObject.delSignal();
+			debugObject.delEntity();
 			return true;
 
 		}
@@ -274,9 +285,9 @@ public class Object {
 			for ( Iterator i = instances.iterator(); i.hasNext(); ) {
 				Instance in = ( Instance ) i.next();
 				in.addSignal( s );
-				debugObject.addSignal();
+				debugObject.addEntity();
 			}
-			debugObject.delSignal();
+			debugObject.delEntity();
 			return true;
 		}
 
