@@ -217,26 +217,22 @@ public class Object {
 
 	public synchronized boolean cancelDelayedSignalSelf(Event e) {
 		Iterator i;
-		
+
 		i = signalSelfQueue.iterator();
 		while (i.hasNext()) {
 			Signal s = (Signal)i.next();
 			if (s instanceof DelayedSignal) {
-				if (s.getEvent() == e) {
-					signalSelfQueue.remove(s);
-					return true;
-				}
+				if (s.getEvent() == e)
+					return signalSelfQueue.remove(s);
 			}
 		}
-		
+
 		synchronized (delayedSignalSelfQueue) {
 			i = delayedSignalSelfQueue.iterator();
 			while (i.hasNext()) {
 				Signal s = (Signal)i.next();
-				if (s.getEvent() == e) {
-					signalSelfQueue.remove(s);
-					return true;
-				}
+				if (s.getEvent() == e)
+					return delayedSignalSelfQueue.remove(s);
 			}
 		}
 
