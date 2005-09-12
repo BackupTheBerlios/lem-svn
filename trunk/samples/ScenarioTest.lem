@@ -73,9 +73,9 @@ model TestModel is
 		scenario TestSignals is {
 			/* Create a signal storm! */
 			objref a1;
+			objref a2;
 			
 			atomic creation {
-				objref a2;
 				a1 := create A;
 				a2 := create A;
 				a1.current_delay := 1;
@@ -83,7 +83,7 @@ model TestModel is
 			}
 
 			generate Ev1 to a1;
-			//generate Ev1 to a2;
+			generate Ev1 to a2;
 		}
 
 		scenario TestEntities is {
