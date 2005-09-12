@@ -181,18 +181,18 @@ public class Instance {
 	 * Returns the next pending signal if one exists and remove it from the
 	 * instance's signal queue, otherwise return null.
 	 */
-	public Signal getNextSignal() throws LemRuntimeException {
+	public Signal getNextSignal(Debug debugObject) throws LemRuntimeException {
 		synchronized (instanceInObject) {	
 			while (true) {
 				if (signalSelfQueue.size() > 0)
 					return (Signal)signalSelfQueue.remove(0);
-				if (instanceInObject.propogateNextSignalSelf())
+				if (instanceInObject.propogateNextSignalSelf(debugObject))
 					continue;
 					
 				if (signalQueue.size() > 0)
 					return (Signal)signalQueue.remove(0);
 
-				if (instanceInObject.propogateNextSignal())
+				if (instanceInObject.propogateNextSignal(debugObject))
 					continue;
 
 				try {

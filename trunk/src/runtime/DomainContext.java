@@ -21,6 +21,8 @@ import java.util.ArrayList;
  * @author sjr
  */
 public class DomainContext extends Context {
+    public Debug debugObject = new Debug();
+
     /** 
      * A collection of all runtime objects known to this context
      */

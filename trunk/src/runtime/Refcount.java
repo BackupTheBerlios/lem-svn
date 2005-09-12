@@ -50,8 +50,6 @@ public class Refcount
 	public synchronized void get() throws Error
 	{
 		num++;
-
-		System.out.println("get: Refcount variable has " + num + " references");
 	}
 
 	public synchronized boolean put() throws Error
@@ -62,7 +60,6 @@ public class Refcount
 
 		num--;
 
-		System.out.println("put: Refcount variable has " + num + " references");
 		if (num == 0)
 			return true;
 		else

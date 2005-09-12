@@ -63,7 +63,7 @@ public class Interpreter {
     /**
      * The context in which the interpreter runs
      */
-    private Context context = null;
+    private DomainContext context = null;
     
     /**
      * A quick hack to enable breaking of loops
@@ -92,7 +92,7 @@ public class Interpreter {
      * @param c the Context in which the procedure should be interpreted
      * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
      */
-    public void interpret( Procedure p, Context c ) throws LemRuntimeException {
+    public void interpret( Procedure p, DomainContext c ) throws LemRuntimeException {
         context = c;
 
         LocalContext stateContext = new LocalContext( c );
@@ -114,7 +114,7 @@ public class Interpreter {
 	 * @param c the Context in which the procedure should be interpreted
 	 * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
 	 */
-	public void interpret( Scenario s, Context c ) throws LemRuntimeException {
+	public void interpret( Scenario s, DomainContext c ) throws LemRuntimeException {
 		context = c;
 		ActionBlock block = s.getActionBlock();
 		executeBlock( block, c );
@@ -281,6 +281,7 @@ public class Interpreter {
 	if (!currentObject.cancelDelayedSignalSelf(e)) {
 		throw new LemRuntimeException("Could not cancel a signal");
 	}
+	context.debugObject.delSignal();
     }
     
     /**
@@ -294,7 +295,9 @@ public class Interpreter {
     public void executeGenerateAction( GenerateAction a, Context c ) throws LemRuntimeException {
         LinkedList p = a.getParameters();
         LinkedList passedValues = null;
-        
+
+	context.debugObject.addSignal();
+
         if ( p != null ) {
             passedValues = new LinkedList();
             
@@ -899,40 +902,4 @@ public class Interpreter {
         else 
             new LemRelationshipDeletionEvent( active_id, passive_id, a.getAssociation().getName(), aInst2.getLinkObjectInstance().getObjectId().intValue()).notifyAll( c );                    
     }
-    
-	/** pause execution of this instance if it belongs to the given scenario.
-	 *@param scenario, the scenario to be pause
-	 */
-	public void pause( Scenario scenario) {
-		for (int i = 0 ; i < instanceInterpreters.size() ; i++) {
-			if ( ((InstanceInterpreter) instanceInterpreters.get(i)).getScenario() == scenario ) {
-				( (InstanceInterpreter) instanceInterpreters.get(i)).pauseExecution();  
-			}
-		}
-	}
-	
-	/** resume execution of this instance if it belongs to the given scenario.
-	 *@param scenario, the scenario to be resumed
-	 */
-	
-	public void resume( Scenario scenario) {
-		for (int i = 0 ; i < instanceInterpreters.size() ; i++) {
-			if ( ((InstanceInterpreter) instanceInterpreters.get(i)).getScenario() == scenario ) {
-				( (InstanceInterpreter) instanceInterpreters.get(i)).resumeExecution();  
-			}
-		}
-	}
-	
-	/** stop execution of this instance if it belongs to the given scenario.
-	 *@param scenario, the scenario to be stopped
-	 */
-	
-	public void stop( Scenario scenario) {
-		for (int i = 0 ; i < instanceInterpreters.size() ; i++) {
-			if ( ((InstanceInterpreter) instanceInterpreters.get(i)).getScenario() == scenario ) {
-				( (InstanceInterpreter) instanceInterpreters.get(i)).stopExecution();  
-			}
-		}
-	}
-	
 }

@@ -32,11 +32,6 @@ import java.util.HashMap;
  * @author shuku
  */
 public class InstanceInterpreter extends java.lang.Thread {
-    
-    public static final int PLAY = 0 ;
-    public static final int PAUSE = 1 ;
-    public static final int STOP = 2 ;
-    
     /** the instance to which this Interpreter belongs to **/
     private runtime.Instance instance;
     
@@ -44,16 +39,15 @@ public class InstanceInterpreter extends java.lang.Thread {
     private Interpreter interpreter;
     
     /** The context in which this thread executes */
-    private Context context;
+    private DomainContext context;
     
     /** The scenario to which this instance belongs **/
     private Scenario scenario ;
     
-    private int flag = PLAY ;
     /** Creates a new instance of Interpreter
      * @param instance the instance to which this interpreter belongs.
      */
-    public InstanceInterpreter( runtime.Instance instance, Context c ) {
+    public InstanceInterpreter( runtime.Instance instance, DomainContext c ) {
         this.instance = instance ;
         
         setName( getName() + " (" + instance.getInstanceClass().getName() + ")" );
@@ -77,9 +71,10 @@ public class InstanceInterpreter extends java.lang.Thread {
         
         while ( true ) {
             System.out.println(Thread.currentThread().getName() + " [init] InstanceInterpreter getting a next signal");
-            Signal s = instance.getNextSignal();
+            Signal s = instance.getNextSignal(context.debugObject);
             
             System.out.println(Thread.currentThread().getName() + " [init] InstanceInterpreter got a next signal");
+
             Iterator i = m.getTransitionList().iterator();
             
             while ( i.hasNext() ) {
@@ -114,18 +109,17 @@ public class InstanceInterpreter extends java.lang.Thread {
     
     /** will run the thread until it enters a deletionstate **/
     public void run() {
-        execution:
         try {
-            if ( init() ) {
-                while ( true ) {
-                    if (flag == PLAY) {
-                        if ( !advance() )
-                            break ;
-                    } else if (flag == STOP) {
-                        break execution ; 
-                    }
-                }
-            }
+	    boolean ret;
+	    context.debugObject.nextState();
+            ret = init();
+	    context.debugObject.delSignal();
+            while (ret) {
+	            context.debugObject.nextState();
+                    ret = advance();
+	            context.debugObject.delSignal();
+	    }
+	    
             System.out.println( "InstanceInterpreter finished" );
             if ( instance.instanceInObject.getRunningInterpretersRefcount().put() ) {
                 /**
@@ -153,7 +147,7 @@ public class InstanceInterpreter extends java.lang.Thread {
             return false;
         
         System.out.println( Thread.currentThread().getName() + " InstanceInterpreter getting a next signal" );
-        Signal s = instance.getNextSignal();
+        Signal s = instance.getNextSignal(context.debugObject);
         System.out.println( Thread.currentThread().getName() + " InstanceInterpreter got a next signal" );
         
         Iterator i = m.getTransitionList().iterator();
@@ -195,28 +189,4 @@ public class InstanceInterpreter extends java.lang.Thread {
     public void setScenario(Scenario scenario) {
         this.scenario = scenario;
     }
-    
-    /** pause execution of this instance 
-     */
-    public void pauseExecution( ) {
-       
-            this.flag = PAUSE ;
-       
-    }
-    
-    /** resume execution of this instance 
-     */
-    
-    public void resumeExecution( ) {
-            this.flag = PLAY ;
-    }
-    
-    /** stop execution of this instance 
-     */
-    
-    public void stopExecution( ) {
-            this.flag = STOP ;
-    }
-    
-    
 }

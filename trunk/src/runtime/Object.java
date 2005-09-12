@@ -231,7 +231,7 @@ public class Object {
 	 * propogate the next signal from self to all instances.
 	 * Callers must be synchronized on 'this' object.
 	 */
-	public boolean propogateNextSignalSelf() throws LemRuntimeException {
+	public boolean propogateNextSignalSelf(Debug debugObject) throws LemRuntimeException {
 		/*
 		 * First propogate any elapsed delayed signals to self
 		 * into the signalSelfQueue.
@@ -253,7 +253,9 @@ public class Object {
 			for ( Iterator i = instances.iterator(); i.hasNext(); ) {
 				Instance in = ( Instance ) i.next();
 				in.addSignalSelf( s );
+				debugObject.addSignal();
 			}
+			debugObject.delSignal();
 			return true;
 
 		}
@@ -265,14 +267,16 @@ public class Object {
 	 * propogate the next signal (not from self) to all instances.
 	 * Callers must be synchronized on 'this' object.
 	 */
-	public boolean propogateNextSignal() throws LemRuntimeException {
+	public boolean propogateNextSignal(Debug debugObject) throws LemRuntimeException {
 
 		if ( signalQueue.size() > 0 ) {
 			Signal s = (Signal) signalQueue.remove( 0 );
 			for ( Iterator i = instances.iterator(); i.hasNext(); ) {
 				Instance in = ( Instance ) i.next();
 				in.addSignal( s );
+				debugObject.addSignal();
 			}
+			debugObject.delSignal();
 			return true;
 		}
 
