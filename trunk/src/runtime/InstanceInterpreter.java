@@ -73,7 +73,8 @@ public class InstanceInterpreter extends java.lang.Thread {
 	    Signal s;
             System.out.println(Thread.currentThread().getName() + " [init] InstanceInterpreter getting a next signal");
 	    do {
-		    context.debugObject.nextStep();
+		    if (!context.debugObject.checkRuntimeState())
+			    return false;
 	            s = instance.getNextSignal(context.debugObject);
 	    } while (s == null);
             
@@ -98,6 +99,13 @@ public class InstanceInterpreter extends java.lang.Thread {
 
                     System.out.println( Thread.currentThread().getName()
                       + " [init] transitioning state to " + newState.getName());
+		 
+		    context.debugObject.makeTransition(t);
+		    context.debugObject.runState(newState);
+		    if (!context.debugObject.checkRuntimeState()) {
+			    context.debugObject.delEntity();
+			    return false;
+		    }
 		    
                     interpreter.interpret( p , context );
 		    
@@ -158,8 +166,9 @@ public class InstanceInterpreter extends java.lang.Thread {
         System.out.println( Thread.currentThread().getName() + " InstanceInterpreter getting a next signal" );
 	Signal s;
 	do {
-	    context.debugObject.nextStep();
-	    s = instance.getNextSignal(context.debugObject);
+		if (!context.debugObject.checkRuntimeState())
+		    return false;
+	        s = instance.getNextSignal(context.debugObject);
 	} while (s == null);
 
         System.out.println( Thread.currentThread().getName() + " InstanceInterpreter got a next signal" );
@@ -184,6 +193,13 @@ public class InstanceInterpreter extends java.lang.Thread {
 
                	System.out.println( Thread.currentThread().getName()
                 	+ " transitioning state to " + newState.getName() );
+
+		context.debugObject.makeTransition(t);
+		context.debugObject.runState(newState);
+		if (!context.debugObject.checkRuntimeState()) {
+		    context.debugObject.delEntity();
+		    return false;
+		}
 
                 interpreter.interpret( p, context );
 

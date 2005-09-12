@@ -21,25 +21,30 @@
 
 package runtime;
 
+import metamodel.State;
+import metamodel.Transition;
+
 import java.util.Iterator;
+import java.util.List;
+import java.util.LinkedList;
 
 /**
- * This class is a debugging interface into the state of the running model.
+ * This class is a debugging interface into the runtimeState of the running model.
  *
  */
 public class Debug {
-	public static final int RUNNING = 0;
-	public static final int PAUSED  = 1;
-	public static final int STOPPED = 2;
+	private static final int RUNNING = 0;
+	private static final int PAUSED  = 1;
+	private static final int STOPPED = 2;
 
 	/**
-	 * The state of the model - RUNNING, PAUSED, STOPPED
+	 * The runtimeState of the model - RUNNING, PAUSED, STOPPED
 	 */
-	private int state;
-	
+	private int runtimeState;
+
 	/**
 	 * The running entities in the model. When this falls to 0, the
-	 * model will have entered a quiescent state, as there will be
+	 * model will have entered a quiescent runtimeState, as there will be
 	 * nothing to trigger further execution (external entities excluded).
 	 */
 	private Refcount liveEntities;
@@ -47,16 +52,26 @@ public class Debug {
 	/**
 	 * The DomainContext which this Debug object is associated with.
 	 */
-	DomainContext context;
+	private DomainContext context;
 
+	/**
+	 * Breakpoints for runtimeState transitions
+	 */
+	private LinkedList transitionBreakpoints = new LinkedList();
+
+	/**
+	 * Breakpoints for runtimeState execution
+	 */
+	private LinkedList stateBreakpoints = new LinkedList();
+	
 	public Debug(DomainContext c) {
-		state = RUNNING;
+		runtimeState = RUNNING;
 		liveEntities = new Refcount();
 		context = c;
 	}
 
 	public synchronized boolean isRunning() {
-		return (state == RUNNING);
+		return (runtimeState == RUNNING);
 	}
 	
 	public void notifyAllObjects() {
@@ -72,17 +87,17 @@ public class Debug {
 	}
 	
 	public synchronized void runModel() {
-		state = RUNNING;
+		runtimeState = RUNNING;
 		notifyAll();
 		notifyAllObjects();
 	}
 	
 	public synchronized void pauseModel() {
-		state = PAUSED;
+		runtimeState = PAUSED;
 	}
 	
 	public synchronized void stopModel() {
-		state = STOPPED;
+		runtimeState = STOPPED;
 	}
 	
 	public synchronized boolean isQuiescentState() {
@@ -100,18 +115,33 @@ public class Debug {
 	}
 	
 	public void enterQuiescentState() {
-		System.out.println("quiescent state entered");
+		System.out.println("quiescent runtimeState entered");
 		notifyAll();
 	}
 	
-	public synchronized boolean nextStep() {
-		while (state != RUNNING) {
-			if (state == STOPPED)
+	public synchronized void makeTransition(Transition t) {
+		Iterator i = transitionBreakpoints.iterator();
+		while (i.hasNext()) {
+			TransitionBreakpoint tb = (TransitionBreakpoint)i.next();
+			if (tb.matches(t))
+				runtimeState = PAUSED;
+		}
+	}
+
+	public synchronized void runState(State s) {
+		Iterator i = stateBreakpoints.iterator();
+		while (i.hasNext()) {
+			StateBreakpoint sb = (StateBreakpoint)i.next();
+			if (sb.matches(s))
+				runtimeState = PAUSED;
+		}
+	}
+	
+	public synchronized boolean checkRuntimeState() {
+		while (runtimeState != RUNNING) {
+			if (runtimeState == STOPPED)
 				return false;
 
-			if (state != PAUSED) {
-				throw new Error("startState found weird state");
-			}
 			try {
             			System.out.println(Thread.currentThread().getName() + " thread paused");
 				wait();
