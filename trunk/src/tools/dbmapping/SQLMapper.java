@@ -101,7 +101,7 @@ public class SQLMapper {
     protected void mapClass( metamodel.Class c ) {
         System.out.println( "CREATE TABLE " + c.getName() + " (" );
         
-        Iterator i = c.getAllAttributes().values().iterator();
+        Iterator i = c.getAllAttributes().iterator();
         
         System.out.print( "oid BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL COMMENT 'Auto-generated identifier'" );
         
