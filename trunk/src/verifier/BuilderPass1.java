@@ -291,7 +291,7 @@ public class BuilderPass1 extends Visitor {
             
             // must be an error
             
-            throw new LemException( "did not expect " + data.getClass().getName() + " instance associated with basic type " + name );
+            throw new LemException( "did not expect " + data.getClass().getName() + " instance associated with basic type " + name, node.getFirstToken(), "LEM_E_01042");
         }
         
         return data;
@@ -395,7 +395,7 @@ public class BuilderPass1 extends Visitor {
             
             // did not expect this type
             
-            throw new LemException( "did not expect " + data.getClass().getName() + " instance as data associated with DomainSpecificType " + name );
+            throw new LemException( "did not expect " + data.getClass().getName() + " instance as data associated with DomainSpecificType " + name,node.getFirstToken(), "LEM_E_01043"  );
         }
         
         return data;

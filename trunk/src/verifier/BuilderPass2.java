@@ -186,7 +186,7 @@ public class BuilderPass2 extends Visitor {
 		metamodel.Class fromClass = getClass( fromClassName );
 
 		if ( fromClass == null )
-			throw new LemException( "Class '" + fromClassName + "' not defined." );
+			throw new LemException( "Class '" + fromClassName + "' not defined.",node.getFirstToken(), "LEM_E_01044" );
 
 		SelectExpression se = new SelectExpression( multiplicity, fromClass, condition );
 		getMapper().add( node, se );
@@ -232,7 +232,7 @@ public class BuilderPass2 extends Visitor {
 
 		for ( int i = 0; i < node.jjtGetNumChildren(); i++ ) {
 			if ( encounteredBreak )
-				throw new LemException( "Unreachable statement" );
+				throw new LemException( "Unreachable statement",node.getFirstToken(), "LEM_E_01045" );
 			Object o = node.jjtGetChild( i ).jjtAccept( this, data );
 
 			if ( o != null && o instanceof Action ) {
@@ -276,7 +276,7 @@ public class BuilderPass2 extends Visitor {
 		for ( int i = 0; i < varDecls.size(); i++ ) {
 			VariableDeclaration v = ( VariableDeclaration ) varDecls.get( i );
 			if ( !a.addVariableDeclaration( v ) )
-				throw new LemException( "Double declaration of variable: " + v.getVariableName() );
+				throw new LemException( "Double declaration of variable: " + v.getVariableName(),node.getFirstToken(), "LEM_E_01046" );
 		}
 
 		// visit the actions within this block
@@ -338,7 +338,7 @@ public class BuilderPass2 extends Visitor {
 			return new UnaryOperation( UnaryOperation.NEGATION );
 		}
 
-		throw new LemException( "Encountered unknown operator '" + node.getFirstToken().image + "'" );
+		throw new LemException( "Encountered unknown operator '" + node.getFirstToken().image + "'",node.getFirstToken(), "LEM_E_01047" );
 	}
 
 	/**
@@ -515,7 +515,7 @@ public class BuilderPass2 extends Visitor {
 				a.setActiveObjectName( passive.getVariableName() );
 				a.setVerbClause( true );
 			} else {
-				throw new LemException( "Invalid verb clause \"" + verbclause + "\"" );
+				throw new LemException( "Invalid verb clause \"" + verbclause + "\"",node.getFirstToken(), "LEM_E_01048" );
 			}
 		} else {
 			a.setActiveObjectName( active.getVariableName() );
@@ -623,7 +623,7 @@ public class BuilderPass2 extends Visitor {
 
 	public Object visit( LEMBreak node, Object data ) throws LemException {
 		if ( !hasLoopAncestorNode( node ) )
-			throw new LemException( "break outside loop" );
+			throw new LemException( "break outside loop",node.getFirstToken(), "LEM_E_01049" );
 		return new BreakStatement();
 	}
 
@@ -712,7 +712,7 @@ public class BuilderPass2 extends Visitor {
 	public Object visit( LEMRelatedTo node, Object data ) throws LemException {
 		RelatedToOperation o = null ;
 		if ( node.jjtGetNumChildren() != 3 ) {
-			throw new LemException( "Related To is a ternary operator,\n Use:  Related To class1 Across R1 " ) ;
+			throw new LemException( "Related To is a ternary operator,\n Use:  Related To class1 Across R1 ", node.getFirstToken(), "LEM_E_01050" ) ;
 		} else {
 			String relatedClassName = getIdentifier( node.jjtGetChild( 0 ) );
 			metamodel.Class relatedClass = getClass( relatedClassName );
@@ -796,7 +796,7 @@ public class BuilderPass2 extends Visitor {
 			return new BinaryOperation( BinaryOperation.SUBTRACTION );
 		}
 
-		throw new LemException( "Unknown operator '" + node.getFirstToken() + "' encountered" );
+		throw new LemException( "Unknown operator '" + node.getFirstToken() + "' encountered", node.getFirstToken(), "LEM_E_01051" );
 	}
 
 	/**
@@ -844,7 +844,7 @@ public class BuilderPass2 extends Visitor {
 			return new BinaryOperation( BinaryOperation.GREATER_THAN_OR_EQUAL );
 		}
 
-		throw new LemException( "Unknown operator '" + node.getFirstToken() + "' encountered" );
+		throw new LemException( "Unknown operator '" + node.getFirstToken() + "' encountered", node.getFirstToken(), "LEM_E_01051" );
 	}
 
 	/**
@@ -864,7 +864,7 @@ public class BuilderPass2 extends Visitor {
 			return new BinaryOperation( BinaryOperation.MODULO );
 		}
 
-		throw new LemException( "Unknown operator '" + node.getFirstToken() + "' encountered" );
+		throw new LemException( "Unknown operator '" + node.getFirstToken() + "' encountered", node.getFirstToken(), "LEM_E_01051" );
 	}
 
 	/**
@@ -904,7 +904,7 @@ public class BuilderPass2 extends Visitor {
         	if( node.jjtGetNumChildren() == 0) {
 	    	// 'self' reference.
             	if(inScenario)
-            	    throw new LemException("Undefined used of self in Scenario");
+            	    throw new LemException("Undefined used of self in Scenario", node.getFirstToken(), "LEM_E_01052" );
 		    return new VariableReference( "self" );  
       	  	} else if( node.jjtGetNumChildren() == 1 ) {
             	// bare variable reference
@@ -913,7 +913,7 @@ public class BuilderPass2 extends Visitor {
             	    if((currentClass.getAttribute(variableName) != null) && !(inScenario)) {
             	        return new VariableReference("self", variableName);
             	    }else if(!(variableName.equals("selected") && hasSelectAncestorNode(node)))
-            	        throw new LemException("Undeclared variable "+variableName);
+            	        throw new LemException("Undeclared variable "+variableName, node.getFirstToken(), "LEM_E_01053" );
           	  } 
            	 return new VariableReference(variableName );
         	} else if( node.jjtGetNumChildren() == 2 ) {
@@ -923,7 +923,7 @@ public class BuilderPass2 extends Visitor {
         	    return new VariableReference( obj.getVariableName(), variableName );
         	}
 
-        	throw new LemException( "LEMVariableReference has neither 1 nor 2 children" );
+        	throw new LemException( "LEMVariableReference has neither 1 nor 2 children", node.getFirstToken(), "LEM_E_01054"  );
 
     	}
 
@@ -1391,13 +1391,13 @@ public class BuilderPass2 extends Visitor {
 
 			if ( fromState == null )
 				throw new LemException( "No such state '" + fromStateName + "' in class '"
-				                        + currentClass.getName() + "'" );
+				                        + currentClass.getName() + "'", node.getFirstToken(), "LEM_E_01055"  );
 			if ( toState == null )
 				throw new LemException( "No such state '" + toStateName + "' in class '"
-				                        + currentClass.getName() + "'" );
+				                        + currentClass.getName() + "'", node.getFirstToken(), "LEM_E_01056"  );
 
 			if ( !( fromState instanceof NonDeletionState ) )
-				throw new LemException( "State '" + fromStateName + "' is not a non-deletion state" );
+				throw new LemException( "State '" + fromStateName + "' is not a non-deletion state", node.getFirstToken(), "LEM_E_01057"  );
 
 			st.setFromState( ( NonDeletionState ) fromState );
 			st.setToState( toState );
@@ -1412,7 +1412,7 @@ public class BuilderPass2 extends Visitor {
 
 			if ( toState == null )
 				throw new LemException( "No such state '" + toStateName + "' in class '"
-				                        + currentClass.getName() + "'" );
+				                        + currentClass.getName() + "'", node.getFirstToken(), "LEM_E_01056"  );
 
 			i.setToState( toState );
 
@@ -1424,7 +1424,7 @@ public class BuilderPass2 extends Visitor {
 		Event e = getEvent( eventName );
 
 		if ( e == null )
-			throw new LemException( "Event '" + eventName + "' not found" );
+			throw new LemException( "Event '" + eventName + "' not found", node.getFirstToken(), "LEM_E_01058"  );
 
 		t.setEvent( e );
 		t.setDescription( getIdentifier( node.jjtGetChild( 1 ) ) );
