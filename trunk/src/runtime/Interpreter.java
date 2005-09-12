@@ -42,18 +42,8 @@ import java.math.BigDecimal;
  * @todo javadoc
  */
 public class Interpreter {
-
-    /**
-     * List of active objects created by the interpreter. This is used by
-     * interpretation of a Scenario, so the interpreter can wait for
-     * all created objects to disappear.
-     * @todo: this is a bit of a hack. Need some good way to return from the
-     * scenario.
-     */
-    private LinkedList createdThreads = new LinkedList();
-    
-/** keeps a record of all the InstanceInterpreters running **/
-	private ArrayList instanceInterpreters = null;
+    /** keeps a record of all the InstanceInterpreters running **/
+    private ArrayList instanceInterpreters = null;
 
     /**
      * The object in which we are executing
@@ -123,7 +113,6 @@ public class Interpreter {
 		c.debugObject.waitQuiescentState();
 		
 		context = null; // ensure no other entry point tries to use this
-		createdThreads = null;
 	}
     
     /**
@@ -218,7 +207,6 @@ public class Interpreter {
             Instance instance = ( Instance ) i.next();
             if ( instance.instanceOfClass.isActive() ) {
                 InstanceInterpreter instanceThread = new InstanceInterpreter( instance, context );
-                createdThreads.add( instanceThread );
             }
         }
         
