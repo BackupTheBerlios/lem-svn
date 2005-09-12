@@ -120,20 +120,7 @@ public class Interpreter {
 		executeBlock( block, c );
 		
 		// wait for all created threads.
-		Iterator i = createdThreads.iterator();
-		while ( i.hasNext() ) {
-			InstanceInterpreter thread = ( InstanceInterpreter ) i.next();
-			instanceInterpreters.add(thread);
-			thread.setScenario(s) ;
-			while ( true ) {
-				try {
-					thread.join();
-				} catch ( InterruptedException e ) {
-					continue;
-				}
-				break;
-			}
-		}
+		c.debugObject.waitQuiescentState();
 		
 		context = null; // ensure no other entry point tries to use this
 		createdThreads = null;
