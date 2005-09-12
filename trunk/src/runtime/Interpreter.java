@@ -150,6 +150,9 @@ public class Interpreter {
      * @throws runtime.LemRuntimeException in case any errors occur during the execution of the action
      */
     public void executeAction( Action a, Context c ) throws LemRuntimeException {
+	context.debugObject.executeAction(a);
+	context.debugObject.checkRuntimeState();
+
         if ( a instanceof CreateAction )
             executeCreateAction((CreateAction)a, c);
 	else if (a instanceof CreationTransaction)

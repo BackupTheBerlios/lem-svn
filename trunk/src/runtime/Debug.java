@@ -23,6 +23,7 @@ package runtime;
 
 import metamodel.State;
 import metamodel.Transition;
+import metamodel.Action;
 
 import java.util.Iterator;
 import java.util.List;
@@ -55,15 +56,21 @@ public class Debug {
 	private DomainContext context;
 
 	/**
-	 * Breakpoints for runtimeState transitions
+	 * Breakpoints for State transitions
 	 */
 	private LinkedList transitionBreakpoints = new LinkedList();
 
 	/**
-	 * Breakpoints for runtimeState execution
+	 * Breakpoints for State execution
 	 */
 	private LinkedList stateBreakpoints = new LinkedList();
+
+	/**
+	 * Breakpoints for Action execution
+	 */
+	private LinkedList actionBreakpoints = new LinkedList();
 	
+
 	public Debug(DomainContext c) {
 		runtimeState = RUNNING;
 		liveEntities = new Refcount();
@@ -136,7 +143,17 @@ public class Debug {
 				runtimeState = PAUSED;
 		}
 	}
+
+	public synchronized void executeAction(Action a) {
+		Iterator i = actionBreakpoints.iterator();
+		while (i.hasNext()) {
+			ActionBreakpoint ab = (ActionBreakpoint)i.next();
+			if (ab.matches(a))
+				runtimeState = PAUSED;
+		}
+	}
 	
+
 	public synchronized boolean checkRuntimeState() {
 		while (runtimeState != RUNNING) {
 			if (runtimeState == STOPPED)
