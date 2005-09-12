@@ -52,6 +52,7 @@ public class ModelTreePanel extends javax.swing.JPanel {
 
         setLayout(new java.awt.BorderLayout());
 
+        SplitPanel.setDividerSize(5);
         modelTree.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 modelTreePropertyChange(evt);

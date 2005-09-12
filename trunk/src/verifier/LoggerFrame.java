@@ -40,7 +40,7 @@ public class LoggerFrame extends javax.swing.JFrame {
 		return scenarioExec;
 	}
 	
-	public ContextTreePanel getContextTree() {
+	public ContextTreePanel3 getContextTree() {
 		return scenarioExec.getContextTree();
 	}
 	

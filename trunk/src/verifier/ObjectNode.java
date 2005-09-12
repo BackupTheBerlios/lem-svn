@@ -9,10 +9,10 @@
  */
 
 package verifier;
-
 import java.util.Iterator;
-import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
+import javax.swing.tree.DefaultMutableTreeNode;
+import metamodel.Event;
 import runtime.Instance;
 
 /**
@@ -21,19 +21,34 @@ import runtime.Instance;
  */
 public class ObjectNode extends AbstractDescriptionNode {
 	
-	private LoggerFrame frame ; 
+	private LoggerFrame frame ;
 	private runtime.Object thisObject ;
 	
 	/** Creates a new instance of ObjectNode */
 	public ObjectNode(runtime.Object o, LoggerFrame frame) {
-		this.frame = frame ; 
-		this.thisObject = o ; 
-		Iterator i = thisObject.getInstances().iterator() ; 
-		System.out.println("Executed ..") ;  
+		this.frame = frame ;
+		this.thisObject = o ;
+		Iterator i = thisObject.getInstances().iterator() ;
+		// add instances to the tree.
+		DefaultMutableTreeNode instancesLevel = new DefaultMutableTreeNode( "Instances" ) ;
+		DefaultMutableTreeNode eventsLevel = new DefaultMutableTreeNode("Signals") ;
+		
+		add(instancesLevel ) ;
 		while( i.hasNext() ) {
-			InstanceNode instanceNode = new InstanceNode((Instance)i.next(), frame ) ;
-			add( instanceNode ) ;
-		}		
+			Instance instance = (Instance) i.next() ;
+			InstanceNode instanceNode = new InstanceNode( instance, frame ) ;
+			instancesLevel.add( instanceNode ) ;
+			metamodel.Class thisClass = instance.getInstanceClass() ;
+			// add signals to the object tree.
+			Iterator j = thisClass.getEvents().iterator();
+			if ( j.hasNext() ) {
+				add(eventsLevel ) ;
+				while ( j.hasNext() ) {
+					Event event = (Event)j.next() ;
+					eventsLevel.add( new SignalNode(event,frame) ) ;
+				}
+			}						
+		}																
 	}
 	
 	/**
@@ -57,5 +72,5 @@ public class ObjectNode extends AbstractDescriptionNode {
 	public JPopupMenu getContextMenu() {
 		JPopupMenu ContextMenu = new JPopupMenu();
 		return ContextMenu;
-	}			
+	}
 }

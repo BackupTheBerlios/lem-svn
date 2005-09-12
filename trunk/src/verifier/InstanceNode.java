@@ -9,9 +9,10 @@
  */
 
 package verifier;
-
-import javax.swing.JFrame;
+import java.util.Iterator;
 import javax.swing.JPopupMenu;
+import javax.swing.tree.DefaultMutableTreeNode;
+import metamodel.Attribute;
 import runtime.Instance;
 
 /**
@@ -27,7 +28,15 @@ public class InstanceNode extends AbstractDescriptionNode {
 	public InstanceNode(Instance instance , LoggerFrame frame) {
 		this.frame = frame ; 
 		this.thisInstance = instance ; 
-		
+		// add attributes to the instances subtree ;
+		DefaultMutableTreeNode attributesLevel = new DefaultMutableTreeNode( "Attributes" ) ;
+		Iterator i = thisInstance.getInstanceClass().getAllAttributes().iterator() ; 
+		if ( i.hasNext() ) {
+			add ( attributesLevel ) ; 
+			while ( i.hasNext() ) {
+				attributesLevel.add( new AttributeNode( (Attribute)i.next() , frame )) ; 
+			}			
+		}		
 	}
 	
 	/**

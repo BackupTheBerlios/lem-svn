@@ -5,8 +5,7 @@
  */
 
 package verifier;
-
-import javax.swing.JFrame;
+import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 
 /**
@@ -34,11 +33,19 @@ public class ContextTreePanel extends javax.swing.JPanel {
 		contextTree.setModel( new DefaultTreeModel( scenarioNode ));
 		CustomTreeRenderer render = new CustomTreeRenderer();
 		contextTree.setCellRenderer(render);
+		add(contextTree ) ; 
 	}
 	
 	/** Set a descriptionPane for this panel to write information into */
 	public void setDescriptionPane(DescriptionPanel descriptionPane) {
 		this.descriptionPane = descriptionPane;
+	}
+	
+	/** get the jtree of this panel *
+	 *@return JTree
+	 */
+	public JTree getTree() {
+		return contextTree ; 
 	}
 	
 	/** This method is called from within the constructor to
@@ -52,7 +59,8 @@ public class ContextTreePanel extends javax.swing.JPanel {
 
         setLayout(new java.awt.BorderLayout());
 
-        contextTree.setBackground(new java.awt.Color(204, 204, 204));
+        setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
+        setPreferredSize(new java.awt.Dimension(150, 200));
         contextTree.setDragEnabled(true);
         contextTree.setEditable(true);
         contextTree.setPreferredSize(new java.awt.Dimension(150, 200));
@@ -65,5 +73,4 @@ public class ContextTreePanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTree contextTree;
     // End of variables declaration//GEN-END:variables
-	
 }

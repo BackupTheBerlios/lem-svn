@@ -6,6 +6,7 @@
 
 package verifier;
 
+import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
 import metamodel.Attribute;
 
@@ -16,13 +17,14 @@ import metamodel.Attribute;
  */
 public class AttributeNode extends AbstractDescriptionNode {
     /**The LEM attribute that AttributeNode contains.*/
-    Attribute attribute = null;
-    
+    private Attribute attribute = null;
+    private LoggerFrame frame = null ; 
     /** Creates a new instance of AttributeNode
      * @param a the LEM attribute object.
      */
-    public AttributeNode( Attribute a ) {
+    public AttributeNode( Attribute a , LoggerFrame frame ) {
         this.attribute = a;
+		this.frame = frame ; 
     }
     /** Returns the name of the attribute followed by the type of the attribute 
      * @return the name of the attribute.

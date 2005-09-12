@@ -11,7 +11,8 @@
 package verifier;
 import java.util.Iterator;
 import javax.swing.JPopupMenu;
-import runtime.Context ; 
+import javax.swing.tree.DefaultMutableTreeNode;
+import runtime.Context ;
 import runtime.DomainContext;
 
 
@@ -23,23 +24,26 @@ public class ScenarioContextNode extends AbstractDescriptionNode {
 	
 	private Context context ;
 	
-	private LoggerFrame frame ; 
+	private LoggerFrame frame ;
 	
 	/** Creates a new instance of ScenarioContextNode */
 	public ScenarioContextNode(Context c, LoggerFrame frame) {
-		this.frame = frame ; 
-		this.context = c ;                 
-                while ((c.getParent()) != null) {
-                    c = c.getParent() ;
-                }
-                DomainContext d = (DomainContext) c ; 
-		System.out.println("outside the loop"); 
-		Iterator i = d.getObjectList().iterator() ; 
-		while( i.hasNext() ) {
-			System.out.println("inside the loop"); 
-			add( new ObjectNode( (runtime.Object)i.next(), frame)) ;			
-		}
+		this.frame = frame ;
+		this.context = c ;
 		
+// find the DomainContext
+		while ((c.getParent()) != null) {
+			c = c.getParent() ;
+		}
+		DomainContext d = (DomainContext) c ;
+		Iterator i = d.getObjectList().iterator() ;
+		DefaultMutableTreeNode objectLevel = new DefaultMutableTreeNode( "Objects" ) ;
+		if ( i.hasNext() ) {
+			add( objectLevel ) ;
+			while( i.hasNext() ) {
+				objectLevel.add( new ObjectNode( (runtime.Object)i.next(), frame)) ;
+			}
+		}		
 	}
 	
 	/**
