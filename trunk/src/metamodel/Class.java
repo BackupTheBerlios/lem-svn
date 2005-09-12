@@ -311,15 +311,8 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
      * 
      * @return an array of the public events in this class
      */
-    public Event [] getEvents() {
-        
-        Event [] result = new Event[ events.size() ];
-        
-        int i = 0;
-        for ( Iterator it = events.values().iterator(); it.hasNext()  ; i++ )
-            result[ i ] = (Event) it.next();
-            
-        return result;
+    public Collection getEvents() {
+        return events.values();
     }
     
     /**
@@ -400,29 +393,29 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
      * HashMap contains values which are Attribute instances. Each key consists of the 
      * attributes class name and attribute name separated by a dot.
      */
-    public HashMap getAllAttributes() {
+    public Collection getAllAttributes() {
         
-        HashMap result = new HashMap();
+//        HashMap result = new HashMap();
+//        
+//        // add the local attributes
+//        
+//        for (Iterator it = attributes.values().iterator(); it.hasNext(); ) {
+//            Attribute att = (Attribute) it.next();
+//            result.put( this.getName() + "." + att.getName(), att );
+//        }
+//        
+//        // now add the attributes defined in the superclass of each generalisation
+//        
+//        for (Iterator it = generalisationRoles.values().iterator(); it.hasNext(); ) {
+//            GeneralisationRole role = (GeneralisationRole) it.next();
+//            if ( role instanceof SubclassRole ) {
+//                metamodel.Class superClass = role.getGeneralisation().getSuperClassRole().getParticipant();
+//                HashMap superclassAttributes = superClass.getAllAttributes();
+//                result.putAll( superclassAttributes );
+//            }
+//        }
         
-        // add the local attributes
-        
-        for (Iterator it = attributes.values().iterator(); it.hasNext(); ) {
-            Attribute att = (Attribute) it.next();
-            result.put( this.getName() + "." + att.getName(), att );
-        }
-        
-        // now add the attributes defined in the superclass of each generalisation
-        
-        for (Iterator it = generalisationRoles.values().iterator(); it.hasNext(); ) {
-            GeneralisationRole role = (GeneralisationRole) it.next();
-            if ( role instanceof SubclassRole ) {
-                metamodel.Class superClass = role.getGeneralisation().getSuperClassRole().getParticipant();
-                HashMap superclassAttributes = superClass.getAllAttributes();
-                result.putAll( superclassAttributes );
-            }
-        }
-        
-        return result;
+        return attributes.values() ;
        
     }
     
