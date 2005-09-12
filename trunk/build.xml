@@ -100,7 +100,8 @@
         </fileset>
     </copy>
     <copy file="${src.dir}/splash/eLEMinator.jpg" todir="${classes.dir}/splash"/>
-    
+    <depend srcdir="${src.dir}" destdir="${classes.dir}"
+	    cache="depcache" closure="yes"/>
     <javac srcdir="${src.dir}" destdir="${classes.dir}"
         classpathref="build.classpath" debug="true" source="1.4" 
         deprecation="true" optimize="false"
