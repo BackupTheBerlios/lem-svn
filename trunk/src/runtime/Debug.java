@@ -31,7 +31,7 @@ import java.util.LinkedList;
 
 /**
  * This class is a debugging interface into the runtimeState of the running model.
- *
+ * @todo javadoc
  */
 public class Debug {
 	private static final int RUNNING = 0;
@@ -127,32 +127,19 @@ public class Debug {
 	}
 	
 	public synchronized void makeTransition(Transition t) {
-		Iterator i = transitionBreakpoints.iterator();
-		while (i.hasNext()) {
-			TransitionBreakpoint tb = (TransitionBreakpoint)i.next();
-			if (tb.matches(t))
-				runtimeState = PAUSED;
-		}
+		if (isBreakpoint(t))
+			runtimeState = PAUSED;
 	}
 
 	public synchronized void runState(State s) {
-		Iterator i = stateBreakpoints.iterator();
-		while (i.hasNext()) {
-			StateBreakpoint sb = (StateBreakpoint)i.next();
-			if (sb.matches(s))
-				runtimeState = PAUSED;
-		}
+		if (isBreakpoint(s))
+			runtimeState = PAUSED;
 	}
 
 	public synchronized void executeAction(Action a) {
-		Iterator i = actionBreakpoints.iterator();
-		while (i.hasNext()) {
-			ActionBreakpoint ab = (ActionBreakpoint)i.next();
-			if (ab.matches(a))
-				runtimeState = PAUSED;
-		}
+		if (isBreakpoint(a))
+			runtimeState = PAUSED;
 	}
-	
 
 	public synchronized boolean checkRuntimeState() {
 		while (runtimeState != RUNNING) {
@@ -179,5 +166,68 @@ public class Debug {
 		System.out.println("deleted an entity, " + (liveEntities.references() - 1) + " live entities");
 		if (liveEntities.put())
 			enterQuiescentState();
+	}
+
+	public synchronized void addBreakpoint(Transition t) {
+		transitionBreakpoints.add(t);
+	}
+
+	public synchronized boolean isBreakpoint(Transition t) {
+		Iterator i = transitionBreakpoints.iterator();
+		while (i.hasNext()) {
+			TransitionBreakpoint tb = (TransitionBreakpoint)i.next();
+			if (tb.matches(t))
+				return true;
+		}
+
+		return false;
+	}
+
+	public synchronized void delBreakpoint(Transition t) {
+		if (!transitionBreakpoints.remove(t)) {
+			throw new Error("Breakpoint does not exist!");
+		}
+	}
+	
+	public synchronized void addBreakpoint(State s) {
+		stateBreakpoints.add(s);
+	}
+
+	public synchronized boolean isBreakpoint(State s) {
+		Iterator i = transitionBreakpoints.iterator();
+		while (i.hasNext()) {
+			StateBreakpoint sb = (StateBreakpoint)i.next();
+			if (sb.matches(s))
+				return true;
+		}
+
+		return false;
+	}
+
+	public synchronized void delBreakpoint(State s) {
+		if (!stateBreakpoints.remove(s)) {
+			throw new Error("Breakpoint does not exist!");
+		}
+	}
+
+	public synchronized void addBreakpoint(Action a) {
+		actionBreakpoints.add(a);
+	}
+
+	public synchronized boolean isBreakpoint(Action a) {
+		Iterator i = actionBreakpoints.iterator();
+		while (i.hasNext()) {
+			ActionBreakpoint ab = (ActionBreakpoint)i.next();
+			if (ab.matches(a))
+				return true;
+		}
+
+		return false;
+	}
+
+	public synchronized void delBreakpoint(Action a) {
+		if (!actionBreakpoints.remove(a)) {
+			throw new Error("Breakpoint does not exist!");
+		}
 	}
 }
