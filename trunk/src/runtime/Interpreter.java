@@ -108,10 +108,6 @@ public class Interpreter {
 		context = c;
 		ActionBlock block = s.getActionBlock();
 		executeBlock( block, c );
-		
-		// wait for all created threads.
-		c.debugObject.waitQuiescentState();
-		
 		context = null; // ensure no other entry point tries to use this
 	}
     

@@ -69,7 +69,9 @@ public class Cmdline {
 		System.err.println( "Got a LemRuntimeException!" );
 		e.printStackTrace();
 	}
-	
+
+	// wait for a quiet state before quitting
+	c.debugObject.waitQuiescentState();
     }
     
     /*This method loads a LEM model specified by the parameter, and returns true
