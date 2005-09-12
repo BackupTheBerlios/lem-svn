@@ -209,8 +209,18 @@ public class Instance {
 				if (instanceInObject.propogateNextSignal(debugObject))
 					continue;
 
+				long delay = instanceInObject.getNextDelayedSignalSelfDelay();
+				if (delay == 0)
+					continue;
+
 				try {
-					instanceInObject.wait();
+					if (delay == -1) {
+						System.out.println("waiting for signal");
+						instanceInObject.wait();
+					} else {
+						System.out.println("waiting for signal with delay " + delay);
+						instanceInObject.wait(delay);
+					}
 					/**
 					 * After taking instanceInObject's lock, we must
 					 * always recheck this Instance's queue because

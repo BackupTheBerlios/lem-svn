@@ -45,8 +45,9 @@ public class SignalGenerator extends java.lang.Thread {
 			DelayedSignal s = senderObject.getNextDelayedSignal();
 			if (s == null)
 				return;
-		    
+
 			runtime.Object target = s.getTarget();
+			System.out.println(target.getObjectId() + " delivered delayed signal");
 		        Integer signalId = s.getSignalId() ; 
 		        Integer targetObjectId = target.getObjectId() ; 
 			target.addSignal(s);

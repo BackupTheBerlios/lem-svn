@@ -140,19 +140,40 @@ public class Object {
 	}
 	
 	public void drainSignals(Debug debug) {
-		while (delayedSignalQueue.size() > 0) {
-			delayedSignalQueue.remove(0);
-			debug.delEntity();
+		synchronized (delayedSignalQueue) {
+			while (delayedSignalQueue.size() > 0) {
+				delayedSignalQueue.remove(0);
+				debug.delEntity();
+			}
 		}
-		while (delayedSignalSelfQueue.size() > 0) {
-			delayedSignalSelfQueue.remove(0);
-			debug.delEntity();
+		synchronized (delayedSignalSelfQueue) {
+			while (delayedSignalSelfQueue.size() > 0) {
+				delayedSignalSelfQueue.remove(0);
+				debug.delEntity();
+			}
 		}
 	}
 
 	public void delDelayedSignal(DelayedSignal s) {
 		synchronized (delayedSignalQueue) {
 			delayedSignalQueue.remove(s);
+		}
+	}
+	
+	public long getNextDelayedSignalSelfDelay() {
+		synchronized (delayedSignalSelfQueue) {
+			if (delayedSignalSelfQueue.size() > 0) {
+				DelayedSignal sig;
+				long delay;
+				sig = (DelayedSignal)delayedSignalSelfQueue.get(0);
+				delay = sig.getDeliveryTime() -
+					System.currentTimeMillis();
+
+				if (delay > 0)
+					return delay;
+				return 0;
+			} else
+				return -1;
 		}
 	}
 	
@@ -168,9 +189,10 @@ public class Object {
 							System.currentTimeMillis();
 						if (delay <= 0) {
 							delayedSignalQueue.remove(sig);
-							System.out.println(objectId + " got a delayed signal with delivery time " + sig.getDeliveryTime());
 							return sig;
 						}
+
+						System.out.println("Next delayed signal in " + delay);
 
 						delayedSignalQueue.wait(delay);
 					} else {

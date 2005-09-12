@@ -86,6 +86,12 @@ model TestModel is
 			/* generate Ev1 to a2; */
 		}
 
+		scenario TestEntities is {
+			objref a;
+			a := create A;
+			generate Ev1 to a;
+		}
+
                 scenario TestAttributeReadWrite is {
                         objref a1;
                         numeric x;
