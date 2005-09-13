@@ -606,14 +606,14 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
            
           // for all non-AssociationClasses
           if (!associations.isEmpty() || !generalisationRoles.isEmpty()) { 
-                  // add ParticipatingClass option
+                  // append ParticipatingClass option
                   strBuf.append("/**\n");
                   
                   // set color for selected class
                   if (isSelected)
                      strBuf.append(" *  @opt nodefillcolor \"#FFFF99\"\n");
            
-                  // add associations for a class   
+                  // append associations for a class   
                   for ( Iterator it = associations.values().iterator(); it.hasNext(); ) {
                        Association asso = (Association) it.next();    
                        // if this association have not be printed 
@@ -632,7 +632,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
                                        asso.getName() + " " +
                                        asso.getActivePerspective().getMultiplicity().getSymbolic() + " ");
                            }
-                           // print the name of other participant 
+                           // append the name of other participant in this association
                            if (this.name == asso.getParticipants()[0].getName()) {
                                strBuf.append(asso.getParticipants()[1].getName().toUpperCase() + "\n");   
                            }
@@ -640,7 +640,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
                                strBuf.append(asso.getParticipants()[0].getName().toUpperCase() + "\n");
                            }
 
-                           // this association contains Asscociation Class                                     
+                           // if this association contains Asscociation Class                                     
                            if (asso.getAssociationClassRole()!=null)  {  
                                list.add(asso);
                            }                          
@@ -648,7 +648,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
                        }                              
                   } //end for
 
-                  //add generalisations for a class 
+                  //append generalisations for a class 
                   for ( Iterator it = generalisationRoles.values().iterator(); it.hasNext(); ) {
                        GeneralisationRole generalisationRole = (GeneralisationRole) it.next();
                        if (this.name != generalisationRole.getGeneralisation().getSuperclass().getName())
@@ -657,9 +657,9 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
                   strBuf.append(" */\n");
 
 
-                  // add ParticipantingClass 
+                  // append ParticipantingClass 
                   strBuf.append("class " + this.name.toUpperCase()  + " {\n");
-                 // add atributes
+                  // append atributes
                   for ( Iterator it = attributes.values().iterator(); it.hasNext(); ) {
                        Attribute attribute = (Attribute) it.next();
                        strBuf.append("   " + attribute.getType().getName() +  " " + attribute.getName() + ";\n");
@@ -667,21 +667,20 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
                   strBuf.append("}\n\n");
           } // end if
           
-          // add AssociationClass
+          // append AssociationClass
           for (Iterator lit = list.listIterator();lit.hasNext();)  {
               
                Association asso = (Association) lit.next();
                Class associationClass = asso.getAssociationClassRole().getAssociationClass();
-               // add  AssociationClass option
-               strBuf.append("/**\n");
-                    
+               // append  AssociationClass option
+               strBuf.append("/**\n");                    
                // set color for this class
                if (verifier.ClassWriter.getSelectedClassList().contains(associationClass)) 
                     strBuf.append(" *  @opt nodefillcolor \"#FFFF99\"\n"); 
                     
                strBuf.append(" *  @tagvalue " + "Association " +  asso.getName() + "\n*/\n" );
                strBuf.append("class " + associationClass.getName().toUpperCase()  + " {\n");
-               // add atributes
+               // append atributes
                 for ( Iterator it = associationClass.attributes.values().iterator(); it.hasNext(); ) {
                 Attribute attribute = (Attribute) it.next();
                     strBuf.append("   " + attribute.getType().getName() +  " " + attribute.getName() + ";\n");

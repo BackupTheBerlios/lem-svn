@@ -34,7 +34,7 @@ import java.util.ArrayList;
  */
 public class ClassWriter {
 
-        /**  store classes selected  */
+        /**  store selected classes   */
         private static Collection selectedClassList;
 
         /**  store all classes in this domain */
@@ -43,10 +43,10 @@ public class ClassWriter {
         /**  store all associations in this domain */
         private static  Collection associationList;
         
-        /**  store all associations in in this domain  */
+        /**  store associations in this domain  */
         private static ArrayList list = new ArrayList();
         
-         /**  a flag to indicate a class is selected or not  */
+        /**  a flag to indicate a class is selected or not  */
         private static boolean isSelected = true;
            
         /**
@@ -60,17 +60,28 @@ public class ClassWriter {
 	 * @todo print the class list
 	 */
 	public static String dumpUMLGraph( Domain domain, Collection aClassList ) {
-
+              
+              // get selected classes  in selected domain
               selectedClassList = aClassList;
+              // get all classes in selected domain
               allClassList = domain.getClasses().values();
               
+              // get all associations in selected domain
               associationList =  domain.getRelationships().values();
-              TopUpList ();
+  
+              TopUpList ();   // fill the variable "list"
+              
               StringBuffer strBuf = new StringBuffer();
-              // list core types 
+             
+              // set some parameters for UMLGraph, 
+              // include whether display attributes, whether display types, backgound color, 
+              // edge color
               strBuf.append("/**\n* @opt attributes\n* @opt types\n* @hidden\n" +
                         "* @opt bgcolor \"#F0F0F0\"\n" + "* @opt edgecolor \"green\"" +            
                         "\n*/\nclass UMLOptions {}\n");
+              
+              // each type used in UMLGraph needs to be defined first,
+              // define core xtUML types 
               strBuf.append("/**\n* @hidden\n*/\nclass integer {}\n");
               strBuf.append("/**\n* @hidden\n*/\nclass string {}\n"); 
               strBuf.append("/**\n* @hidden\n*/\nclass Boolean {}\n");
@@ -81,7 +92,7 @@ public class ClassWriter {
               strBuf.append("/**\n* @hidden\n*/\nclass arbitrary_id {}\n");
               strBuf.append("\n");strBuf.append("\n");
              
-              // print UMLGraph code for all classes
+              // append  UMLGraph code of all classes into string buffer
               for ( Iterator it = allClassList.iterator(); it.hasNext(); ) {
                    metamodel.Class umlclass = (metamodel.Class) it.next();   
                    // decide  whether a class is selected or not
@@ -92,7 +103,10 @@ public class ClassWriter {
               }
               
               strBuf.append("\n");
-              TopUpList ();
+              
+              // variable "list" ,which has become empty , needs to be refilled 
+              TopUpList ();    
+              
               return  strBuf.toString();
         }
         
@@ -115,10 +129,11 @@ public class ClassWriter {
         }
         
         /** 
-         *  Top up association list
+         *  Copy all relationships in static variable "associationList" to 
+         *  another static variable "list" 
          */
         private static void TopUpList ()  {
-               list.clear();
+               list.clear(); // empty the list 
                for ( Iterator it = associationList.iterator(); it.hasNext(); ) {
                     metamodel.Relationship relationalship = (metamodel.Relationship) it.next();   
                     list.add(relationalship);
