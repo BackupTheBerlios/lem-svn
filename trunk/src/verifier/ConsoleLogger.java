@@ -67,7 +67,7 @@ public class ConsoleLogger implements runtime.LemEventListener {
 	 * @param event The Object Creation event to be logged
 	 **/
 	
-	public void objectCreated(runtime.LemObjectCreationEvent event) {
+	public synchronized void objectCreated(runtime.LemObjectCreationEvent event) {
 		String message = " OC \n";
                 message = message + "Object id:"+event.getObjectId().intValue()+"\n";
                 message = message + "ClassName=";
@@ -85,7 +85,7 @@ public class ConsoleLogger implements runtime.LemEventListener {
 	 *
 	 * @param event The Object Creation event to be logged
 	 **/
-	public void objectDeleted(runtime.LemObjectDeletionEvent event) {
+	public synchronized void objectDeleted(runtime.LemObjectDeletionEvent event) {
  		// testing message
                 String message = " OD \n";
                 message = message + "Object id:"+event.getObjectId().intValue()+"\n";
@@ -118,7 +118,7 @@ public class ConsoleLogger implements runtime.LemEventListener {
 	 * Prints old value and new value to console.
 	 * @param e The event representing the attribute change
 	 */
-	public void attributeChange(LemAttributeChangeEvent event) {
+	public synchronized void attributeChange(LemAttributeChangeEvent event) {
                 // testing message starts
                 String message = " AC \n";
                 message = message + "Object id: "+event.getObjectId().intValue()+"\n";
@@ -158,7 +158,7 @@ public class ConsoleLogger implements runtime.LemEventListener {
          * @param event the LemRelationshipCreationEvent representing the circumstances
          * in which the relationship is created.
          */        
-	public void relationshipCreation(LemRelationshipCreationEvent event) {
+	public synchronized void relationshipCreation(LemRelationshipCreationEvent event) {
                 // testing message starts
                 String message = " RC \n";
                 message = message + "Active object id: "+event.getActiveObjectId().intValue()+ "\n";

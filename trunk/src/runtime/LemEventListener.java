@@ -14,12 +14,12 @@ public interface LemEventListener {
     /**
      * Change the logging level to Debug which corresponds to level 2.
      */
-//    void levelDebug();
+//   void levelDebug();
     
     /**
      * Change the logging level to Info which corresponds to level 1.
      */
-//    void levelInfo();
+//   void levelInfo();
     
     /**
      * Called when a EventGeneration action has caused an xtUML Event to be placed
@@ -28,14 +28,14 @@ public interface LemEventListener {
      * @param ev the LemEventGenerationEvent which represents the circumstances
      * of the generated event
      */
-    void eventGenerated(LemEventGenerationEvent ev);
+    public void eventGenerated(LemEventGenerationEvent ev);
     
     /**
      * The logListener can notify the logger that a receiveEvent has occured.
      *
      * @param ev Event object that was received.
      */
-//    void receiveEvent(EventObject ev);
+//    public void receiveEvent(EventObject ev);
     
     /**
      * Called by the runtime when an event recieved by an object has caused a
@@ -44,7 +44,7 @@ public interface LemEventListener {
      * @param event The event representing the circumstance in which the object
      * transitioned between states
      */
-    void transitionEvent(LemStateTransitionEvent event);
+    public void transitionEvent(LemStateTransitionEvent event);
     
     /**
      * Called by the runtime when reading an attribute's value
@@ -52,7 +52,7 @@ public interface LemEventListener {
      * @param event The event representing the circumstances in which the
      *  attribute is read.
      */
-    void attributeRead(LemAttributeReadEvent event);
+    public void attributeRead(LemAttributeReadEvent event);
     
     /**
      * Called by the runtime when an attribute's value has changed.
@@ -61,7 +61,7 @@ public interface LemEventListener {
      *  attribute changed values.
      * @param attributeName The name of the attribute which has changed.
      */
-    void attributeChange(LemAttributeChangeEvent event);
+    public void attributeChange(LemAttributeChangeEvent event);
     
     /**
      * Called by the runtime when a DeleteAction has been executed successfully
@@ -70,7 +70,7 @@ public interface LemEventListener {
      * @param event The LemRelationshipDeletionEvent representing the circumstances
      * in which the relationship was deleted.
      */
-    void relationshipDeletion(LemRelationshipDeletionEvent event);
+    public void relationshipDeletion(LemRelationshipDeletionEvent event);
     
     /**
      * Called by the runtime when a CreatAction has been executed successfully
@@ -79,7 +79,7 @@ public interface LemEventListener {
      * @param event the LemRelationshipCreationEvent representing the circumstances
      * in which the relationship is created.
      */
-    void relationshipCreation(LemRelationshipCreationEvent event);
+    public void relationshipCreation(LemRelationshipCreationEvent event);
     
     /**
      * Called by the runtime when a CreateAction has been executed successfully
@@ -88,7 +88,7 @@ public interface LemEventListener {
      * @param event the LemObjectCreationEvent representing the circumstances
      * in which the new object was created
      */
-    void objectCreated( LemObjectCreationEvent event);
+    public void objectCreated( LemObjectCreationEvent event);
     
     /**
      * Called by the runtime when a DeleteAction has been executed successfully
@@ -97,7 +97,7 @@ public interface LemEventListener {
      * @param event The LemObjectDeletionEvent representing the circumstances
      *  in which the existing object was deleted
      */
-    void objectDeleted( LemObjectDeletionEvent event);
+    public void objectDeleted( LemObjectDeletionEvent event);
     
     /**
      * Called by the runtime when an ReclassificationAction has been executed
@@ -107,13 +107,13 @@ public interface LemEventListener {
      * @param event The object which was reclassified.
      * @param previousType The type of object before reclassification.
      */
-//    void reclassification( LemObjectReclassificatonEvent event, String previousType) ;
+//    public void reclassification( LemObjectReclassificatonEvent event, String previousType) ;
     
     /**
      * Called by the runtime when a delayed event sent by self is cancelled.
      *
      * @param event The event which has been cancelled.
      */
-//    void cancelledEvent(LemEvent event);
+//    public void cancelledEvent(LemEvent event);
     
 }
