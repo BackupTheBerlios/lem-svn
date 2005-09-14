@@ -73,8 +73,8 @@ public class InstanceNode extends AbstractDescriptionNode {
 			StyleConstants.setFontFamily(s, "Times New Roman");
 			StyleConstants.setFontSize(s, 14);
 			StyleConstants.setBold(s, true);
-			StyleConstants.setForeground(s, Color.black);
-			StyledElement element = new StyledElement( "\t\tList of Attributes\n" , s) ;
+			StyleConstants.setForeground(s, Color.black);			
+			StyledElement element = new StyledElement( "\tList of Attributes\n" , s) ;
 			Attribute attribute = (Attribute)i.next() ; 
 			AttributeNode attributeNode = new AttributeNode( attribute, null ) ;
 			StyledDocument styledDoc = attributeNode.getDynamicDescription() ; 
