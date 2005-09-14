@@ -9,8 +9,13 @@
  */
 
 package verifier;
+import java.awt.Color;
 import java.util.Iterator;
+import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextPane;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 import metamodel.Event;
 import runtime.Instance;
@@ -47,8 +52,8 @@ public class ObjectNode extends AbstractDescriptionNode {
 					Event event = (Event)j.next() ;
 					eventsLevel.add( new SignalNode(event,frame) ) ;
 				}
-			}						
-		}																
+			}
+		}
 	}
 	
 	/**
@@ -71,6 +76,34 @@ public class ObjectNode extends AbstractDescriptionNode {
 	 */
 	public JPopupMenu getContextMenu() {
 		JPopupMenu ContextMenu = new JPopupMenu();
+		JMenuItem descriptionItem = new JMenuItem();
+		descriptionItem.setText("Descriptions");
+		descriptionItem.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				JTextPane descriptionPanel = frame.getDescriptionPane() ;
+				StyledDocument doc = getStyledDocument() ;
+				
+			}
+		});
 		return ContextMenu;
+	}
+	
+	public StyledDocument getDynamicDescription() {
+		StyledDocument doc = new StyledDocument() ;
+		Iterator i = thisObject.getInstances().iterator() ;
+		while (i.hasNext()) {
+			SimpleAttributeSet s = new SimpleAttributeSet();
+			StyleConstants.setFontFamily(s, "Times New Roman");
+			StyleConstants.setFontSize(s, 14);
+			StyleConstants.setBold(s, true);
+			StyleConstants.setForeground(s, Color.black);
+			StyledElement element = new StyledElement( "\tList of Instances:"+"\n" , s) ;
+			doc.addStyle( element ) ; 
+			Instance instance = (Instance)i.next() ; 
+			InstanceNode instanceNode = new InstanceNode( instance, null ) ;
+			StyledDocument styledDoc = instanceNode.getDynamicDescription() ; 
+			doc.append(styledDoc) ; 
+		}
+		return doc;
 	}
 }
