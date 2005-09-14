@@ -21,6 +21,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import runtime.LemObjectCreationEvent;
+import runtime.LemObjectDeletionEvent;
+import runtime.LemRelationshipCreationEvent;
+import runtime.LemRelationshipDeletionEvent;
 
 
 /**
@@ -45,7 +48,7 @@ public class TableModel extends AbstractTableModel {
     ImageIcon downIcon = new ImageIcon();
     
     /** the name of the columns */
-    private String[] columnNames = {"Counter","Type", "Object1", "Object2", "State1","State2", "Event", "AttName", "AttValue", "RelName"};
+    private String[] columnNames = {"Counter","Type", "Id1", "Object1", "Id2", "Object2", "State1","State2", "Event", "AttName", "AttValue", "RelName", "RelId"};
     
     /** the rows of the table - initally null (Contains all the data of the table) */
     private Vector rowData = new Vector();
@@ -107,15 +110,70 @@ public class TableModel extends AbstractTableModel {
         
         tmp.add(new Integer(counter)) ;
         tmp.add("OC");
+        tmp.add(event.getObjectId());
         for( Iterator i = event.getObjectClassName().iterator(); i.hasNext(); ) {
             instances = instances + i.next().toString() + " ";
         }
         tmp.add(instances);
+       
         for(int i=0;i<7;i++){
             tmp.add(null);
         }
         rowData.add(tmp);
         refreshTable();
+    }
+    
+    public void objectDeleted(LemObjectDeletionEvent event, int counter){
+       Vector tmp = new Vector();
+        String instances="";
+        
+        tmp.add(new Integer(counter)) ;
+        tmp.add("OD");
+        tmp.add(event.getObjectId());
+        for( Iterator i = event.getObjectClassName().iterator(); i.hasNext(); ) {
+            instances = instances + i.next().toString() + " ";
+        }
+        tmp.add(instances);
+       
+        for(int i=0;i<7;i++){
+            tmp.add(null);
+        }
+        rowData.add(tmp);
+        refreshTable(); 
+    }
+    
+    public void relationshipCreation(LemRelationshipCreationEvent event, int counter){
+        Vector tmp = new Vector();        
+        tmp.add(new Integer(counter)) ;
+        tmp.add("RC");
+        tmp.add(event.getActiveObjectId());
+        tmp.add(null);
+        tmp.add(event.getPassiveObjectId());
+        for (int i=0; i<6; i++){
+            tmp.add(null);
+        }
+        tmp.add(event.getAssociationLabel());
+        tmp.add(event.getLinkObjectId());
+    
+        rowData.add(tmp);
+        refreshTable(); 
+    }
+    
+    public void relationshipDeletion(LemRelationshipDeletionEvent event, int counter){
+        Vector tmp = new Vector();        
+        tmp.add(new Integer(counter)) ;
+        tmp.add("RD");
+        tmp.add(event.getActiveObjectId());
+        tmp.add(null);
+        tmp.add(event.getPassiveObjectId());
+        for (int i=0; i<6; i++){
+            tmp.add(null);
+        }
+        tmp.add(event.getAssociationLabel());
+        tmp.add(event.getLinkObjectId());
+    
+        rowData.add(tmp);
+        refreshTable(); 
     }
     
     public void refreshTable(){
@@ -153,9 +211,12 @@ public class TableModel extends AbstractTableModel {
      * @return the Object / value in the cell.
      */
     public Object getValueAt(int row, int col) {
+        if (col < columnNames.length){
         Vector tmp = (Vector)filteredData.get(row);
         Object data = tmp.get(col);
         return data;
+        }
+        return null;
     }
     
     /**
