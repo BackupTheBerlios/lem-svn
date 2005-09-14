@@ -107,7 +107,7 @@ public class InstanceInterpreter extends java.lang.Thread {
 			    return false;
 		    }
 		    
-                    interpreter.interpret( p , context );
+                    interpreter.interpret( p, s, context );
 		    
 		    context.debugObject.delEntity();
                     if ( newState instanceof NonDeletionState )
@@ -202,7 +202,7 @@ public class InstanceInterpreter extends java.lang.Thread {
 		    return false;
 		}
 
-                interpreter.interpret( p, context );
+                interpreter.interpret( p, s, context );
 
 		context.debugObject.delEntity();
                 if ( newState instanceof NonDeletionState )
