@@ -79,22 +79,23 @@ public class Interpreter {
      * main ActionBlock.
      *
      * @param p the procedure to interpret
+	 * @param s the signal which caused the procedure to be executed
      * @param c the Context in which the procedure should be interpreted
      * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
      */
-    public void interpret( Procedure p, DomainContext c ) throws LemRuntimeException {
-        context = c;
+    public void interpret( Procedure p, Signal s, DomainContext c ) throws LemRuntimeException {
+		context = c;
 
-        LocalContext stateContext = new LocalContext( c );
-	Variable selfVar = VariableFactory.newVariable( ObjectReferenceType.getInstance(), currentObject );
-	stateContext.addVariable( "self" , selfVar ) ;
+		ProcedureContext procContext = new ProcedureContext( c, s );
+		Variable selfVar = new ObjectReferenceVariable( currentObject );
+		procContext.addVariable( "self" , selfVar ) ;
 
-        ActionBlock block = p.getActionBlock();
-        executeBlock( block, stateContext );
-	stateContext.finish();
+		ActionBlock block = p.getActionBlock();
+		executeBlock( block, procContext );
+		procContext.finish();
 
-        context = null; // ensure no other entry point tries to use this
-    }
+        	context = null; // ensure no other entry point tries to use this
+	}
     
     /**
 	 * Interpret the given Scenario by calling executeBlock on Scenario's
@@ -769,7 +770,7 @@ public class Interpreter {
                     Instance instance = ( Instance ) j.next();
                         
                     if ( instance.getInstanceClass() == selectedClass ) {
-                        Variable var = VariableFactory.newVariable( ObjectReferenceType.getInstance(), o );
+                        Variable var = new ObjectReferenceVariable( o );
                         boolean goodVariable = true;
                             
                         if ( condition != null ) {
