@@ -10,6 +10,7 @@ import java.awt.Toolkit;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Vector;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -22,6 +23,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import runtime.LemAttributeChangeEvent;
 import runtime.LemAttributeReadEvent;
+import runtime.LemEventGenerationEvent;
 import runtime.LemObjectCreationEvent;
 import runtime.LemObjectDeletionEvent;
 import runtime.LemRelationshipCreationEvent;
@@ -49,9 +51,9 @@ public class TableModel extends AbstractTableModel {
     JTable table = new JTable();
     ImageIcon upIcon = new ImageIcon();
     ImageIcon downIcon = new ImageIcon();
-    
+   
     /** the name of the columns */
-    private String[] columnNames = {"Counter","Type", "Id1", "Object1", "Id2", "Object2", "State1","State2", "Event", "AttName", "AttValue", "RelName", "RelId"};
+    private String[] columnNames = {"Counter","Type", "Id1", "Object1", "Id2", "Object2", "State1","State2", "Event", "Parameters", "AttName", "AttValue", "RelName", "RelId"};
     
     /** the rows of the table - initally null (Contains all the data of the table) */
     private Vector rowData = new Vector();
@@ -194,7 +196,7 @@ public class TableModel extends AbstractTableModel {
         rowData.add(tmp);
         refreshTable();
     }
-      
+    
     public void attributeRead(LemAttributeReadEvent event, int counter){
         Vector tmp = new Vector();
         tmp.add(new Integer(counter)) ;
@@ -209,7 +211,7 @@ public class TableModel extends AbstractTableModel {
         refreshTable();
     }
     
-    public void transitionEvent(LemStateTransitionEvent event, int counter){ 
+    public void transitionEvent(LemStateTransitionEvent event, int counter){
         Vector tmp = new Vector();
         tmp.add(new Integer(counter)) ;
         tmp.add("TE");
@@ -223,9 +225,31 @@ public class TableModel extends AbstractTableModel {
         refreshTable();
     }
     
-     public void refreshTable(){
+    public void eventGenerated(LemEventGenerationEvent event, int counter){
+        Vector tmp = new Vector();
+        tmp.add(new Integer(counter)) ;
+        tmp.add("EG");
+        runtime.Object o = event.getSignalSource();
+        tmp.add(o.getObjectId());
+        for (int i=0; i<5; i++ ){
+            tmp.add(null);
+        }
+        metamodel.GenerateAction action = event.getGenerateAction();
+        tmp.add(action.getEventName());
+        LinkedList parameters = action.getParameters();
+        String names = "";
+        for (int i=0; i < parameters.size(); i++){
+            names = names + parameters.get(i) + ", ";
+        }
+        tmp.add(names);
+        rowData.add(tmp);
+        refreshTable();
+    }
+    
+    public void refreshTable(){
         filter.applyFilter();
         sortAllRowsBy();
+        //table.updateUI();
     }
     
     /**
@@ -258,8 +282,8 @@ public class TableModel extends AbstractTableModel {
      * @return the Object / value in the cell.
      */
     public Object getValueAt(int row, int col) {
-        if (col < columnNames.length){
-            Vector tmp = (Vector)filteredData.get(row);
+        Vector tmp = (Vector)filteredData.get(row);
+        if (col < tmp.size()){
             Object data = tmp.get(col);
             return data;
         }
@@ -280,6 +304,7 @@ public class TableModel extends AbstractTableModel {
         Vector data = getDataVector();
         Collections.sort(data, new ColumnSorter(colSort, ascend));
         fireTableStructureChanged();
+        //table.updateUI();
     }
     
     public void removeFilter(){
@@ -315,6 +340,7 @@ public class TableModel extends AbstractTableModel {
             changeIcon(colSort, upIcon);
         }
         fireTableStructureChanged();
+        //table.updateUI();
     }
     
     /**
