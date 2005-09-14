@@ -3,47 +3,38 @@ model TestModel is
 		subsystem TestSubsystem is
 			class A is
 				attribute current_delay is numeric;
-				event Ev1;
-				event Ev2;
+				event Ev1 carries ( o is objref );
+				event Ev2 carries ( o is objref );
 				
 				behaviour is
-					state s1 is
+					state s1( o is objref ) is
 					{
-						set myset;
-						
 						// After 10s delay time, give up and kill the model.
-						generate Ev2 to self with delay 10000;
+						generate Ev2( self ) to self with delay 10000;
 
-						myset := select one from instances of A where selected /= self;
-						for each myobj in myset
-						{
-							generate Ev1 to myobj with delay self.current_delay;
-						}
+						generate Ev1( self ) to o with delay self.current_delay;
 						self.current_delay := self.current_delay * 2;
 					} end s1;
 
-					state s2 is
+					state s2( o is objref ) is
 					{
+
 						set myset;
-						
-						cancel Ev2 to self;
-						
-						myset := select one from instances of A where selected /= self;
-						for each myobj in myset
-						{
-							generate Ev1 to myobj;
-						}
+
+                                                cancel Ev2 to self;
+
+                                             	myset := select one from instances of A where selected /= self;
+                                       		for each myobj in myset
+                                               	{
+                                                	generate Ev1( self ) to myobj;
+                                               	}
 					} end s2;
 
-					deletion state s3 is
+					deletion state s3( o is objref ) is
 					{
 						set myset;
 						
-						myset := select one from instances of A where selected /= self;
-						for each myobj in myset
-						{
-							generate Ev2 to myobj;
-						}
+						generate Ev2( self ) to o;
 					} end s3;
 					
 					on Ev1 transition from creation state to s1;
@@ -82,8 +73,8 @@ model TestModel is
 				a2.current_delay := 1;
 			}
 
-			generate Ev1 to a1;
-			generate Ev1 to a2;
+			generate Ev1( a2 ) to a1;
+			generate Ev1( a1 ) to a2;
 		}
 
 		scenario TestEntities is {
@@ -127,6 +118,5 @@ model TestModel is
 				delete b;
 			}
 		}
-
 	end TestDomain;
 end TestModel;
