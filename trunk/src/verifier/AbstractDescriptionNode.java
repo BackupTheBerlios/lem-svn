@@ -30,6 +30,9 @@ public abstract class AbstractDescriptionNode extends DefaultMutableTreeNode{
      */
     public abstract String getDescription();
     
+	public StyledDocument getDynamicDescription() {
+		return null ; 
+	}
     /**
      * Takes empty extra white spaces out of String
      * but preserves the NewLines after end of sentences.
