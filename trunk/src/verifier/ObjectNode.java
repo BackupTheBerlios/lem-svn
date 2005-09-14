@@ -19,6 +19,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 import metamodel.Event;
 import runtime.Instance;
+import runtime.Signal;
 
 /**
  *
@@ -36,7 +37,11 @@ public class ObjectNode extends AbstractDescriptionNode {
 		Iterator i = thisObject.getInstances().iterator() ;
 		// add instances to the tree.
 		DefaultMutableTreeNode instancesLevel = new DefaultMutableTreeNode( "Instances" ) ;
-		DefaultMutableTreeNode eventsLevel = new DefaultMutableTreeNode("Signals") ;
+		DefaultMutableTreeNode eventsLevel = new DefaultMutableTreeNode("Accepted Signals") ;
+		DefaultMutableTreeNode selfQueueLevel = new DefaultMutableTreeNode("Queue to self") ;
+		DefaultMutableTreeNode normalQueueLevel = new DefaultMutableTreeNode("Regular Queue") ;
+		DefaultMutableTreeNode delayedSelfQueueLevel = new DefaultMutableTreeNode("Delayed to self") ;
+		DefaultMutableTreeNode delayedQueueLevel = new DefaultMutableTreeNode("Delayed Queue") ;
 		
 		add(instancesLevel ) ;
 		while( i.hasNext() ) {
@@ -50,9 +55,50 @@ public class ObjectNode extends AbstractDescriptionNode {
 				add(eventsLevel ) ;
 				while ( j.hasNext() ) {
 					Event event = (Event)j.next() ;
-					eventsLevel.add( new SignalNode(event,frame) ) ;
+					eventsLevel.add( new ContextEventNode(event,frame) ) ;
 				}
 			}
+		}
+		Iterator selfQueue = thisObject.getSelfSignalQueue().iterator();
+		if(selfQueue.hasNext()) {
+			add(selfQueueLevel);
+		 while(selfQueue.hasNext()) {
+		 	Signal signal = (Signal)selfQueue.next();
+			ContextSignalNode ConSigNode= new ContextSignalNode(signal,frame);
+			selfQueueLevel.add(ConSigNode);
+		 }
+		}
+		Iterator queue = thisObject.getSignalQueue().iterator();
+		
+		if(queue.hasNext()) {
+		add(normalQueueLevel);	
+		 while(queue.hasNext()) {
+		 	Signal signal = (Signal)queue.next();
+			ContextSignalNode ConSigNode= new ContextSignalNode(signal,frame);
+			normalQueueLevel.add(ConSigNode);
+		}
+		}
+		
+		Iterator delayedSelf = thisObject.getDelayedSelfQueue().iterator();
+		
+		if(delayedSelf.hasNext()) {
+		add(delayedSelfQueueLevel);	
+		 while(delayedSelf.hasNext()) {
+		 	Signal signal = (Signal)delayedSelf.next();
+			ContextSignalNode ConSigNode= new ContextSignalNode(signal,frame);
+			delayedSelfQueueLevel.add(ConSigNode);
+		}
+		}
+		
+		Iterator delayed = thisObject.getDelayedQueue().iterator();
+		
+		if(delayed.hasNext()) {
+		add(delayedQueueLevel);	
+		 while(delayed.hasNext()) {
+		 	Signal signal = (Signal)delayed.next();
+			ContextSignalNode ConSigNode= new ContextSignalNode(signal,frame);
+			delayedQueueLevel.add(ConSigNode);
+		}
 		}
 	}
 	
