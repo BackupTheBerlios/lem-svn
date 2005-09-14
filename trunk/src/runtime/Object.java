@@ -446,4 +446,33 @@ public class Object {
             }
             return c;
         }
+		
+		/**
+         *
+         */
+		public Collection getSelfSignalQueue() {
+			return signalSelfQueue;
+		}
+		
+		/**
+         *
+         */
+		public Collection getSignalQueue() {
+			return signalSelfQueue;
+		}
+		
+		/**
+         *
+         */
+		public Collection getDelayedSelfQueue() {
+			return delayedSignalSelfQueue;
+		}
+		
+		/**
+         *
+         */
+		public Collection getDelayedQueue() {
+			return delayedSignalQueue;
+		}
+			
 }
