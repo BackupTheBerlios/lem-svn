@@ -1013,11 +1013,13 @@ void EventGeneration() : {}
 void ParameterList() : {}
 {
 	<LPAREN>
-	Expression()
-	(
-		<COMMA>
+	[	
 		Expression()
-	)*
+		(
+			<COMMA>
+			Expression()
+		)*
+	]
 	<RPAREN>
 }
 
