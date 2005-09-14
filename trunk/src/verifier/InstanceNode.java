@@ -9,8 +9,11 @@
  */
 
 package verifier;
+import java.awt.Color;
 import java.util.Iterator;
 import javax.swing.JPopupMenu;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 import metamodel.Attribute;
 import runtime.Instance;
@@ -60,5 +63,24 @@ public class InstanceNode extends AbstractDescriptionNode {
 	public JPopupMenu getContextMenu() {
 		JPopupMenu ContextMenu = new JPopupMenu();
 		return ContextMenu;
-	}						
+	}	
+	
+	public StyledDocument getDynamicDescription() {
+		StyledDocument doc = new StyledDocument() ;
+		Iterator i = thisInstance.getInstanceClass().getAllAttributes().iterator() ;
+		while (i.hasNext()) {
+			SimpleAttributeSet s = new SimpleAttributeSet();
+			StyleConstants.setFontFamily(s, "Times New Roman");
+			StyleConstants.setFontSize(s, 14);
+			StyleConstants.setBold(s, true);
+			StyleConstants.setForeground(s, Color.black);
+			StyledElement element = new StyledElement( "\t\tList of Attributes\n" , s) ;
+			Attribute attribute = (Attribute)i.next() ; 
+			AttributeNode attributeNode = new AttributeNode( attribute, null ) ;
+			StyledDocument styledDoc = attributeNode.getDynamicDescription() ; 
+			doc.append(styledDoc) ; 
+		}
+		return doc;
+	}
+	
 }
