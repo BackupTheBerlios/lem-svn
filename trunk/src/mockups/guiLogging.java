@@ -106,13 +106,7 @@ public class guiLogging extends javax.swing.JFrame {
         
         
 	/* Not executing in the context of an object! */
-        runtime.Interpreter i = new Interpreter(null);
-        try{
-            i.interpret(p, d);
-        } catch(LemRuntimeException e) {
-            System.out.println(e);
-        }
-    }
+   }
      /**
      * @param args the command line arguments
      */

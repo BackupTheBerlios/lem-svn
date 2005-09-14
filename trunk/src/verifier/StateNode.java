@@ -72,10 +72,5 @@ public class StateNode extends AbstractDescriptionNode {
         ConsoleLogger c = new ConsoleLogger(d);
 	/* Not executing in the context of an object! */
         runtime.Interpreter i = new Interpreter(null);
-        try{
-            i.interpret(p, d);
-        } catch(LemRuntimeException e) {
-            System.out.println(e);
-        }
     }
 }
