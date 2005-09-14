@@ -329,11 +329,18 @@ public class Interpreter {
 	    else
 		    System.out.print(currentObject.getObjectId());
 	    System.out.println(" generating signal to " + target.getObjectId());
-            if ( target == currentObject ) {
-                target.addSignalSelf( s );
-            } else {
-                target.addSignal( s );
-            }
+	    synchronized (target) {
+		    if (target.isActive()) {
+		            if ( target == currentObject ) {
+		                target.addSignalSelf( s );
+		            } else {
+		                target.addSignal( s );
+		            }
+		    } else {
+			    /* Object has become inactive */
+			    context.debugObject.delEntity();
+		    }
+	    }
         }
     }
     
