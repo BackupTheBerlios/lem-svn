@@ -20,6 +20,8 @@ import javax.swing.table.TableColumnModel;
  * @author  Simon Franklin
  *
  * @see JContextLoggerPanel
+ * @see ColumnSorter
+ * @see Filter
  * @see TableModel
  */
 public class ColumnHeaderListener extends MouseAdapter {
