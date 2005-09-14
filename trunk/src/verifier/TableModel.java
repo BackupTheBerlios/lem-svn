@@ -53,7 +53,7 @@ public class TableModel extends AbstractTableModel {
     ImageIcon downIcon = new ImageIcon();
    
     /** the name of the columns */
-    private String[] columnNames = {"Counter","Type", "Id1", "Object1", "Id2", "Object2", "State1","State2", "Event", "Parameters", "AttName", "AttValue", "RelName", "RelId"};
+    private String[] columnNames = {"Counter","Type", "Id1", "Object1", "Id2", "Object2", "State1","State2", "Event","Parameters", "AttName", "AttValue", "RelName", "RelId"};
     
     /** the rows of the table - initally null (Contains all the data of the table) */
     private Vector rowData = new Vector();
@@ -294,8 +294,16 @@ public class TableModel extends AbstractTableModel {
      *  Not implemented as the data in the table is not editable.
      */
     public void setValueAt(Object value, int row, int col) {}
+        
+    public void removeFilter(){
+        filter.removeFilter();
+    }
     
-    /**
+    public void applyFilter(String text, int colIndex, int type ) {
+        filter.applyFilter(text, colIndex, type);
+    }
+    
+     /**
      * Sorts the data in the table according to the column selected and the value of ascend.
      * Called when a new row is added to the table and the table needs to be resorted
      * to include the new row.
@@ -305,14 +313,6 @@ public class TableModel extends AbstractTableModel {
         Collections.sort(data, new ColumnSorter(colSort, ascend));
         fireTableStructureChanged();
         //table.updateUI();
-    }
-    
-    public void removeFilter(){
-        filter.removeFilter();
-    }
-    
-    public void applyFilter(String text, int colIndex, int type ) {
-        filter.applyFilter(text, colIndex, type);
     }
     
     /**
@@ -333,7 +333,7 @@ public class TableModel extends AbstractTableModel {
             ascend=true;
         }
         Vector data = getDataVector();
-        Collections.sort(data, new ColumnSorter(colIndex, ascend));
+        Collections.sort(data, new ColumnSorter(colSort, ascend));
         if (ascend) {
             changeIcon(colSort, downIcon);
         } else {
