@@ -9,8 +9,9 @@ package verifier;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.net.URL;
+import javax.swing.JTextPane;
 import metamodel.Scenario;
-import java.lang.Thread ;
+
 /**
  *
  * @author  David Gavin
@@ -44,7 +45,7 @@ public class LoggerFrame extends javax.swing.JFrame {
 		return scenarioExec.getContextTree();
 	}
 	
-	public DescriptionPanel getDescriptionPane() {
+	public JTextPane getDescriptionPane() {
 		return scenarioExec.getDescriptionPane() ;
 	}
 	
@@ -55,17 +56,32 @@ public class LoggerFrame extends javax.swing.JFrame {
 	 */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
+        jToolBar1 = new javax.swing.JToolBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
             }
         });
 
+        jToolBar1.setMaximumSize(new java.awt.Dimension(20, 20));
+        jToolBar1.setPreferredSize(new java.awt.Dimension(20, 20));
+        getContentPane().add(jToolBar1, java.awt.BorderLayout.CENTER);
+
         pack();
     }
     // </editor-fold>//GEN-END:initComponents
+
+	private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+// TODO add your handling code here:
+		scenarioExec.updateUI() ; 
+	}//GEN-LAST:event_formComponentResized
 	
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
 		scenarioExec.killScenario();
@@ -73,6 +89,7 @@ public class LoggerFrame extends javax.swing.JFrame {
 	}//GEN-LAST:event_formWindowClosing
 	
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 	
 }
