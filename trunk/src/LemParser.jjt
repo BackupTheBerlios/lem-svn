@@ -1004,7 +1004,7 @@ void EventGeneration() : {}
 {
         <GENERATE>
 	Identifier()
-	ParameterList()
+	OptionalParameterList()
 	<TO>
 	ObjectReference()
 	WithDelay()
@@ -1012,15 +1012,18 @@ void EventGeneration() : {}
 
 void ParameterList() : {}
 {
-	[
-		<LPAREN>
+	<LPAREN>
+	Expression()
+	(
+		<COMMA>
 		Expression()
-		(
-			<COMMA>
-			Expression()
-		)*
-		<RPAREN>
-	]
+	)*
+	<RPAREN>
+}
+
+void OptionalParameterList() : {}
+{
+	[ ParameterList() ]
 }
 
 void WithDelay() : {}
@@ -1254,7 +1257,8 @@ void UnaryOperator() : {}
 void Unary() : {}
 {
 	[ UnaryOperator() ]
-	Primary()
+	Primary() 
+	[ FunctionCall() ]
 }
 
 void Primary() : {}
@@ -1273,3 +1277,7 @@ void ParenthesizedPrimary() : {}
 	<RPAREN>
 }
 
+void FunctionCall() : {}
+{
+	ParameterList()
+}

@@ -427,6 +427,12 @@ public class BuilderPass2 extends Visitor {
 		return a;
 	}
 
+	public Object visit( LEMOptionalParameterList node, Object data ) throws LemException {
+		if( node.jjtGetNumChildren() > 0 ) 
+			return node.jjtGetChild( 0 ).jjtAccept( this, null );
+		return null;
+	}
+	
 	/**
 	 * Returns a LinkedList of Expressions as parameters.
 	 */
@@ -543,7 +549,7 @@ public class BuilderPass2 extends Visitor {
 		UnrelateAction a = new UnrelateAction();
 		VariableReference active = ( VariableReference ) node.jjtGetChild( 0 ).jjtAccept( this, null );
 		VariableReference passive = ( VariableReference ) node.jjtGetChild( 1 ).jjtAccept( this, null );
-		String assocName = ( String ) node.jjtGetChild( 2 ).jjtAccept( this, null );
+		String assocName = (String) node.jjtGetChild( 2 ).jjtAccept( this, null );
 
 		Relationship r = currentDomain.getRelationship( assocName );
 		if ( !( r instanceof Association ) ) {
