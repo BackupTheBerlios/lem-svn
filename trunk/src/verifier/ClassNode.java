@@ -37,7 +37,7 @@ public class ClassNode extends AbstractDescriptionNode {
 		attributeListing = new StyledDocument() ;		
 		Iterator i = c.getAllAttributes().iterator();		
 		while( i.hasNext() ) {
-			AttributeNode attribute =  new AttributeNode( (metamodel.Attribute) i.next() , null ) ;
+			AttributeNode attribute =  new AttributeNode( (metamodel.Attribute) i.next(), null , null ) ;
 			add( attribute);
 			attributeListing.append(attribute.getStyledDocument() ) ;
 		}

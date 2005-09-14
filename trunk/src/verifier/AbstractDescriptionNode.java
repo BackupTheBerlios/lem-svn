@@ -79,7 +79,7 @@ public abstract class AbstractDescriptionNode extends DefaultMutableTreeNode{
         StyleConstants.setForeground(s1, Color.black);
         String Description;
         if(getDescription()==""||getDescription()==null){
-            Description="<No Description>";
+            Description="" ;//"<No Description>";
         } else {
             Description=getDescription();
         }

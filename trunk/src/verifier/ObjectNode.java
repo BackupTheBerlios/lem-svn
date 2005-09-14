@@ -62,43 +62,43 @@ public class ObjectNode extends AbstractDescriptionNode {
 		Iterator selfQueue = thisObject.getSelfSignalQueue().iterator();
 		if(selfQueue.hasNext()) {
 			add(selfQueueLevel);
-		 while(selfQueue.hasNext()) {
-		 	Signal signal = (Signal)selfQueue.next();
-			ContextSignalNode ConSigNode= new ContextSignalNode(signal,frame);
-			selfQueueLevel.add(ConSigNode);
-		 }
+			while(selfQueue.hasNext()) {
+				Signal signal = (Signal)selfQueue.next();
+				ContextSignalNode ConSigNode= new ContextSignalNode(signal,frame);
+				selfQueueLevel.add(ConSigNode);
+			}
 		}
 		Iterator queue = thisObject.getSignalQueue().iterator();
 		
 		if(queue.hasNext()) {
-		add(normalQueueLevel);	
-		 while(queue.hasNext()) {
-		 	Signal signal = (Signal)queue.next();
-			ContextSignalNode ConSigNode= new ContextSignalNode(signal,frame);
-			normalQueueLevel.add(ConSigNode);
-		}
+			add(normalQueueLevel);
+			while(queue.hasNext()) {
+				Signal signal = (Signal)queue.next();
+				ContextSignalNode ConSigNode= new ContextSignalNode(signal,frame);
+				normalQueueLevel.add(ConSigNode);
+			}
 		}
 		
 		Iterator delayedSelf = thisObject.getDelayedSelfQueue().iterator();
 		
 		if(delayedSelf.hasNext()) {
-		add(delayedSelfQueueLevel);	
-		 while(delayedSelf.hasNext()) {
-		 	Signal signal = (Signal)delayedSelf.next();
-			ContextSignalNode ConSigNode= new ContextSignalNode(signal,frame);
-			delayedSelfQueueLevel.add(ConSigNode);
-		}
+			add(delayedSelfQueueLevel);
+			while(delayedSelf.hasNext()) {
+				Signal signal = (Signal)delayedSelf.next();
+				ContextSignalNode ConSigNode= new ContextSignalNode(signal,frame);
+				delayedSelfQueueLevel.add(ConSigNode);
+			}
 		}
 		
 		Iterator delayed = thisObject.getDelayedQueue().iterator();
 		
 		if(delayed.hasNext()) {
-		add(delayedQueueLevel);	
-		 while(delayed.hasNext()) {
-		 	Signal signal = (Signal)delayed.next();
-			ContextSignalNode ConSigNode= new ContextSignalNode(signal,frame);
-			delayedQueueLevel.add(ConSigNode);
-		}
+			add(delayedQueueLevel);
+			while(delayed.hasNext()) {
+				Signal signal = (Signal)delayed.next();
+				ContextSignalNode ConSigNode= new ContextSignalNode(signal,frame);
+				delayedQueueLevel.add(ConSigNode);
+			}
 		}
 	}
 	
@@ -114,7 +114,7 @@ public class ObjectNode extends AbstractDescriptionNode {
 	 * @return the Object description.
 	 */
 	public String getDescription(){
-		return "Description" ; //trim(thisObject.getDescription());
+		return "" ; //trim(thisObject.getDescription());
 	}
 	/**
 	 * Returns the ContextMenu based on the Scenario.
@@ -137,18 +137,25 @@ public class ObjectNode extends AbstractDescriptionNode {
 	public StyledDocument getDynamicDescription() {
 		StyledDocument doc = new StyledDocument() ;
 		Iterator i = thisObject.getInstances().iterator() ;
-		while (i.hasNext()) {
+		if ( i.hasNext() ) {
 			SimpleAttributeSet s = new SimpleAttributeSet();
 			StyleConstants.setFontFamily(s, "Times New Roman");
 			StyleConstants.setFontSize(s, 14);
 			StyleConstants.setBold(s, true);
 			StyleConstants.setForeground(s, Color.black);
-			StyledElement element = new StyledElement( "\tList of Instances:"+"\n" , s) ;
-			doc.addStyle( element ) ; 
-			Instance instance = (Instance)i.next() ; 
-			InstanceNode instanceNode = new InstanceNode( instance, null ) ;
-			StyledDocument styledDoc = instanceNode.getDynamicDescription() ; 
-			doc.append(styledDoc) ; 
+			StyledElement element = new StyledElement( "List of Instances:"+"\n" , s) ;
+			doc.addStyle( element ) ;
+			while (i.hasNext()) {
+				doc.addStyle( StyledElement.getTab() ) ; 
+				Instance instance = (Instance)i.next() ;
+				InstanceNode instanceNode = new InstanceNode( instance, null ) ;
+				StyledDocument styledDoc1 = instanceNode.getStyledDocument();
+				StyledDocument styledDoc2 = instanceNode.getDynamicDescription();
+				
+				doc.append(styledDoc1) ;
+				doc.addStyle( StyledElement.getTab() ) ; 
+				doc.append(styledDoc2) ;
+			}
 		}
 		return doc;
 	}

@@ -24,22 +24,23 @@ import runtime.Instance;
  */
 public class InstanceNode extends AbstractDescriptionNode {
 	
-	private LoggerFrame frame ; 
-	private Instance thisInstance ;	
+	private LoggerFrame frame ;
+	private Instance thisInstance ;
 	
 	/** Creates a new instance of InstanceNode */
 	public InstanceNode(Instance instance , LoggerFrame frame) {
-		this.frame = frame ; 
-		this.thisInstance = instance ; 
+		this.frame = frame ;
+		this.thisInstance = instance ;
+		
 		// add attributes to the instances subtree ;
 		DefaultMutableTreeNode attributesLevel = new DefaultMutableTreeNode( "Attributes" ) ;
-		Iterator i = thisInstance.getInstanceClass().getAllAttributes().iterator() ; 
+		Iterator i = thisInstance.getInstanceClass().getAllAttributes().iterator() ;
 		if ( i.hasNext() ) {
-			add ( attributesLevel ) ; 
+			add( attributesLevel ) ;
 			while ( i.hasNext() ) {
-				attributesLevel.add( new AttributeNode( (Attribute)i.next() , frame )) ; 
-			}			
-		}		
+				attributesLevel.add( new AttributeNode( (Attribute)i.next() , thisInstance, frame )) ;
+			}
+		}
 	}
 	
 	/**
@@ -63,22 +64,33 @@ public class InstanceNode extends AbstractDescriptionNode {
 	public JPopupMenu getContextMenu() {
 		JPopupMenu ContextMenu = new JPopupMenu();
 		return ContextMenu;
-	}	
+	}
 	
 	public StyledDocument getDynamicDescription() {
 		StyledDocument doc = new StyledDocument() ;
 		Iterator i = thisInstance.getInstanceClass().getAllAttributes().iterator() ;
-		while (i.hasNext()) {
-			SimpleAttributeSet s = new SimpleAttributeSet();
-			StyleConstants.setFontFamily(s, "Times New Roman");
-			StyleConstants.setFontSize(s, 14);
-			StyleConstants.setBold(s, true);
-			StyleConstants.setForeground(s, Color.black);			
-			StyledElement element = new StyledElement( "\tList of Attributes\n" , s) ;
-			Attribute attribute = (Attribute)i.next() ; 
-			AttributeNode attributeNode = new AttributeNode( attribute, null ) ;
-			StyledDocument styledDoc = attributeNode.getDynamicDescription() ; 
-			doc.append(styledDoc) ; 
+		if ( i.hasNext() ) {
+			SimpleAttributeSet s2 = new SimpleAttributeSet();
+			StyleConstants.setFontFamily(s2, "Times New Roman");
+			StyleConstants.setFontSize(s2, 14);
+			StyleConstants.setBold(s2, true);
+			StyleConstants.setForeground(s2, Color.black);
+			StyledElement element2 = new StyledElement( "List of Attributes\n" , s2) ;
+			doc.addStyle( element2 ) ;
+			
+			while (i.hasNext()) {
+				
+				Attribute attribute = (Attribute)i.next() ;
+				AttributeNode attributeNode = new AttributeNode( attribute, thisInstance , null ) ;
+				StyledDocument styledDoc1 = attributeNode.getStyledDocument() ;
+				StyledDocument styledDoc2 = attributeNode.getDynamicDescription() ;
+				doc.addStyle( StyledElement.getTab() ) ; 
+				doc.addStyle( StyledElement.getTab() ) ; 
+				doc.append(styledDoc1) ;
+				doc.addStyle( StyledElement.getTab() ) ; 
+				doc.addStyle( StyledElement.getTab() ) ; 
+				doc.append(styledDoc2) ;
+			}
 		}
 		return doc;
 	}

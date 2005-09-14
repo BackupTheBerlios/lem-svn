@@ -116,18 +116,21 @@ public class ContextTreePanel extends javax.swing.JPanel {
 	
 	public void displayDescription(Object p) {
 		StyledDocument doc = null , dynamicDoc = null ;
-		JTextPane descriptionArea = frame.getDescriptionPane() ; 
+		JTextPane descriptionArea = frame.getDescriptionPane() ;
 		try{
 			
 			if (p instanceof AbstractDescriptionNode){
 				AbstractDescriptionNode ADN = (AbstractDescriptionNode)p;
 				doc = ADN.getStyledDocument();
-				dynamicDoc = ADN.getDynamicDescription() ; 
-				doc.append(dynamicDoc) ; 
+				dynamicDoc = ADN.getDynamicDescription() ;
+				doc.append(dynamicDoc) ;
 				try {
 					descriptionArea.getDocument().remove( 0 , descriptionArea.getDocument().getLength() ) ;
 					for ( int i = 0 ; i < doc.getLength() ; i++ ) {
-						descriptionArea.getDocument().insertString(descriptionArea.getDocument().getLength() ,doc.getStyledElement(i).getContent() + "\n", doc.getStyledElement(i).getAttributeSet()) ;
+						if ( doc.getStyledElement(i).getContent().equals("\t") )
+							descriptionArea.getDocument().insertString(descriptionArea.getDocument().getLength() ,"\t", doc.getStyledElement(i).getAttributeSet()) ;
+						else
+							descriptionArea.getDocument().insertString(descriptionArea.getDocument().getLength() ,doc.getStyledElement(i).getContent() + "\n", doc.getStyledElement(i).getAttributeSet()) ;
 					}
 				}
 				
