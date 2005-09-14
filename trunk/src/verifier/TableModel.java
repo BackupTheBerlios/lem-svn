@@ -20,10 +20,13 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
+import runtime.LemAttributeChangeEvent;
+import runtime.LemAttributeReadEvent;
 import runtime.LemObjectCreationEvent;
 import runtime.LemObjectDeletionEvent;
 import runtime.LemRelationshipCreationEvent;
 import runtime.LemRelationshipDeletionEvent;
+import runtime.LemStateTransitionEvent;
 
 
 /**
@@ -57,7 +60,7 @@ public class TableModel extends AbstractTableModel {
     private Vector filteredData = new Vector();
     
     //Set up the filter for the model
-   public Filter filter = new Filter(this);
+    public Filter filter = new Filter(this);
     
     
     //begin iconHeaderRenderer
@@ -115,7 +118,7 @@ public class TableModel extends AbstractTableModel {
             instances = instances + i.next().toString() + " ";
         }
         tmp.add(instances);
-       
+        
         for(int i=0;i<7;i++){
             tmp.add(null);
         }
@@ -124,7 +127,7 @@ public class TableModel extends AbstractTableModel {
     }
     
     public void objectDeleted(LemObjectDeletionEvent event, int counter){
-       Vector tmp = new Vector();
+        Vector tmp = new Vector();
         String instances="";
         
         tmp.add(new Integer(counter)) ;
@@ -134,16 +137,16 @@ public class TableModel extends AbstractTableModel {
             instances = instances + i.next().toString() + " ";
         }
         tmp.add(instances);
-       
+        
         for(int i=0;i<7;i++){
             tmp.add(null);
         }
         rowData.add(tmp);
-        refreshTable(); 
+        refreshTable();
     }
     
     public void relationshipCreation(LemRelationshipCreationEvent event, int counter){
-        Vector tmp = new Vector();        
+        Vector tmp = new Vector();
         tmp.add(new Integer(counter)) ;
         tmp.add("RC");
         tmp.add(event.getActiveObjectId());
@@ -154,13 +157,13 @@ public class TableModel extends AbstractTableModel {
         }
         tmp.add(event.getAssociationLabel());
         tmp.add(event.getLinkObjectId());
-    
+        
         rowData.add(tmp);
-        refreshTable(); 
+        refreshTable();
     }
     
     public void relationshipDeletion(LemRelationshipDeletionEvent event, int counter){
-        Vector tmp = new Vector();        
+        Vector tmp = new Vector();
         tmp.add(new Integer(counter)) ;
         tmp.add("RD");
         tmp.add(event.getActiveObjectId());
@@ -171,12 +174,56 @@ public class TableModel extends AbstractTableModel {
         }
         tmp.add(event.getAssociationLabel());
         tmp.add(event.getLinkObjectId());
-    
+        
         rowData.add(tmp);
-        refreshTable(); 
+        refreshTable();
     }
     
-    public void refreshTable(){
+    
+    public void attributeChange(LemAttributeChangeEvent event, int counter){
+        Vector tmp = new Vector();
+        tmp.add(new Integer(counter)) ;
+        tmp.add("WA");
+        tmp.add(event.getObjectId());
+        for (int i=0; i<6; i++ ){
+            tmp.add(null);
+        }
+        tmp.add(event.getAttributeName());
+        String values = event.getOldValue() +"->" + event.getNewValue();
+        tmp.add(values);
+        rowData.add(tmp);
+        refreshTable();
+    }
+      
+    public void attributeRead(LemAttributeReadEvent event, int counter){
+        Vector tmp = new Vector();
+        tmp.add(new Integer(counter)) ;
+        tmp.add("RA");
+        tmp.add(event.getObjectId());
+        for (int i=0; i<6; i++ ){
+            tmp.add(null);
+        }
+        tmp.add(event.getAttributeName());
+        tmp.add(event.getValue());
+        rowData.add(tmp);
+        refreshTable();
+    }
+    
+    public void transitionEvent(LemStateTransitionEvent event, int counter){ 
+        Vector tmp = new Vector();
+        tmp.add(new Integer(counter)) ;
+        tmp.add("TE");
+        tmp.add(event.getObjectId());
+        for (int i=0; i<3; i++ ){
+            tmp.add(null);
+        }
+        tmp.add(event.getFromState());
+        tmp.add(event.getToState());
+        rowData.add(tmp);
+        refreshTable();
+    }
+    
+     public void refreshTable(){
         filter.applyFilter();
         sortAllRowsBy();
     }
@@ -212,9 +259,9 @@ public class TableModel extends AbstractTableModel {
      */
     public Object getValueAt(int row, int col) {
         if (col < columnNames.length){
-        Vector tmp = (Vector)filteredData.get(row);
-        Object data = tmp.get(col);
-        return data;
+            Vector tmp = (Vector)filteredData.get(row);
+            Object data = tmp.get(col);
+            return data;
         }
         return null;
     }
