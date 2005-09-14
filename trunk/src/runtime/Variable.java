@@ -73,12 +73,11 @@ public abstract class Variable {
 	 *@return the CoreDataType associated with this variable
 	 */
 	public CoreDataType getCoreDataType() {
-		DataType type = getType();
-		if( type instanceof DomainSpecificDataType ) {
-			return ((DomainSpecificDataType)type).getCoreDataType();
+		DataType t = getType();
+		if( t instanceof DomainSpecificDataType ) {
+			return ((DomainSpecificDataType)t).getCoreDataType();
 		}
-		
-		return (CoreDataType)type;
+		return (CoreDataType)t;
 	}
 	
 	/*Mathematical and Logical operations defined on variables */

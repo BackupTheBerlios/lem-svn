@@ -66,7 +66,6 @@ public class guiLogging extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         newClass.setName("ARTC");
-        Vector c = new Vector();
         c.add(newClass);
         a.setClasses(c);
         aB.addAction(a);

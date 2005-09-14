@@ -144,9 +144,9 @@ public class DomainSpecificDataType extends DomainElement implements DataType, D
         // make sure that the supplied identifier is not already in the enumeration
         
         for ( Iterator it = enumeration.iterator(); it.hasNext(); ) {
-            String id = (String) it.next();
-            if ( id.equals( anIdentifier )) 
-                throw new LemException( id + " already exists in enumeration");
+            String ident = (String) it.next();
+            if ( ident.equals( anIdentifier )) 
+                throw new LemException( ident + " already exists in enumeration");
         }
         
         // all is ok so add the identifier
@@ -169,8 +169,8 @@ public class DomainSpecificDataType extends DomainElement implements DataType, D
             throw new LemException( "DomainSpecificDataType " + name + " is not an enumeration");
         
         for ( int i = 0; i < enumeration.size(); i++ ) {
-            String id = (String) enumeration.get( i );
-            if ( id.equals( theIdentifier ))
+            String ident = (String) enumeration.get( i );
+            if ( ident.equals( theIdentifier ))
                 return i;
         }
         

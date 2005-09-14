@@ -462,13 +462,13 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
      */
     public Identifier createNewIdentifier() {
         
-        Identifier id = new Identifier();
+        Identifier ident = new Identifier();
         
-        identifiers.add( id );
-        id.setNumber( identifiers.size() );
-        id.setDomainClass( this );
+        identifiers.add( ident );
+        ident.setNumber( identifiers.size() );
+        ident.setDomainClass( this );
         
-        return id;
+        return ident;
     }
     
     /**
@@ -497,13 +497,13 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
         if ( j < 0 )
             return null;
         
-        Identifier id = null;
+        Identifier ident = null;
         for ( int i = 0; i < n; i++ ) {
             if ( i == j )
                 continue;
-            id = (Identifier) identifiers.get( i );
-            if ( anIdentifier.equals( id )) 
-                return id;
+            ident = (Identifier) identifiers.get( i );
+            if ( anIdentifier.equals( ident )) 
+                return ident;
         }
         
         // no duplicates found
