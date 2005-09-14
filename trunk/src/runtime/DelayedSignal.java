@@ -44,7 +44,6 @@ public class DelayedSignal extends Signal {
 	 * @param e The event to which this signal is associated.
 	 * @param o The object which is the target of this signal.
 	 * @param t The time when this object is delivered.
-	 * @todo time should be an absolute time.
 	 * @throws LemRuntimeException if ...
 	 */
 	public DelayedSignal(Event e, runtime.Object o, BigDecimal t) throws LemRuntimeException {

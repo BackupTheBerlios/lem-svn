@@ -24,7 +24,7 @@ public class TransactionContext extends LocalContext {
     }
 
     public void finish() throws LemRuntimeException {
-	if (parentContext != null)
+	if (parentContext != null && objectList.size() > 0)
 		parentContext.addObjects(objectList);
     }
 

@@ -222,8 +222,6 @@ public class Object {
 				} catch (InterruptedException e) {
 					/*
 					 * InterruptedException is OK.
-					 * @todo: must somehow stop the thread
-					 * when the object is deleted.
 					 */
 				}
 			}

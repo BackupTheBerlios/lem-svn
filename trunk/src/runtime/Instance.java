@@ -97,23 +97,6 @@ public class Instance {
 		initialiseAssociationInstances();
 	}
 
-	/**
-	 * 
-	 * Creates a new instance of Instance given the template Class and an initial state
-	 * @param theClass the class which is instantiated by this instance
-	 * @param state the state in which this instance should begin
-	 * @throws runtime.LemRuntimeException in case any class attributes could not be initialised to their default values
-	 */
-	/* @todo: this shouldn't be used. delete.
-	public Instance(metamodel.Class theClass, State state) throws LemRuntimeException {
-	    instanceOfClass = theClass;
-	    currentState = state;
-	    
-	    initialiseAttributeInstances();
-	    initialiseAssociationInstances();
-	}
-	*/
-
 	private void initialiseAttributeInstances() throws LemRuntimeException {
 		Iterator i = instanceOfClass.getAttributes().values().iterator();
 		attributeInstances = new HashMap();
