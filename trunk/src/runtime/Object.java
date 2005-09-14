@@ -215,6 +215,8 @@ public class Object {
 
 						delayedSignalQueue.wait(delay);
 					} else {
+						if (!isActive())
+							return null;
 						delayedSignalQueue.wait();
 					}
 				} catch (InterruptedException e) {

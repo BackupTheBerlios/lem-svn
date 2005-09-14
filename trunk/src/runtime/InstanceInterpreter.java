@@ -145,6 +145,7 @@ public class InstanceInterpreter extends java.lang.Thread {
 			instance.instanceInObject.drainSignals(context.debugObject);
 	            }
 		    instance.drainSignals(context.debugObject);
+		    instance.instanceInObject.notifyAll();
 	    }
         } catch ( LemRuntimeException e ) {
             e.printStackTrace();
