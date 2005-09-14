@@ -5,6 +5,10 @@
  */
 
 package verifier;
+import java.awt.event.MouseEvent;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -18,26 +22,29 @@ public class ContextTreePanel extends javax.swing.JPanel {
 	private runtime.Context context ;
 	/** the description panel into which display the information
 	 *about objects, instances etc.*/
-	private DescriptionPanel descriptionPane ;
+	private JTextPane descriptionPane ;
 	/** the scenario that spawned the scenarioExecuter **/
 	
-	private LoggerFrame frame ; 
+	private JPopupMenu contextMenu = new JPopupMenu();
+	private Object currentContextObject = null;
+	
+	private LoggerFrame frame ;
 	
 	/** Creates new form ContextTreePanel */
 	/** creates a tree displaying all the major components in a context */
 	public ContextTreePanel(runtime.Context c,  LoggerFrame frame) {
 		initComponents();
 		this.context = c ;
-		this.frame = frame ; 
+		this.frame = frame ;
 		ScenarioContextNode scenarioNode = new ScenarioContextNode( context,  frame) ;
 		contextTree.setModel( new DefaultTreeModel( scenarioNode ));
 		CustomTreeRenderer render = new CustomTreeRenderer();
 		contextTree.setCellRenderer(render);
-		add(contextTree ) ; 
+		add(contextTree ) ;
 	}
 	
 	/** Set a descriptionPane for this panel to write information into */
-	public void setDescriptionPane(DescriptionPanel descriptionPane) {
+	public void setDescriptionPane(JTextPane descriptionPane) {
 		this.descriptionPane = descriptionPane;
 	}
 	
@@ -45,7 +52,7 @@ public class ContextTreePanel extends javax.swing.JPanel {
 	 *@return JTree
 	 */
 	public JTree getTree() {
-		return contextTree ; 
+		return contextTree ;
 	}
 	
 	/** This method is called from within the constructor to
@@ -64,10 +71,74 @@ public class ContextTreePanel extends javax.swing.JPanel {
         contextTree.setDragEnabled(true);
         contextTree.setEditable(true);
         contextTree.setPreferredSize(new java.awt.Dimension(150, 200));
+        contextTree.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                contextTreeMouseClicked(evt);
+            }
+        });
+
         add(contextTree, java.awt.BorderLayout.CENTER);
 
     }
     // </editor-fold>//GEN-END:initComponents
+	
+	private void contextTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contextTreeMouseClicked
+// TODO add your handling code here:
+		if (MouseEvent.BUTTON3 == evt.getButton()||MouseEvent.BUTTON2 == evt.getButton()) {
+			try{
+				Object p = contextTree.getClosestPathForLocation(evt.getX(), evt.getY()).getLastPathComponent();
+				if (p instanceof AbstractDescriptionNode){
+					AbstractDescriptionNode adn = (AbstractDescriptionNode)p;
+					currentContextObject = p;
+					contextMenu = adn.getContextMenu();
+					JMenuItem desc = new JMenuItem();
+					desc.addActionListener(new java.awt.event.ActionListener() {
+						public void actionPerformed(java.awt.event.ActionEvent evt) {
+							DescriptionMenuClicked(evt);
+						}
+					});
+					desc.setText("Description");
+					contextMenu.add(desc);
+					contextMenu.show( this, evt.getX(), evt.getY() );
+				}
+			} catch(Exception e){System.out.println(e);}
+		} else {
+			displayDescription(contextTree.getSelectionPath().getLastPathComponent());
+		}
+		
+	}//GEN-LAST:event_contextTreeMouseClicked
+	
+	private void DescriptionMenuClicked(java.awt.event.ActionEvent evt) {
+		displayDescription(currentContextObject);
+		contextMenu.setVisible(false);
+		currentContextObject=null;
+	}
+	
+	public void displayDescription(Object p) {
+		StyledDocument doc = null , dynamicDoc = null ;
+		JTextPane descriptionArea = frame.getDescriptionPane() ; 
+		try{
+			
+			if (p instanceof AbstractDescriptionNode){
+				AbstractDescriptionNode ADN = (AbstractDescriptionNode)p;
+				doc = ADN.getStyledDocument();
+				dynamicDoc = ADN.getDynamicDescription() ; 
+				doc.append(dynamicDoc) ; 
+				try {
+					descriptionArea.getDocument().remove( 0 , descriptionArea.getDocument().getLength() ) ;
+					for ( int i = 0 ; i < doc.getLength() ; i++ ) {
+						descriptionArea.getDocument().insertString(descriptionArea.getDocument().getLength() ,doc.getStyledElement(i).getContent() + "\n", doc.getStyledElement(i).getAttributeSet()) ;
+					}
+				}
+				
+				catch(Exception e) {}
+			}
+		}
+		
+		catch(NullPointerException e) {
+		}
+		
+	}
 	
 	
     // Variables declaration - do not modify//GEN-BEGIN:variables
