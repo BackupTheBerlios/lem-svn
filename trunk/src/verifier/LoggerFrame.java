@@ -27,7 +27,7 @@ public class LoggerFrame extends javax.swing.JFrame {
 		Image lem = Toolkit.getDefaultToolkit().getImage(imageURL);
 		setIconImage(lem);
 		scenarioExec = new ScenarioExecuter(inScenario, this) ;
-		this.add(scenarioExec);
+		this.getContentPane().add(scenarioExec);
 		this.setTitle(inScenario.getName());
 		eleminator.newWindow(this);
 		
