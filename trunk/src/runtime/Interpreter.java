@@ -195,7 +195,7 @@ public class Interpreter {
         Iterator i;
         
         // Create the new object
-        runtime.Object o = new runtime.Object( a.getClasses() );
+        runtime.Object o = new runtime.Object(context, a.getClasses());
         
         // Add it to the context
         c.addObject( o );

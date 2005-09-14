@@ -43,6 +43,9 @@ public class Object {
         /** this arbitrary id, will uniquely identify this object **/
         private Integer objectId;
 
+	/** The domain context in which this object resides */
+	private DomainContext context;
+
 	/** Queue of pending signals for the object */
 	private LinkedList signalQueue = new LinkedList();
 
@@ -84,12 +87,13 @@ public class Object {
 	 * @throws LemRuntimeException if the <code>classes</code> collection does
 	 * not represent a valid type for the new object
 	 */
-	public Object( Collection classes ) throws LemRuntimeException {
-		// Do these classes actually participate in the same inheritance
-		// hierarchy?
-                objectId = ArbitraryIdVariable.getInstance() ;             
+	public Object(DomainContext c, Collection classes) throws LemRuntimeException {
+		context = c;
+                objectId = ArbitraryIdVariable.getInstance() ;
                 System.out.println( objectId + " : Object Created") ;     
                 
+		// Do these classes actually participate in the same inheritance
+		// hierarchy?
 		if ( !validClasses( classes ) ) {
 			throw new LemRuntimeException( "Specified class list will not produce a valid Object" );
 		}
@@ -129,11 +133,16 @@ public class Object {
 	{
 		return runningInterpreters;
 	}
+
+	public boolean isActive()
+	{
+		return (runningInterpreters.references() > 0);
+	}
 	
 	public void addDelayedSignal(DelayedSignal s) {
 		synchronized (delayedSignalQueue) {
 			if (delayedGenerator == null)
-				delayedGenerator = new SignalGenerator(this);
+				delayedGenerator = new SignalGenerator(context, this);
 			delayedSignalQueue.add(s);
 			delayedSignalQueue.notify();
 		}

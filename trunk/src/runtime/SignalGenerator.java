@@ -33,9 +33,13 @@ import java.util.GregorianCalendar ;
 public class SignalGenerator extends java.lang.Thread {
     /** The senderObject sending the signal **/
     private runtime.Object senderObject = null ;
+
+    /** The domain context in which the SignalGenerator runs */
+    private DomainContext context;
     
     /** Creates a new instance of SignalGenerator */
-    public SignalGenerator(runtime.Object sender) {
+    public SignalGenerator(DomainContext c, runtime.Object sender) {
+	context = c;
         this.senderObject = sender;
         start() ;
     }
@@ -48,9 +52,19 @@ public class SignalGenerator extends java.lang.Thread {
 
 			runtime.Object target = s.getTarget();
 			System.out.println(target.getObjectId() + " delivered delayed signal");
-		        Integer signalId = s.getSignalId() ; 
-		        Integer targetObjectId = target.getObjectId() ; 
-			target.addSignal(s);
+			synchronized (target) {
+			        Integer signalId = s.getSignalId(); 
+			        Integer targetObjectId = target.getObjectId();
+				if (target.isActive()) {
+					target.addSignal(s);
+				} else {
+					/*
+					 * All interpreters have stopped,
+					 * signal shouldn't be deliviered.
+					 */
+					context.debugObject.delEntity();
+				}
+			}
 		}
 	}
 }

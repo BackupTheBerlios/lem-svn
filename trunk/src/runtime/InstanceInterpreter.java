@@ -131,11 +131,10 @@ public class InstanceInterpreter extends java.lang.Thread {
             while (ret) {
                     ret = advance();
 	    }
-	    instance.isActive = false;
-
             System.out.println( "InstanceInterpreter finished" );
+
 	    synchronized (instance.instanceInObject) {
-		    instance.drainSignals(context.debugObject);
+		    instance.isActive = false;
 	            if (instance.instanceInObject.getRunningInterpretersRefcount().put()) {
 	                /**
 	                 * If this is the last running interpreter, then delete
@@ -145,6 +144,7 @@ public class InstanceInterpreter extends java.lang.Thread {
 	                context.delObject( instance.instanceInObject );
 			instance.instanceInObject.drainSignals(context.debugObject);
 	            }
+		    instance.drainSignals(context.debugObject);
 	    }
         } catch ( LemRuntimeException e ) {
             e.printStackTrace();
