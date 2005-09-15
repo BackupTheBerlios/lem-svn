@@ -6,7 +6,7 @@
 
 package runtime;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.HashMap;
 
@@ -15,10 +15,6 @@ import java.util.HashMap;
  * @author u4128551
  */
 public class LocalContext extends Context {
-	/**
-	 * A collection of all variables local to the context
-	 */
-	private List variableList = new LinkedList();
 
 	/**
 	 * A map of all variables local to the context
@@ -55,10 +51,14 @@ public class LocalContext extends Context {
 	 */
 	public void addVariable( String name, Variable variable ) {
 		variableMap.put( name, variable );
-		variableList.add( variable );
 	}
-	
-	public List getVariableList() {
-		return variableList;
+
+	/**
+	 * Returns the collection of local variables known to this context.
+	 *
+	 * @return the collection
+	 */
+	public Collection getVariableList() {
+		return variableMap.values();
 	}
 }
