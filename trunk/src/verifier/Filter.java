@@ -42,32 +42,32 @@ public class Filter {
         Vector tmp = Model.getUnfilteredVector();
         //removes white space at begining and end
         String input = text.trim();
-            for (int i=0; i<data.size(); i++) {
-                tmp = (Vector) data.get(i);
-                String tmp2 = ""+ tmp.get(colIndex);
-                String txt = tmp2.trim();
-                if (type == 0) {
-                    if ((txt.equalsIgnoreCase(input))) {
-                        newData.add(tmp);
-                    }
-                }else {
-                    if (((txt.toLowerCase()).matches(".*" + input.toLowerCase() + ".*"))) {
-                        newData.add(tmp);
-                    }
+        for (int i=0; i<data.size(); i++) {
+            tmp = (Vector) data.get(i);
+            String tmp2 = ""+ tmp.get(colIndex);
+            String txt = tmp2.trim();
+            if (type == 0) {
+                if ((txt.equalsIgnoreCase(input))) {
+                    newData.add(tmp);
+                }
+            }else {
+                if (((txt.toLowerCase()).matches(".*" + input.toLowerCase() + ".*"))) {
+                    newData.add(tmp);
                 }
             }
+        }
         Model.changeDisplayRows(newData);
         
     }
     
     
-     public void applyFilter(){
-         if(text!=null){
-        newData.removeAllElements();
-        Vector tmp = new Vector();
-        tmp = Model.getUnfilteredVector();
-        //removes white space at begining and end
-        String input = text.trim();
+    public void applyFilter(){
+        if(text!=null){
+            newData.removeAllElements();
+            Vector tmp = new Vector();
+            tmp = Model.getUnfilteredVector();
+            //removes white space at begining and end
+            String input = text.trim();
             for (int i=0; i<data.size(); i++) {
                 tmp = (Vector) data.get(i);
                 String tmp2 = ""+ tmp.get(colIndex);
@@ -82,8 +82,8 @@ public class Filter {
                     }
                 }
             }
-        Model.changeDisplayRows(newData);
-         }
+            Model.changeDisplayRows(newData);
+        }
     }
     /**
      * Removes the filter from the table model
