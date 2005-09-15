@@ -29,6 +29,7 @@ import runtime.LemObjectDeletionEvent;
 import runtime.LemRelationshipCreationEvent;
 import runtime.LemRelationshipDeletionEvent;
 import runtime.LemStateTransitionEvent;
+import java.lang.Thread;
 
 
 /**
@@ -51,7 +52,7 @@ public class TableModel extends AbstractTableModel {
     JTable table = new JTable();
     ImageIcon upIcon = new ImageIcon();
     ImageIcon downIcon = new ImageIcon();
-   
+    
     /** the name of the columns */
     private String[] columnNames = {"Counter","Type", "Id1", "Object1", "Id2", "Object2", "State1","State2", "Event","Parameters", "AttName", "AttValue", "RelName", "RelId"};
     
@@ -111,9 +112,7 @@ public class TableModel extends AbstractTableModel {
      */
     public void objectCreated(LemObjectCreationEvent event, int counter){
         Vector tmp = new Vector();
-        for(int i =0; i< columnNames.length; i++){
-            tmp.add(null);
-        }
+        tmp = populate(tmp);
         String instances="";
         
         tmp.set(0, new Integer(counter)) ;
@@ -123,15 +122,13 @@ public class TableModel extends AbstractTableModel {
             instances = instances + i.next().toString() + " ";
         }
         tmp.set(3, instances);
-        rowData.add(tmp);
+        addRow(tmp);
         refreshTable();
     }
     
     public void objectDeleted(LemObjectDeletionEvent event, int counter){
-       Vector tmp = new Vector();
-        for(int i =0; i< columnNames.length; i++){
-            tmp.add(null);
-        }
+        Vector tmp = new Vector();
+        tmp = populate(tmp);
         String instances="";
         tmp.set(0, new Integer(counter)) ;
         tmp.set(1, "OD");
@@ -140,88 +137,77 @@ public class TableModel extends AbstractTableModel {
             instances = instances + i.next().toString() + " ";
         }
         tmp.set(3, instances);
-        rowData.add(tmp);
+        addRow(tmp);
         refreshTable();
     }
- 
+    
     public void relationshipCreation(LemRelationshipCreationEvent event, int counter){
         Vector tmp = new Vector();
-        for(int i =0; i< columnNames.length; i++){
-            tmp.add(null);
-        }
+        tmp = populate(tmp);
         tmp.set(0, new Integer(counter)) ;
         tmp.set(1,"RC");
         tmp.set(2, event.getActiveObjectId());
         tmp.set(12, event.getAssociationLabel());
         tmp.set(13, event.getLinkObjectId());
-        rowData.add(tmp);
+        addRow(tmp);
         refreshTable();
     }
     
     public void relationshipDeletion(LemRelationshipDeletionEvent event, int counter){
         Vector tmp = new Vector();
-        for(int i =0; i< columnNames.length; i++){
-            tmp.add(null);
-        }
+        tmp = populate(tmp);
         tmp.set(0, new Integer(counter)) ;
         tmp.set(1, "RD");
         tmp.set(2, event.getActiveObjectId());
         tmp.set(4, event.getPassiveObjectId());
         tmp.set(12, event.getAssociationLabel());
         tmp.set(13, event.getLinkObjectId());
-        rowData.add(tmp);
+        addRow(tmp);
         refreshTable();
     }
     
     public void attributeChange(LemAttributeChangeEvent event, int counter){
         Vector tmp = new Vector();
-        for(int i =0; i< columnNames.length; i++){
-            tmp.add(null);
-        }
+        tmp = populate(tmp);
         tmp.set(0, new Integer(counter));
         tmp.set(1, "WA");
         tmp.set(2,event.getObjectId());
         tmp.set(10,event.getAttributeName());
-        String values = event.getOldValue() +"->" + event.getNewValue();
-        tmp.set(11, values);
-        rowData.add(tmp);
+        //String values = event.getOldValue() +"->" + event.getNewValue();
+        //tmp.set(11, values);
+        tmp.set(11, event.getNewValue());
+        addRow(tmp);
         refreshTable();
     }
     
     public void attributeRead(LemAttributeReadEvent event, int counter){
         Vector tmp = new Vector();
-        for(int i =0; i< columnNames.length; i++){
-            tmp.add(null);
-        }
+        tmp = populate(tmp);
         tmp.set(0, new Integer(counter)) ;
         tmp.set(1, "RA");
         tmp.set(2, event.getObjectId());
         tmp.set(10,event.getAttributeName());
         tmp.set(11, event.getValue());
-        rowData.add(tmp);
+        addRow(tmp);
         refreshTable();
     }
     
-     
+    
     public void transitionEvent(LemStateTransitionEvent event, int counter){
         Vector tmp = new Vector();
-        for(int i =0; i< columnNames.length; i++){
-            tmp.add(null);
-        }
+        tmp = populate(tmp);
         tmp.set(0, new Integer(counter)) ;
         tmp.set(1, "TE");
         tmp.set(2, event.getObjectId());
         tmp.set(6, event.getFromState());
         tmp.set(7, event.getToState());
-        rowData.add(tmp);
+        addRow(tmp);
         refreshTable();
     }
     
     public void eventGenerated(LemEventGenerationEvent event, int counter){
         Vector tmp = new Vector();
-        for(int i =0; i< columnNames.length; i++){
-            tmp.add(null);
-        }
+        tmp = populate(tmp);
         tmp.set(0, new Integer(counter)) ;
         tmp.set(1, "EG");
         runtime.Object o = event.getSignalSource();
@@ -234,14 +220,24 @@ public class TableModel extends AbstractTableModel {
             names = names + parameters.get(i) + ", ";
         }
         tmp.set(9,names);
-        rowData.add(tmp);
+        addRow(tmp);
         refreshTable();
     }
     
-    public void refreshTable(){
+    private synchronized void addRow(Vector row){
+        rowData.add(row);
+    }
+    
+    private Vector populate(Vector tmp){
+        for(int i =0; i< columnNames.length; i++){
+            tmp.add(null);
+        }
+        return tmp;
+    }
+    
+    public synchronized void refreshTable(){
         filter.applyFilter();
         sortAllRowsBy();
-        //table.updateUI();
     }
     
     /**
@@ -286,7 +282,7 @@ public class TableModel extends AbstractTableModel {
      *  Not implemented as the data in the table is not editable.
      */
     public void setValueAt(Object value, int row, int col) {}
-        
+    
     public void removeFilter(){
         filter.removeFilter();
     }
@@ -295,16 +291,15 @@ public class TableModel extends AbstractTableModel {
         filter.applyFilter(text, colIndex, type);
     }
     
-     /**
+    /**
      * Sorts the data in the table according to the column selected and the value of ascend.
      * Called when a new row is added to the table and the table needs to be resorted
      * to include the new row.
      */
-    public void sortAllRowsBy() {
+    public synchronized void sortAllRowsBy() {
         Vector data = getDataVector();
         Collections.sort(data, new ColumnSorter(colSort, ascend));
         fireTableStructureChanged();
-        //table.updateUI();
     }
     
     /**
@@ -312,7 +307,7 @@ public class TableModel extends AbstractTableModel {
      * order based on the value of ascend
      * @param colIndex the column the sort is based on
      */
-    public void sortAllRowsBy(int colIndex) {
+    public synchronized void sortAllRowsBy(int colIndex) {
         changeIcon(colSort, null);
         if(colIndex == colSort) {
             if(ascend){
@@ -324,6 +319,8 @@ public class TableModel extends AbstractTableModel {
             colSort = colIndex;
             ascend=true;
         }
+        
+        // sort the data in the table
         Vector data = getDataVector();
         Collections.sort(data, new ColumnSorter(colSort, ascend));
         if (ascend) {
@@ -332,18 +329,17 @@ public class TableModel extends AbstractTableModel {
             changeIcon(colSort, upIcon);
         }
         fireTableStructureChanged();
-        //table.updateUI();
     }
     
     /**
      * @return the vector holding all the rows of the table
      */
-    public Vector getDataVector() {
+    public synchronized Vector getDataVector() {
         //return rowData;
         return filteredData;
     }
     
-    public Vector getUnfilteredVector(){
+    public synchronized Vector getUnfilteredVector(){
         return rowData;
     }
     
