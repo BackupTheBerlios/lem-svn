@@ -43,7 +43,6 @@ public class ColumnHeaderListener extends MouseAdapter {
             if (vColIndex == -1) {
                 return;
             }
-    
             // Determine if mouse was clicked between column heads
             Rectangle headerRect = table.getTableHeader().getHeaderRect(vColIndex);
             if (vColIndex == 0) {
