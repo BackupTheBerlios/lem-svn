@@ -221,6 +221,10 @@ public class Instance {
 			}
 		}
 	}
+        
+        public State getCurrentState() {
+            return currentState;
+        }
 
 	public runtime.Object getInstanceInObject() {
 		return instanceInObject;
