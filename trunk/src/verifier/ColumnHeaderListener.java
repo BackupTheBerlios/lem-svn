@@ -34,7 +34,7 @@ public class ColumnHeaderListener extends MouseAdapter {
             JTable table = ((JTableHeader)evt.getSource()).getTable();
             TableModel model = (TableModel)table.getModel();
             TableColumnModel colModel = table.getColumnModel();
-    
+            
             // The index of the column whose header was clicked
             int vColIndex = colModel.getColumnIndexAtX(evt.getX());
             int mColIndex = table.convertColumnIndexToModel(vColIndex);
@@ -62,7 +62,7 @@ public class ColumnHeaderListener extends MouseAdapter {
                 }
             }
             // Calls a sort when a column header is clicked
-            model.sortAllRowsBy(vColIndex);
+            model.sortAllRowsBy(mColIndex);
             table.getTableHeader().updateUI();
         }
     }
