@@ -61,7 +61,7 @@ public class NumericVariable extends Variable {
 			setType( NumericType.getInstance() );
 		} catch( NumberFormatException nfe ) {
 			throw new LemRuntimeException( "NumberFormatException" 
-							+ " while creating new NumericVariable" );
+					+ " while creating new NumericVariable" );
 		}
 	}
 	
@@ -106,7 +106,8 @@ public class NumericVariable extends Variable {
 	 *
 	 * @param type the type, usually (but not necessarily) a DomainSpecificDataType
 	 * @param value the value to be assumed by this variable
-	 * @throws runtime.LemRuntimeException if the value String does not represent a valid Java BigDecimal
+	 * @throws runtime.LemRuntimeException if the value String does not
+	 * represent a valid Java BigDecimal 
 	 * @see the java.math.BigDecimal API
 	 */
 	public NumericVariable( DataType type, String value ) throws LemRuntimeException {
@@ -115,10 +116,11 @@ public class NumericVariable extends Variable {
 				this.value = new BigDecimal( value );
 			else
 				this.value = new BigDecimal( 0 );
+			
 			setType( type );
 		} catch( NumberFormatException nfe ) {
 			System.err.println( "Invalid string passed to NumericVariable constructor: " 
-							+ nfe.getMessage() );
+					+ nfe.getMessage() );
 		}
 	}
 	
@@ -146,13 +148,13 @@ public class NumericVariable extends Variable {
 		if( StringType.getInstance().equals( rightType )) {
 			// Concatenate the left and the right
 			return new StringVariable( value.toString() 
-							+ right.getValue().toString() );
+					+ right.getValue().toString() );
 		} else if( NumericType.getInstance().equals( rightType )) {
 			return new NumericVariable( value.add( (BigDecimal)right.getValue() ));
 		}
 		
 		throw new LemRuntimeException( "Operation add(numeric, " 
-						+ right.getType().getName() + "' not supported" );
+				+ right.getType().getName() + "' not supported" );
 	}
 
 	/**
@@ -172,13 +174,13 @@ public class NumericVariable extends Variable {
 		if( StringType.getInstance().equals( rightType )) {
 			// Concatenate the left and the right
 			return new StringVariable( value.toString() 
-							+ right.getValue().toString() );
+					+ right.getValue().toString() );
 		} else if( NumericType.getInstance().equals( rightType )) {
 			return new NumericVariable( value.subtract( (BigDecimal)right.getValue() ));
 		}
 		
 		throw new LemRuntimeException( "Operation subtract(numeric, " 
-						+ right.getType().getName() + "' not supported" );
+				+ right.getType().getName() + "' not supported" );
 	}
 	
 	/**
@@ -197,7 +199,7 @@ public class NumericVariable extends Variable {
 		}
 		
 		throw new LemRuntimeException( "Operation multiply(numeric, " 
-						+ right.getType().getName() + "' not supported" );
+				+ right.getType().getName() + "' not supported" );
 	}
 	
 	/**
@@ -216,12 +218,12 @@ public class NumericVariable extends Variable {
 				return new NumericVariable( value.divide( (BigDecimal)right.getValue(), 10, BigDecimal.ROUND_HALF_EVEN ));
 			} catch( ArithmeticException e ) {
 				throw new LemRuntimeException( "Error in division: " 
-								+ e.getMessage() );
+						+ e.getMessage() );
 			}
 		}
 		
 		throw new LemRuntimeException( "Operation divide(numeric, " 
-						+ right.getType().getName() + "' not supported" );
+				+ right.getType().getName() + "' not supported" );
 	}
 	
 	/**
@@ -253,7 +255,7 @@ public class NumericVariable extends Variable {
 	public Variable mod(Variable b) throws LemRuntimeException {
 		if( !NumericType.getInstance().equals( b.getCoreDataType() ))
 			throw new LemRuntimeException( "Operation mod(numeric, " 
-							+ b.getType().getName() + "' not supported" );
+					+ b.getType().getName() + "' not supported" );
 		BigDecimal right = (BigDecimal)b.getValue();
 		BigDecimal rem = value.subtract( value.divide( right, BigDecimal.ROUND_DOWN ) );
 		return new NumericVariable( rem );
@@ -270,7 +272,7 @@ public class NumericVariable extends Variable {
 	private int compare( Variable v ) throws LemRuntimeException {
 		if( !NumericType.getInstance().equals( v.getCoreDataType() ))
 			throw new LemRuntimeException( "Operation compare(numeric, " 
-							+ v.getType().getName() + "' not supported" );
+					+ v.getType().getName() + "' not supported" );
 		
 		BigDecimal right = (BigDecimal)v.getValue();
 		
