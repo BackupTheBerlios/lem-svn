@@ -14,6 +14,10 @@ import runtime.LemRelationshipDeletionEvent;
 import runtime.LemEventGenerationEvent;
 import runtime.LemAttributeReadEvent;
 import runtime.LemStateTransitionEvent;
+import runtime.LemEventReceivedEvent;
+import runtime.LemEventCancellationEvent;
+import runtime.LemSelectionEvent;
+import java.math.BigDecimal;
 
 /**
  * Receives all activity by the runtime and logs desired activity to the console
@@ -173,15 +177,57 @@ public class ConsoleLogger implements runtime.LemEventListener {
                 counter++;
 	}
         
+         /**
+         * Called by the runtime when a GenerateAction has been executed successfully.
+         *
+         * @param event the LemEventGenerationEvent representing the circumstances
+         * in which the event was generated.
+         */           
         public void eventGenerated(LemEventGenerationEvent event) {
-               String message = " EG ";
-                message = "Object ID ";
-                message = message + " generated signal ";
-                message = message + " Signal name ";                
-                message = message + "Object ID";
+                String message = " EG \n";
+                // signal generation by Scenario
+                if(event.getSenderObjectId() == null)
+                    message = message + "Sender object id: Null (Scenario generated) \n";
+                else 
+                    message = message + "Sender object id: "+event.getSenderObjectId().intValue()+"\n";                
+                message = message + "Receiving object id: "+event.getReceiverObjectId().intValue()+"\n";                
+                message = message + "Event id: "+event.getEventId().intValue()+"\n";
+                message = message + "Event type: "+event.getEventType()+"\n";                
+                message = message + "Parameters: ";
+                if(event.getEventParameters().size()==0)
+                    message = message + "Null";
+		for( Iterator i = event.getEventParameters().iterator(); i.hasNext(); ) {
+			message = message + i.next().toString() + ", ";
+		}                
+                if(event.getEventDelay() != null)
+                    message = message + "\n" + "Event delay: "+event.getEventDelay();
                 logger.debug(counter + message);
                 counter++;            
         }    
+        
+         /**
+         * Called by the runtime when a event has been received by an object
+         *
+         * @param event the LemEventReceivedEvent representing the circumstances
+         * in which the signal was received.
+         */           
+        public void receiveEvent(LemEventReceivedEvent event) {
+                // testing message starts
+                String message = " RE \n";
+                message = message + "Object id: "+event.getObjectId().intValue()+ "\n";
+                message = message + "Event id: "+event.getEventId().intValue()+"\n";
+                message = message + "Event type: "+event.getEventType()+"\n";
+                message = message + "Parameters: ";
+                if(event.getEventParameters().size()==0)
+                    message = message + "Null";
+		for( Iterator i = event.getEventParameters().iterator(); i.hasNext(); ) {
+			message = message + i.next().toString() + ", ";
+		}                       
+                // testing message ends
+                
+                logger.debug(counter + message);
+                counter++;                 
+        }
         
         /**
         * Called by the runtime when an event recieved by an object has caused a
@@ -200,5 +246,45 @@ public class ConsoleLogger implements runtime.LemEventListener {
                 
                 logger.debug(counter + message);
                 counter++;            
+        }
+        
+        /**
+        * Called by the runtime when an event has been cancelled.
+        *
+        * @param event The event representing the event that is cancelled
+        */        
+        public void cancelledEvent(LemEventCancellationEvent event) {   
+                // testing message starts
+                String message = " EC \n";
+                message = message + "Object id: "+event.getObjectId().intValue()+ "\n";
+                message = message + "Event id: "+event.getEventId().intValue()+"\n";
+                message = message + "Event type: "+event.getEventType()+"\n";
+                message = message + "Parameters: ";                
+                if(event.getEventParameters().size()==0)
+                    message = message + "Null";
+		for( Iterator i = event.getEventParameters().iterator(); i.hasNext(); ) {
+			message = message + i.next().toString() + ", ";
+		}                       
+                // testing message ends
+                
+                logger.debug(counter + message);
+                counter++;                         
+        }
+        
+        public void selectedEvent(LemSelectionEvent event) {
+                // testing message starts
+                String message = " SEL \n";
+                message = message + "Condition: ";
+                message = message + event.getSelectCondition() + "\n";
+                message = message + "Selected object/s: ";                
+                if(event.getObjectList().size()==0)
+                    message = message + "Null";
+		for( Iterator i = event.getObjectList().iterator(); i.hasNext(); ) {
+			message = message + i.next().toString() + ", ";
+		}                       
+                // testing message ends
+                
+                logger.debug(counter + message);
+                counter++;                   
         }
 }
