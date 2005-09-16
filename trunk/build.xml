@@ -212,7 +212,7 @@
     <junit fork="yes" dir="${basedir}">
         <jvmarg line="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=y" />
         <formatter type="plain"/>
-        <classpath path="${build.dir}/classes"/>
+        <classpath refid="run.classpath"/>
         <test todir="${build.dir}" name="${classname}Test" />
     </junit>
   </target>
