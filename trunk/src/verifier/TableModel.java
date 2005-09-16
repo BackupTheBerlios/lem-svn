@@ -197,7 +197,7 @@ public class TableModel extends AbstractTableModel {
         Vector tmp = new Vector();
         tmp = populate(tmp);
         tmp.set(0, new Integer(counter)) ;
-        tmp.set(1, "TE");
+        tmp.set(1, "TRAN");
         tmp.set(2, event.getObjectId());
         tmp.set(6, event.getFromState());
         tmp.set(7, event.getToState());
