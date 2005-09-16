@@ -69,7 +69,7 @@ public class ObjectNode extends AbstractDescriptionNode {
 				add(eventsLevel ) ;
 				while ( j.hasNext() ) {
 					Event event = (Event)j.next() ;
-					eventsLevel.add( new ContextEventNode(event,frame) ) ;
+					eventsLevel.add( new ContextEventNode(thisObject,event,frame) ) ;
 				}
 			}
 		}

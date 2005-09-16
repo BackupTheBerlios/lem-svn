@@ -17,7 +17,6 @@ import metamodel.Scenario;
  * @author  David Gavin
  */
 public class LoggerFrame extends javax.swing.JFrame {
-	private ScenarioExecuter scenarioExec;
 	private Eleminator eleminator;
 	/** Creates new form LoggerFrame */
 	public LoggerFrame(Scenario inScenario, Eleminator inEleminator) {
@@ -26,27 +25,25 @@ public class LoggerFrame extends javax.swing.JFrame {
 		URL imageURL = getClass().getClassLoader().getResource("verifier/lem.jpg");
 		Image lem = Toolkit.getDefaultToolkit().getImage(imageURL);
 		setIconImage(lem);
-		scenarioExec = new ScenarioExecuter(inScenario, this) ;
-		this.getContentPane().add(scenarioExec);
+		scenarioExecutor.init(inScenario, this) ; 
 		this.setTitle(inScenario.getName());
-		eleminator.newWindow(this);
-		
+		eleminator.newWindow(this);		
 	}
 	
 	public void startExecutor() {
-		new Thread(scenarioExec).start() ;		
+		new Thread(scenarioExecutor).start() ;		
 	}
 	
-	public ScenarioExecuter getScenarioExec() {
-		return scenarioExec;
+	public ScenarioExecutor getScenarioExecutor() {
+		return scenarioExecutor;
 	}
 	
-	public ContextTreePanel getContextTree() {
-		return scenarioExec.getContextTree();
+	public ContextTree getContextTree() {
+		return scenarioExecutor.getContextTree();
 	}
 	
 	public JTextPane getDescriptionPane() {
-		return scenarioExec.getDescriptionPane() ;
+		return scenarioExecutor.getDescriptionPane() ;
 	}
 	
 	/** This method is called from within the constructor to
@@ -56,7 +53,9 @@ public class LoggerFrame extends javax.swing.JFrame {
 	 */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
-        jToolBar1 = new javax.swing.JToolBar();
+        scenarioExecutor = new verifier.ScenarioExecutor();
+
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -70,9 +69,9 @@ public class LoggerFrame extends javax.swing.JFrame {
             }
         });
 
-        jToolBar1.setMaximumSize(new java.awt.Dimension(20, 20));
-        jToolBar1.setPreferredSize(new java.awt.Dimension(20, 20));
-        getContentPane().add(jToolBar1, java.awt.BorderLayout.CENTER);
+        scenarioExecutor.setMinimumSize(new java.awt.Dimension(800, 600));
+        scenarioExecutor.setPreferredSize(new java.awt.Dimension(1024, 768));
+        getContentPane().add(scenarioExecutor, new java.awt.GridBagConstraints());
 
         pack();
     }
@@ -80,16 +79,16 @@ public class LoggerFrame extends javax.swing.JFrame {
 
 	private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
 // TODO add your handling code here:
-		scenarioExec.updateUI() ; 
+		scenarioExecutor.updateUI() ; 
 	}//GEN-LAST:event_formComponentResized
 	
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-		scenarioExec.killScenario();
+		scenarioExecutor.killScenario();
 		eleminator.killWindow(this);
 	}//GEN-LAST:event_formWindowClosing
 	
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToolBar jToolBar1;
+    private verifier.ScenarioExecutor scenarioExecutor;
     // End of variables declaration//GEN-END:variables
 	
 }

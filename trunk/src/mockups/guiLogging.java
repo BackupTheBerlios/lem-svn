@@ -12,9 +12,7 @@ import metamodel.CreateAction;
 import metamodel.Procedure;
 import metamodel.Class;
 import runtime.DomainContext;
-import runtime.Interpreter;
-import runtime.LemRuntimeException;
-import verifier.JContextLoggerPanel;
+import verifier.ContextLoggerPanel;
 
 /**
  *
@@ -29,10 +27,12 @@ public class guiLogging extends javax.swing.JFrame {
     CreateAction a = new CreateAction();
     ActionBlock aB = new ActionBlock();
     Class newClass = new Class();
-    JContextLoggerPanel logger = new JContextLoggerPanel(d);
+    ContextLoggerPanel logger = new ContextLoggerPanel() ; 
+	
     /** Creates new form guiLogging */
     public guiLogging() {
-        getContentPane().add(logger,java.awt.BorderLayout.CENTER);
+		logger.init(d) ; 
+		getContentPane().add(logger,java.awt.BorderLayout.CENTER);
         initComponents();
       	setBounds(0,0,640,480);
 	setTitle("MockUps");
