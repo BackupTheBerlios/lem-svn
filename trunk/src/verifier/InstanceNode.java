@@ -55,7 +55,7 @@ public class InstanceNode extends AbstractDescriptionNode {
 		if ( i.hasNext() ) {
 			add( attributesLevel ) ;
 			while ( i.hasNext() ) {
-				attributesLevel.add( new AttributeNode( (Attribute)i.next() , frame )) ; 
+				attributesLevel.add( new AttributeNode( (Attribute)i.next(), thisInstance , frame )) ; 
 			}			
 		}
                 DefaultMutableTreeNode associationsLevel = new DefaultMutableTreeNode( "Association" ) ;
@@ -65,9 +65,6 @@ public class InstanceNode extends AbstractDescriptionNode {
 			while ( j.hasNext() ) {
 				associationsLevel.add( new ContextAssociationNode( thisInstance, (Association)i.next() , frame )) ; 
 			}			
-		}
-				attributesLevel.add( new AttributeNode( (Attribute)i.next() , thisInstance, frame )) ;
-			}
 		}
                 StateMachine m = thisInstance.getInstanceClass().getStateMachine();
 		if( m != null ) {
