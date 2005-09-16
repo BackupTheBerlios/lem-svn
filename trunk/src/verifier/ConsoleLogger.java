@@ -211,7 +211,7 @@ public class ConsoleLogger implements runtime.LemEventListener {
          * @param event the LemEventReceivedEvent representing the circumstances
          * in which the signal was received.
          */           
-        public void receiveEvent(LemEventReceivedEvent event) {
+        public void receivedEvent(LemEventReceivedEvent event) {
                 // testing message starts
                 String message = " RE \n";
                 message = message + "Object id: "+event.getObjectId().intValue()+ "\n";
@@ -287,4 +287,6 @@ public class ConsoleLogger implements runtime.LemEventListener {
                 logger.debug(counter + message);
                 counter++;                   
         }
+        
+       
 }
