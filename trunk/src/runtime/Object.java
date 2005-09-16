@@ -44,7 +44,7 @@ public class Object {
         private Integer objectId;
 
 	/** The domain context in which this object resides */
-	private DomainContext context;
+	//private DomainContext context;
 
 	/** Queue of pending signals for the object */
 	private LinkedList signalQueue = new LinkedList();
@@ -146,7 +146,7 @@ public class Object {
 	public void addDelayedSignal(DelayedSignal s) {
 		synchronized (delayedSignalQueue) {
 			if (delayedGenerator == null)
-				delayedGenerator = new SignalGenerator(context, this);
+				delayedGenerator = new SignalGenerator((DomainContext)context, this);
 			delayedSignalQueue.add(s);
 			delayedSignalQueue.notify();
 		}
