@@ -253,14 +253,15 @@ public class Interpreter {
     public void executeCancelAction( CancelAction a, Context c ) throws LemRuntimeException {
         // Find the event to be fired on the given object
         Event e = currentObject.findEvent( a.getEventName(), null );
-	if (!currentObject.cancelDelayedSignalSelf(e)) {
+        Signal s = currentObject.cancelDelayedSignalSelf(e);
+	if (s == null) {
 		throw new LemRuntimeException("Could not cancel a signal");
 	}
 	context.debugObject.delEntity();
-      int id1 = currentObject.getObjectId().intValue();
-      int id2 = s.getSignalId().intValue();
-      Collection p = s.getParameters();
-      new LemEventCancellationEvent(id1, id2, a.getEventName(), p).notifyAll( c );
+        int id1 = currentObject.getObjectId().intValue();
+        int id2 = s.getSignalId().intValue();
+        Collection p = s.getParameters();
+        new LemEventCancellationEvent(id1, id2, a.getEventName(), p).notifyAll( c );
     }
     
     /**
