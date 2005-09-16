@@ -210,11 +210,10 @@ public class TableModel extends AbstractTableModel {
         tmp = populate(tmp);
         tmp.set(0, new Integer(counter)) ;
         tmp.set(1, "EG");
-        runtime.Object o = event.getSignalSource();
-        tmp.set(2, o.getObjectId());
-        metamodel.GenerateAction action = event.getGenerateAction();
-        tmp.set(8, action.getEventName());
-        LinkedList parameters = action.getParameters();
+        tmp.set(2, event.getSenderObjectId());
+        tmp.set(8, event.getEventType());
+        LinkedList parameters = new LinkedList();
+        parameters.addAll(event.getEventParameters());
         String names = "";
         for (int i=0; i < parameters.size(); i++){
             names = names + parameters.get(i) + ", ";
