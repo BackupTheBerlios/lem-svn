@@ -63,7 +63,7 @@ public class InstanceNode extends AbstractDescriptionNode {
                 if ( j.hasNext() ) {
 			add ( associationsLevel ) ; 
 			while ( j.hasNext() ) {
-				associationsLevel.add( new ContextAssociationNode( thisInstance, (Association)i.next() , frame )) ; 
+				associationsLevel.add( new ContextAssociationNode( thisInstance, (Association)j.next() , frame )) ; 
 			}			
 		}
                 StateMachine m = thisInstance.getInstanceClass().getStateMachine();
