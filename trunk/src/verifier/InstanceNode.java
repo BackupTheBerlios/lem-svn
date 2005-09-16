@@ -29,6 +29,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
+import metamodel.Association;
 import metamodel.Attribute;
 import metamodel.State;
 import metamodel.StateMachine;
@@ -54,6 +55,17 @@ public class InstanceNode extends AbstractDescriptionNode {
 		if ( i.hasNext() ) {
 			add( attributesLevel ) ;
 			while ( i.hasNext() ) {
+				attributesLevel.add( new AttributeNode( (Attribute)i.next() , frame )) ; 
+			}			
+		}
+                DefaultMutableTreeNode associationsLevel = new DefaultMutableTreeNode( "Association" ) ;
+		Iterator j = thisInstance.getInstanceClass().getAssociations().values().iterator() ; 
+                if ( j.hasNext() ) {
+			add ( associationsLevel ) ; 
+			while ( j.hasNext() ) {
+				associationsLevel.add( new ContextAssociationNode( thisInstance, (Association)i.next() , frame )) ; 
+			}			
+		}
 				attributesLevel.add( new AttributeNode( (Attribute)i.next() , thisInstance, frame )) ;
 			}
 		}
