@@ -71,7 +71,7 @@ public class Cmdline {
 	}
 
 	// wait for a quiet state before quitting
-	c.debugObject.waitQuiescentState();
+	c.getDebugObject().waitQuiescentState();
     }
     
     /*This method loads a LEM model specified by the parameter, and returns true
