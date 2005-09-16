@@ -97,6 +97,6 @@ public class LemEventReceivedEvent extends LemEvent {
     * @param listener The listener to notify
     */
     public void notify(LemEventListener listener) {
-	listener.receiveEvent(this);
+	listener.receivedEvent(this);
     }    
 }
