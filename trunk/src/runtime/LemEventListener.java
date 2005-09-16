@@ -35,7 +35,7 @@ public interface LemEventListener {
      *
      * @param ev Event object that was received.
      */
-    public void receivedEvent(LemEventReceivedEvent ev);
+    public void receiveEvent(LemEventReceivedEvent ev);
     
     /**
      * Called by the runtime when an event recieved by an object has caused a
@@ -122,5 +122,5 @@ public interface LemEventListener {
      * @param event The event representing the condition and result of the select 
      * expression
      */
-    void selectedEvent(LemSelectionEvent event);   
+    public void selectedEvent(LemSelectionEvent event);   
 }
