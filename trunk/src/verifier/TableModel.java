@@ -275,6 +275,20 @@ public class TableModel extends AbstractTableModel {
     }
     
     public void cancelledEvent(LemEventCancellationEvent event, int counter){ 
+        Vector tmp = new Vector();
+        tmp = populate(tmp);
+        tmp.set(0, new Integer(counter)) ;
+        tmp.set(1, "CE");
+        tmp.set(2, event.getObjectId());
+        tmp.set(8, event.getEventType() + ": " + event.getEventId() );
+        Collection parameters = event.getEventParameters();
+        String names = "";
+        for (Iterator i= parameters.iterator(); i.hasNext();){
+            names = names + (String)i.next() + ", ";
+        }
+        tmp.set(9,names);
+        addRow(tmp);
+        refreshTable();
         
     }
     
