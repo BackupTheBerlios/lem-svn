@@ -42,8 +42,18 @@ import java.math.BigDecimal;
  * @todo javadoc
  */
 public class Interpreter {
-    /** keeps a record of all the InstanceInterpreters running **/
-    private ArrayList instanceInterpreters = null;
+
+    /**
+     * List of active objects created by the interpreter. This is used by
+     * interpretation of a Scenario, so the interpreter can wait for
+     * all created objects to disappear.
+     * @todo: this is a bit of a hack. Need some good way to return from the
+     * scenario.
+     */
+    private LinkedList createdThreads = new LinkedList();
+    
+/** keeps a record of all the InstanceInterpreters running **/
+	private ArrayList instanceInterpreters = null;
 
     /**
      * The object in which we are executing
@@ -53,7 +63,7 @@ public class Interpreter {
     /**
      * The context in which the interpreter runs
      */
-    private DomainContext context = null;
+    private Context context = null;
     
     /**
      * A quick hack to enable breaking of loops
@@ -79,23 +89,22 @@ public class Interpreter {
      * main ActionBlock.
      *
      * @param p the procedure to interpret
-	 * @param s the signal which caused the procedure to be executed
      * @param c the Context in which the procedure should be interpreted
      * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
      */
-    public void interpret( Procedure p, Signal s, DomainContext c ) throws LemRuntimeException {
-		context = c;
+    public void interpret( Procedure p, Context c ) throws LemRuntimeException {
+        context = c;
 
-		ProcedureContext procContext = new ProcedureContext( c, s );
-		Variable selfVar = new ObjectReferenceVariable( currentObject );
-		procContext.addVariable( "self" , selfVar ) ;
+        LocalContext stateContext = new LocalContext( c );
+	Variable selfVar = VariableFactory.newVariable( ObjectReferenceType.getInstance(), currentObject );
+	stateContext.addVariable( "self" , selfVar ) ;
 
-		ActionBlock block = p.getActionBlock();
-		executeBlock( block, procContext );
-		procContext.finish();
+        ActionBlock block = p.getActionBlock();
+        executeBlock( block, stateContext );
+	stateContext.finish();
 
-        	context = null; // ensure no other entry point tries to use this
-	}
+        context = null; // ensure no other entry point tries to use this
+    }
     
     /**
 	 * Interpret the given Scenario by calling executeBlock on Scenario's
@@ -105,11 +114,29 @@ public class Interpreter {
 	 * @param c the Context in which the procedure should be interpreted
 	 * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
 	 */
-	public void interpret( Scenario s, DomainContext c ) throws LemRuntimeException {
+	public void interpret( Scenario s, Context c ) throws LemRuntimeException {
 		context = c;
 		ActionBlock block = s.getActionBlock();
 		executeBlock( block, c );
+		
+		// wait for all created threads.
+		Iterator i = createdThreads.iterator();
+		while ( i.hasNext() ) {
+			InstanceInterpreter thread = ( InstanceInterpreter ) i.next();
+			instanceInterpreters.add(thread);
+			thread.setScenario(s) ;
+			while ( true ) {
+				try {
+					thread.join();
+				} catch ( InterruptedException e ) {
+					continue;
+				}
+				break;
+			}
+		}
+		
 		context = null; // ensure no other entry point tries to use this
+		createdThreads = null;
 	}
     
     /**
@@ -151,9 +178,6 @@ public class Interpreter {
      * @throws runtime.LemRuntimeException in case any errors occur during the execution of the action
      */
     public void executeAction( Action a, Context c ) throws LemRuntimeException {
-	context.debugObject.executeAction(a);
-	context.debugObject.checkRuntimeState();
-
         if ( a instanceof CreateAction )
             executeCreateAction((CreateAction)a, c);
 	else if (a instanceof CreationTransaction)
@@ -196,8 +220,8 @@ public class Interpreter {
         Iterator i;
         
         // Create the new object
-        runtime.Object o = new runtime.Object(context, a.getClasses());
-        
+        runtime.Object o = new runtime.Object( a.getClasses() );
+        o.setContext( c );
         // Add it to the context
         c.addObject( o );
         
@@ -207,6 +231,7 @@ public class Interpreter {
             Instance instance = ( Instance ) i.next();
             if ( instance.instanceOfClass.isActive() ) {
                 InstanceInterpreter instanceThread = new InstanceInterpreter( instance, context );
+                createdThreads.add( instanceThread );
             }
         }
         
@@ -253,10 +278,14 @@ public class Interpreter {
     public void executeCancelAction( CancelAction a, Context c ) throws LemRuntimeException {
         // Find the event to be fired on the given object
         Event e = currentObject.findEvent( a.getEventName(), null );
-	if (!currentObject.cancelDelayedSignalSelf(e)) {
+        Signal s = currentObject.cancelDelayedSignalSelf(e);
+	if (s == null) {
 		throw new LemRuntimeException("Could not cancel a signal");
 	}
-	context.debugObject.delEntity();
+        int id1 = currentObject.getObjectId().intValue();
+        int id2 = s.getSignalId().intValue();
+        Collection p = s.getParameters();
+        new LemEventCancellationEvent(id1, id2, a.getEventName(), p).notifyAll( c );
     }
     
     /**
@@ -270,9 +299,8 @@ public class Interpreter {
     public void executeGenerateAction( GenerateAction a, Context c ) throws LemRuntimeException {
         LinkedList p = a.getParameters();
         LinkedList passedValues = null;
-
-	context.debugObject.addEntity();
-
+        int eventid = 0;
+        
         if ( p != null ) {
             passedValues = new LinkedList();
             
@@ -292,13 +320,22 @@ public class Interpreter {
         }
         
         runtime.Object target = ( runtime.Object ) ( ( ObjectReferenceVariable ) targetRef ).getValue();
+        
+        // if we are not in Scenario
+        int id1=0;
+        if(currentObject != null)
+            id1 = currentObject.getObjectId().intValue();
+        
+        int id2 = target.getObjectId().intValue();        
+        
         // Find the event to be fired on the given object
         Event e = target.findEvent( a.getEventName(), a.getParameters() );
+        String type = e.getName();        
+        
         if ( e == null ) {
             // TODO: Don't use single-arg constructor for LemRuntimeException
             throw new LemRuntimeException( "Could not find named event" );
         }
-        
         // Create the new signal
         Expression delayExpression = a.getDelayTime();
         if ( delayExpression != null ) {
@@ -312,12 +349,13 @@ public class Interpreter {
                 ds.setParameters( passedValues );
 
 	    System.out.println(currentObject.getObjectId() + " generating delayed signal (" + delay + ") to " + target.getObjectId());
+            eventid = ds.getSignalId().intValue();            
+            new LemEventGenerationEvent(id1, id2, eventid, type, p, delay).notifyAll( c );            
             if ( target == currentObject ) {
                 currentObject.addDelayedSignalSelf( ds );
             } else {
                 currentObject.addDelayedSignal( ds );
             }
-
         } else {
             Signal s = new Signal( e );
             Integer signalId = s.getSignalId() ;
@@ -330,19 +368,15 @@ public class Interpreter {
 	    else
 		    System.out.print(currentObject.getObjectId());
 	    System.out.println(" generating signal to " + target.getObjectId());
-	    synchronized (target) {
-		    if (target.isActive()) {
-		            if ( target == currentObject ) {
-		                target.addSignalSelf( s );
-		            } else {
-		                target.addSignal( s );
-		            }
-		    } else {
-			    /* Object has become inactive */
-			    context.debugObject.delEntity();
-		    }
-	    }
-        }
+            eventid = s.getSignalId().intValue();            
+            new LemEventGenerationEvent(id1, id2, eventid, type, p).notifyAll( c ); 
+            if ( target == currentObject ) {
+                target.addSignalSelf( s );
+            } else {
+                target.addSignal( s );
+            }
+                        
+        }   
     }
     
     /**
@@ -754,7 +788,8 @@ public class Interpreter {
         RelatedToOperation rto = se.getRelatedToOperation() ;
         Expression condition = se.getCondition();
         SetVariable set = new SetVariable() ;
-	
+	Collection list = new LinkedList();
+        
 	Context tmp = c;
         while (tmp.getParent() != null)
 		tmp = tmp.getParent();
@@ -770,7 +805,7 @@ public class Interpreter {
                     Instance instance = ( Instance ) j.next();
                         
                     if ( instance.getInstanceClass() == selectedClass ) {
-                        Variable var = new ObjectReferenceVariable( o );
+                        Variable var = VariableFactory.newVariable( ObjectReferenceType.getInstance(), o );
                         boolean goodVariable = true;
                             
                         if ( condition != null ) {
@@ -799,14 +834,17 @@ public class Interpreter {
                             }
                         }
                             
-                        if ( goodVariable )
+                        if ( goodVariable ) {
                             set.addToSet( var ) ;
+                            list.add(((runtime.Object)var.getValue()).getObjectId());
+                        }
                     }
                 }
             }
         }
         
         System.out.println( Thread.currentThread().getName() + " selected " + ((LinkedList)set.getValue()).size() + " references" );
+        new LemSelectionEvent(expressionToString(condition), list).notifyAll( c );
         return set;
     }
     
@@ -884,4 +922,101 @@ public class Interpreter {
         else 
             new LemRelationshipDeletionEvent( active_id, passive_id, a.getAssociation().getName(), aInst2.getLinkObjectInstance().getObjectId().intValue()).notifyAll( c );                    
     }
+    
+	/** pause execution of this instance if it belongs to the given scenario.
+	 *@param scenario, the scenario to be pause
+	 */
+	public void pause( Scenario scenario) {
+		for (int i = 0 ; i < instanceInterpreters.size() ; i++) {
+			if ( ((InstanceInterpreter) instanceInterpreters.get(i)).getScenario() == scenario ) {
+				( (InstanceInterpreter) instanceInterpreters.get(i)).pauseExecution();  
+			}
+		}
+	}
+	
+	/** resume execution of this instance if it belongs to the given scenario.
+	 *@param scenario, the scenario to be resumed
+	 */
+	
+	public void resume( Scenario scenario) {
+		for (int i = 0 ; i < instanceInterpreters.size() ; i++) {
+			if ( ((InstanceInterpreter) instanceInterpreters.get(i)).getScenario() == scenario ) {
+				( (InstanceInterpreter) instanceInterpreters.get(i)).resumeExecution();  
+			}
+		}
+	}
+	
+	/** stop execution of this instance if it belongs to the given scenario.
+	 *@param scenario, the scenario to be stopped
+	 */
+	
+	public void stop( Scenario scenario) {
+		for (int i = 0 ; i < instanceInterpreters.size() ; i++) {
+			if ( ((InstanceInterpreter) instanceInterpreters.get(i)).getScenario() == scenario ) {
+				( (InstanceInterpreter) instanceInterpreters.get(i)).stopExecution();  
+			}
+		}
+	}
+        
+        public String expressionToString(Expression e) {
+            String result = "";
+            if ( e instanceof Literal ) {
+                Literal l = ( Literal ) e;
+                return "literal";
+            } else if ( e instanceof BinaryOperation ) {
+                BinaryOperation o = ( BinaryOperation ) e;
+                String left = expressionToString ( o.getLeft());
+                String right = expressionToString ( o.getRight());
+            
+                switch ( o.getType() ) {
+                    case BinaryOperation.ADDITION:
+                        return left + " + " + right;
+                    case BinaryOperation.SUBTRACTION:
+                        return left + " - " + right;
+                    case BinaryOperation.MULTIPLICATION:
+                        return left + " * " + right;
+                    case BinaryOperation.DIVISION:
+                        return left + " / " + right;
+                    case BinaryOperation.EXPONENTIATION:
+                        return left + " ^ " + right;
+                    case BinaryOperation.EQUAL:
+                        return left + " = " + right;
+                    case BinaryOperation.LESS_THAN:
+                        return left + " < " + right;
+                    case BinaryOperation.LESS_THAN_OR_EQUAL:
+                        return left + " <= " + right;
+                    case BinaryOperation.GREATER_THAN:
+                        return left + " > " + right;
+                    case BinaryOperation.GREATER_THAN_OR_EQUAL:
+                        return left + " >= " + right;
+                    case BinaryOperation.MODULO:
+                        return left + " mod " + right;
+                    case BinaryOperation.NOT_EQUAL:
+                        return left + " /= " + right;
+                    case BinaryOperation.LOGICAL_AND:
+                        return left + " && " + right;
+                    case BinaryOperation.LOGICAL_OR:
+                        return left + " || " + right;
+                }
+            } else if ( e instanceof VariableReference ) {
+                // Must look up Variable
+                VariableReference v = (VariableReference) e ;
+                if(v.getObjectName() != null)
+                    result = v.getObjectName() + ".";
+                if (v.getVariableName() != null)
+                    result = result + v.getVariableName();
+                return result;
+            } else if ( e instanceof UnaryOperation ) {
+                UnaryOperation o = ( UnaryOperation ) e;
+                String operand = expressionToString( o.getOperand() );
+                
+                switch ( o.getType() ) {
+                    case UnaryOperation.NEGATION:
+                        return "-" + operand;
+                    case UnaryOperation.LOGICAL_NOT:
+                        return "!" + operand;
+                }
+            }
+            return null;
+        }
 }
