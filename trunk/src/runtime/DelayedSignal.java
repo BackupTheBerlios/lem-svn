@@ -1,5 +1,5 @@
 /*
- * DelayedSignal.java - An optional brief description of the file
+ * DelayedSignal.java
  *
  * Copyright (C) 2005 Nick Piggin
  *
