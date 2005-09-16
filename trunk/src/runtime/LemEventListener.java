@@ -35,7 +35,7 @@ public interface LemEventListener {
      *
      * @param ev Event object that was received.
      */
-    public void receiveEvent(LemEventReceivedEvent ev);
+    public void receivedEvent(LemEventReceivedEvent ev);
     
     /**
      * Called by the runtime when an event recieved by an object has caused a

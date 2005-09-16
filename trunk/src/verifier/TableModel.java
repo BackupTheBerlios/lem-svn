@@ -23,6 +23,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import runtime.LemAttributeChangeEvent;
 import runtime.LemAttributeReadEvent;
+import runtime.LemEventCancellationEvent;
 import runtime.LemEventGenerationEvent;
 import runtime.LemEventReceivedEvent;
 import runtime.LemObjectCreationEvent;
@@ -266,11 +267,15 @@ public class TableModel extends AbstractTableModel {
         Collection idList = event.getObjectList();
         String names = "";
         for (Iterator i= idList.iterator(); i.hasNext();){
-            names = names + (String)i.next() + ", ";
+            names = names + i.next().toString() + ", ";
         }
         tmp.set(9,names);
         addRow(tmp);
         refreshTable();
+    }
+    
+    public void cancelledEvent(LemEventCancellationEvent event, int counter){ 
+        
     }
     
     private synchronized void addRow(Vector row){
