@@ -26,32 +26,34 @@ import metamodel.ArbitraryIdType;
 import metamodel.DataType;
 
 public class ArbitraryIdVariable extends Variable {
-    private static int currentId = 100000;
-    private static Integer id;
-    
-    /** Creates a new instance of ArbitaryIdVariable */
-    public ArbitraryIdVariable() throws LemRuntimeException{
-        //id = new Integer(current_id);
-        //current_id++;
-        //currentId = 100000 ; 
-    }
-    
-    public static synchronized Integer getInstance() {
-        currentId++;
-        id = new Integer(currentId);        
-        return id ; 
-    }
-    
-    /** we don't want to allow set value, for obvious reasons **/
-    public void setValue(java.lang.Object o) {
-	    //id = (Integer)o;
-    }    
-    
-    public java.lang.Object getValue() {
-        return id;
-    }
-    
-    public DataType getType() {
-        return ArbitraryIdType.getInstance();
-    }
+	private static int currentId = 100000;
+	private static Integer id;
+	
+	/** Creates a new instance of ArbitaryIdVariable */
+	public ArbitraryIdVariable() throws LemRuntimeException {
+	}
+	
+	public static synchronized Integer getInstance() {
+		currentId++;
+		id = new Integer(currentId);
+
+		return id; 
+	}
+	
+	/** 
+	 * Calling this function does nothing. The value of the ArbitraryIdVariable
+	 * is immutable.
+	 *
+	 * @param ignored is ignored
+	 */
+	public void setValue(java.lang.Object ignored) {
+	}	
+	
+	public java.lang.Object getValue() {
+		return id;
+	}
+	
+	public DataType getType() {
+		return ArbitraryIdType.getInstance();
+	}
 }
