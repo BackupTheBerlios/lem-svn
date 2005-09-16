@@ -1,168 +1,58 @@
-model TestModel is
+model TheWorld is "where all things happen"
+	domain Cooking is "pleasurable and rewarding"
+			subsystem MicrowaveOven is "the quickest way to eat a pie"
+				class Oven is
+					attribute Voltage "voltage" is numeric;
+					attribute Power "power" is numeric;
+					attribute Capacity "capacity" is numeric;
+				end Oven;
+				
+			class Plate is
+				attribute Size "size" is numeric;
+				event startRotation;
+				event stopRotation;
+				behaviour is
+					state still
+						"turn plate motor off" is
+					end still;
+					state rotating 
+						"turn plate motor on" is
+					end rotating;
+					on startRotation transition from still to rotating;
+					on stopRotation transition from rotating to still;
+				end behaviour;
+			end Plate;
 
+			class Beeper is
+				attribute Type "type" is string;
+				event soundBeeper;
+				event beeperTimeExpired;
 
-	domain MicrowaveOven is
+				behaviour is
+					state silent 
+						"turn beeper off" is
+					end silent;
 
-    		subsystem MicrowaveOven is
-
-                      		class Oven  is
-	 			attribute Voltage "voltage" is numeric;
-				attribute Power "power" is numeric;
-				attribute Capacity "capacity" is numeric;
-	          		end Oven;
-                      
-                      		class Plate is
-	 			attribute Size "size" is numeric;
-
-                                  event startRotation;
-                                  event stopRotation;
-
-                                  behaviour is
-                                    state still
-                                         "turn plate motor off" is
-                                    end still;
-                                    state rotating 
-                                         "turn plate motor on" is
-                                    end rotating;
-
-                                  on startRotation transition from still to rotating;
-                                  on stopRotation transition from rotating to still;
-                                  end behaviour;
-	          		end Plate;
-
-                      		class Beeper is
-		 		attribute Type "type" is string;
-
-                                  event soundBeeper;
-                                  event beeperTimeExpired;
-
-                                  behaviour is
-				     state silent 
-                                         "turn beeper off" is
-                                    end silent;
-                                    state sounding 
-                                         "turn beeper on" is
-                                     // generate beeperTimeExpired;
-                                    end sounding;
-                                 
-
-                                  on soundBeeper transition from silent to sounding;
-                                  on beeperTimeExpired transition from sounding to silent;
-                                  end behaviour;
-	          		end Beeper;
-
-                      		association R1 is "a record of the fact that each Oven has a Beeper" 
+					state sounding 
+						"turn beeper on" is
+						// generate beeperTimeExpired;
+					end sounding;
+					
+					on soundBeeper transition from silent to sounding;
+					on beeperTimeExpired transition from sounding to silent;
+				end behaviour;
+			end Beeper;
+			
+			association R1 is "a record of the fact that each Oven has a Beeper" 
 				Oven "has" 1..1 Beeper;
 				Beeper "indicates completion of cooking by " 1..1 Oven;
 			end R1;
-
+			
 			association R2 is "a record of the fact that each Oven has a Plate" 
 				Oven "has" 1..1 Plate;
 				Plate "rotates food cooking by " 1..1 Oven;
 			end R2;
-
-		end MicrowaveOven;
-
-	end  MicrowaveOven;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	domain TestDomain1 is
-		subsystem TestGeneralisation is
-			class A is
-				attribute name "identifier" is string;
-			end;
-
-			class F specialisation of A is
-
-			end;
-
-
-
-			class G specialisation of A is
-			end;
-
-			class H specialisation of G is
-
-			end;
-
-			class I specialisation of G is
-
-			end;
-
-
-			generalisation R1 is
-				A is F or G;
-			end;
-
-			generalisation R2 is
-				G is H or I;
-			end;
-		end TestGeneralisation;
-		
-
-
-
-	            subsystem Sale is
-		   
-	            	class Book is "a representation of a book"
-				attribute bookNumber "uniquely identifies the book" is string;
-				attribute title "appears on the cover of the book" is string;
-				attribute subtitle "provides additional information for some books.
-						  We regard the subtitle as a simple extension of the 
-						  name of the book" is string := "NO SUBTITLE";
-				attribute copyright "a notice detailing the owner of the copyright for 
-						   the book" is string;
-				attribute unitPrice "the price of one copy of the book" is numeric;
-
-
-			end Book;
-
-
-		   
-	            	class Customer is "the important person to whom we sell books.
-						Customers may be individuals or organisations but
-						we do not treat them differently" 
-				attribute customerId "a unique identifier for the customer" is arbitrary_id;
-				attribute name "identifies the customer" is string;
-				attribute email "provides a convenient means of communication with the customer" is string;
-			end Customer;
-
-			association R3 is "a record of the fact that customer's buy books" 
-				Customer "buys" 0..* Book;
-				Book "is sold to" 0..* Customer;
-
-				
-				class Sale is "a record of the sale of a book to a customer"
-					attribute saleDate "records the date of the transaction" is date;
-					attribute quantity "of this title (book) sold to the customer" is numeric;
-					attribute unitPrice "of the book" is numeric;
-					attribute value "of this sale" is numeric;
-				end Sale;
-				
-			end R3;
-
-
-
-		end Sale;
-   
-	end TestDomain1;
-
-
-end TestModel;
+			
+			end MicrowaveOven;	
+	end Cooking;
+end TheWorld;
