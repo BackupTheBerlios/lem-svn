@@ -77,6 +77,10 @@ public class Object {
 	Collection instances = new LinkedList();
 	
 	private Refcount runningInterpreters = new Refcount();
+
+        /** reference to the Context this object is in */
+        private Context context;
+
 	
 	/**
 	 * Creates a new instance of Object. The object will contain instances
@@ -263,6 +267,11 @@ public class Object {
 	 */
 	public synchronized void addSignal( Signal s ) {
 		signalQueue.add( s );
+                int id1 = objectId.intValue();
+                int id2 = s.getSignalId().intValue();
+                String type = s.getEvent().getName();
+                Collection p = s.getParameters();
+                new LemEventReceivedEvent( id1, id2, type, p ).notifyAll(context);    
 		notifyAll();
 	}
 	
@@ -272,6 +281,11 @@ public class Object {
 	 */
 	public synchronized void addSignalSelf( Signal s ) {
 		signalSelfQueue.add( s );
+                int id1 = objectId.intValue();
+                int id2 = s.getSignalId().intValue();
+                String type = s.getEvent().getName();
+                Collection p = s.getParameters();
+                new LemEventReceivedEvent( id1, id2, type, p ).notifyAll(context);    
 		notifyAll();
 	}
 	
@@ -474,5 +488,9 @@ public class Object {
 		public Collection getDelayedQueue() {
 			return delayedSignalQueue;
 		}
-			
+
+        /** function to set the Context which this object is in */
+        public void setContext(Context c) {
+            this.context = c;
+        }			
 }
