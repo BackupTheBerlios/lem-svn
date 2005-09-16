@@ -8,9 +8,9 @@ package verifier;
 import java.awt.Component;
 import java.awt.Toolkit;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Vector;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -24,12 +24,14 @@ import javax.swing.table.TableCellRenderer;
 import runtime.LemAttributeChangeEvent;
 import runtime.LemAttributeReadEvent;
 import runtime.LemEventGenerationEvent;
+import runtime.LemEventReceivedEvent;
 import runtime.LemObjectCreationEvent;
 import runtime.LemObjectDeletionEvent;
 import runtime.LemRelationshipCreationEvent;
 import runtime.LemRelationshipDeletionEvent;
+import runtime.LemSelectionEvent;
 import runtime.LemStateTransitionEvent;
-import java.lang.Thread;
+
 
 
 /**
@@ -54,7 +56,21 @@ public class TableModel extends AbstractTableModel {
     ImageIcon downIcon = new ImageIcon();
     
     /** the name of the columns */
-    private String[] columnNames = {"Counter","Type", "Id1", "Object1", "Id2", "Object2", "State1","State2", "Event","Parameters", "AttName", "AttValue", "RelName", "RelId"};
+    private String[] columnNames = {"Counter",
+                                    "Type", 
+                                    "Id1", 
+                                    "Object1", 
+                                    "Id2", 
+                                    "Object2",
+                                    "State1",
+                                    "State2", 
+                                    "Event",
+                                    "Parameters", 
+                                    "AttName", 
+                                    "AttValue", 
+                                    "RelName", 
+                                    "RelId",
+                                    "Delay"};
     
     /** the rows of the table - initally null (Contains all the data of the table) */
     private Vector rowData = new Vector();
@@ -170,7 +186,7 @@ public class TableModel extends AbstractTableModel {
         Vector tmp = new Vector();
         tmp = populate(tmp);
         tmp.set(0, new Integer(counter));
-        tmp.set(1, "WA");
+        tmp.set(1, "AW");
         tmp.set(2,event.getObjectId());
         tmp.set(10,event.getAttributeName());
         //String values = event.getOldValue() +"->" + event.getNewValue();
@@ -184,7 +200,7 @@ public class TableModel extends AbstractTableModel {
         Vector tmp = new Vector();
         tmp = populate(tmp);
         tmp.set(0, new Integer(counter)) ;
-        tmp.set(1, "RA");
+        tmp.set(1, "AR");
         tmp.set(2, event.getObjectId());
         tmp.set(10,event.getAttributeName());
         tmp.set(11, event.getValue());
@@ -211,12 +227,46 @@ public class TableModel extends AbstractTableModel {
         tmp.set(0, new Integer(counter)) ;
         tmp.set(1, "EG");
         tmp.set(2, event.getSenderObjectId());
-        tmp.set(8, event.getEventType());
-        LinkedList parameters = new LinkedList();
-        parameters.addAll(event.getEventParameters());
+        tmp.set(4, event.getReceiverObjectId());
+        tmp.set(8, event.getEventType() + ": " + event.getEventId() );
+        Collection parameters = event.getEventParameters();
         String names = "";
-        for (int i=0; i < parameters.size(); i++){
-            names = names + parameters.get(i) + ", ";
+        for (Iterator i = parameters.iterator(); i.hasNext();){
+            names = names + (String)i.next() + ", ";
+        }
+        tmp.set(9,names);
+        tmp.set(13, event.getEventDelay());
+        addRow(tmp);
+        refreshTable();
+    }
+    
+    public void receivedEvent(LemEventReceivedEvent event, int counter){
+        Vector tmp = new Vector();
+        tmp = populate(tmp);
+        tmp.set(0, new Integer(counter)) ;
+        tmp.set(1, "RE");
+        tmp.set(2, event.getObjectId());
+        tmp.set(8, event.getEventType() + ": " + event.getEventId() );
+        Collection parameters = event.getEventParameters();
+        String names = "";
+        for (Iterator i= parameters.iterator(); i.hasNext();){
+            names = names + (String)i.next() + ", ";
+        }
+        tmp.set(9,names);
+        addRow(tmp);
+        refreshTable();
+    }
+    
+    public void selectedEvent(LemSelectionEvent event, int counter){
+        Vector tmp = new Vector();
+        tmp = populate(tmp);
+        tmp.set(0, new Integer(counter)) ;
+        tmp.set(1, "SEL");
+       // tmp.set(2, event.getObjectId());
+        Collection idList = event.getObjectList();
+        String names = "";
+        for (Iterator i= idList.iterator(); i.hasNext();){
+            names = names + (String)i.next() + ", ";
         }
         tmp.set(9,names);
         addRow(tmp);
