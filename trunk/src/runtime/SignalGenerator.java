@@ -62,7 +62,7 @@ public class SignalGenerator extends java.lang.Thread {
 					 * All interpreters have stopped,
 					 * signal shouldn't be deliviered.
 					 */
-					context.debugObject.delEntity();
+					context.getDebugObject().delEntity();
 				}
 			}
 		}

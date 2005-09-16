@@ -151,8 +151,8 @@ public class Interpreter {
      * @throws runtime.LemRuntimeException in case any errors occur during the execution of the action
      */
     public void executeAction( Action a, Context c ) throws LemRuntimeException {
-	context.debugObject.executeAction(a);
-	context.debugObject.checkRuntimeState();
+	context.getDebugObject().executeAction(a);
+	context.getDebugObject().checkRuntimeState();
 
         if ( a instanceof CreateAction )
             executeCreateAction((CreateAction)a, c);
@@ -257,7 +257,8 @@ public class Interpreter {
 	if (s == null) {
 		throw new LemRuntimeException("Could not cancel a signal");
 	}
-	context.debugObject.delEntity();
+	
+	context.getDebugObject().delEntity();
         int id1 = currentObject.getObjectId().intValue();
         int id2 = s.getSignalId().intValue();
         Collection p = s.getParameters();
@@ -277,7 +278,7 @@ public class Interpreter {
         LinkedList passedValues = null;
         int eventid = 0;
 
-	context.debugObject.addEntity();
+	context.getDebugObject().addEntity();
 
         if ( p != null ) {
             passedValues = new LinkedList();
@@ -360,7 +361,7 @@ public class Interpreter {
 		            }
 		    } else {
 			    /* Object has become inactive */
-			    context.debugObject.delEntity();
+			    context.getDebugObject().delEntity();
 		    }
 	    }
         }

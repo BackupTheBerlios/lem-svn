@@ -73,9 +73,9 @@ public class InstanceInterpreter extends java.lang.Thread {
 	    Signal s;
             System.out.println(Thread.currentThread().getName() + " [init] InstanceInterpreter getting a next signal");
 	    do {
-		    if (!context.debugObject.checkRuntimeState())
+		    if (!context.getDebugObject().checkRuntimeState())
 			    return false;
-	            s = instance.getNextSignal(context.debugObject);
+	            s = instance.getNextSignal(context.getDebugObject());
 	    } while (s == null);
             
             System.out.println(Thread.currentThread().getName() + " [init] InstanceInterpreter got a next signal");
@@ -100,16 +100,16 @@ public class InstanceInterpreter extends java.lang.Thread {
                     System.out.println( Thread.currentThread().getName()
                       + " [init] transitioning state to " + newState.getName());
 		 
-		    context.debugObject.makeTransition(t);
-		    context.debugObject.runState(newState);
-		    if (!context.debugObject.checkRuntimeState()) {
-			    context.debugObject.delEntity();
+		    context.getDebugObject().makeTransition(t);
+		    context.getDebugObject().runState(newState);
+		    if (!context.getDebugObject().checkRuntimeState()) {
+			    context.getDebugObject().delEntity();
 			    return false;
 		    }
 		    
                     interpreter.interpret( p, s, context );
 		    
-		    context.debugObject.delEntity();
+		    context.getDebugObject().delEntity();
                     if ( newState instanceof NonDeletionState )
                         return true;
                     else
@@ -117,7 +117,7 @@ public class InstanceInterpreter extends java.lang.Thread {
                 }
             }
 
-            context.debugObject.delEntity();
+            context.getDebugObject().delEntity();
         }
     }
     
@@ -142,9 +142,9 @@ public class InstanceInterpreter extends java.lang.Thread {
 			 * a delete object action for passive objects)
 	                 */
 	                context.delObject( instance.instanceInObject );
-			instance.instanceInObject.drainSignals(context.debugObject);
+			instance.instanceInObject.drainSignals(context.getDebugObject());
 	            }
-		    instance.drainSignals(context.debugObject);
+		    instance.drainSignals(context.getDebugObject());
 		    instance.instanceInObject.notifyAll();
 	    }
         } catch ( LemRuntimeException e ) {
@@ -167,9 +167,9 @@ public class InstanceInterpreter extends java.lang.Thread {
         System.out.println( Thread.currentThread().getName() + " InstanceInterpreter getting a next signal" );
 	Signal s;
 	do {
-		if (!context.debugObject.checkRuntimeState())
+		if (!context.getDebugObject().checkRuntimeState())
 		    return false;
-	        s = instance.getNextSignal(context.debugObject);
+	        s = instance.getNextSignal(context.getDebugObject());
 	} while (s == null);
 
         System.out.println( Thread.currentThread().getName() + " InstanceInterpreter got a next signal" );
@@ -195,23 +195,23 @@ public class InstanceInterpreter extends java.lang.Thread {
                	System.out.println( Thread.currentThread().getName()
                 	+ " transitioning state to " + newState.getName() );
 
-		context.debugObject.makeTransition(t);
-		context.debugObject.runState(newState);
-		if (!context.debugObject.checkRuntimeState()) {
-		    context.debugObject.delEntity();
+		context.getDebugObject().makeTransition(t);
+		context.getDebugObject().runState(newState);
+		if (!context.getDebugObject().checkRuntimeState()) {
+		    context.getDebugObject().delEntity();
 		    return false;
 		}
 
                 interpreter.interpret( p, s, context );
 
-		context.debugObject.delEntity();
+		context.getDebugObject().delEntity();
                 if ( newState instanceof NonDeletionState )
                     return true;
                 else
                     return false;
             }
         }
-	context.debugObject.delEntity();
+	context.getDebugObject().delEntity();
         return true;
     }
     
