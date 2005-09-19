@@ -136,7 +136,7 @@ public class TableModel extends AbstractTableModel {
         tmp.set(1, "OC");
         tmp.set(2, event.getObjectId());
         for( Iterator i = event.getObjectClassName().iterator(); i.hasNext(); ) {
-            instances = instances + i.next().toString() + " ";
+            instances = instances + i.next() + " ";
         }
         tmp.set(3, instances);
         addRow(tmp);
@@ -151,7 +151,7 @@ public class TableModel extends AbstractTableModel {
         tmp.set(1, "OD");
         tmp.set(2, event.getObjectId());
         for( Iterator i = event.getObjectClassName().iterator(); i.hasNext(); ) {
-            instances = instances + i.next().toString() + " ";
+            instances = instances + i.next() + " ";
         }
         tmp.set(3, instances);
         addRow(tmp);
@@ -233,8 +233,7 @@ public class TableModel extends AbstractTableModel {
         Collection parameters = event.getEventParameters();
         String names = "";
         for (Iterator i = parameters.iterator(); i.hasNext();) {
-	    VariableReference vr = (VariableReference)i.next();
-            names = names + vr.getVariableName() + ", ";
+            names = names + i.next() + ", ";
         }
         tmp.set(9,names);
         tmp.set(13, event.getEventDelay());
@@ -251,8 +250,8 @@ public class TableModel extends AbstractTableModel {
         tmp.set(8, event.getEventType() + ": " + event.getEventId() );
         Collection parameters = event.getEventParameters();
         String names = "";
-        for (Iterator i= parameters.iterator(); i.hasNext();){
-            names = names + (String)i.next() + ", ";
+        for (Iterator i = parameters.iterator(); i.hasNext();){
+            names = names + i.next() + ", ";
         }
         tmp.set(9,names);
         addRow(tmp);
@@ -267,8 +266,8 @@ public class TableModel extends AbstractTableModel {
        // tmp.set(2, event.getObjectId());
         Collection idList = event.getObjectList();
         String names = "";
-        for (Iterator i= idList.iterator(); i.hasNext();){
-            names = names + i.next().toString() + ", ";
+        for (Iterator i = idList.iterator(); i.hasNext();){
+            names = names + i.next() + ", ";
         }
         tmp.set(9,names);
         addRow(tmp);
@@ -284,8 +283,8 @@ public class TableModel extends AbstractTableModel {
         tmp.set(8, event.getEventType() + ": " + event.getEventId() );
         Collection parameters = event.getEventParameters();
         String names = "";
-        for (Iterator i= parameters.iterator(); i.hasNext();){
-            names = names + (String)i.next() + ", ";
+        for (Iterator i = parameters.iterator(); i.hasNext();){
+            names = names + i.next() + ", ";
         }
         tmp.set(9,names);
         addRow(tmp);

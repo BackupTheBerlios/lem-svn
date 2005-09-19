@@ -250,7 +250,7 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
         java.util.Collection className = new java.util.LinkedList();
         className = event.getObjectClassName();
         for( Iterator i = event.getObjectClassName().iterator(); i.hasNext(); ) {
-            doc.addStyle(new StyledElement(i.next().toString() + " ", classNames));
+            doc.addStyle(new StyledElement(i.next() + " ", classNames));
         }
         doc.addStyle(new StyledElement("\n", text));
         addText(doc);
@@ -428,8 +428,7 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
             parameters.addAll(event.getEventParameters());
         String para = "";
         for (Iterator i = parameters.iterator(); i.hasNext();) {
-	    VariableReference vr = (VariableReference)i.next();
-            para = para + vr.getVariableName() + ", ";
+            para = para + i.next() + ", ";
         }
         doc.addStyle(new StyledElement(para, values));
         doc.addStyle(new StyledElement(" Delay: ", text));
@@ -456,7 +455,7 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
         Collection parameters = event.getEventParameters();
         String para = "";
         for (Iterator i = parameters.iterator(); i.hasNext();){
-            para = para + (String)i.next() + ", ";
+            para = para + i.next() + ", ";
         }
         doc.addStyle(new StyledElement(para, values));  
          doc.addStyle(new StyledElement("\n", text));
@@ -514,7 +513,7 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
         Collection parameters = event.getEventParameters();
         String para = "";
         for (Iterator i = parameters.iterator(); i.hasNext();){
-            para = para + (String)i.next() + ", ";
+            para = para + i.next() + ", ";
         }
         doc.addStyle(new StyledElement(para, values));   
          doc.addStyle(new StyledElement("\n", text));
