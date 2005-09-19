@@ -34,6 +34,8 @@ import java.util.ArrayList;
 public class DomainContext extends Context {
 	private Debug debugObject;
 
+	private Time timeObject;
+
 	/** 
 	 * A collection of all runtime objects known to this context
 	 */
@@ -43,6 +45,7 @@ public class DomainContext extends Context {
 	public DomainContext() {
 		super(null);
 		setDebugObject(new Debug(this));
+		setTimeObject(new Time());
 	}
 
 	/**
@@ -86,7 +89,15 @@ public class DomainContext extends Context {
 		return debugObject;
 	}
 
-	public void setDebugObject(Debug debugObject) {
+	private void setDebugObject(Debug debugObject) {
 		this.debugObject = debugObject;
+	}
+
+	public Time getTimeObject() {
+		return timeObject;
+	}
+
+	private void setTimeObject(Time timeObject) {
+		this.timeObject = timeObject;
 	}
 }
