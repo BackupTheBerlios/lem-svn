@@ -36,7 +36,7 @@ import java.util.Vector;
      * @param a The first object
      * @param b The second object
      */
-    public int compare(Object a, Object b) {
+    public synchronized int compare(Object a, Object b) {
         Vector v1 = (Vector)a;
         Vector v2 = (Vector)b;
         Object o1 = v1.get(colIndex);
