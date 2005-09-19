@@ -40,10 +40,16 @@ public class ClassWriter {
         /**  store all classes in this domain */
         private static Collection allClassList;
         
-        /**  store all associations in this domain */
-        private static  Collection associationList;
+        /**  
+         * Store all associations in this domain,
+         * After assigned the value, it never be changed
+         */
+        private static  Collection allAssociationList;
         
-        /**  store associations in this domain  */
+        /**  
+          * Store associations in this domain. 
+          * Elements (association) in it can be removed and added to it again 
+          */
         private static ArrayList list = new ArrayList();
         
         /**  a flag to indicate a class is selected or not  */
@@ -67,9 +73,9 @@ public class ClassWriter {
               allClassList = domain.getClasses().values();
               
               // get all associations in selected domain
-              associationList =  domain.getRelationships().values();
+              allAssociationList =  domain.getRelationships().values();
   
-              TopUpList ();   // fill the variable "list"
+              topUpList ();   // fill the variable "list"
               
               StringBuffer strBuf = new StringBuffer();
              
@@ -105,7 +111,7 @@ public class ClassWriter {
               strBuf.append("\n");
               
               // variable "list" ,which has become empty , needs to be refilled 
-              TopUpList ();    
+              topUpList ();    
               
               return  strBuf.toString();
         }
@@ -129,12 +135,15 @@ public class ClassWriter {
         }
         
         /** 
-         *  Copy all relationships in static variable "associationList" to 
-         *  another static variable "list" 
+         *  Copy all associations from variable "allAssociationList" to 
+         *  another variable "list" one by one.
+         *  All associations in variable "list" will be all removed after all 
+         *  associations being represented. So this function will be called 
+         *  again to copy all associations back to variable "list"
          */
-        private static void TopUpList ()  {
+        private static void topUpList ()  {
                list.clear(); // empty the list 
-               for ( Iterator it = associationList.iterator(); it.hasNext(); ) {
+               for ( Iterator it = allAssociationList.iterator(); it.hasNext(); ) {
                     metamodel.Relationship relationalship = (metamodel.Relationship) it.next();   
                     list.add(relationalship);
                }
