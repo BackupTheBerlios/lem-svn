@@ -86,7 +86,8 @@ public class ContextTree extends javax.swing.JTree {
 				}
 			} catch(Exception e){System.out.println(e);}
 		} else {
-			displayDescription(this.getSelectionPath().getLastPathComponent());
+			if (this.getSelectionPath() != null)
+				displayDescription(this.getSelectionPath().getLastPathComponent());
 		}
 	}//GEN-LAST:event_formMouseClicked
 	
