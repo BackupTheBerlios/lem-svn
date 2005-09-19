@@ -32,7 +32,7 @@ import runtime.LemRelationshipCreationEvent;
 import runtime.LemRelationshipDeletionEvent;
 import runtime.LemSelectionEvent;
 import runtime.LemStateTransitionEvent;
-
+import metamodel.VariableReference;
 
 
 /**
@@ -232,8 +232,9 @@ public class TableModel extends AbstractTableModel {
         tmp.set(8, event.getEventType() + ": " + event.getEventId() );
         Collection parameters = event.getEventParameters();
         String names = "";
-        for (Iterator i = parameters.iterator(); i.hasNext();){
-            names = names + (String)i.next() + ", ";
+        for (Iterator i = parameters.iterator(); i.hasNext();) {
+	    VariableReference vr = (VariableReference)i.next();
+            names = names + vr.getVariableName() + ", ";
         }
         tmp.set(9,names);
         tmp.set(13, event.getEventDelay());

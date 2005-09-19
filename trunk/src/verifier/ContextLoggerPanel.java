@@ -24,6 +24,7 @@ import runtime.LemRelationshipCreationEvent;
 import runtime.LemRelationshipDeletionEvent;
 import runtime.LemSelectionEvent;
 import runtime.LemStateTransitionEvent;
+import metamodel.VariableReference;
 
 /**
  *
@@ -426,8 +427,9 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
         if(event.getEventParameters().size() > 0)
             parameters.addAll(event.getEventParameters());
         String para = "";
-        for (Iterator i = parameters.iterator(); i.hasNext();){
-            para = para + (String)i.next() + ", ";
+        for (Iterator i = parameters.iterator(); i.hasNext();) {
+	    VariableReference vr = (VariableReference)i.next();
+            para = para + vr.getVariableName() + ", ";
         }
         doc.addStyle(new StyledElement(para, values));
         doc.addStyle(new StyledElement(" Delay: ", text));
