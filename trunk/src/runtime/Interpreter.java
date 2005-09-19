@@ -1,10 +1,11 @@
 /*
- * Interpreter.java - An optional brief description of the file
- * This Class interprets and executes Action Language in given cotexts.
- * Copyright (C) 2005 sjr
- * Copyright (C) 2004 Nick Piggin
- * Copyright (C) 2004 Thuan Seah
- * Copyright (C) 2004 Shuku Torabi
+ * Interpreter.java - This Class interprets and executes Action Language in
+ * given contexts.  
+ *
+ * Copyright (C) 2005 James Ring
+ * Copyright (C) 2005 Nick Piggin
+ * Copyright (C) 2005 Thuan Seah
+ * Copyright (C) 2005 Shuku Torabi
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -178,10 +179,11 @@ public class Interpreter {
             executeUnrelateAction((UnrelateAction)a, c);
         else if(a instanceof BreakStatement)
             executeBreakStatement((BreakStatement)a, c);
-        else {
+		else if (a instanceof PrintAction)
+			executePrintAction((PrintAction)a, c);
+		else
             throw new LemRuntimeException( "executeAction encountered unknown action" );
         }
-    }
     
     /**
      * Execute the given CreateAction in the given Context.
@@ -525,6 +527,19 @@ public class Interpreter {
         destination.setValue( value.getValue() );
         return destination;
     }
+    
+    /**
+	 * Executes the given PrintAction, causing some output to go to standard
+	 * error.
+	 *
+	 * @param p the PrintAction to execute
+	 * @param c the Context in which the PrintAction executes
+	 */
+	public void executePrintAction( PrintAction p, Context c ) throws LemRuntimeException {
+		Variable v = evaluateExpression( p.getOutputExpression(), c );
+
+		System.err.println( v.getValue() );
+	}
     
     /**
      * Dereference the given VariableReference in the given Context.
