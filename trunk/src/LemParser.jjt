@@ -276,6 +276,7 @@ TOKEN : /* ACTION LANGUAGE IDENTIFIERS */
 | <RECLASSIFY: "reclassify">
 | <OF: "of">
 | <CREATE: "create">
+| <PRINT: "print">
 | <ATOMIC: "atomic">
 | <DELETE: "delete">
 | <WITH: "with">
@@ -913,7 +914,8 @@ void Action() : {}
 	| EventGeneration()<SEMI>
 	| EventCancel()<SEMI>
 	| LinkCreation()<SEMI>
-        | LinkDeletion()<SEMI>
+    | LinkDeletion()<SEMI>
+	| PrintAction()<SEMI>
 	| CreationTransaction()
 	| IfStatement()
 	| WhileStatement()
@@ -970,6 +972,11 @@ void RelationshipReference() : {}
 	LOOKAHEAD(2)
 	  (Identifier() <DOT> VerbClause())
 	| Identifier()
+}
+
+void PrintAction() : {} 
+{
+	<PRINT> Expression()
 }
 
 void LinkCreation() : {} 

@@ -393,6 +393,10 @@ public class BuilderPass2 extends Visitor {
 		return node.jjtGetChild( 0 ).jjtAccept( this, null );
 	}
 
+	public Object visit( LEMPrintAction node, Object data ) throws LemException {
+		return new PrintAction( (Expression)node.jjtGetChild( 0 ).jjtAccept( this, null ));
+	}
+	
 	/**
 	 * @param node
 	 * @param data
