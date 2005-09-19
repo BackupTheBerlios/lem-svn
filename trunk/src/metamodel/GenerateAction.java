@@ -15,7 +15,7 @@ public class GenerateAction extends Action {
 	private String eventName = null;
 	private VariableReference target = null;
 	private LinkedList parameters = null;
-        private Expression delayTime = null ; 
+	private Expression delayTime = null ; 
         
 	/** Creates a new instance of GenerateAction */
 	public GenerateAction() {
