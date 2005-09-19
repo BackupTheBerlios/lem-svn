@@ -104,7 +104,7 @@ public class Time {
 	 * Equivalent of o.wait(timeout), but takes a timeout in LemMs, and wakes
 	 * object if time scale changes.
 	 */
-	public synchronized void wait(java.lang.Object o, long timeoutLemMs) {
+	public synchronized void wait(java.lang.Object o, long timeoutLemMs) throws InterruptedException {
 		timeoutWaiters.add(o);
 		if (LemTimeFactor == 0)
 			o.wait();
