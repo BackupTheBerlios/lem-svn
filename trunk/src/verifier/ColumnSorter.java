@@ -26,9 +26,11 @@ import java.util.Vector;
      * @param colIndex The index of the column
      * @param ascending True if ascending order, False if descending
      */
-    ColumnSorter(int colIndex, boolean ascending) {
+   ColumnSorter(int colIndex, boolean ascending) {
+       synchronized (this) {
         this.colIndex = colIndex;
         this.ascending = ascending;
+       }
     }
     
     /**
