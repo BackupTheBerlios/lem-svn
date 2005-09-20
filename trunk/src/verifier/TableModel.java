@@ -267,7 +267,7 @@ public class TableModel extends AbstractTableModel {
         tmp = populate(tmp);
         tmp.set(columnNames.indexOf("Counter"), new Integer(counter)) ;
         tmp.set(columnNames.indexOf("Type"), "SEL");
-        // tmp.set(columnNames.indexOf("Id1"), event.getObjectId());
+        tmp.set(columnNames.indexOf("Id1"), event.getObjectId());
         Collection idList = event.getObjectList();
         String names = "";
         for (Iterator i = idList.iterator(); i.hasNext();){
