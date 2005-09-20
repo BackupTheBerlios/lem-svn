@@ -277,6 +277,7 @@ public class Interpreter {
      */
     public void executeGenerateAction( GenerateAction a, Context c ) throws LemRuntimeException {
         LinkedList p = a.getParameters();
+        LinkedList pList = null;
         LinkedList passedValues = null;
         int eventid = 0;
 
@@ -284,11 +285,12 @@ public class Interpreter {
 
         if ( p != null ) {
             passedValues = new LinkedList();
-            
+            pList = new LinkedList();
             /* Evaluate parameters - pass by value obviously */
             Iterator i = p.iterator();
             while ( i.hasNext() ) {
                 Expression e = ( Expression ) i.next();
+                pList.add( expressionToString(e) );
                 Variable result = evaluateExpression( e, c );
                 passedValues.add( result );
             }
@@ -333,7 +335,7 @@ public class Interpreter {
 
 	    System.out.println(currentObject.getObjectId() + " generating delayed signal (" + delay + ") to " + target.getObjectId());
             eventid = ds.getSignalId().intValue();            
-            new LemEventGenerationEvent(id1, id2, eventid, type, p, delay).notifyAll( c );            
+            new LemEventGenerationEvent(id1, id2, eventid, type, pList, delay).notifyAll( c );            
             if ( target == currentObject ) {
                 currentObject.addDelayedSignalSelf( ds );
             } else {
@@ -353,7 +355,7 @@ public class Interpreter {
 		    System.out.print(currentObject.getObjectId());
 	    System.out.println(" generating signal to " + target.getObjectId());
           eventid = s.getSignalId().intValue();            
-          new LemEventGenerationEvent(id1, id2, eventid, type, p).notifyAll( c ); 
+          new LemEventGenerationEvent(id1, id2, eventid, type, pList).notifyAll( c ); 
 	    synchronized (target) {
 		    if (target.isActive()) {
 		            if ( target == currentObject ) {
@@ -846,8 +848,11 @@ public class Interpreter {
         }
         
         System.out.println( Thread.currentThread().getName() + " selected " + ((LinkedList)set.getValue()).size() + " references" );
-        new LemSelectionEvent(expressionToString(condition), list).notifyAll( c );
-	  return set;
+        int id=0;
+        if(currentObject != null)
+            id = currentObject.getObjectId().intValue();
+        new LemSelectionEvent(id, expressionToString(condition), list).notifyAll( c );
+        return set;
     }
     
     /**
