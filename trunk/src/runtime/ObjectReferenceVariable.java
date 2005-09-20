@@ -66,4 +66,8 @@ public class ObjectReferenceVariable extends Variable {
         return equal( b ).logicalNot();
     }
 
+    public String toString() {
+        String result = "";
+        return result + value.getObjectId().intValue();
+    }
 }
