@@ -7,6 +7,7 @@
 package verifier;
 import java.awt.Component;
 import java.awt.Toolkit;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,7 +33,7 @@ import runtime.LemRelationshipCreationEvent;
 import runtime.LemRelationshipDeletionEvent;
 import runtime.LemSelectionEvent;
 import runtime.LemStateTransitionEvent;
-import metamodel.VariableReference;
+
 
 
 /**
@@ -58,16 +59,16 @@ public class TableModel extends AbstractTableModel {
     
     /** the name of the columns */
     private String[] columnNames = {"Counter",
-            "Type",
-            "Id1",
-            "Object1",
-            "Id2",
-            "Object2",
-            "State1",
-            "State2",
-            "Event",
-            "Parameters",
-            "AttName",
+            "Type", 
+            "Id1", 
+            "Object1", 
+            "Id2", 
+            //"Object2",
+            "State1", 
+            "State2", 
+            "Event", 
+            "Parameters", 
+            "AttName", 
             "AttValue",
             "RelName",
             "RelId",
@@ -143,6 +144,7 @@ public class TableModel extends AbstractTableModel {
                 refreshTable();
             }
             
+            
             public void objectDeleted(LemObjectDeletionEvent event, int counter){
                 Vector tmp = new Vector();
                 tmp = populate(tmp);
@@ -164,8 +166,8 @@ public class TableModel extends AbstractTableModel {
                 tmp.set(0, new Integer(counter)) ;
                 tmp.set(1,"RC");
                 tmp.set(2, event.getActiveObjectId());
-                tmp.set(12, event.getAssociationLabel());
-                tmp.set(13, event.getLinkObjectId());
+                tmp.set(11, event.getAssociationLabel());
+                tmp.set(12, event.getLinkObjectId());
                 addRow(tmp);
                 refreshTable();
             }
@@ -177,8 +179,8 @@ public class TableModel extends AbstractTableModel {
                 tmp.set(1, "RD");
                 tmp.set(2, event.getActiveObjectId());
                 tmp.set(4, event.getPassiveObjectId());
-                tmp.set(12, event.getAssociationLabel());
-                tmp.set(13, event.getLinkObjectId());
+                tmp.set(11, event.getAssociationLabel());
+                tmp.set(12, event.getLinkObjectId());
                 addRow(tmp);
                 refreshTable();
             }
@@ -189,10 +191,10 @@ public class TableModel extends AbstractTableModel {
                 tmp.set(0, new Integer(counter));
                 tmp.set(1, "AW");
                 tmp.set(2,event.getObjectId());
-                tmp.set(10,event.getAttributeName());
+                tmp.set(9,event.getAttributeName());
                 //String values = event.getOldValue() +"->" + event.getNewValue();
                 //tmp.set(11, values);
-                tmp.set(11, event.getNewValue());
+                tmp.set(10, event.getNewValue());
                 addRow(tmp);
                 refreshTable();
             }
@@ -203,8 +205,8 @@ public class TableModel extends AbstractTableModel {
                 tmp.set(0, new Integer(counter)) ;
                 tmp.set(1, "AR");
                 tmp.set(2, event.getObjectId());
-                tmp.set(10,event.getAttributeName());
-                tmp.set(11, event.getValue());
+                tmp.set(9,event.getAttributeName());
+                tmp.set(10, event.getValue());
                 addRow(tmp);
                 refreshTable();
             }
@@ -216,8 +218,8 @@ public class TableModel extends AbstractTableModel {
                 tmp.set(0, new Integer(counter)) ;
                 tmp.set(1, "TRAN");
                 tmp.set(2, event.getObjectId());
-                tmp.set(6, event.getFromState());
-                tmp.set(7, event.getToState());
+                tmp.set(5, event.getFromState());
+                tmp.set(6, event.getToState());
                 addRow(tmp);
                 refreshTable();
             }
@@ -229,14 +231,14 @@ public class TableModel extends AbstractTableModel {
                 tmp.set(1, "EG");
                 tmp.set(2, event.getSenderObjectId());
                 tmp.set(4, event.getReceiverObjectId());
-                tmp.set(8, event.getEventType() + ": " + event.getEventId() );
+                tmp.set(7, event.getEventType() + ": " + event.getEventId() );
                 Collection parameters = event.getEventParameters();
                 String names = "";
                 for (Iterator i = parameters.iterator(); i.hasNext();) {
                     names = names + i.next() + ", ";
                 }
-                tmp.set(9,names);
-                tmp.set(13, event.getEventDelay());
+                tmp.set(8,names);
+                tmp.set(12, event.getEventDelay());
                 addRow(tmp);
                 refreshTable();
             }
@@ -247,13 +249,13 @@ public class TableModel extends AbstractTableModel {
                 tmp.set(0, new Integer(counter)) ;
                 tmp.set(1, "RE");
                 tmp.set(2, event.getObjectId());
-                tmp.set(8, event.getEventType() + ": " + event.getEventId() );
+                tmp.set(7, event.getEventType() + ": " + event.getEventId() );
                 Collection parameters = event.getEventParameters();
                 String names = "";
                 for (Iterator i = parameters.iterator(); i.hasNext();){
                     names = names + i.next() + ", ";
                 }
-                tmp.set(9,names);
+                tmp.set(8,names);
                 addRow(tmp);
                 refreshTable();
             }
@@ -269,7 +271,7 @@ public class TableModel extends AbstractTableModel {
                 for (Iterator i = idList.iterator(); i.hasNext();){
                     names = names + i.next() + ", ";
                 }
-                tmp.set(9,names);
+                tmp.set(8,names);
                 addRow(tmp);
                 refreshTable();
             }
@@ -280,13 +282,13 @@ public class TableModel extends AbstractTableModel {
                 tmp.set(0, new Integer(counter)) ;
                 tmp.set(1, "CE");
                 tmp.set(2, event.getObjectId());
-                tmp.set(8, event.getEventType() + ": " + event.getEventId() );
+                tmp.set(7, event.getEventType() + ": " + event.getEventId() );
                 Collection parameters = event.getEventParameters();
                 String names = "";
                 for (Iterator i = parameters.iterator(); i.hasNext();){
                     names = names + i.next() + ", ";
                 }
-                tmp.set(9,names);
+                tmp.set(8,names);
                 addRow(tmp);
                 refreshTable();
                 
