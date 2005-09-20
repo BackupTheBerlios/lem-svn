@@ -1,6 +1,28 @@
+<!--
+ * xmi2lem.xsl
+ *
+ * Copyright (C) 2005
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
+-->
+
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" xmlns:UML="org.omg.xmi.namespace.UML">
 
+<!--the real uml content "class name","attributes","association",etc. is in teh xmi.content tag-->
 	<xsl:template match="/XMI">
 		<xsl:apply-templates select="XMI.content"/>
 	</xsl:template>
@@ -9,7 +31,7 @@
 		<xsl:text>&#xA;</xsl:text>
 		<xsl:apply-templates select="UML:Model"/>
 	</xsl:template>
-
+<!--select the the name of the model of uml diagram and put it as the the name for lem model-->
 	<xsl:template match="UML:Model">
 		<xsl:text>model </xsl:text>
 		<xsl:value-of select="@name"/>
@@ -19,14 +41,14 @@
 		<xsl:value-of select="@name"/>
 		<xsl:text>;&#xA;</xsl:text>
 	</xsl:template>
-
+<!--find all the calsses and associations in the model-->
 	<xsl:template match="UML:Namespace.ownedElement">
 		<xsl:apply-templates select="UML:Class"/>
 		<xsl:apply-templates select="UML:Association"/>
 	</xsl:template>
 
 	<xsl:key name="classes" match="/XMI/XMI.content/UML:Model/UML:Namespace.ownedElement/UML:Class" use="@xmi.id"/>
-	
+<!--put all the classes into the model-->	
 	<xsl:template match="UML:Class">
 		<xsl:text>object </xsl:text>
 		<xsl:value-of select="@name"/>
@@ -35,7 +57,7 @@
 		<xsl:value-of select="@name"/>
 		<xsl:text>;&#xA;</xsl:text>
 	</xsl:template>
-
+<!--put all the associations into the model. include the association name, two classes at the end of this assiociation-->
 	<xsl:template match="UML:Association">
 		<xsl:text>association </xsl:text>
 		<xsl:value-of select="@name"/>
@@ -53,7 +75,7 @@
 		<xsl:value-of select="@name"/>
 		<xsl:text>;&#xA;</xsl:text>
 	</xsl:template>
-
+<!--put the value of "multiplicity" on one end of the association "class 1"-->
 	<xsl:template match="UML:Association.connection/UML:AssociationEnd[position()=1]">
 		<xsl:text> "</xsl:text>
 		<xsl:value-of select="@name"/>
@@ -63,7 +85,7 @@
 		<xsl:value-of select="UML:AssociationEnd.multiplicity/UML:Multiplicity/UML:Multiplicity.range/UML:MultiplicityRange/@upper"/>
 		<xsl:text> </xsl:text>
 	</xsl:template>
-
+<!--put the value of "multiplicity" on the other end of the association "class 2"-->
 	<xsl:template match="UML:Association.connection/UML:AssociationEnd[position()=2]">
 		<xsl:text> "</xsl:text>
 		<xsl:value-of select="@name"/>
@@ -73,8 +95,4 @@
 		<xsl:value-of select="UML:AssociationEnd.multiplicity/UML:Multiplicity/UML:Multiplicity.range/UML:MultiplicityRange/@upper"/>
 		<xsl:text> </xsl:text>
 	</xsl:template>
-</xsl:stylesheet><!-- Stylus Studio meta-information - (c) 2004-2005. Progress Software Corporation. All rights reserved.
-<metaInformation>
-<scenarios ><scenario default="yes" name="requirementsModel.xmi" userelativepaths="yes" externalpreview="no" url="requirementsModel.xmi" htmlbaseurl="" outputurl="" processortype="saxon8" profilemode="0" profiledepth="" profilelength="" urlprofilexml="" commandline="" additionalpath="" additionalclasspath="" postprocessortype="none" postprocesscommandline="" postprocessadditionalpath="" postprocessgeneratedext=""/></scenarios><MapperMetaTag><MapperInfo srcSchemaPathIsRelative="yes" srcSchemaInterpretAsXML="no" destSchemaPath="" destSchemaRoot="" destSchemaPathIsRelative="yes" destSchemaInterpretAsXML="no" ><SourceSchema srcSchemaPath="requirementsModel.xmi" srcSchemaRoot="XMI" AssociatedInstance="" loaderFunction="document" loaderFunctionUsesURI="no"/></MapperInfo><MapperBlockPosition><template match="/XMI"><block path="xsl:apply&#x2D;templates" x="247" y="0"/></template><template match="Association.connection"></template><template match="UML:AssociationEnd"></template><template match="UML:Class"></template><template match="UML:Association.connection/UML:AssociationEnd[position()=1]"></template></MapperBlockPosition></MapperMetaTag>
-</metaInformation>
--->
+</xsl:stylesheet>
