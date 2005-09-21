@@ -5,7 +5,7 @@ model DNAProfiling is "Demonstrates the declaration of domain specific data type
 	
 		subsystem SimpleSubSystem is "a demonstration subsystem"
 
-			object Person is
+			class Person is
 				"the subject of DNA profiling"
 
 				attribute personId is arbitrary_id;
@@ -13,7 +13,7 @@ model DNAProfiling is "Demonstrates the declaration of domain specific data type
 				identifier is personId;
 			end Person;
 
-			object DNAProfile is
+			class DNAProfile is
 				"a full and complete description of a strand of DNA"
 
 				attribute profileId is string;

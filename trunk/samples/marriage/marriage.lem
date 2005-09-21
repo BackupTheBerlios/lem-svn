@@ -13,7 +13,7 @@ model HumanSociety is
 	subsystem People is
 		"concerned with people and the concept of marriage"
 
-		object Person is 
+		class Person is 
 		   "a human being"
 
 			attribute name 
@@ -24,11 +24,11 @@ model HumanSociety is
 				is date;
 		end Person;
 
-		object Male specialisation of Person is 
+		class Male specialisation of Person is 
 		   "a person of the male gender"
 		end Male;
 
-		object Female specialisation of Person is 
+		class Female specialisation of Person is 
 		   "a person of the female gender"
 		end Female;
 
@@ -49,7 +49,7 @@ model HumanSociety is
 			Male "has, as wife" 0..1 Female;
 			Female "has, as husband" 0..1 Male;
 
-			object Marriage is
+			class Marriage is
 			   "the union of a man and a woman"
 
 			   attribute startDate "the date of the wedding" is date;

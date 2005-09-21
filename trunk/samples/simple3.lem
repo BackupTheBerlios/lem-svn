@@ -9,7 +9,7 @@ model SimpleModel is "Demonstrates the declaration of domain specific data type"
 		type Intensity "represents an earthquakes force on the Richter scale"
 				is numeric range: [0.,-10.] precision: 0.1;
 		type CompassPoint is (North, East, South or West );
-                type PlaceName is string length 30;
+                type PlaceName is string length : 30;
 		
 		subsystem SimpleSubSystem is "a demonstration subsystem"
 		end SimpleSubSystem;

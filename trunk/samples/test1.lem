@@ -1,7 +1,17 @@
-Model TestModel is 
+model TestModel is 
   "A demonstration
    of LEM
    This is a very long description 
    consisting of many lines
    of detailed explanation"
-End TestModel;
+
+	domain TestDomain is "You need to havea atleast one domain for each model"
+
+		subsystem TestSubsystem is "You then need to have a subsystem, of type-declarations"
+
+		end TestSubsystem;
+
+	end TestDomain;
+
+   
+end TestModel;

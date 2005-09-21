@@ -3,8 +3,11 @@
 //
 // $Id$
 // $Log$
-// Revision 1.1  2005/03/15 12:17:16  u3957053
-// Initial revision
+// Revision 1.2  2005/09/21 01:24:03  u3970466
+// MAde some of the samples work... see bugzlla for working / non working samples
+//
+// Revision 1.1.1.1  2005/03/15 12:17:16  u3957053
+// Import of xtuml.jdns.org source tree into GForge at ANU
 //
 // Revision 1.9  2005/01/25 01:22:59  u2550921
 // Restructured and updated to align with work done by Annette
@@ -83,7 +86,7 @@ model Jukebox is
 	   // Now define a Playlist.
 	   // ------------------------------------------------------------------------
 
-       object Track is 
+       class Track is 
 	   
 	   	 "an item of music that can be played by the Jukebox"
 
@@ -107,7 +110,7 @@ model Jukebox is
 	   // Now define a Playlist.
 	   // ------------------------------------------------------------------------
 
-	   object Playlist is
+	   class Playlist is
 
 	     "a collection of one or more tracks that may be played
 		  sequentially or in random order.  A playlist is a core concept within

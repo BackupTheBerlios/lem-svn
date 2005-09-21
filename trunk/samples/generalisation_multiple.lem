@@ -12,7 +12,7 @@ model Generalisation_multiple is
     subsystem AccountKeeping is
         "concerned with bank accounts"
 
-        object Account is "the concept of a depositors account"
+        class Account is "the concept of a depositors account"
             attribute name is string;
         end Account;
 
@@ -21,7 +21,7 @@ model Generalisation_multiple is
         end R1;
 
         
-        object CheckingAccount specialisation of Account
+        class CheckingAccount specialisation of Account
             is "an accounts upon which cheques can be drawn"
 
         end CheckingAccount;
@@ -30,22 +30,22 @@ model Generalisation_multiple is
             CheckingAccount is RegularCheckingAccount or InterestCheckingAccount;
         end R2;
 
-        object RegularCheckingAccount specialisation of CheckingAccount
+        class RegularCheckingAccount specialisation of CheckingAccount
             is "a check account which earns no interest"
 
         end RegularCheckingAccount;
 
-        object InterestCheckingAccount specialisation of CheckingAccount and InterestBearingAccount
+        class InterestCheckingAccount specialisation of CheckingAccount and InterestBearingAccount
             is "a check account which earns interest"
 
         end InterestCheckingAccount;
 
-        object SavingsAccount specialisation of Account and InterestBearingAccount
+        class SavingsAccount specialisation of Account and InterestBearingAccount
             is "an account with a passbook"
 
         end SavingsAccount;
 
-        object InterestBearingAccount 
+        class InterestBearingAccount 
             is "a an account which earns interest"
 
         end InterestBearingAccount;

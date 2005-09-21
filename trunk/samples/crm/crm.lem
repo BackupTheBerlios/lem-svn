@@ -83,7 +83,7 @@ model SomeClient is
 			 maintain a comprehensive profile of all of our business dealings
 			 with each Party."
 
-			 object Party is
+			class Party is
 
 			 	"Formally, a Party represents an identifiable, addressable
 				 entity that may have a legal status and that normally has
@@ -117,11 +117,11 @@ model SomeClient is
 
 		subsystem PartyAddressability is
 
-			object Address is
+			class Address is
 
 			end Address;
 
-			object WebPageAddress specialisation of Address is
+			class WebPageAddress specialisation of Address is
 
 				attribute url
 
@@ -130,7 +130,7 @@ model SomeClient is
 
 			end WebPageAddress;
 
-			object EmailAddress specialisation of Address is
+			class EmailAddress specialisation of Address is
 
 				attribute emailAddress
 
@@ -139,15 +139,15 @@ model SomeClient is
 
 			end EmailAddress;
 
-			object TelecomAddress specialisation of Address is
+			class TelecomAddress specialisation of Address is
 
 			end TelecomAddress;
 
-			object GeographicAddress specialisation of Address is
+			class GeographicAddress specialisation of Address is
 
 			end GeographicAddress;
 
-			object Country is 
+			class Country is 
 				
 				"A country where Parties reside or maintain offices. The
 				 International Stardards Organisation have standardised the

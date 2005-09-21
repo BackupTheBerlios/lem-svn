@@ -6,8 +6,11 @@
 // $Id$
 // 
 // $Log$
-// Revision 1.1  2005/03/15 12:17:16  u3957053
-// Initial revision
+// Revision 1.2  2005/09/21 01:23:29  u3970466
+// MAde some of the samples work... see bugzlla for working / non working samples
+//
+// Revision 1.1.1.1  2005/03/15 12:17:16  u3957053
+// Import of xtuml.jdns.org source tree into GForge at ANU
 //
 // Revision 1.2  2004/08/23 04:52:54  u2550921
 // fix spelling errors
@@ -32,7 +35,7 @@ model BookStoreModel is
 		// by using domain specific data types we allow the domain experts to feel more comfortable
 		// with the subject matter being described
 
-		type Money "the root of all evil" is real;
+		type Money "the root of all evil" is numeric;
 		type IDBN "is used to uniquely identify books" is string;
 		type PrintStatus "describes the status of a publication" is (inprint, discontinued);
 		

@@ -28,21 +28,21 @@ model Education is
     subsystem UndergraduateTeaching is
         "the guts of the problem"
 
-		object Teacher is "the pervaor of all knowledge"
+		class Teacher is "the pervaor of all knowledge"
 
 			attribute staffNo "uniquely identifies the teacher" is PersonIdentifier;
 			attribute name is string;
 
 		end Teacher;
 
-		object Student is "the person being educated"
+		class Student is "the person being educated"
 
 			attribute id "uniquely identifies the student" is PersonIdentifier;
 			attribute name is string;
 
 		end Student;
 
-		object Course is "the subject under study"
+		class Course is "the subject under study"
 
 			attribute id "uniquely identifies the course" is string;
 			attribute name is string;
@@ -70,14 +70,14 @@ model Education is
 			// an association class to capture student/course relationship info
 			//
 
-			object Enrolment is 
+			class Enrolment is 
 				"captures infomation concerning the student/course relationship"
 
 				attribute score is Mark;
 				attribute result is Grade;
 
-                                attribute courseId refers to Course.id across R2;
-				attribute studentId refers to Student.id across R2;
+                                referential attribute courseId refers to Course.id across R2;
+				referential attribute studentId refers to Student.id across R2;
 
 			end Enrolment;
 		end R2;

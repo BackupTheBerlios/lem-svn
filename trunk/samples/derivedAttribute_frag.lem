@@ -1,4 +1,4 @@
-object Order is
+class Order is
 
    ...
 

@@ -1,4 +1,4 @@
-Model RealEstateApplication is 
+model RealEstateApplication is 
     "a demonstration of the current capabilities of the LEM language"
     Domain RealEstate is 
         "a collection of classes, relationships, states, actions and rules relating to the real estate industry"
@@ -100,4 +100,4 @@ Model RealEstateApplication is
 
 // Bridges not yet implemented	
 // Bridge LondonBridge is between OneSideOfTheRiver and Another End LondonBridge;
-End;
+end;

@@ -14,7 +14,7 @@ model Generalisation_compound is
     subsystem Inventory is
         "a very simple subsystem"
 
-        object Product is "all products sold by the bookstore"
+        class Product is "all products sold by the bookstore"
             attribute title is string;
         end Product;
 
@@ -26,7 +26,7 @@ model Generalisation_compound is
             Product is StockedProduct or SpecialOrderProduct;
         end R12;
 
-        object BookProduct specialisation of Product
+        class BookProduct specialisation of Product
             is "a paper-based publication"
 
             attribute id is string;
@@ -34,26 +34,26 @@ model Generalisation_compound is
 
         end BookProduct;
 
-        object SoftwareProduct specialisation of Product
+        class SoftwareProduct specialisation of Product
             is "is a publication that is delivered on computer disk"
 
             attribute version is string;
         end SoftwareProduct;
 
-        object RecordingProduct specialisation of Product
+        class RecordingProduct specialisation of Product
             
             is "is a sound recording"
             attribute performer is string;
             attribute runningTime is Period;
         end RecordingProduct;
 
-        object StockedProduct specialisation of Product
+        class StockedProduct specialisation of Product
             is "a product which is nomally kept in stock"
 
             attribute quantityOnHand is Qty;
         end StockedProduct;
 
-        object SpecialOrderProduct specialisation of Product
+        class SpecialOrderProduct specialisation of Product
             is "a product that is ordered to satisfy a product order"
 
             attribute daysToDeliver is numeric;

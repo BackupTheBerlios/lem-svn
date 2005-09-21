@@ -19,7 +19,7 @@ model ChessGame is "concerned with the game of Chess"
 	
 	subsystem Pieces is 
 
-		object ChessPiece is "a represention of a piece on the chess board" 
+		class ChessPiece is "a represention of a piece on the chess board" 
 			
 			attribute value "the status and power" is PieceValue;
 			attribute colour "defines who owns the piece" is PlayerColour;

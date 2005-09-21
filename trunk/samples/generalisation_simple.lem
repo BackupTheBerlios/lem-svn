@@ -12,7 +12,7 @@ model Generalisation_simple is
     subsystem Inventory is
         "a very simple subsystem"
 
-        object Product is "all products sold by the bookstore"
+        class Product is "all products sold by the bookstore"
             attribute title is string;
         end Product;
 
@@ -20,7 +20,7 @@ model Generalisation_simple is
             Product is BookProduct, RecordingProduct or SoftwareProduct;
         end R11;
 
-        object BookProduct specialisation of Product
+        class BookProduct specialisation of Product
             is "a paper-based publication"
 
             attribute id is string;
@@ -28,13 +28,13 @@ model Generalisation_simple is
 
         end BookProduct;
 
-        object SoftwareProduct specialisation of Product
+        class SoftwareProduct specialisation of Product
             is "is a publication that is delivered on computer disk"
 
             attribute version is string;
         end SoftwareProduct;
 
-        object RecordingProduct specialisation of Product
+        class RecordingProduct specialisation of Product
             
             is "is a sound recording"
             attribute performer is string;

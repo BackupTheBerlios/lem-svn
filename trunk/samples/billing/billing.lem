@@ -17,7 +17,7 @@ model BillingSystem is "concerned with billing client"
 
 	subsystem Activities is 
 
-		object Activity is "Time spent on a clients job" 
+		class Activity is "Time spent on a clients job" 
 			
 			attribute uid  		"a unique identifier for an activity" is UID;
 			attribute client  	"the name of the client" is string;
