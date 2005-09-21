@@ -7,6 +7,35 @@ model TheWorld is "where all things happen"
 					attribute Capacity "capacity" is numeric;
 				end Oven;
 				
+				class Door is
+					attribute isSafe "The user is safe when the isSafe = true, I.e. when the door is closed" is boolean;
+					event Release;
+					event Closed;
+					behaviour is
+						state Open "The door is open" is
+						end Open;
+						state Closed "The door is close" is
+						end Closed;
+						
+						on Release transition from Closed to Open;
+						on Closed transition from Open to Closed;
+					end behaviour;
+				end Door;
+				
+				class Magnetron is
+					event TurnOn;
+					event TurnOff;
+					behaviour is
+						state On "The magnetron is turned on" is
+						end On;
+						state Off "The magnetron is turned off" is
+						end Off;
+
+						on TurnOn transition from Off to On;
+						on TurnOff transition from On to Off;
+					end behaviour;
+				end Magnetron;
+
 			class Plate is
 				attribute Size "size" is numeric;
 				event startRotation;
@@ -53,6 +82,15 @@ model TheWorld is "where all things happen"
 				Plate "rotates food cooking by " 1..1 Oven;
 			end R2;
 			
+			association R3 is "a record of the fact that each Oven has a Magnetron"
+				Oven "has" 1..1 Magnetron;
+				Magnetron "shoots electrons at the food" 1..1 Oven;
+			end R3;
+			
+			association R4 is "a record of the fact that each Oven has a Door"
+				Oven "has" 1..1 Door;
+				Door "closes the entrance to" 1..1 Oven;
+			end R4;
 			end MicrowaveOven;	
 	end Cooking;
 end TheWorld;
