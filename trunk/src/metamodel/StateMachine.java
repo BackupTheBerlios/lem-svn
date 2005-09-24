@@ -378,7 +378,7 @@ public class StateMachine implements DescribedEntity {
 	public String dumpDot() {
 		
 		StringBuffer strBuf = new StringBuffer( "digraph G {" );
-		strBuf.append("node [shape=record]");
+		strBuf.append("node [shape=record];");
 		
 		// Special-case handling for creation state
 		strBuf.append("creation [shape=point,label=\"creation\"];");
@@ -389,7 +389,7 @@ public class StateMachine implements DescribedEntity {
 		while ( i.hasNext() ) {
 			State s = (State)i.next();
 			// Add the state's name
-			strBuf.append( s.getName() + "[label=\"{" + s.getNumber(s) + ". " + s.getName() + "|" );
+			strBuf.append(s.getName() + "[shape=record,label=\"" + s.getNumber(s) + ". " + s.getName() + "\"];" );
 		}
 				
 		// Get the transitions
@@ -401,7 +401,7 @@ public class StateMachine implements DescribedEntity {
 			if (t.getFromState() == null) {
 				strBuf.append("creation -> " + t.getToState().getName() + ";");
 			} else {
-				strBuf.append(t.getFromState().getName() + " -> " + t.getToState().getName() + ";");
+				strBuf.append(t.getFromState().getName() + " -> " + t.getToState().getName() + "[label=" + "\""+t.getEvent()+"\"];");
 			}
 		}
 		
