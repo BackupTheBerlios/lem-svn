@@ -634,10 +634,10 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
                            }
                            // append the name of other participant in this association
                            if (this.name == asso.getParticipants()[0].getName()) {
-                               strBuf.append(asso.getParticipants()[1].getName().toUpperCase() + "\n");   
+                               strBuf.append(asso.getParticipants()[1].getName() + "\n");   
                            }
                            else {
-                               strBuf.append(asso.getParticipants()[0].getName().toUpperCase() + "\n");
+                               strBuf.append(asso.getParticipants()[0].getName() + "\n");
                            }
 
                            // if this association contains Asscociation Class                                     
@@ -658,7 +658,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
 
 
                   // append ParticipantingClass 
-                  strBuf.append("class " + this.name.toUpperCase()  + " {\n");
+                  strBuf.append("class " + this.name + " {\n");
                   // append atributes
                   for ( Iterator it = attributes.values().iterator(); it.hasNext(); ) {
                        Attribute attribute = (Attribute) it.next();
@@ -679,7 +679,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
                     strBuf.append(" *  @opt nodefillcolor \"#FFFF99\"\n"); 
                     
                strBuf.append(" *  @tagvalue " + "Association " +  asso.getName() + "\n*/\n" );
-               strBuf.append("class " + associationClass.getName().toUpperCase()  + " {\n");
+               strBuf.append("class " + associationClass.getName() + " {\n");
                // append atributes
                 for ( Iterator it = associationClass.attributes.values().iterator(); it.hasNext(); ) {
                 Attribute attribute = (Attribute) it.next();
