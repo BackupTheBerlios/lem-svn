@@ -89,7 +89,9 @@ public class Time {
 
 		while (timeoutWaiters.size() > 0) {
 			java.lang.Object o = (java.lang.Object)timeoutWaiters.remove();
-			o.notifyAll();
+			synchronized (o) {
+				o.notifyAll();
+			}
 		}
 	}
 

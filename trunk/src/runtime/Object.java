@@ -44,7 +44,7 @@ public class Object {
         private Integer objectId;
 
 	/** The domain context in which this object resides */
-	//private DomainContext context;
+	private DomainContext context;
 
 	/** Queue of pending signals for the object */
 	private LinkedList signalQueue = new LinkedList();
@@ -78,10 +78,6 @@ public class Object {
 	
 	private Refcount runningInterpreters = new Refcount();
 
-        /** reference to the Context this object is in */
-        private Context context;
-
-	
 	/**
 	 * Creates a new instance of Object. The object will contain instances
 	 * of all the classes in the <code>classes</code> collection.
@@ -146,7 +142,7 @@ public class Object {
 	public void addDelayedSignal(DelayedSignal s) {
 		synchronized (delayedSignalQueue) {
 			if (delayedGenerator == null)
-				delayedGenerator = new SignalGenerator((DomainContext)context, this);
+				delayedGenerator = new SignalGenerator(context, this);
 			delayedSignalQueue.add(s);
 			delayedSignalQueue.notify();
 		}
@@ -190,7 +186,7 @@ public class Object {
 				long delay;
 				sig = (DelayedSignal)delayedSignalSelfQueue.get(0);
 				delay = sig.getDeliveryTime() -
-					System.currentTimeMillis();
+					context.getTimeObject().getTimeMs();
 
 				if (delay > 0)
 					return delay;
@@ -209,7 +205,7 @@ public class Object {
 						long delay;
 						sig = (DelayedSignal)delayedSignalQueue.get(0);
 						delay = sig.getDeliveryTime() -
-							System.currentTimeMillis();
+								context.getTimeObject().getTimeMs();
 						if (delay <= 0) {
 							delayedSignalQueue.remove(sig);
 							return sig;
@@ -306,7 +302,7 @@ public class Object {
 			while (delayedSignalSelfQueue.size() > 0) {
 				DelayedSignal s;
 				s = (DelayedSignal)delayedSignalSelfQueue.get(0);
-				if (s.getDeliveryTime() <= System.currentTimeMillis()) {
+				if (s.getDeliveryTime() <= context.getTimeObject().getTimeMs()) {
 					delayedSignalSelfQueue.remove( s );
 					addSignalSelf(s);
 				} else
@@ -494,7 +490,12 @@ public class Object {
 		}
 
         /** function to set the Context which this object is in */
-        public void setContext(Context c) {
+        public void setContext(DomainContext c) {
             this.context = c;
-        }			
+        }
+
+	/** function to get the Context which this object is in */
+	public DomainContext getContext() {
+		return context;
+	}
 }

@@ -49,7 +49,8 @@ public class DelayedSignal extends Signal {
 	public DelayedSignal(Event e, runtime.Object o, BigDecimal t) throws LemRuntimeException {
 		super(e);
 		target = o;
-		deliveryTime = System.currentTimeMillis() + t.longValue();
+		deliveryTime = o.getContext().getTimeObject().getTimeMs()
+							+ t.longValue();
 	}
 
 	public runtime.Object getTarget() {

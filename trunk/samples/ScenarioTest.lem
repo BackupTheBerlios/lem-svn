@@ -13,6 +13,7 @@ model TestModel is
 						generate Ev2( self ) to self with delay 10000;
 
 						generate Ev1( self ) to o with delay self.current_delay;
+//						generate Ev1( self ) to o;
 						self.current_delay := self.current_delay * 2;
 					} end s1;
 
