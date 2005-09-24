@@ -667,19 +667,26 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
                   strBuf.append("}\n\n");
           } // end if
           
-          // append AssociationClass
+          // UMLGraph code for all AssociationClasses in selected domain is appended
+          // after code for all ParticipantingClasses have been generated.
+          
+          // Since all associations contain AssociationClass have already be stored in 
+          // variable list, AssociationClasses can be find easily.
           for (Iterator lit = list.listIterator();lit.hasNext();)  {
-              
+               // get association
                Association asso = (Association) lit.next();
+               // get AssociationClass from association
                Class associationClass = asso.getAssociationClassRole().getAssociationClass();
                // append  AssociationClass option
                strBuf.append("/**\n");                    
                // set color for this class
                if (verifier.ClassWriter.getSelectedClassList().contains(associationClass)) 
                     strBuf.append(" *  @opt nodefillcolor \"#FFFF99\"\n"); 
-                    
+               // add name of the association that it belongs to     
                strBuf.append(" *  @tagvalue " + "Association " +  asso.getName() + "\n*/\n" );
+               // add the name of the AssociationClass
                strBuf.append("class " + associationClass.getName() + " {\n");
+
                // append atributes
                 for ( Iterator it = associationClass.attributes.values().iterator(); it.hasNext(); ) {
                 Attribute attribute = (Attribute) it.next();
