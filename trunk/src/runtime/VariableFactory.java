@@ -24,7 +24,7 @@ public class VariableFactory {
     private VariableFactory() {
     }
     
-    static Variable newVariable( DataType type, java.lang.Object value ) throws LemRuntimeException {
+    public static Variable newVariable( DataType type, java.lang.Object value ) throws LemRuntimeException {
         Variable v = null;
         DataType c = type;
         
@@ -57,7 +57,7 @@ public class VariableFactory {
         return v;
     }
     
-    static Variable newVariable( DataType type ) throws LemRuntimeException {
+    public static Variable newVariable( DataType type ) throws LemRuntimeException {
         Variable v = null;
         DataType c = type;
         

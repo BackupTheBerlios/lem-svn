@@ -17,8 +17,9 @@ public class DebugControlPanel extends javax.swing.JPanel {
 	
 	private DomainContext context = null;
 	private Scenario scenario = null ;
-	private ScenarioExecutor parent ; 
-		
+	private ScenarioExecutor parent ;
+	
+	
 	/** Creates new form BeanForm */
 	public DebugControlPanel() {
 		initComponents();
@@ -28,8 +29,11 @@ public class DebugControlPanel extends javax.swing.JPanel {
 		playButton.setEnabled(false);
 		this.context = c ;
 		this.scenario = s ;
-		this.parent = se ; 
+		this.parent = se ;
+		timeSlider.initialise( context ) ; 	
 	}
+	
+	
 	
 	/** This method is called from within the constructor to
 	 * initialize the form.
@@ -43,6 +47,14 @@ public class DebugControlPanel extends javax.swing.JPanel {
         stopButton = new javax.swing.JButton();
         separator2 = new javax.swing.JSeparator();
         pauseButton = new javax.swing.JButton();
+        panelTimeSeparator = new javax.swing.JSeparator();
+        timeSlider = new verifier.TimeSlider();
+
+        addVetoableChangeListener(new java.beans.VetoableChangeListener() {
+            public void vetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {
+                formVetoableChange(evt);
+            }
+        });
 
         playButton.setBackground(new java.awt.Color(255, 255, 255));
         playButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/verifier/play.gif")));
@@ -78,19 +90,30 @@ public class DebugControlPanel extends javax.swing.JPanel {
 
         add(pauseButton);
 
+        panelTimeSeparator.setForeground(new java.awt.Color(255, 255, 255));
+        panelTimeSeparator.setPreferredSize(new java.awt.Dimension(20, 0));
+        add(panelTimeSeparator);
+
+        add(timeSlider);
+
     }
     // </editor-fold>//GEN-END:initComponents
 
+	private void formVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_formVetoableChange
+
+	}//GEN-LAST:event_formVetoableChange
+			
 	private void pauseButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pauseButtonMouseClicked
 // TODO add your handling code here:
 		if (pauseButton.isEnabled()) {
 			context.getDebugObject().pauseModel() ;
 			pauseButton.setEnabled( false ) ;
 			playButton.setEnabled(true);
+			context.getTimeObject().pausedTime() ; 
 		}
-		parent.refreshTree() ; 
+		parent.refreshTree() ;
 	}//GEN-LAST:event_pauseButtonMouseClicked
-
+	
 	private void stopButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stopButtonMouseClicked
 // TODO add your handling code here:
 		if (stopButton.isEnabled()) {
@@ -99,25 +122,28 @@ public class DebugControlPanel extends javax.swing.JPanel {
 			pauseButton.setEnabled( false ) ;
 			playButton.setEnabled( false ) ;
 		}
-		parent.refreshTree() ; 		
+		parent.refreshTree() ;
 	}//GEN-LAST:event_stopButtonMouseClicked
-
+	
 	private void playButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMouseClicked
 // TODO add your handling code here:
 		if (playButton.isEnabled()) {
 			context.getDebugObject().runModel() ;
 			pauseButton.setEnabled( true ) ;
 			stopButton.setEnabled( true ) ;
+			context.getTimeObject().resumeTime() ; 
 		}
 	}//GEN-LAST:event_playButtonMouseClicked
 	
 	
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JSeparator panelTimeSeparator;
     private javax.swing.JButton pauseButton;
     private javax.swing.JButton playButton;
     private javax.swing.JSeparator separator2;
     private javax.swing.JSeparator seperator1;
     private javax.swing.JButton stopButton;
+    private verifier.TimeSlider timeSlider;
     // End of variables declaration//GEN-END:variables
-	
 }
+

@@ -29,6 +29,10 @@ import java.util.LinkedList;
  * @author npiggin
  */
 public class Time {
+	
+	/** the system time when the models been paused */
+	private long pausedTime ;
+	
 	/**
 	 * The current System time when this "period" has started.
 	 */
@@ -81,7 +85,7 @@ public class Time {
 	 * real time * multiplier = lem time.
 	 * Set to 0 to stop lem time.
 	 */
-	public synchronized void setTimeFactor(float factor) {
+	public synchronized void setTimeFactor(double factor) {
 		long now = System.currentTimeMillis();
 		elapsedLemMs = getTimeMs(now);
 		startPeriodSystemMs = now;
@@ -113,5 +117,14 @@ public class Time {
 		else
 			o.wait((long)(timeoutLemMs / LemTimeFactor));
 		timeoutWaiters.remove(o);
+	}
+
+	public void resumeTime() {
+		startPeriodSystemMs += System.currentTimeMillis() - pausedTime ; 
+		pausedTime = 0 ; 
+	}
+
+	public void pausedTime() {
+		this.pausedTime = System.currentTimeMillis();
 	}
 }

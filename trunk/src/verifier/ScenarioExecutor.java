@@ -99,6 +99,7 @@ public class ScenarioExecutor extends javax.swing.JPanel implements Runnable {
         verticalSplit2 = new javax.swing.JSplitPane();
         descriptionPaneScroller = new javax.swing.JScrollPane();
         descriptionPanel = new javax.swing.JTextPane();
+        loggerScroller = new javax.swing.JScrollPane();
         loggerPanel = new verifier.ContextLoggerPanel();
 
         setLayout(new java.awt.GridBagLayout());
@@ -134,7 +135,9 @@ public class ScenarioExecutor extends javax.swing.JPanel implements Runnable {
 
         loggerPanel.setMinimumSize(new java.awt.Dimension(650, 400));
         loggerPanel.setPreferredSize(new java.awt.Dimension(874, 400));
-        verticalSplit2.setLeftComponent(loggerPanel);
+        loggerScroller.setViewportView(loggerPanel);
+
+        verticalSplit2.setRightComponent(loggerScroller);
 
         verticalSplit1.setRightComponent(verticalSplit2);
 
@@ -153,6 +156,7 @@ public class ScenarioExecutor extends javax.swing.JPanel implements Runnable {
     private javax.swing.JTextPane descriptionPanel;
     private javax.swing.JSplitPane horizontalSplit;
     private verifier.ContextLoggerPanel loggerPanel;
+    private javax.swing.JScrollPane loggerScroller;
     private javax.swing.JScrollPane treeScroller;
     private javax.swing.JSplitPane verticalSplit1;
     private javax.swing.JSplitPane verticalSplit2;

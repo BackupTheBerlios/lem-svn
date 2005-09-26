@@ -34,9 +34,9 @@ import java.util.LinkedList;
  * @todo javadoc
  */
 public class Debug {
-	private static final int RUNNING = 0;
-	private static final int PAUSED  = 1;
-	private static final int STOPPED = 2;
+	public static final int RUNNING = 0;
+	public static final int PAUSED  = 1;
+	public static final int STOPPED = 2;
 
 	/**
 	 * The runtimeState of the model - RUNNING, PAUSED, STOPPED
@@ -229,5 +229,9 @@ public class Debug {
 		if (!actionBreakpoints.remove(a)) {
 			throw new Error("Breakpoint does not exist!");
 		}
+	}
+
+	public int getRuntimeState() {
+		return runtimeState;
 	}
 }
