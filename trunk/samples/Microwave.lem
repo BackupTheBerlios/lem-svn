@@ -5,6 +5,37 @@ model TheWorld is "where all things happen"
 					attribute Voltage "voltage" is numeric;
 					attribute Power "power" is numeric;
 					attribute Capacity "capacity" is numeric;
+
+                                        event doorClosed;
+					event doorOpened;
+					event buttonPressed;
+					event timeExpired;
+
+					behaviour is
+						state ReadyToCook is
+						end ReadyToCook;
+
+						state DoorOpened is
+						end DoorOpened;
+
+						state Cooking is
+						end Cooking;
+
+						state CookingInterrupted is
+						end CookingInterrupted;
+
+						state CookingComplete is
+						end;
+						
+						on doorClosed transition from DoorOpened to ReadyToCook;
+						on doorClosed transition from CookingInterrupted to ReadyToCook;
+						on doorOpened transition from ReadyToCook to DoorOpened;
+						on doorOpened transition from CookingComplete to DoorOpened;
+						on doorOpened transition from Cooking to CookingInterrupted;
+						on buttonPressed transition from ReadyToCook to Cooking;
+						on timeExpired transition from Cooking to CookingComplete;
+					end behaviour;
+
 				end Oven;
 				
 				class Door is
