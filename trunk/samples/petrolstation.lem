@@ -1,0 +1,212 @@
+model PetrolStation is "A xtUML model of a petrol station. This model has ben based on that of the iUML tutorial" 
+
+	domain PSC is "The petrol station controll domain. This is the domain that controls the logic of the petrol station model" 
+		
+		subsystem Pstation is "This sub-system holdes the classes within the PSC domain" 
+			
+			class Delivery is "The object that puts fuel in the pump" 
+				\\ attribute Time
+				attribute Pump_number "the pump identifier the deliver fue is through" is numeric;
+				attribute Volume_delivered "the amount of fuel delevered " is numeric;
+				attribute Cost "the cost per unit of the delevered fuel" is numberic;
+				\\event create Delivery(Pump id) ;
+				event DelieveryComplete;
+				event FuelUnitDelivered;
+
+				behaviour is
+					state CreatingDelivery 
+					"create a delivery instance and enable the pump" is
+					end Creatingdelivery;
+					
+					state CalculatePrice 
+					"A unit of petrol has been delivered" is
+					end CalculatePrice;
+					
+					state DeliveryComplete
+					"The delivery has been comleted"
+						
+					end DeliveryComplete;
+
+					state DeliveryCancelled
+					"No fuel hs been pumped, and nothing to pay"
+					end DeliveryCancelled;
+					
+				end behaviour;
+				
+				on DeliveryCompleted transition from CreatingDelivery to DeliveryCancelled;
+				on FuelUnitDelivered transition from CreatingDelivery to CalculatingPrice;
+				on FuelUnitDelivered transition from CalculatingPrice to CalculatingPrice;
+				on Delivery Completed transition from CalculatingPrice to DeliveryComplete;
+
+				
+				\\on event transition fron state to state;
+				
+			end Delivery;
+			
+			class Pump is "makes the fuel run against gravitey"
+				attribute Pump_number "the unique id for a pump" is numeric;
+				attribute Tank_number "the uniue tank identifer where the fuel is pumped from" is numeric;
+				
+				event CustomerFinished;
+				event FuelAvaliable;
+				event GunRemoved;
+				event GunReplaced;
+				event FuelLevelLow;
+				event PumpEnabled;
+				event TriggerDepressed;
+				event TriggerREleased;
+				
+				behaviour is
+					
+					state WaitingForCustomer 
+					"The pump is in a stationary position" is
+
+					end WaitingForCustomer;
+					
+					state WaitingPumpEnable
+					"the pump is read to move fuel" is
+
+					end WaitingPumpEnable;
+
+					state FuelUnavailable
+					"there is no more fuel" is
+					
+					end FuelUnavailable;
+					
+					state FuelDeliveryComplete
+					"the customer requires no more fuel" is
+
+					end FuelDeliveryComplete;
+
+					state ReadyToPump
+					"needed to start the motor in the fuel pump" is
+						
+					end ReadyToPump;
+
+					state PumpingPaused
+					"pause the pumping process" is
+						
+					end PumpingPaused
+
+					state Pumping 
+					"the fuel is running from the tank through the motor to the customer"
+						
+					end Pumping;
+				end behaviour;
+				
+				on CustomerFinished transition 
+					from FuelDeliveryComplete to WaitingForCustomer;
+				on FuelAvailable transition
+					from FuelUnAvailable to WaitingForCustomer;
+				on GunReplaved transition
+					from WaitingPumpEnable to WaitingForCustomer;
+				on GunRemoved transition 
+					from WaitingForCustomer to WaitingPumpEnable;
+				on FuelLevelLow transition
+					from WaitingPumpEnable to Fuel UnAvailable;
+				on PumpEnabled transition
+					from WaitingPumpEnable to ReadyToPump;
+				on GenReplaced transition
+					from ReadyToPump to DuelDeliveryComplete;
+				on TriggerDepressed transition
+					from ReadyToPump to Pumping;
+				on TriggerReleased transition
+					from Pumping to PumpingPaused;
+				on TriggerDepressed transition
+					from PumpingPaused to Pumping;
+				on GunReplaced transition
+					from PumpingPaused to FuelDeliveryComplete;
+
+				
+			end Pump;
+			
+			class Tank is "keeps the fuel safe from burning"
+				attribute Tank_numer "the unique id for a tank" is numeric;
+				attribute Grade_name "the name of the grades stored in the tank" is string;
+				attribute Tank_empty "signifies when the tank is empty" is boolean;
+				attribute Tank_level "the current level of fuel in the tank" is numeric;
+				attribute capacity "the maximum amount of fuel this tank can hold" is numeric;
+				attribute Empty_threshold "reminder when there is only a little bit of fuel left in the tank" is numeric;
+				
+				event FuelUsed;
+				event LevelAbovethreshold;
+				event LevelBelowThreshold;
+				event TankerDelivery;
+				
+				state ResetWaitingPumps
+				"tank in use" is
+				end ReseWaitingPumps;
+				
+				
+				
+				
+			end Tank;
+
+			class Fuel_grade is "the quality of the fuel"
+				attribute Grade_name "the name of the fuel grade" is string;
+				attribute Unit_price "the cost of fuel per unit" is numeric;
+			end Fuel_grade;
+			
+			class Transaction is "Where the customer hands over money for their fuel"
+				attribute Transaction_number "a unique number for each transaction" is numeric;
+				attribute Pump_numer "the pump linked to a simgle transaction" is numeric;
+				\\attribute Transaction_type "the transaction subtype" is Transaction_subtype;
+				attribute Cost "the total cost of this transaction" is numeric;
+				\\attribute Ttransaction_process_time "time??" is time???
+				\\attribute Deliver_Start_time " another time" ???;
+			end Transaction
+		
+\\\ Inherit from transaction
+			class Evaded_transaction is "the customer doesn't pay for their fuel? "
+				attribute Transaction_number is numeric;
+				attribute Observations "what happened ?" is string;
+			end Ecaded_transaction;
+
+			class Paid_transaction is "the customer pays for the fuel they pump"
+				attribute Transaction_number is numeric;
+			end Paid_transaction;
+			
+			class Pending_transaction is "a transaction that is not finised"
+				attribute Transaction_number is numeric;
+				attribute Pump_number "the pump id where the fuel is being pumped from" is numberic;
+			end Pending_transaction;
+
+\\\\\\\\\\ Associations
+
+			association R1 is "the relationship between a tank and pump"
+				Pump "is pumping fuel from" 1..1 Tank;
+				Tank "is providing fuel for" 0..* Pump;
+			end R1;
+
+			association R2 is "the relationship between a tank and fuel_grade"
+				Tank "stores" 1..1 Fuel_grade;
+				Fule_grade "is stored in" 1..1 Tank;
+			end R2;
+			
+			association R3 is "the relationship between a deliver and a pump"
+				Pump "is being used for" 0..1 Delivery;
+				Delivery "is being made using" 1..1 Pump;
+			end R3;
+			
+			asssociation R9 is "the relationship between pump and pending_transaction"
+				Pump "delivered fuel for" 0..1 Pending_Transaction;
+				Pending_transaction "is pending for" 1..1 Pump;
+			end R9;
+			
+			association R10 is "the relationship between pump and transaction"
+				Transaction "records fuel delivery for" 1..1 Pump;
+				Pump "has delivered fuel for" 0..* Transaction;
+			end R10;
+
+
+\\\\\\\\\\ Generalisations
+
+			generalisation R4 is "there are different transaction types" 
+				Transaction is Evaded_transaction or Paid_transaction or Pending_transaction;
+			end R4;
+			
+		end Pstation;	
+			
+	end PSC;
+
+end PetrolStation;
