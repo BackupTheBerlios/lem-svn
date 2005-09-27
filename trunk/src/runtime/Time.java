@@ -92,7 +92,8 @@ public class Time {
 		LemTimeFactor = factor;
 
 		while (timeoutWaiters.size() > 0) {
-			java.lang.Object o = (java.lang.Object)timeoutWaiters.remove();
+			/* Remove the first element from the list */
+			java.lang.Object o = (java.lang.Object)timeoutWaiters.remove(0);
 			synchronized (o) {
 				o.notifyAll();
 			}
