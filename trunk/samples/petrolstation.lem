@@ -133,12 +133,48 @@ model PetrolStation is "A xtUML model of a petrol station. This model has ben ba
 				event LevelBelowThreshold;
 				event TankerDelivery;
 				
-				state ResetWaitingPumps
-				"tank in use" is
-				end ReseWaitingPumps;
+				behaviour is 
+					state ResetWaitingPumps
+					"tank in use" is
+					end ReseWaitingPumps;	
+
+					state CheckingLevelAfterTankerDelivery
+					"makesure the delivery is corrent" is
+					end CheckingLevelAfterTankerDeliver;
+
+					state CheckingLevelsAfterPumpUsage
+					"re-do the tank level" is
+					end CheckingLevelsAfterPumpUsage;
 				
+					state WaitingForTankerDelivery
+					"in a waiting state" is
+					end WaitingForTankerDelivery;
 				
+					state UpdatingFuelLevels
+					"some fuel has been used and the level needs to be updated"
+					end UpdatingFuelLevels;
+
+				end behaviour;
 				
+				on FuelUsed transition
+					from ResetWaitingPump to CheckingLEvelsAfterPumpUsage;
+				on LevelAboveThreshold transition
+					from CheckingLevelsAfterPumpUsage to ResetWaitingPump;
+				on LevelBelowThreshold transition
+					from CheckingLevelsAfterPumpUsage to WaitingForTankerDelivery;
+				on FuelUsed transition
+					from WaitingForTankerDeliver to UpdatingfuelLevels;
+				on LevelBelowThreshold transition
+					from UpdatingFuelLEvels to WaitingForTankerDelivery;
+				on TankerDeliver tranmsition
+					from WaitingForTankerDelivery to CheckingLevelsAfterTankerDelivery;
+				on  LevelBelowThreshold transition
+					CheckingLevelsAfterTankerDelivery to WaitingForTankerDelivery;
+				on LevelAboveThreshold transition 
+					from CheckingLEvelsAfterTankerDelivery to ResetWaitingPumps;
+				on TankerDelivery transition
+					from ResetWaitingPumps tp CheckingLevelsAfterTankerDelivery;
+					
 				
 			end Tank;
 
@@ -154,6 +190,33 @@ model PetrolStation is "A xtUML model of a petrol station. This model has ben ba
 				attribute Cost "the total cost of this transaction" is numeric;
 				\\attribute Ttransaction_process_time "time??" is time???
 				\\attribute Deliver_Start_time " another time" ???;
+				
+				event CustomerAbsconds;
+				event PaymentRecieved;
+
+				behaviour is
+					
+					state Created 
+					"the inital state" is
+					end Created;
+
+					state Evaded 
+					"the customer doesn't want to pay" id
+					end Evaded;
+
+					state Paid 
+					"the customer handing over money" is
+					end Paid;
+					
+				end behaviour;
+				
+				on CustomerAbsconds transition
+					from Created to Evaded;
+				on PaymentRecieved transition
+					from Created to Paid;
+				on PaymentRecieved transition
+					from Evaded to Paid;				
+				
 			end Transaction
 		
 \\\ Inherit from transaction
