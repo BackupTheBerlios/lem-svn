@@ -29,9 +29,15 @@ import java.util.LinkedList;
  * @author npiggin
  */
 public class Time {
+	/**
+	 * true if model has been paused. This causes subsequent
+	 * calls to setTimeFactor not to restart the model (ie. only
+	 * resumeTime will).
+	 */
+	private boolean paused;
 	
-	/** the system time when the models been paused */
-	private long pausedTime ;
+	/** The time factor before the model has been paused */
+	private double pausedFactor;
 	
 	/**
 	 * The current System time when this "period" has started.
@@ -58,6 +64,7 @@ public class Time {
 	 * Create a new, initialised Time object.
 	 */
 	public Time() {
+		paused = false;
 		LemTimeFactor = 1.0;
 		elapsedLemMs = 0;
 		startPeriodSystemMs = System.currentTimeMillis();
@@ -86,16 +93,20 @@ public class Time {
 	 * Set to 0 to stop lem time.
 	 */
 	public synchronized void setTimeFactor(double factor) {
-		long now = System.currentTimeMillis();
-		elapsedLemMs = getTimeMs(now);
-		startPeriodSystemMs = now;
-		LemTimeFactor = factor;
+		if (paused) {
+			pausedFactor = factor;
+		} else {
+			long now = System.currentTimeMillis();
+			elapsedLemMs = getTimeMs(now);
+			startPeriodSystemMs = now;
+			LemTimeFactor = factor;
 
-		while (timeoutWaiters.size() > 0) {
-			/* Remove the first element from the list */
-			java.lang.Object o = (java.lang.Object)timeoutWaiters.remove(0);
-			synchronized (o) {
-				o.notifyAll();
+			while (timeoutWaiters.size() > 0) {
+				/* Remove the first element from the list */
+				java.lang.Object o = (java.lang.Object)timeoutWaiters.remove(0);
+				synchronized (o) {
+					o.notifyAll();
+				}
 			}
 		}
 	}
@@ -104,7 +115,10 @@ public class Time {
 	 * Returns the current "lem time" multiplier.
 	 */
 	public synchronized double getTimeFactor() {
-		return LemTimeFactor;
+		if (paused)
+			return pausedFactor;
+		else
+			return LemTimeFactor;
 	}
 
 	/**
@@ -120,12 +134,14 @@ public class Time {
 		timeoutWaiters.remove(o);
 	}
 
-	public void resumeTime() {
-		startPeriodSystemMs += System.currentTimeMillis() - pausedTime ; 
-		pausedTime = 0 ; 
+	public synchronized void resumeTime() {
+		paused = false;
+		setTimeFactor(pausedFactor);
 	}
 
-	public void pausedTime() {
-		this.pausedTime = System.currentTimeMillis();
+	public synchronized void pausedTime() {
+		pausedFactor = getTimeFactor();
+		setTimeFactor(0.0); /* stop lem time */
+		paused = true;
 	}
 }

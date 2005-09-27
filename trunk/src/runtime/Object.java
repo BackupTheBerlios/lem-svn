@@ -213,7 +213,7 @@ public class Object {
 
 						System.out.println("Next delayed signal in " + delay);
 
-						delayedSignalQueue.wait(delay);
+						context.getTimeObject().wait(delayedSignalQueue, delay);
 					} else {
 						if (!isActive())
 							return null;

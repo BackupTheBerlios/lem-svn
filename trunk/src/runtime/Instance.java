@@ -205,7 +205,7 @@ public class Instance {
 						instanceInObject.wait();
 					} else {
 						System.out.println("waiting for signal with delay " + delay);
-						instanceInObject.wait(delay);
+						instanceInObject.getContext().getTimeObject().wait(instanceInObject, delay);
 					}
 					/**
 					 * After taking instanceInObject's lock, we must
