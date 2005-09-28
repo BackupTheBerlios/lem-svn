@@ -93,21 +93,35 @@ public class Time {
 	 * real time * multiplier = lem time.
 	 * Set to 0 to stop lem time.
 	 */
-	public synchronized void setTimeFactor(double factor) {
-		if (paused) {
-			pausedFactor = factor;
-		} else {
-			long now = System.currentTimeMillis();
-			elapsedLemMs = getTimeMs(now);
-			startPeriodSystemMs = now;
-			LemTimeFactor = factor;
+	public void setTimeFactor(double factor) {
+		LinkedList wakeList;
+		java.lang.Object o;
+
+		synchronized (this) {
+			if (paused) {
+				pausedFactor = factor;
+				return;
+			} else {
+				long now = System.currentTimeMillis();
+				elapsedLemMs = getTimeMs(now);
+				startPeriodSystemMs = now;
+				LemTimeFactor = factor;
+			}
+
+
+			wakeList = new LinkedList();
 
 			Iterator i = timeoutWaiters.iterator();
 			while (i.hasNext()) {
-				java.lang.Object o = (java.lang.Object)i.next();
-				synchronized (o) {
-					o.notifyAll();
-				}
+				o = (java.lang.Object)i.next();
+				wakeList.add(o);
+			}
+		}
+
+		while (wakeList.size() > 0) {
+			o = (java.lang.Object)wakeList.remove(0);
+			synchronized (o) {
+				o.notifyAll();
 			}
 		}
 	}
