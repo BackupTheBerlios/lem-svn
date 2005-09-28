@@ -216,7 +216,7 @@ public class Instance {
 					 * So go back to the top.
 					 */
 				} catch ( Exception e ) {
-					e.printStackTrace();
+					/* this is OK */
 				}
 			}
 		}

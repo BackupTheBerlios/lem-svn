@@ -159,15 +159,14 @@ public class Object {
 			debug.delEntity();
 		}
 
+		while (delayedSignalSelfQueue.size() > 0) {
+			delayedSignalSelfQueue.remove(0);
+			debug.delEntity();
+		}
+
 		synchronized (delayedSignalQueue) {
 			while (delayedSignalQueue.size() > 0) {
 				delayedSignalQueue.remove(0);
-				debug.delEntity();
-			}
-		}
-		synchronized (delayedSignalSelfQueue) {
-			while (delayedSignalSelfQueue.size() > 0) {
-				delayedSignalSelfQueue.remove(0);
 				debug.delEntity();
 			}
 		}
@@ -179,21 +178,19 @@ public class Object {
 		}
 	}
 	
-	public long getNextDelayedSignalSelfDelay() {
-		synchronized (delayedSignalSelfQueue) {
-			if (delayedSignalSelfQueue.size() > 0) {
-				DelayedSignal sig;
-				long delay;
-				sig = (DelayedSignal)delayedSignalSelfQueue.get(0);
-				delay = sig.getDeliveryTime() -
-					context.getTimeObject().getTimeMs();
+	public synchronized long getNextDelayedSignalSelfDelay() {
+		if (delayedSignalSelfQueue.size() > 0) {
+			DelayedSignal sig;
+			long delay;
+			sig = (DelayedSignal)delayedSignalSelfQueue.get(0);
+			delay = sig.getDeliveryTime() -
+				context.getTimeObject().getTimeMs();
 
-				if (delay > 0)
-					return delay;
-				return 0;
-			} else
-				return -1;
-		}
+			if (delay > 0)
+				return delay;
+			return 0;
+		} else
+			return -1;
 	}
 	
 	public DelayedSignal getNextDelayedSignal() {
@@ -228,10 +225,9 @@ public class Object {
 		}
 	}
 
-	public void addDelayedSignalSelf(DelayedSignal s) {
-		synchronized (delayedSignalSelfQueue) {
-			delayedSignalSelfQueue.add(s);
-		}
+	public synchronized void addDelayedSignalSelf(DelayedSignal s) {
+		delayedSignalSelfQueue.add(s);
+		notifyAll();
 	}
 
 	public synchronized Signal cancelDelayedSignalSelf(Event e) {
@@ -248,14 +244,12 @@ public class Object {
 			}
 		}
 
-		synchronized (delayedSignalSelfQueue) {
-			i = delayedSignalSelfQueue.iterator();
-			while (i.hasNext()) {
-				Signal s = (Signal)i.next();
-				if (s.getEvent() == e) {
-					delayedSignalSelfQueue.remove(s);
-                                        return s;
-                                }
+		i = delayedSignalSelfQueue.iterator();
+		while (i.hasNext()) {
+			Signal s = (Signal)i.next();
+			if (s.getEvent() == e) {
+				delayedSignalSelfQueue.remove(s);
+				return s;
 			}
 		}
 
@@ -293,21 +287,19 @@ public class Object {
 	 * propogate the next signal from self to all instances.
 	 * Callers must be synchronized on 'this' object.
 	 */
-	public boolean propogateNextSignalSelf(Debug debugObject) throws LemRuntimeException {
+	public synchronized boolean propogateNextSignalSelf(Debug debugObject) throws LemRuntimeException {
 		/*
 		 * First propogate any elapsed delayed signals to self
 		 * into the signalSelfQueue.
 		 */
-		synchronized (delayedSignalSelfQueue) {
-			while (delayedSignalSelfQueue.size() > 0) {
-				DelayedSignal s;
-				s = (DelayedSignal)delayedSignalSelfQueue.get(0);
-				if (s.getDeliveryTime() <= context.getTimeObject().getTimeMs()) {
-					delayedSignalSelfQueue.remove( s );
-					addSignalSelf(s);
-				} else
-					break;
-			}
+		while (delayedSignalSelfQueue.size() > 0) {
+			DelayedSignal s;
+			s = (DelayedSignal)delayedSignalSelfQueue.get(0);
+			if (s.getDeliveryTime() <= context.getTimeObject().getTimeMs()) {
+				delayedSignalSelfQueue.remove( s );
+				addSignalSelf(s);
+			} else
+				break;
 		}
 		
 		if (signalSelfQueue.size() > 0) {
@@ -460,35 +452,23 @@ public class Object {
             }
             return c;
         }
-		
-		/**
-         *
-         */
-		public Collection getSelfSignalQueue() {
-			return signalSelfQueue;
-		}
-		
-		/**
-         *
-         */
-		public Collection getSignalQueue() {
-			return signalSelfQueue;
-		}
-		
-		/**
-         *
-         */
-		public Collection getDelayedSelfQueue() {
-			return delayedSignalSelfQueue;
-		}
-		
-		/**
-         *
-         */
-		public Collection getDelayedQueue() {
-			return delayedSignalQueue;
-		}
-
+	
+	public Collection getSelfSignalQueue() {
+		return signalSelfQueue;
+	}
+	
+	public Collection getSignalQueue() {
+		return signalQueue;
+	}
+	
+	public Collection getDelayedSelfQueue() {
+		return delayedSignalSelfQueue;
+	}
+	
+	public Collection getDelayedQueue() {
+		return delayedSignalQueue;
+	}
+	
         /** function to set the Context which this object is in */
         public void setContext(DomainContext c) {
             this.context = c;
