@@ -16,10 +16,30 @@ model PetrolStation is "A xtUML model of a petrol station. This model has ben ba
 				behaviour is
 					state CreatingDelivery 
 					"create a delivery instance and enable the pump" is
+						objref new_delivery;
+						
+						new_delivery := create Delivery; 
+						\\ set variables
+						Pump_Number = Pump_ID;
+						\\ set time = now
+						Volume_delivered := 0;
+						Cost := 0;
+						
+						relate new_delivery to delivering_pump across R3;
+						
+						generate Pump_Enabled() to delivering_pump
+						
 					end Creatingdelivery;
 					
 					state CalculatePrice 
 					"A unit of petrol has been delivered" is
+						
+						New_Volume = this Volume_Delivered + 0.01
+						this Volume_Delivered = New_Volume;
+
+						Grade = this->R3->R1->R2;
+						
+						
 					end CalculatePrice;
 					
 					state DeliveryComplete
@@ -60,7 +80,8 @@ model PetrolStation is "A xtUML model of a petrol station. This model has ben ba
 					
 					state WaitingForCustomer 
 					"The pump is in a stationary position" is
-
+						\\This is a sate for waiting hence there are no actions.
+						\\Wait for a customer to remove a gun
 					end WaitingForCustomer;
 					
 					state WaitingPumpEnable
@@ -125,7 +146,7 @@ model PetrolStation is "A xtUML model of a petrol station. This model has ben ba
 				attribute Grade_name "the name of the grades stored in the tank" is string;
 				attribute Tank_empty "signifies when the tank is empty" is boolean;
 				attribute Tank_level "the current level of fuel in the tank" is numeric;
-				attribute capacity "the maximum amount of fuel this tank can hold" is numeric;
+				attribute Capacity "the maximum amount of fuel this tank can hold" is numeric;
 				attribute Empty_threshold "reminder when there is only a little bit of fuel left in the tank" is numeric;
 				
 				event FuelUsed;
@@ -140,10 +161,12 @@ model PetrolStation is "A xtUML model of a petrol station. This model has ben ba
 
 					state CheckingLevelAfterTankerDelivery
 					"makesure the delivery is corrent" is
+				
 					end CheckingLevelAfterTankerDeliver;
 
 					state CheckingLevelsAfterPumpUsage
 					"re-do the tank level" is
+					
 					end CheckingLevelsAfterPumpUsage;
 				
 					state WaitingForTankerDelivery
