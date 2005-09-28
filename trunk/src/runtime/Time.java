@@ -145,7 +145,7 @@ public class Time {
 		if (LemTimeFactor == 0)
 			o.wait();
 		else
-			o.wait((long)(timeoutLemMs / LemTimeFactor));
+			o.wait((long)((float)timeoutLemMs / LemTimeFactor));
 		timeoutWaiters.remove(o);
 	}
 
