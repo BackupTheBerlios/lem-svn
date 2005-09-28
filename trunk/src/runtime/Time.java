@@ -137,16 +137,23 @@ public class Time {
 	}
 
 	/**
-	 * Equivalent of o.wait(timeout), but takes a timeout in LemMs, and wakes
-	 * object if time scale changes.
+	 * Equivalent of o.wait(timeout), but takes a timeout in LemMs, and
+	 * wakes object if time scale changes. Must be called while
+	 * synchronized on o.
 	 */
-	public synchronized void wait(java.lang.Object o, long timeoutLemMs) throws InterruptedException {
-		timeoutWaiters.add(o);
+	public void wait(java.lang.Object o, long timeoutLemMs) throws InterruptedException {
+		synchronized (this) {
+			timeoutWaiters.add(o);
+		}
+		
 		if (LemTimeFactor == 0)
 			o.wait();
 		else
 			o.wait((long)((float)timeoutLemMs / LemTimeFactor));
-		timeoutWaiters.remove(o);
+
+		synchronized (this) {
+			timeoutWaiters.remove(o);
+		}
 	}
 
 	public synchronized void resumeTime() {
