@@ -22,6 +22,7 @@
 package runtime;
 
 import java.util.LinkedList;
+import java.util.Iterator;
 
 /**
  * A Time object is the keeper of "model time" for the LEM runtime.
@@ -101,9 +102,9 @@ public class Time {
 			startPeriodSystemMs = now;
 			LemTimeFactor = factor;
 
-			while (timeoutWaiters.size() > 0) {
-				/* Remove the first element from the list */
-				java.lang.Object o = (java.lang.Object)timeoutWaiters.remove(0);
+			Iterator i = timeoutWaiters.iterator();
+			while (i.hasNext()) {
+				java.lang.Object o = (java.lang.Object)i.next();
 				synchronized (o) {
 					o.notifyAll();
 				}
