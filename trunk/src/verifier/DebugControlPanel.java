@@ -16,8 +16,10 @@ import runtime.DomainContext;
 public class DebugControlPanel extends javax.swing.JPanel {
 	
 	private DomainContext context = null;
-	private Scenario scenario = null ;
-	private ScenarioExecutor parent ;
+	private Scenario scenario = null;
+	private ScenarioExecutor parent;
+	private Thread scenarioThread = null;
+
 	
 	
 	/** Creates new form BeanForm */
@@ -26,10 +28,10 @@ public class DebugControlPanel extends javax.swing.JPanel {
 	}
 	
 	public void init(DomainContext c, Scenario s, ScenarioExecutor se) {
-		playButton.setEnabled(false);
-		this.context = c ;
-		this.scenario = s ;
-		this.parent = se ;
+		playButton.setEnabled(true);
+		this.context = c;
+		this.scenario = s;
+		this.parent = se;
 		timeSlider.initialise( context ) ; 	
 	}
 	
@@ -126,11 +128,16 @@ public class DebugControlPanel extends javax.swing.JPanel {
 	
 	private void playButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMouseClicked
 // TODO add your handling code here:
-		if (playButton.isEnabled()) {
-			context.getDebugObject().runModel() ;
-			pauseButton.setEnabled( true ) ;
-			stopButton.setEnabled( true ) ;
+		if( scenarioThread == null ) {
+			scenarioThread = new Thread( parent );
+			scenarioThread.start();
+		} else {
+			context.getDebugObject().runModel();
 		}
+
+		stopButton.setEnabled( true );
+		pauseButton.setEnabled( true );
+		playButton.setEnabled( false );
 	}//GEN-LAST:event_playButtonMouseClicked
 	
 	
