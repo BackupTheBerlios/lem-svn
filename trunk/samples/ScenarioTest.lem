@@ -9,8 +9,8 @@ model TestModel is
 				behaviour is
 					state s1( o is objref ) is
 					{
-						// After 10s delay time, give up and kill the model.
-						generate Ev2( self ) to self with delay 10000;
+						// After 4s delay time, give up and kill the model.
+						generate Ev2( o ) to self with delay 4000;
 
 						generate Ev1( self ) to o with delay self.current_delay;
 						self.current_delay := self.current_delay * 2;
