@@ -47,6 +47,7 @@ public class ScenarioExecutor extends javax.swing.JPanel implements Runnable {
 	
 	public void run() {
 		try {
+			context.getDebugObject().runModel();
 			interpreter.interpret(scenario, context);
 		} catch(LemRuntimeException e) {
 			System.out.println(e);
