@@ -132,11 +132,14 @@ public class Time {
 	 * synchronized on o.
 	 */
 	public void wait(java.lang.Object o, long timeoutLemMs) throws InterruptedException {
+		boolean timeStopped;
+
 		synchronized (this) {
 			timeoutWaiters.add(o);
+			timeStopped = paused || (LemTimeFactor == 0);
 		}
 		
-		if (LemTimeFactor == 0)
+		if (timeStopped)
 			o.wait();
 		else
 			o.wait((long)((float)timeoutLemMs / LemTimeFactor));
