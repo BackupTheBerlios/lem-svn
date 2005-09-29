@@ -59,7 +59,6 @@ public class ScenarioNode extends AbstractDescriptionNode  {
 				LoggerFrame loggerWindow = new LoggerFrame(scenario, eleminator);
 				loggerWindow.setVisible(true);
 				loggerWindow.setBounds(0,0,640,480);
-				loggerWindow.startExecutor();
 			}
 		});
 		contextMenu.add(executeProcedure);

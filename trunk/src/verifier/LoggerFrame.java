@@ -30,10 +30,6 @@ public class LoggerFrame extends javax.swing.JFrame {
 		eleminator.newWindow(this);		
 	}
 	
-	public void startExecutor() {
-		new Thread(scenarioExecutor).start() ;		
-	}
-	
 	public ScenarioExecutor getScenarioExecutor() {
 		return scenarioExecutor;
 	}
