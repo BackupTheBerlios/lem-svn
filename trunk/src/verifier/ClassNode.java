@@ -2,6 +2,25 @@
  * ClassNode.java
  *
  * Created on April 24, 2005, 3:54 PM
+ *
+ * Copyright (C) 2005 Steven Ring
+ * Copyright (C) 2005 Shokouhmand Torabi
+ * Copyright (C) 2005 David Gavin
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
  */
 
 package verifier;
@@ -19,7 +38,7 @@ import metamodel.Event ;
  * Tree node appearing inside a SubsystemNode. For representing and "holding" a
  * LEM Class object. Has AttributeNode, StateMachineNode and EventsTreeNode as
  * children.
- * @author sjr
+ * @author Steven Ring
  */
 public class ClassNode extends AbstractDescriptionNode {
 	/**The LEM Class object that ClassNode contains*/

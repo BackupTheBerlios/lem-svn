@@ -37,7 +37,7 @@ import runtime.Instance;
 
 /**
  *
- * @author u3958283
+ * @author Shokouhmand Torabi
  */
 public class InstanceNode extends AbstractDescriptionNode {
 	

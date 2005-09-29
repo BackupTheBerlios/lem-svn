@@ -1,5 +1,5 @@
 /*
- * ContextParameterNode.java
+ * ContextVariableNode.java
  *
  * Created on September 14, 2005, 2:24 PM
  *
@@ -31,7 +31,7 @@ import runtime.Variable;
 
 /**
  *
- * @author u4128551
+ * @author David Gavin
  */
 public class ContextVariableNode extends AbstractDescriptionNode {
 	private Variable thisVariable;

@@ -1,5 +1,5 @@
 /*
- * SignalNode.java
+ * ContextEventNode.java
  *
  * Created on September 12, 2005, 4:24 PM
  *
@@ -34,7 +34,7 @@ import runtime.Object ;
 import runtime.Signal;
 /**
  *
- * @author u3958283
+ * @author Shokouhmand Torabi
  */
 public class ContextEventNode extends AbstractDescriptionNode {
 	

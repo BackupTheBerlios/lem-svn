@@ -35,7 +35,7 @@ import metamodel.Transition;
  * Tree node appearing inside a ClassNode. For graphically representing and
  * "holding" a LEM StateMachine object. Has StateNodes and TransitionNodes as
  * children.
- * @author sjr
+ * @author James Ring
  */
 public class StateMachineNode extends AbstractDescriptionNode {
     /**The LEM StateMachine object that StateMachineNode contains*/

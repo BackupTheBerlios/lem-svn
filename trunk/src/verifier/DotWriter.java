@@ -2,6 +2,7 @@
  * DotWriter.java
  *
  * Copyright (C) 2005 Steven Michael Ring
+ * Copyright (C) 2005 Toshio Nakamura
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

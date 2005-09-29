@@ -37,7 +37,7 @@ import runtime.Signal;
 
 /**
  *
- * @author u3958283
+ * @author Shokouhmand Torabi
  */
 public class ObjectNode extends AbstractDescriptionNode {
 	
