@@ -912,20 +912,23 @@ public class BuilderPass2 extends Visitor {
 
     	public Object visit( LEMVariableReference node, Object data ) throws LemException {
         	if( node.jjtGetNumChildren() == 0) {
-	    	// 'self' reference.
-            	if(inScenario)
-            	    throw new LemException("Undefined use of self in Scenario", node.getFirstToken(), "LEM_E_01051" );
-		    return new VariableReference( "self" );  
-      	  	} else if( node.jjtGetNumChildren() == 1 ) {
-            	// bare variable reference
-            	String variableName = getIdentifier(node.jjtGetChild(0) );
+	    		// 'self' reference.
+	            	if(inScenario)
+	            	    throw new LemException("Undefined use of self in Scenario", node.getFirstToken(), "LEM_E_01051" );
+			    return new VariableReference( "self" );  
+		} else if( node.jjtGetNumChildren() == 1 ) {
+	            	// bare variable reference
+	            	String variableName = getIdentifier(node.jjtGetChild(0));
+			
+/* TODO: need to fix static variable checking
             	if(!currentBlock.isValidVariable(variableName)) {
             	    if((currentClass.getAttribute(variableName) != null) && !(inScenario)) {
             	        return new VariableReference("self", variableName);
             	    }else if(!(variableName.equals("selected") && hasSelectAncestorNode(node)))
             	        throw new LemException("Undeclared variable "+variableName, node.getFirstToken(), "LEM_E_01052" );
           	  } 
-           	 return new VariableReference(variableName );
+*/
+			return new VariableReference(variableName);
         	} else if( node.jjtGetNumChildren() == 2 ) {
       	  	    // object.variable-style reference, eg. "publisher.name"
         	    VariableReference obj = (VariableReference)visit( (LEMObjectReference)node.jjtGetChild(0), null );
