@@ -11,7 +11,7 @@ import runtime.DomainContext;
 
 /**
  *
- * @author  u3958283
+ * @author  shuku
  */
 public class TimeSlider extends javax.swing.JPanel {
 	
@@ -22,16 +22,21 @@ public class TimeSlider extends javax.swing.JPanel {
 		initComponents();
 		timeFactorLabel.setText("Factor:"+ getTimeFactor() + "X" ) ;
 		TimeChanger tc = new TimeChanger() ;
+		
+		//if ( context != null)
+		//	 context.getTimeObject().setTimeFactor( getTimeFactor() ) ; 
 	}
 	
 	public void initialise(DomainContext d) {
-		this.context = d ;
-		
+		this.context = d ;				
+		refreshTime() ; 
+		//context.getTimeObject().setTimeFactor( 1 ) ;
 	}
 	
 	public void refreshTime() {
-		if ( context != null )
+		if ( context != null && context.getDebugObject().isRunning() ) {			
 			timer.setText( " " + context.getTimeObject().getTimeMs() + " ") ;
+		}
 	}
 	
 	
@@ -52,9 +57,15 @@ public class TimeSlider extends javax.swing.JPanel {
         timeFactorLabel.setText("Factor :      ");
         add(timeFactorLabel);
 
+        timeSlider.setMaximum(199);
         timeSlider.setMinimum(1);
-        timeSlider.setValue(10);
-        timeSlider.setPreferredSize(new java.awt.Dimension(100, 16));
+        timeSlider.setValue(100);
+        timeSlider.setPreferredSize(new java.awt.Dimension(150, 16));
+        timeSlider.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                timeSliderKeyPressed(evt);
+            }
+        });
         timeSlider.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 timeSliderMouseClicked(evt);
@@ -85,17 +96,29 @@ public class TimeSlider extends javax.swing.JPanel {
     }
     // </editor-fold>//GEN-END:initComponents
 
+	private void timeSliderKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_timeSliderKeyPressed
+// TODO add your handling code here:
+		context.getTimeObject().setTimeFactor( getTimeFactor() ) ;
+		timeFactorLabel.setText("Factor: " + getTimeFactor() + "X" ) ;
+		refreshTime() ;
+	}//GEN-LAST:event_timeSliderKeyPressed
+
 	private void timerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timerActionPerformed
 // TODO add your handling code here:
+		context.getTimeObject().setTimeFactor( getTimeFactor() ) ;
+		timeFactorLabel.setText("Factor: " + getTimeFactor() + "X" ) ;
+		refreshTime() ;
 	}//GEN-LAST:event_timerActionPerformed
 	
 	public double getTimeFactor() {
 		double value = (double) timeSlider.getValue() ;
 		double timeFactor = 0.0 ;
-		if ( value < 10)
-			timeFactor = (1/ Math.pow( Math.abs(10 - value) , 2 ) ) ;
+		if (value == 100)
+			timeFactor = 1.0 ; 
+		else if ( value < 100)
+			timeFactor = 1 -Math.abs(  (value-100) / 100 );  
 		else 
-			timeFactor = value ; 
+			timeFactor = (double)(value - 100) ;
 		
 		return Math.round( (100*timeFactor) ) / 100.0   ; 
 	}
@@ -123,7 +146,6 @@ public class TimeSlider extends javax.swing.JPanel {
 		
 		public void run() {
 			while ( true ) {
-				if ( context != null && (context.getDebugObject().getRuntimeState()== Debug.RUNNING))
 					refreshTime() ;
 				try {
 					sleep(100) ;

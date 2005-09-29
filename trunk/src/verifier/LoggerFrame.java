@@ -51,8 +51,6 @@ public class LoggerFrame extends javax.swing.JFrame {
     private void initComponents() {
         scenarioExecutor = new verifier.ScenarioExecutor();
 
-        getContentPane().setLayout(new java.awt.GridBagLayout());
-
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -65,9 +63,7 @@ public class LoggerFrame extends javax.swing.JFrame {
             }
         });
 
-        scenarioExecutor.setMinimumSize(new java.awt.Dimension(800, 600));
-        scenarioExecutor.setPreferredSize(new java.awt.Dimension(1024, 768));
-        getContentPane().add(scenarioExecutor, new java.awt.GridBagConstraints());
+        getContentPane().add(scenarioExecutor, java.awt.BorderLayout.CENTER);
 
         pack();
     }

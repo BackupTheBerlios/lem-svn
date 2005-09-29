@@ -28,10 +28,14 @@ public class DebugControlPanel extends javax.swing.JPanel {
 	}
 	
 	public void init(DomainContext c, Scenario s, ScenarioExecutor se) {
+		//playButton.setEnabled(false);
+		pauseButton.setEnabled(false) ; 
+		stopButton.setEnabled(false) ; 
 		playButton.setEnabled(true);
 		this.context = c;
 		this.scenario = s;
 		this.parent = se;
+
 		timeSlider.initialise( context ) ; 	
 	}
 	
@@ -108,7 +112,8 @@ public class DebugControlPanel extends javax.swing.JPanel {
 	private void pauseButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pauseButtonMouseClicked
 // TODO add your handling code here:
 		if (pauseButton.isEnabled()) {
-			context.getDebugObject().pauseModel() ;
+			context.getDebugObject().pauseModel();
+			timeSlider.refreshTime() ; 
 			pauseButton.setEnabled( false ) ;
 			playButton.setEnabled(true);
 		}

@@ -170,7 +170,7 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
         matches = new javax.swing.JComboBox();
         clear = new javax.swing.JButton();
 
-        setLayout(new java.awt.GridBagLayout());
+        setLayout(new java.awt.BorderLayout());
 
         setMaximumSize(new java.awt.Dimension(1030, 850));
         setMinimumSize(new java.awt.Dimension(650, 450));
@@ -262,7 +262,7 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
 
         jSplitPane2.setRightComponent(jPanel1);
 
-        add(jSplitPane2, new java.awt.GridBagConstraints());
+        add(jSplitPane2, java.awt.BorderLayout.CENTER);
 
     }
     // </editor-fold>//GEN-END:initComponents

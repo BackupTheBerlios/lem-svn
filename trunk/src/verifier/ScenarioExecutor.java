@@ -42,7 +42,7 @@ public class ScenarioExecutor extends javax.swing.JPanel implements Runnable {
 		contextTree.setDescriptionPane( descriptionPanel) ;
 		horizontalSplit.setLeftComponent(treeScroller) ; 
 		verticalSplit2.setLeftComponent( descriptionPaneScroller ) ; 
-		verticalSplit2.setRightComponent( loggerPanel) ; 
+		//verticalSplit2.setRightComponent( loggerPanel) ; 
 	}
 	
 	public void run() {
@@ -93,21 +93,47 @@ public class ScenarioExecutor extends javax.swing.JPanel implements Runnable {
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
         horizontalSplit = new javax.swing.JSplitPane();
-        treeScroller = new javax.swing.JScrollPane();
-        contextTree = new verifier.ContextTree();
-        verticalSplit1 = new javax.swing.JSplitPane();
+        verticalSplit = new javax.swing.JSplitPane();
         debugControlPanel = new verifier.DebugControlPanel();
         verticalSplit2 = new javax.swing.JSplitPane();
         descriptionPaneScroller = new javax.swing.JScrollPane();
         descriptionPanel = new javax.swing.JTextPane();
-        loggerScroller = new javax.swing.JScrollPane();
-        loggerPanel = new verifier.ContextLoggerPanel();
+        loggerPanel = new verifier.LoggerPanel();
+        treeScroller = new javax.swing.JScrollPane();
+        contextTree = new verifier.ContextTree();
 
-        setLayout(new java.awt.GridBagLayout());
+        setLayout(new java.awt.BorderLayout());
 
-        setPreferredSize(new java.awt.Dimension(1024, 768));
+        setMaximumSize(null);
+        setMinimumSize(null);
+        setPreferredSize(null);
         horizontalSplit.setMinimumSize(new java.awt.Dimension(800, 600));
         horizontalSplit.setPreferredSize(new java.awt.Dimension(1024, 768));
+        verticalSplit.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        verticalSplit.setMinimumSize(new java.awt.Dimension(650, 600));
+        verticalSplit.setPreferredSize(new java.awt.Dimension(874, 768));
+        debugControlPanel.setMaximumSize(new java.awt.Dimension(1024, 80));
+        debugControlPanel.setMinimumSize(new java.awt.Dimension(650, 40));
+        debugControlPanel.setPreferredSize(new java.awt.Dimension(874, 768));
+        verticalSplit.setTopComponent(debugControlPanel);
+
+        verticalSplit2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        descriptionPaneScroller.setMinimumSize(new java.awt.Dimension(703, 200));
+        descriptionPaneScroller.setPreferredSize(new java.awt.Dimension(703, 300));
+        descriptionPanel.setMaximumSize(null);
+        descriptionPaneScroller.setViewportView(descriptionPanel);
+
+        verticalSplit2.setTopComponent(descriptionPaneScroller);
+
+        loggerPanel.setMaximumSize(null);
+        loggerPanel.setMinimumSize(null);
+        loggerPanel.setPreferredSize(null);
+        verticalSplit2.setBottomComponent(loggerPanel);
+
+        verticalSplit.setBottomComponent(verticalSplit2);
+
+        horizontalSplit.setRightComponent(verticalSplit);
+
         treeScroller.setMinimumSize(new java.awt.Dimension(150, 600));
         treeScroller.setPreferredSize(new java.awt.Dimension(150, 600));
         contextTree.setMaximumSize(new java.awt.Dimension(250, 768));
@@ -115,36 +141,9 @@ public class ScenarioExecutor extends javax.swing.JPanel implements Runnable {
         contextTree.setPreferredSize(new java.awt.Dimension(150, 768));
         treeScroller.setViewportView(contextTree);
 
-        horizontalSplit.setRightComponent(treeScroller);
+        horizontalSplit.setLeftComponent(treeScroller);
 
-        verticalSplit1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        verticalSplit1.setMinimumSize(new java.awt.Dimension(650, 600));
-        verticalSplit1.setPreferredSize(new java.awt.Dimension(874, 768));
-        debugControlPanel.setMaximumSize(new java.awt.Dimension(1024, 80));
-        debugControlPanel.setMinimumSize(new java.awt.Dimension(650, 40));
-        debugControlPanel.setPreferredSize(new java.awt.Dimension(874, 768));
-        verticalSplit1.setLeftComponent(debugControlPanel);
-
-        verticalSplit2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        descriptionPaneScroller.setMinimumSize(new java.awt.Dimension(703, 200));
-        descriptionPaneScroller.setPreferredSize(new java.awt.Dimension(703, 300));
-        descriptionPanel.setMinimumSize(new java.awt.Dimension(700, 50));
-        descriptionPanel.setPreferredSize(new java.awt.Dimension(700, 200));
-        descriptionPaneScroller.setViewportView(descriptionPanel);
-
-        verticalSplit2.setRightComponent(descriptionPaneScroller);
-
-        loggerPanel.setMinimumSize(new java.awt.Dimension(650, 400));
-        loggerPanel.setPreferredSize(new java.awt.Dimension(874, 400));
-        loggerScroller.setViewportView(loggerPanel);
-
-        verticalSplit2.setRightComponent(loggerScroller);
-
-        verticalSplit1.setRightComponent(verticalSplit2);
-
-        horizontalSplit.setRightComponent(verticalSplit1);
-
-        add(horizontalSplit, new java.awt.GridBagConstraints());
+        add(horizontalSplit, java.awt.BorderLayout.CENTER);
 
     }
     // </editor-fold>//GEN-END:initComponents
@@ -156,10 +155,9 @@ public class ScenarioExecutor extends javax.swing.JPanel implements Runnable {
     private javax.swing.JScrollPane descriptionPaneScroller;
     private javax.swing.JTextPane descriptionPanel;
     private javax.swing.JSplitPane horizontalSplit;
-    private verifier.ContextLoggerPanel loggerPanel;
-    private javax.swing.JScrollPane loggerScroller;
+    private verifier.LoggerPanel loggerPanel;
     private javax.swing.JScrollPane treeScroller;
-    private javax.swing.JSplitPane verticalSplit1;
+    private javax.swing.JSplitPane verticalSplit;
     private javax.swing.JSplitPane verticalSplit2;
     // End of variables declaration//GEN-END:variables
 	
