@@ -72,7 +72,7 @@ public class Debug {
 	
 
 	public Debug(DomainContext c) {
-		runtimeState = RUNNING;
+		runtimeState = PAUSED;
 		liveEntities = new Refcount();
 		context = c;
 	}
@@ -97,14 +97,17 @@ public class Debug {
 		runtimeState = RUNNING;
 		notifyAll();
 		notifyAllObjects();
+		context.getTimeObject().resumeTime();
 	}
 	
 	public synchronized void pauseModel() {
 		runtimeState = PAUSED;
+		context.getTimeObject().pauseTime();
 	}
 	
 	public synchronized void stopModel() {
 		runtimeState = STOPPED;
+		context.getTimeObject().pauseTime();
 	}
 	
 	public synchronized boolean isQuiescentState() {

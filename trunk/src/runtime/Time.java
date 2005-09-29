@@ -37,9 +37,6 @@ public class Time {
 	 */
 	private boolean paused;
 	
-	/** The time factor before the model has been paused */
-	private double pausedFactor;
-	
 	/**
 	 * The current System time when this "period" has started.
 	 */
@@ -65,7 +62,7 @@ public class Time {
 	 * Create a new, initialised Time object.
 	 */
 	public Time() {
-		paused = false;
+		paused = true;
 		LemTimeFactor = 1.0;
 		elapsedLemMs = 0;
 		startPeriodSystemMs = System.currentTimeMillis();
@@ -77,6 +74,9 @@ public class Time {
 	 * @now: assumed current time.
 	 */
 	private synchronized long getTimeMs(long now) {
+		if (paused)
+			return elapsedLemMs;
+
 		return elapsedLemMs +
 			(long)((now - startPeriodSystemMs) * LemTimeFactor);
 	}
@@ -91,23 +91,16 @@ public class Time {
 	/**
 	 * Sets the current "lem time" multiplier
 	 * real time * multiplier = lem time.
-	 * Set to 0 to stop lem time.
 	 */
 	public void setTimeFactor(double factor) {
 		LinkedList wakeList;
 		java.lang.Object o;
 
 		synchronized (this) {
-			if (paused) {
-				pausedFactor = factor;
-				return;
-			} else {
-				long now = System.currentTimeMillis();
-				elapsedLemMs = getTimeMs(now);
-				startPeriodSystemMs = now;
-				LemTimeFactor = factor;
-			}
-
+			long now = System.currentTimeMillis();
+			elapsedLemMs = getTimeMs(now);
+			startPeriodSystemMs = now;
+			LemTimeFactor = factor;
 
 			wakeList = new LinkedList();
 
@@ -130,10 +123,7 @@ public class Time {
 	 * Returns the current "lem time" multiplier.
 	 */
 	public synchronized double getTimeFactor() {
-		if (paused)
-			return pausedFactor;
-		else
-			return LemTimeFactor;
+		return LemTimeFactor;
 	}
 
 	/**
@@ -157,13 +147,13 @@ public class Time {
 	}
 
 	public synchronized void resumeTime() {
+		setTimeFactor(LemTimeFactor);
 		paused = false;
-		setTimeFactor(pausedFactor);
 	}
 
-	public synchronized void pausedTime() {
-		pausedFactor = getTimeFactor();
-		setTimeFactor(0.0); /* stop lem time */
+	public synchronized void pauseTime() {
+		/* stop lem time */
+		setTimeFactor(LemTimeFactor);
 		paused = true;
 	}
 }

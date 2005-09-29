@@ -109,7 +109,6 @@ public class DebugControlPanel extends javax.swing.JPanel {
 			context.getDebugObject().pauseModel() ;
 			pauseButton.setEnabled( false ) ;
 			playButton.setEnabled(true);
-			context.getTimeObject().pausedTime() ; 
 		}
 		parent.refreshTree() ;
 	}//GEN-LAST:event_pauseButtonMouseClicked
@@ -131,7 +130,6 @@ public class DebugControlPanel extends javax.swing.JPanel {
 			context.getDebugObject().runModel() ;
 			pauseButton.setEnabled( true ) ;
 			stopButton.setEnabled( true ) ;
-			context.getTimeObject().resumeTime() ; 
 		}
 	}//GEN-LAST:event_playButtonMouseClicked
 	
