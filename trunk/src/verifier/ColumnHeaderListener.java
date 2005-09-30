@@ -32,7 +32,10 @@ import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
-/** Detects if the user clicks on the head of a column to sort.
+/** 
+ * Detects if the user clicks on the head of a column.
+ * Ist mouse click sorts the column in ascending order, second
+ * mouse click sorts the column in descending order. 
  * 
  * @author  David Gavin
  * @author  Donna Aloe
@@ -42,13 +45,17 @@ import javax.swing.table.TableColumnModel;
  * @see ColumnSorter
  * @see Filter
  * @see TableModel
+ *
  */
 public class ColumnHeaderListener extends MouseAdapter {
         public ColumnHeaderListener(){}
         
-	/** Receieves a mouse clicked event from the GUI 
-	* @param evt the Mouse click event
-	*/
+    /**
+     * Receieves a mouse clicked event from the GUI
+     *
+     * @param evt the Mouse click event
+     *
+     */
         public void mouseClicked(MouseEvent evt) {
             JTable table = ((JTableHeader)evt.getSource()).getTable();
             TableModel model = (TableModel)table.getModel();
