@@ -32,17 +32,27 @@ import runtime.DelayedSignal;
 import runtime.LemRuntimeException;
 import runtime.Object ;
 import runtime.Signal;
+
+
 /**
- *
+ * Event node appearing inside a ModelTreePanel based on a particular event, has methods for returning
+ * the name, description and ContexMenu for the node. 
+ * 
  * @author Shokouhmand Torabi
  */
+ 
 public class ContextEventNode extends AbstractDescriptionNode {
 	
 	Event thisEvent ;
 	LoggerFrame frame ;
 	private Object parentObject = null ;
 	
-	/** Creates a new instance of SignalNode */
+	/** 
+	* Creates a new instance of SignalNode 
+	* @param object the parent of the given event
+	* @param e the event from which a node is created
+	* @param frame the logger frame the node will be displayed in
+	*/
 	public ContextEventNode(Object object, Event e, LoggerFrame frame) {
 		this.frame = frame ;
 		this.thisEvent = e ;
