@@ -38,6 +38,7 @@ import runtime.VariableFactory;
 /**
  * Tree node appearing appearing inside a ClassNode. For graphically
  * representing and "holding" LEM attribute objects. Has no children.
+ *
  * @author James Ring
  */
 public class AttributeNode extends AbstractDescriptionNode {
@@ -46,7 +47,9 @@ public class AttributeNode extends AbstractDescriptionNode {
 	private LoggerFrame frame = null ;
 	/** instance to which this attribute belongs **/
 	private Instance instance = null;
-	/** Creates a new instance of AttributeNode
+
+	/** 
+	 * Creates a new instance of AttributeNode
 	 * @param a the LEM attribute object.
 	 */
 	public AttributeNode( Attribute a , Instance instance, LoggerFrame frame ) {
@@ -54,12 +57,15 @@ public class AttributeNode extends AbstractDescriptionNode {
 		this.frame = frame ;
 		this.instance = instance ;
 	}
-	/** Returns the name of the attribute followed by the type of the attribute
+
+	/**
+	 * Returns the name of the attribute followed by the type of the attribute
 	 * @return the name of the attribute.
 	 */
 	public String toString() {
 		return attribute.getName() + " : " + attribute.getType().getName();
 	}
+
 	/**
 	 * Returns the description of the attribute, will return an empty string if
 	 * description is null.
@@ -107,6 +113,10 @@ public class AttributeNode extends AbstractDescriptionNode {
 		return ContextMenu;
 	}
 	
+	/**
+	* Creates and returns a Styled Document containing the name of the specified attribute.
+	* @return the Styled Document
+	*/
 	public StyledDocument getDynamicDescription() {
 		StyledDocument doc = new StyledDocument() ;
 		Variable v = instance.getInstanceInObject().getAttribute(attribute.getName()) ;
