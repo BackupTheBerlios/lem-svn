@@ -107,7 +107,7 @@ public class BuilderPass3 extends Visitor {
             
             if ( null == subjectClass ) {
                 throw new LemException(
-                "Class " + subjectClass + " does not exist.",
+                "Class " + name + " does not exist.",
                 node.getFirstToken(),
                 "LEM_E_01019" );
             }
