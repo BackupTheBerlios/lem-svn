@@ -1,105 +1,128 @@
 model TheWorld is "where all things happen"
 	domain Cooking is "pleasurable and rewarding"
-			subsystem MicrowaveOven is "the quickest way to eat a pie"
-				class Oven is
-					attribute Voltage "voltage" is numeric;
-					attribute Power "power" is numeric;
-					attribute Capacity "capacity" is numeric;
+		subsystem MicrowaveOven is "the quickest way to cook a pie"
+			class Oven is
+				attribute Voltage "voltage" is numeric;
+				attribute Power "power" is numeric;
+				attribute Capacity "capacity" is numeric;
+				attribute remainingCookingTime is numeric;
 
-                                        event doorClosed;
-					event doorOpened;
-					event buttonPressed;
-					event timeExpired;
+				event startCooking;
+				event cancelCooking;
+				event cookingPeriodOver;
+				event beepingOver;
+				event cookingPeriod;
+				event ovenSafe;
 
-					behaviour is
-						state ReadyToCook is
-						end ReadyToCook;
-
-						state DoorOpened is
-						end DoorOpened;
-
-						state Cooking is
-						end Cooking;
-
-						state CookingInterrupted is
-						end CookingInterrupted;
-
-						state CookingComplete is
-						end;
-						
-						on doorClosed transition from DoorOpened to ReadyToCook;
-						on doorClosed transition from CookingInterrupted to ReadyToCook;
-						on doorOpened transition from ReadyToCook to DoorOpened;
-						on doorOpened transition from CookingComplete to DoorOpened;
-						on doorOpened transition from Cooking to CookingInterrupted;
-						on buttonPressed transition from ReadyToCook to Cooking;
-						on timeExpired transition from Cooking to CookingComplete;
-					end behaviour;
-
-				end Oven;
+				behaviour is 
+					state AwaitingCookingRequest is {
+					} end;
+					state AssigningCookingPeriod is {
+					} end;
+					state SignallingCookingPeriodOver is {
+					} end;
+					state CookingSuspended is {
+					} end;
+					state EnsuringSafeToCook is {
+					} end;
+					state Cooking is {
+					} end;
 				
-				class Door is
-					attribute isSafe "The user is safe when the isSafe = true, I.e. when the door is closed" is boolean;
-					event Release;
-					event Closed;
-					behaviour is
-						state Open "The door is open" is
-						end Open;
-						state Closed "The door is close" is
-						end Closed;
-						
-						on Release transition from Closed to Open;
-						on Closed transition from Open to Closed;
-					end behaviour;
-				end Door;
-				
-				class Magnetron is
-					event TurnOn;
-					event TurnOff;
-					behaviour is
-						state On "The magnetron is turned on" is
-						end On;
-						state Off "The magnetron is turned off" is
-						end Off;
-
-						on TurnOn transition from Off to On;
-						on TurnOff transition from On to Off;
-					end behaviour;
-				end Magnetron;
-
-			class Plate is
-				attribute Size "size" is numeric;
-				event startRotation;
-				event stopRotation;
-				behaviour is
-					state still
-						"turn plate motor off" is
-					end still;
-					state rotating 
-						"turn plate motor on" is
-					end rotating;
-					on startRotation transition from still to rotating;
-					on stopRotation transition from rotating to still;
+					on cookingPeriod transition from AwaitingCookingRequest to AssigningCookingPeriod;
+					on startCooking transition from AssigningCookingPeriod to EnsuringSafeToCook;
+					on startCooking transition from EnsuringSafeToCook to EnsuringSafeToCook;
+					on startCooking transition from CookingSuspended to EnsuringSafeToCook;
+					on cancelCooking transition from CookingSuspended to AwaitingCookingRequest;
+					on cancelCooking transition from Cooking to CookingSuspended;
+					on cookingPeriodOver transition from Cooking to SignallingCookingPeriodOver;
+					on beepingOver transition from SignallingCookingPeriodOver to AwaitingCookingRequest;
+					on ovenSafe transition from EnsuringSafeToCook to Cooking;
 				end behaviour;
-			end Plate;
+				
+			end Oven;
+				
+			class Door is
+				attribute closed "user is safe when door is closed" is boolean;
+				event Release;
+				event Close;
+				behaviour is
+					state Open "The door is open" is
+					end Open;
+					state Closed "The door is close" is
+					end Closed;
+					
+					on Release transition from Closed to Open;
+					on Close transition from Open to Closed;
+				end behaviour;
+			end Door;
+			
+			class Magnetron is
+				event PowerOn;
+				event PowerOff;
+				behaviour is
+					state On "The magnetron is turned on" is
+					end On;
+					state Off "The magnetron is turned off" is
+					end Off;
+
+					on PowerOn transition from Off to On;
+					on PowerOff transition from On to Off;
+				end behaviour;
+			end Magnetron;
+
+			class Turntable is
+				attribute Size "size" is numeric;
+				event spin;
+				event stop;
+				behaviour is
+					state Stationary "turn plate motor off" is
+					end;
+					
+					state Rotating "turn plate motor on" is
+					end;
+					on spin transition from Stationary to Rotating;
+					on stopRotation transition from Rotating to Stationary;
+				end behaviour;
+			end Turntable;
+
+			class Light is
+				event switchOn;
+				event switchOff;
+				behaviour is
+					state LightOff "turn light off" is
+					end;
+					
+					state LightOn "turn light on" is
+					end;
+					on switchOn transition from LightOff to LightOn;
+					on switchOff transition from Lighton to LightOff;
+				end behaviour;
+			end Light;
+
 
 			class Beeper is
 				attribute Type "type" is string;
-				event soundBeeper;
-				event beeperTimeExpired;
+				event beepOver;
+				event pauseOver;
+				event startBeeping;
+				event stopBeeping;
+				event BeepingStopped;
 
 				behaviour is
-					state silent 
-						"turn beeper off" is
-					end silent;
+					state AwaitingBeeperReuqest is
+					end;
 
-					state sounding 
-						"turn beeper on" is
-						// generate beeperTimeExpired;
-					end sounding;
+					state Beeping "turn beeper on" is
+					end;
+
+					state Pause "stop beeping!" is
+					end;
 					
-					on soundBeeper transition from silent to sounding;
-					on beeperTimeExpired transition from sounding to silent;
+					on startBeeping transition from AwaitingBeeperRequest to Beeping;
+					on stopBeeping transition from Beeping to AwaitingBeeperRequest ;
+					on stopBeeping transition from Pause to AwaitingBeeperRequest ;
+					on beepOver transition from Beeping to Pause;
+					on pauseOver transition from Pause to Beeping;
 				end behaviour;
 			end Beeper;
 			
@@ -108,9 +131,9 @@ model TheWorld is "where all things happen"
 				Beeper "indicates completion of cooking by " 1..1 Oven;
 			end R1;
 			
-			association R2 is "a record of the fact that each Oven has a Plate" 
-				Oven "has" 1..1 Plate;
-				Plate "rotates food cooking by " 1..1 Oven;
+			association R2 is "a record of the fact that each Oven has a Turntable" 
+				Oven "has" 1..1 Turntable;
+				Turntable "rotates food cooking by " 1..1 Oven;
 			end R2;
 			
 			association R3 is "a record of the fact that each Oven has a Magnetron"
@@ -123,5 +146,12 @@ model TheWorld is "where all things happen"
 				Door "closes the entrance to" 1..1 Oven;
 			end R4;
 			end MicrowaveOven;	
+
+
+			scenario CookAPie is {
+				
+
+
+				}
 	end Cooking;
 end TheWorld;
