@@ -11,19 +11,48 @@ model TheWorld is "where all things happen"
 				event cancelCooking;
 				event cookingPeriodOver;
 				event beepingOver;
-				event cookingPeriod;
+				event cookingPeriod carries (period is objref);
 				event ovenSafe;
-
+				
+				
 				behaviour is 
 					state AwaitingCookingRequest is {
+						remainingCookingTime := 0;
+						beeper := select one from instances of Beeper where (Oven (related to Beeper across R1));
+						generate stopBeeping to beeper;
 					} end;
+					
 					state AssigningCookingPeriod is {
+						remainingCookingtime := cookingPeriod.period;
 					} end;
+					
 					state SignallingCookingPeriodOver is {
+						beeper := select one from instances of Beeper where (Oven (related to Beeper across R1));
+						generate startBeeping to myBeeper;
+						light := select one from instances of Light where (Oven (related to Light across R6));
+						generate switchOff to light;
+						turntable := select one from instances of Turntable where (Oven (related to Turntable across R2));
+						generate stop to turntable;
+						magnetron := select one from instances of Magnetron where (Oven (related to Magnetron across R3));
+						generate powerOff to magnetron;
 					} end;
+					
 					state CookingSuspended is {
+						remainingCookingTime := ovenTimer.timeRemaining;
+						cancel cookingPeriodOver to self;
+						light := select one from instances of Light where (Oven (related to Light across R6));
+						generate switchOff to light;
+						turntable := select one from instances of Turntable where (Oven (related to Turntable across R2));
+						generate stop to turntable;
+						magnetron := select one from instances of Magnetron where (Oven (related to Magnetron across R3));
+						generate powerOff to magnetron;
 					} end;
+					
 					state EnsuringSafeToCook is {
+						if(remainingCookingTime /= 0){
+							door := select one from instances of Door where (Oven (related to Door across R4));
+							//TODO finish this!
+							}
 					} end;
 					state Cooking is {
 					} end;
@@ -43,16 +72,23 @@ model TheWorld is "where all things happen"
 				
 			class Door is
 				attribute closed "user is safe when door is closed" is boolean;
-				event Release;
-				event Close;
+				event release;
+				event close;
 				behaviour is
-					state Open "The door is open" is
+					state Open "The door is open" is{
+						closed := false;
+						oven := select one from instances of Oven where (Door (related to Oven across R4));
+						generate cancelCooking to oven;
+						}
 					end Open;
-					state Closed "The door is close" is
+					
+					state Closed "The door is close" is {
+						closed := true;
+						}
 					end Closed;
 					
-					on Release transition from Closed to Open;
-					on Close transition from Open to Closed;
+					on release transition from Closed to Open;
+					on close transition from Open to Closed;
 				end behaviour;
 			end Door;
 			
@@ -60,9 +96,13 @@ model TheWorld is "where all things happen"
 				event PowerOn;
 				event PowerOff;
 				behaviour is
-					state On "The magnetron is turned on" is
+					state On "The magnetron is turned on" is {
+						print "magnetron, transform!!!";
+						}
 					end On;
-					state Off "The magnetron is turned off" is
+					state Off "The magnetron is turned off" is {
+						print "magnetron off";
+						}
 					end Off;
 
 					on PowerOn transition from Off to On;
@@ -75,10 +115,14 @@ model TheWorld is "where all things happen"
 				event spin;
 				event stop;
 				behaviour is
-					state Stationary "turn plate motor off" is
+					state Stationary "turn plate motor off" is {
+						print "there is not a season to turn turn turn";
+						}
 					end;
 					
-					state Rotating "turn plate motor on" is
+					state Rotating "turn plate motor on" is {
+						print "turn turn turn";
+						}
 					end;
 					on spin transition from Stationary to Rotating;
 					on stopRotation transition from Rotating to Stationary;
@@ -89,10 +133,14 @@ model TheWorld is "where all things happen"
 				event switchOn;
 				event switchOff;
 				behaviour is
-					state LightOff "turn light off" is
+					state LightOff "turn light off" is {
+						print "light off";
+						}
 					end;
 					
-					state LightOn "turn light on" is
+					state LightOn "turn light on" is {
+						print "light on";
+						}
 					end;
 					on switchOn transition from LightOff to LightOn;
 					on switchOff transition from Lighton to LightOff;
@@ -101,21 +149,38 @@ model TheWorld is "where all things happen"
 
 
 			class Beeper is
-				attribute Type "type" is string;
+				attribute beepCount "type" is numeric;
 				event beepOver;
 				event pauseOver;
 				event startBeeping;
 				event stopBeeping;
-				event BeepingStopped;
+				event beepingStopped;
 
 				behaviour is
-					state AwaitingBeeperReuqest is
+					state AwaitingBeeperReuqest is {
+						beepCount := 0;
+					}
 					end;
 
-					state Beeping "turn beeper on" is
+					state Beeping "turn beeper on" is {
+						if(beepCount < 4) {
+							print "beep beep";
+							generate beppOver to self with delay 500;
+						}
+						else {
+							generate beepingStopped to self;
+						oven := select one from instances of Oven where (Beeper (related to Oven across R1));
+							generate beepingOven to Oven;
+						}
+						
+						beepCount := beepCount + 1;
+					}
 					end;
 
-					state Pause "stop beeping!" is
+					state Pause "stop beeping!" is {
+						print "no beep";
+						generate pauseOver to self with delay 500;
+					}
 					end;
 					
 					on startBeeping transition from AwaitingBeeperRequest to Beeping;
@@ -123,6 +188,7 @@ model TheWorld is "where all things happen"
 					on stopBeeping transition from Pause to AwaitingBeeperRequest ;
 					on beepOver transition from Beeping to Pause;
 					on pauseOver transition from Pause to Beeping;
+					on beepingStopped transition from Beeping to AwaitingBeeperRequest;
 				end behaviour;
 			end Beeper;
 			
@@ -145,13 +211,37 @@ model TheWorld is "where all things happen"
 				Oven "has" 1..1 Door;
 				Door "closes the entrance to" 1..1 Oven;
 			end R4;
+			
+			association R5 is "a record of the fact that each Oven has a Light"
+				Oven "has" 1..1 Light;
+				Light "illuminates the cooking process" 1..1 Ovem;
+			end R5;
+			
 			end MicrowaveOven;	
 
 
 			scenario CookAPie is {
+				objref sharehouseOven;
+				objref sharehouseBeeper;
+				objref sharehouseLight;
+				objref sharehouseTurntable;
+				objref sharehouseDoor;
+				objref sharehouseMagnetron;
 				
+				sharehouseOven := create Oven;
+				sharehouseBeeper := create Beeper;
+				sharehouseLight := create Light;
+				sharehouseTurntable := create Turntable;
+				sharehouseDoor := create Door;
+				sharehouseMagnetron := create Magnetron;
 
-
+				relate sharehouseOven to sharehouseBeeper across R1."beeps it up";
+				relate sharehouseOven to sharehouseLight across R5."lights it up";
+				relate sharehouseOven to sharehouseTurntable across R2."mixes it up";
+				relate sharehouseOven to sharehouseDoor across R4."opens it up";
+				relate sharehouseOven to sharehouseMagnetron across R3."heats it up";
+				
+				
 				}
 	end Cooking;
 end TheWorld;
