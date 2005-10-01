@@ -355,8 +355,10 @@ public class LoggerPanel extends javax.swing.JPanel implements runtime.LemEventL
         doc.addStyle(new StyledElement(event.getPassiveObjectId().toString(), values));
         doc.addStyle(new StyledElement(" Relationship Label: ", text));
         doc.addStyle(new StyledElement(event.getAssociationLabel(), values));
-        doc.addStyle(new StyledElement("Link ID: ", text));
-        doc.addStyle(new StyledElement(event.getLinkObjectId().toString(), values));
+        if (event.getLinkObjectId() != null) {
+		doc.addStyle(new StyledElement("Link ID: ", text));
+        	doc.addStyle(new StyledElement(event.getLinkObjectId().toString(), values));
+	}
         doc.addStyle(new StyledElement("\n", text));
         addText(doc);
     }
@@ -379,8 +381,10 @@ public class LoggerPanel extends javax.swing.JPanel implements runtime.LemEventL
         doc.addStyle(new StyledElement(event.getPassiveObjectId().toString(), values));
         doc.addStyle(new StyledElement(" Relationship Label: ", text));
         doc.addStyle(new StyledElement(event.getAssociationLabel(), values));
-        doc.addStyle(new StyledElement("Link ID: ", text));
-        doc.addStyle(new StyledElement(event.getLinkObjectId().toString(), values));
+	if (event.getLinkObjectId() != null) {
+        	doc.addStyle(new StyledElement("Link ID: ", text));
+       		doc.addStyle(new StyledElement(event.getLinkObjectId().toString(), values));
+	}
         doc.addStyle(new StyledElement("\n", text));
         addText(doc);
     }
