@@ -18,7 +18,7 @@ model TheWorld is "where all things happen"
 				behaviour is 
 					state AwaitingCookingRequest is {
 						remainingCookingTime := 0;
-						beeper := select one from instances of Beeper where (Oven (related to Beeper across R1));
+			//			beeper := select one from instances of Beeper where (Oven (related to Beeper across R1));
 						generate stopBeeping to beeper;
 					} end;
 					
@@ -27,30 +27,30 @@ model TheWorld is "where all things happen"
 					} end;
 					
 					state SignallingCookingPeriodOver is {
-						beeper := select one from instances of Beeper where (Oven (related to Beeper across R1));
+			//			beeper := select one from instances of Beeper where (Oven (related to Beeper across R1));
 						generate startBeeping to myBeeper;
-						light := select one from instances of Light where (Oven (related to Light across R6));
+			//			light := select one from instances of Light where (Oven (related to Light across R6));
 						generate switchOff to light;
-						turntable := select one from instances of Turntable where (Oven (related to Turntable across R2));
+			//			turntable := select one from instances of Turntable where (Oven (related to Turntable across R2));
 						generate stop to turntable;
-						magnetron := select one from instances of Magnetron where (Oven (related to Magnetron across R3));
+			///			magnetron := select one from instances of Magnetron where (Oven (related to Magnetron across R3));
 						generate powerOff to magnetron;
 					} end;
 					
 					state CookingSuspended is {
 						remainingCookingTime := ovenTimer.timeRemaining;
 						cancel cookingPeriodOver to self;
-						light := select one from instances of Light where (Oven (related to Light across R6));
+			//			light := select one from instances of Light where (Oven (related to Light across R6));
 						generate switchOff to light;
-						turntable := select one from instances of Turntable where (Oven (related to Turntable across R2));
+			//			turntable := select one from instances of Turntable where (Oven (related to Turntable across R2));
 						generate stop to turntable;
-						magnetron := select one from instances of Magnetron where (Oven (related to Magnetron across R3));
+			//			magnetron := select one from instances of Magnetron where (Oven (related to Magnetron across R3));
 						generate powerOff to magnetron;
 					} end;
 					
 					state EnsuringSafeToCook is {
 						if(remainingCookingTime /= 0){
-							door := select one from instances of Door where (Oven (related to Door across R4));
+			//				door := select one from instances of Door where (Oven (related to Door across R4));
 							//TODO finish this!
 							}
 					} end;
@@ -77,7 +77,7 @@ model TheWorld is "where all things happen"
 				behaviour is
 					state Open "The door is open" is{
 						closed := false;
-						oven := select one from instances of Oven where (Door (related to Oven across R4));
+			//			oven := select one from instances of Oven where (Door (related to Oven across R4));
 						generate cancelCooking to oven;
 						}
 					end Open;
@@ -125,7 +125,7 @@ model TheWorld is "where all things happen"
 						}
 					end;
 					on spin transition from Stationary to Rotating;
-					on stopRotation transition from Rotating to Stationary;
+					on stop transition from Rotating to Stationary;
 				end behaviour;
 			end Turntable;
 
@@ -143,7 +143,7 @@ model TheWorld is "where all things happen"
 						}
 					end;
 					on switchOn transition from LightOff to LightOn;
-					on switchOff transition from Lighton to LightOff;
+					on switchOff transition from LightOn to LightOff;
 				end behaviour;
 			end Light;
 
@@ -157,7 +157,7 @@ model TheWorld is "where all things happen"
 				event beepingStopped;
 
 				behaviour is
-					state AwaitingBeeperReuqest is {
+					state AwaitingBeeperRequest is {
 						beepCount := 0;
 					}
 					end;
@@ -169,7 +169,7 @@ model TheWorld is "where all things happen"
 						}
 						else {
 							generate beepingStopped to self;
-						oven := select one from instances of Oven where (Beeper (related to Oven across R1));
+			//			oven := select one from instances of Oven where (Beeper (related to Oven across R1));
 							generate beepingOven to Oven;
 						}
 						
@@ -214,7 +214,7 @@ model TheWorld is "where all things happen"
 			
 			association R5 is "a record of the fact that each Oven has a Light"
 				Oven "has" 1..1 Light;
-				Light "illuminates the cooking process" 1..1 Ovem;
+				Light "illuminates the cooking process" 1..1 Oven;
 			end R5;
 			
 			end MicrowaveOven;	
@@ -235,13 +235,13 @@ model TheWorld is "where all things happen"
 				sharehouseDoor := create Door;
 				sharehouseMagnetron := create Magnetron;
 
-				relate sharehouseOven to sharehouseBeeper across R1."beeps it up";
-				relate sharehouseOven to sharehouseLight across R5."lights it up";
-				relate sharehouseOven to sharehouseTurntable across R2."mixes it up";
-				relate sharehouseOven to sharehouseDoor across R4."opens it up";
-				relate sharehouseOven to sharehouseMagnetron across R3."heats it up";
+				relate sharehouseOven to sharehouseBeeper across R1/*."beeps it up"*/;
+				relate sharehouseOven to sharehouseLight across R5/*."lights it up"*/;
+				relate sharehouseOven to sharehouseTurntable across R2/*."mixes it up"*/;
+				relate sharehouseOven to sharehouseDoor across R4/*."opens it up"*/;
+				relate sharehouseOven to sharehouseMagnetron across R3/*."heats it up"*/;
 				
 				
-				}
+			}
 	end Cooking;
 end TheWorld;
