@@ -217,31 +217,31 @@ model TheWorld is "where all things happen"
 				Light "illuminates the cooking process" 1..1 Oven;
 			end R5;
 			
-			end MicrowaveOven;	
+		end MicrowaveOven;	
 
 
-			scenario CookAPie is {
-				objref sharehouseOven;
-				objref sharehouseBeeper;
-				objref sharehouseLight;
-				objref sharehouseTurntable;
-				objref sharehouseDoor;
-				objref sharehouseMagnetron;
+		scenario CookAPie is {
+			objref sharehouseOven;
+			objref sharehouseBeeper;
+			objref sharehouseLight;
+			objref sharehouseTurntable;
+			objref sharehouseDoor;
+			objref sharehouseMagnetron;
 				
-				sharehouseOven := create Oven;
-				sharehouseBeeper := create Beeper;
-				sharehouseLight := create Light;
-				sharehouseTurntable := create Turntable;
-				sharehouseDoor := create Door;
-				sharehouseMagnetron := create Magnetron;
+			sharehouseOven := create Oven;
+			sharehouseBeeper := create Beeper;
+			sharehouseLight := create Light;
+			sharehouseTurntable := create Turntable;
+			sharehouseDoor := create Door;
+			sharehouseMagnetron := create Magnetron;
 
-				relate sharehouseOven to sharehouseBeeper across R1/*."beeps it up"*/;
-				relate sharehouseOven to sharehouseLight across R5/*."lights it up"*/;
-				relate sharehouseOven to sharehouseTurntable across R2/*."mixes it up"*/;
-				relate sharehouseOven to sharehouseDoor across R4/*."opens it up"*/;
-				relate sharehouseOven to sharehouseMagnetron across R3/*."heats it up"*/;
+			relate sharehouseOven to sharehouseBeeper across R1/*."beeps it up"*/;
+			relate sharehouseOven to sharehouseLight across R5/*."lights it up"*/;
+			relate sharehouseOven to sharehouseTurntable across R2/*."mixes it up"*/;
+			relate sharehouseOven to sharehouseDoor across R4/*."opens it up"*/;
+			relate sharehouseOven to sharehouseMagnetron across R3/*."heats it up"*/;
+			
 				
-				
-			}
+		}
 	end Cooking;
 end TheWorld;
