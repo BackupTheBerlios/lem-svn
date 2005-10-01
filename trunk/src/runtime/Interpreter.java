@@ -75,16 +75,17 @@ public class Interpreter {
 		instanceInterpreters = new ArrayList() ; 
     }
     
-    /**
-     * Interpret the given Procedure by calling executeBlock on Procedure's
-     * main ActionBlock.
-     *
-     * @param p the procedure to interpret
-	 * @param s the signal which caused the procedure to be executed
-     * @param c the Context in which the procedure should be interpreted
-     * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
-     */
-    public void interpret( Procedure p, Signal s, DomainContext c ) throws LemRuntimeException {
+	/**
+	* Interpret the given Procedure by calling executeBlock on Procedure's
+	* main ActionBlock.
+	*
+	* @param p the procedure to interpret
+	* @param s the signal which caused the procedure to be executed
+	* @param c the Context in which the procedure should be interpreted
+	* @throws runtime.LemRuntimeException when any error occurs in the 
+	* execution of the procedure
+	*/
+	public void interpret( Procedure p, Signal s, DomainContext c ) throws LemRuntimeException {
 		context = c;
 
 		ProcedureContext procContext = new ProcedureContext( c, s );
@@ -98,52 +99,56 @@ public class Interpreter {
         	context = null; // ensure no other entry point tries to use this
 	}
     
-    /**
+	/**
 	 * Interpret the given Scenario by calling executeBlock on Scenario's
 	 * main ActionBlock.
 	 *
 	 * @param s the scenario to interpret
 	 * @param c the Context in which the procedure should be interpreted
-	 * @throws runtime.LemRuntimeException when any error occurs in the execution of the procedure
+	 * @throws runtime.LemRuntimeException when any error occurs in the 
+	 * execution of the procedure
 	 */
-	public void interpret( Scenario s, DomainContext c ) throws LemRuntimeException {
+	public void interpret( Scenario s, DomainContext c ) 
+			throws LemRuntimeException {
 		context = c;
 		ActionBlock block = s.getActionBlock();
 		executeBlock( block, c );
 		context = null; // ensure no other entry point tries to use this
 	}
     
-    /**
-     * Execute the given ActionBlock by setting up the "stack frame" for
-     * all variable declarations then calling executeAction on all of the
-     * block's Actions.
-     *
-     * @param p the procedure to execute
-     * @param c the context in which to execute
-     * @throws runtime.LemRuntimeException if any error occurs during the execution of the procedure
-     */
-    public void executeBlock( ActionBlock block, Context c ) throws LemRuntimeException {
-        LocalContext localContext = new LocalContext( c );
-        Collection decls = block.getVariableDeclarations();
-        LinkedList actions = block.getActions();
-        Iterator i;
-        
-        /* Set up variables into the local context */
-        i = decls.iterator();
-        while ( i.hasNext() ) {
-            VariableDeclaration vd = ( VariableDeclaration ) i.next();
-            instantiateVariable( vd, localContext );
-        }
-        
-        /* Execute actions */
-        i = actions.iterator();
-        while( i.hasNext() && !hasBreak) {
-            Action a = (Action)i.next();
-            executeAction(a, localContext);
-        }
-        
-        localContext.finish();
-    }
+	/**
+	* Execute the given ActionBlock by setting up the "stack frame" for
+	* all variable declarations then calling executeAction on all of the
+	* block's Actions.
+	*
+	* @param p the procedure to execute
+	* @param c the context in which to execute
+	* @throws runtime.LemRuntimeException if any error occurs during the 
+	* execution of the procedure
+	*/
+	public void executeBlock( ActionBlock block, Context c ) 
+			throws LemRuntimeException {
+		LocalContext localContext = new LocalContext( c );
+		Collection decls = block.getVariableDeclarations();
+		LinkedList actions = block.getActions();
+		Iterator i;
+
+		/* Set up variables into the local context */
+		i = decls.iterator();
+		while ( i.hasNext() ) {
+			VariableDeclaration vd = (VariableDeclaration)i.next();
+			instantiateVariable( vd, localContext );
+		}
+
+		/* Execute actions */
+		i = actions.iterator();
+		while( i.hasNext() && !hasBreak) {
+			Action a = (Action)i.next();
+			executeAction(a, localContext);
+		}
+
+		localContext.finish();
+	}
     
     /**
      * Execute the given action.
