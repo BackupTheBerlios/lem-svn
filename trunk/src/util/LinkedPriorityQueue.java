@@ -48,13 +48,13 @@ public class LinkedPriorityQueue extends LinkedList {
 	}
 
 	/** 
-	 * Pushes the given Comparable into the queue. The object will be 
+	 * Add the given Comparable into the queue. The object will be 
 	 * inserted in the correct position to maintain the ordering of 
 	 * the queue based on the queue's type.
 	 *
 	 * @param c the object to insert
 	 */
-	public void push( Comparable c ) {
+	public void add( Comparable c ) {
 		if( type == MIN_QUEUE )
 			minInsert( c );
 		else
