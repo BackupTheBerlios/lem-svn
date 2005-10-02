@@ -27,7 +27,7 @@ import runtime.Debug;
 import runtime.DomainContext;
 
 /**
- *
+ * Creates the time slider and time display for an executing scenario.
  * @author  Shokouhmand Torabi
  */
 public class TimeSlider extends javax.swing.JPanel {
@@ -44,12 +44,19 @@ public class TimeSlider extends javax.swing.JPanel {
 		//	 context.getTimeObject().setTimeFactor( getTimeFactor() ) ; 
 	}
 	
+        /**
+         * Initalise the time slide and associate a domain context
+         * @param d The associated domain context
+         */
 	public void initialise(DomainContext d) {
 		this.context = d ;				
 		refreshTime() ; 
 		//context.getTimeObject().setTimeFactor( 1 ) ;
 	}
 	
+        /**
+         * Refresh the time as displayed in the LEM time box
+         */
 	public void refreshTime() {
 		if ( context != null && context.getDebugObject().isRunning() ) {			
 			timer.setText( " " + context.getTimeObject().getTimeMs() + " ") ;
@@ -113,6 +120,10 @@ public class TimeSlider extends javax.swing.JPanel {
     }
     // </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Sets the time factor according to the display on the time slider
+     * @param evt The Time slider event
+     */
 	private void timeSliderKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_timeSliderKeyPressed
 // TODO add your handling code here:
 		context.getTimeObject().setTimeFactor( getTimeFactor() ) ;
@@ -120,6 +131,10 @@ public class TimeSlider extends javax.swing.JPanel {
 		refreshTime() ;
 	}//GEN-LAST:event_timeSliderKeyPressed
 
+        /**
+         * Set the time factor according to the display on the time slider
+         * @param evt The associated Action event (moving the slider)
+         */
 	private void timerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timerActionPerformed
 // TODO add your handling code here:
 		context.getTimeObject().setTimeFactor( getTimeFactor() ) ;
@@ -127,6 +142,10 @@ public class TimeSlider extends javax.swing.JPanel {
 		refreshTime() ;
 	}//GEN-LAST:event_timerActionPerformed
 	
+        /**
+         * Change the factor according to the time slider
+         * @return The time factor displayed on the time slider
+         */
 	public double getTimeFactor() {
 		double value = (double) timeSlider.getValue() ;
 		double timeFactor = 0.0 ;
@@ -139,7 +158,11 @@ public class TimeSlider extends javax.swing.JPanel {
 		
 		return Math.round( (100*timeFactor) ) / 100.0   ; 
 	}
-	
+	/**
+         * Set the time factor according to the time slider
+         * @param evt The mouse click event 
+         */
+        
 	private void timeSliderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_timeSliderMouseClicked
 // TODO add your handling code here:
 		context.getTimeObject().setTimeFactor( getTimeFactor() ) ;
@@ -156,6 +179,9 @@ public class TimeSlider extends javax.swing.JPanel {
     private javax.swing.JTextField timer;
     // End of variables declaration//GEN-END:variables
 	
+    /**
+     * Refreshes the displayed time according to LEM time. 
+     */
 	class TimeChanger extends Thread {
 		public TimeChanger() {
 			start() ;
