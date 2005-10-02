@@ -7,6 +7,7 @@ model TheWorld is "where all things happen"
 				attribute Capacity "capacity" is numeric;
 				attribute remainingCookingTime is numeric;
 
+				event genesis;
 				event startCooking;
 				event cancelCooking;
 				event cookingPeriodOver;
@@ -51,12 +52,23 @@ model TheWorld is "where all things happen"
 					state EnsuringSafeToCook is {
 						if(remainingCookingTime /= 0){
 			//				door := select one from instances of Door where (Oven (related to Door across R4));
-							//TODO finish this!
+							if (door.closed){
+								generate ovenSafe to self;
 							}
+						}
 					} end;
+					
 					state Cooking is {
+						generate cookingPeriodOver to self with delay remainingCookingTime;
+                        //                      light := select one from instances of Light where (Oven (related to Light across R6));
+						generate switchOn to light;
+			//			turntable := select one from instances of Turntable where (Oven (related to Turntable across R2));
+						generate start to turntable;
+			//			magnetron := select one from instances of Magnetron where (Oven (related to Magnetron across R3));
+						generate powerOn to magnetron;
 					} end;
 				
+					on genesis transition from Creation to AwaitingCookingRequest;
 					on cookingPeriod transition from AwaitingCookingRequest to AssigningCookingPeriod;
 					on startCooking transition from AssigningCookingPeriod to EnsuringSafeToCook;
 					on startCooking transition from EnsuringSafeToCook to EnsuringSafeToCook;
@@ -72,6 +84,7 @@ model TheWorld is "where all things happen"
 				
 			class Door is
 				attribute closed "user is safe when door is closed" is boolean;
+				event genesis;
 				event release;
 				event close;
 				behaviour is
@@ -87,12 +100,14 @@ model TheWorld is "where all things happen"
 						}
 					end Closed;
 					
+					on genesis transition from Creation to Closed;
 					on release transition from Closed to Open;
 					on close transition from Open to Closed;
 				end behaviour;
 			end Door;
 			
 			class Magnetron is
+				event genesis;
 				event PowerOn;
 				event PowerOff;
 				behaviour is
@@ -105,6 +120,7 @@ model TheWorld is "where all things happen"
 						}
 					end Off;
 
+					on genesis transition from Creation to Off;
 					on PowerOn transition from Off to On;
 					on PowerOff transition from On to Off;
 				end behaviour;
@@ -112,6 +128,7 @@ model TheWorld is "where all things happen"
 
 			class Turntable is
 				attribute Size "size" is numeric;
+				event genesis;
 				event spin;
 				event stop;
 				behaviour is
@@ -124,12 +141,14 @@ model TheWorld is "where all things happen"
 						print "turn turn turn";
 						}
 					end;
+					on genesis transition from Creation to Stationary;
 					on spin transition from Stationary to Rotating;
 					on stop transition from Rotating to Stationary;
 				end behaviour;
 			end Turntable;
 
 			class Light is
+				event genesis;
 				event switchOn;
 				event switchOff;
 				behaviour is
@@ -142,6 +161,7 @@ model TheWorld is "where all things happen"
 						print "light on";
 						}
 					end;
+					on genesis transition from Creation to LightOff;
 					on switchOn transition from LightOff to LightOn;
 					on switchOff transition from LightOn to LightOff;
 				end behaviour;
@@ -150,6 +170,7 @@ model TheWorld is "where all things happen"
 
 			class Beeper is
 				attribute beepCount "type" is numeric;
+				event genesis;
 				event beepOver;
 				event pauseOver;
 				event startBeeping;
@@ -183,6 +204,7 @@ model TheWorld is "where all things happen"
 					}
 					end;
 					
+					on genesis transition from Creation to AwaitingBeeperRequest;
 					on startBeeping transition from AwaitingBeeperRequest to Beeping;
 					on stopBeeping transition from Beeping to AwaitingBeeperRequest ;
 					on stopBeeping transition from Pause to AwaitingBeeperRequest ;
@@ -234,14 +256,14 @@ model TheWorld is "where all things happen"
 			sharehouseTurntable := create Turntable;
 			sharehouseDoor := create Door;
 			sharehouseMagnetron := create Magnetron;
-
+				
 			relate sharehouseOven to sharehouseBeeper across R1/*."beeps it up"*/;
 			relate sharehouseOven to sharehouseLight across R5/*."lights it up"*/;
 			relate sharehouseOven to sharehouseTurntable across R2/*."mixes it up"*/;
 			relate sharehouseOven to sharehouseDoor across R4/*."opens it up"*/;
 			relate sharehouseOven to sharehouseMagnetron across R3/*."heats it up"*/;
 			
+			generate cookingPeriod to sharehouseOven;	
 				
-		}
 	end Cooking;
 end TheWorld;
