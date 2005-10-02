@@ -31,6 +31,9 @@ import runtime.Interpreter;
 import runtime.LemRuntimeException;
 
 /**
+ * Displays an executing scenario on the GUI.
+ * Has methods: refresh tree, get scenario name, kill scenario, get context tree,
+ * get description pane.
  *
  * @author Shokouhmand Torabi
  */
@@ -47,6 +50,11 @@ public class ScenarioExecutor extends javax.swing.JPanel implements Runnable {
 		initComponents();
 	}
 	
+        /**
+         * Initalise the executor and associate a scenario and logger.
+         * @param scenario The associated scenario
+         * @param frame The associated logger frame
+         */
 	public void init(Scenario scenario, LoggerFrame frame) {
 		this.scenario = scenario ;
 		this.frame = frame ;
@@ -62,6 +70,9 @@ public class ScenarioExecutor extends javax.swing.JPanel implements Runnable {
 		//verticalSplit2.setRightComponent( loggerPanel) ; 
 	}
 	
+        /**
+         * Execute the associated scenario
+         */
 	public void run() {
 		try {
 			context.getDebugObject().runModel();
@@ -72,6 +83,9 @@ public class ScenarioExecutor extends javax.swing.JPanel implements Runnable {
 		
 	}
 	
+        /**
+         * Refresh the context tree according to the state of the model.
+         */
 	public void refreshTree() {
 		//this.removeAll() ;
 		treeScroller.remove( contextTree ) ;
@@ -86,18 +100,31 @@ public class ScenarioExecutor extends javax.swing.JPanel implements Runnable {
 		updateUI() ;
 	}
 	
+        /**
+         * @return The current scenario name
+         */
 	public String getScenarioName() {
 		return scenario.getName();
 	}
+        
+        /**
+         * Stop the execution of the current scenario.
+         */
 	public void killScenario()	{
 		context.getDebugObject().stopModel();
 		
 	}
 	
+        /**
+         * @return The context tree for the scenario
+         */
 	public ContextTree getContextTree() {
 		return contextTree;
 	}
-	
+        
+        /**
+         * @return The description pane for the context tree
+         */
 	public JTextPane getDescriptionPane() {
 		return descriptionPanel;
 	}
