@@ -30,6 +30,7 @@ import javax.swing.JTextPane;
 import javax.swing.tree.DefaultTreeModel;
 
 /**
+ * Generates the context tree and displays the description for the selected node. 
  *
  * @author  Shokouhmand Torabi
  */
@@ -51,6 +52,11 @@ public class ContextTree extends javax.swing.JTree {
 		initComponents();		
 	}
 	
+        /**
+         * Initalise the tree, with the context and model. 
+         *@param c The associated context
+         *@param frame The associated logger 
+         */
 	public void init(runtime.Context c,  LoggerFrame frame) {
 		this.context = c ;
 		this.frame = frame ;
@@ -60,7 +66,11 @@ public class ContextTree extends javax.swing.JTree {
 		this.setCellRenderer(render);
 	}
 	
-	/** Set a descriptionPane for this panel to write information into */
+	/**
+         * Set a descriptionPane for this panel to write information into 
+         * @param descriptionPane The pane to write to
+         */
+        
 	public void setDescriptionPane(JTextPane descriptionPane) {
 		this.descriptionPane = descriptionPane;
 	}
@@ -80,6 +90,12 @@ public class ContextTree extends javax.swing.JTree {
 
     }//GEN-END:initComponents
 
+    
+    /**
+     * Generates the context tree for the associated scenario.
+     *
+     * @param evt The mouse click event
+     */
 	private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
 // TODO add your handling code here:
 		if (MouseEvent.BUTTON3 == evt.getButton()||MouseEvent.BUTTON2 == evt.getButton()) {
@@ -106,12 +122,20 @@ public class ContextTree extends javax.swing.JTree {
 		}
 	}//GEN-LAST:event_formMouseClicked
 	
+        /**
+         * Display description of the object selected on the description pane
+         * @param evt  The mouse click event
+         */
 	private void DescriptionMenuClicked(java.awt.event.ActionEvent evt) {
 		displayDescription(currentContextObject);
 		contextMenu.setVisible(false);
 		currentContextObject=null;
 	}
 	
+        /**
+         * Convert the description to a styled document and add to the description pane.
+         * @param p The associated object
+         */
 	public void displayDescription(Object p) {
 		StyledDocument doc = null , dynamicDoc = null ;
 		JTextPane descriptionArea = frame.getDescriptionPane() ;
