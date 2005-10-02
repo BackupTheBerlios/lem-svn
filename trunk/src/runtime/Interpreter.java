@@ -557,12 +557,12 @@ public class Interpreter {
      */
     protected Variable getVariable( VariableReference r, Context c ) throws LemRuntimeException {
         String name = r.getObjectName();
+	String attribute_name = r.getVariableName();
         Variable destination;
         
         if ( name != null ) {
             // if variable the attribute of the current object
             if(name.equals("self") && (currentObject != null)) {
-                String attribute_name = r.getVariableName();
                 destination = currentObject.getAttribute( attribute_name );
                 if ( destination == null ) {
                     throw new LemRuntimeException( "Attribute '" + r.getVariableName() + "' not defined on object named '" + name + "'" );
@@ -589,7 +589,6 @@ public class Interpreter {
             runtime.Object source = ( runtime.Object ) ( v.getValue() );
             
             // Now we've got the target object. We need to get the named attribute from that object.
-            String attribute_name = r.getVariableName();
             destination = source.getAttribute( attribute_name );
             if ( destination == null ) {
                 throw new LemRuntimeException( "Attribute '" + r.getVariableName() + "' not defined on object named '" + name + "'" );
@@ -601,7 +600,9 @@ public class Interpreter {
         } else {
 		destination = c.getVariable( r.getVariableName() );
 		if (destination == null)
-			throw new LemRuntimeException("Variable " + r.getVariableName() + " is NULL");
+			destination = currentObject.getAttribute(attribute_name);
+		if (destination == null)
+			throw new LemRuntimeException("Variable " + r.getVariableName() + " is undefined");
 
         }
         
@@ -798,7 +799,7 @@ public class Interpreter {
         RelatedToOperation rto = se.getRelatedToOperation() ;
         Expression condition = se.getCondition();
         SetVariable set = new SetVariable() ;
-	  Collection list = new LinkedList();
+	Collection list = new LinkedList();
 	Context tmp = c;
         while (tmp.getParent() != null)
 		tmp = tmp.getParent();
