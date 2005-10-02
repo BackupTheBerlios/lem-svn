@@ -27,8 +27,11 @@ import metamodel.Scenario;
 import runtime.DomainContext;
 
 /**
+ * Displays and contains the play, stop and pause buttons, time slider and lem time box 
+ * for running a scenario. 
  *
  * @author  Shokouhmand Torabi
+ * @see runtime.Time
  */
 public class DebugControlPanel extends javax.swing.JPanel {
 	
@@ -36,14 +39,23 @@ public class DebugControlPanel extends javax.swing.JPanel {
 	private Scenario scenario = null;
 	private ScenarioExecutor parent;
 	private Thread scenarioThread = null;
-
 	
-	
-	/** Creates new form BeanForm */
+	/**
+         * Creates new form BeanForm 
+         */
 	public DebugControlPanel() {
 		initComponents();
 	}
 	
+        /**
+         * Initalise the play, stop and pause buttons, and set the context and 
+         * scenario.
+         *
+         * @param c The domain context of the loaded model
+         * @param s The scenario executing
+         * @param se The parent display which contains the tree veiw and log of the
+         *           executing scenario. 
+         */
 	public void init(DomainContext c, Scenario s, ScenarioExecutor se) {
 		//playButton.setEnabled(false);
 		pauseButton.setEnabled(false) ; 
@@ -123,7 +135,13 @@ public class DebugControlPanel extends javax.swing.JPanel {
 	private void formVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_formVetoableChange
 
 	}//GEN-LAST:event_formVetoableChange
-			
+	
+        /**
+         * Pause the running scenario when the pause button is clicked,
+         * enables the play button and disables the pause button.
+         *
+         * @param evt The mouse click event
+         */
 	private void pauseButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pauseButtonMouseClicked
 // TODO add your handling code here:
 		if (pauseButton.isEnabled()) {
@@ -135,6 +153,13 @@ public class DebugControlPanel extends javax.swing.JPanel {
 		parent.refreshTree() ;
 	}//GEN-LAST:event_pauseButtonMouseClicked
 	
+        /**
+         * Stop the running scenario when the stop button is clicked,
+         * disables the play, pause and stop buttons.
+         *
+         * @param evt The mouse click event
+         */
+        
 	private void stopButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stopButtonMouseClicked
 // TODO add your handling code here:
 		if (stopButton.isEnabled()) {
@@ -146,6 +171,13 @@ public class DebugControlPanel extends javax.swing.JPanel {
 		parent.refreshTree() ;
 	}//GEN-LAST:event_stopButtonMouseClicked
 	
+        
+        /**
+         * Play the paused scenario when the play button is clicked,
+         * disables the play button and enables the pause and stop buttons.
+         *
+         * @param evt The mouse click event
+         */
 	private void playButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playButtonMouseClicked
 // TODO add your handling code here:
 		if( scenarioThread == null ) {
