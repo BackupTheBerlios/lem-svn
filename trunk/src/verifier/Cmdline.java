@@ -43,6 +43,8 @@ import java.io.*;
 
 
 /**
+ * Allows the user to load a LEM model from the command line, has methods: Cmdline 
+ * and loadModel
  *
  * @author  Nick Piggin
  */
@@ -50,7 +52,14 @@ public class Cmdline {
     
     File workingDirectory = null;
     
-    /** Creates new form Cmdline */
+    /**
+     * Creates new form Cmdline 
+     *
+     * @param file The name of the file to be loaded
+     * @param domain The domain context 
+     * @param scenario The scenario to be run
+     * 
+     */
     public Cmdline(String file, String domain, String scenario) {
        
 	Model m = null;
@@ -89,8 +98,10 @@ public class Cmdline {
 	c.getDebugObject().waitQuiescentState();
     }
     
-    /*This method loads a LEM model specified by the parameter, and returns true
+    /**
+     * This method loads a LEM model specified by the parameter, and returns true
      *if model loaded succesfully and false otherwise
+     *
      *@param modelFile name of the LEM model file.
      *@return true if model loaded succesfully and false otherweise
      */
@@ -103,6 +114,8 @@ public class Cmdline {
     }
     
     /**
+     * Determines if the user has supplied the correct information and number of parameters
+     * and creates a new CmdLine
      * @param args the command line arguments
      */
     public static void main(String args[]) {
