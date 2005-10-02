@@ -51,7 +51,9 @@ public class ColumnHeaderListener extends MouseAdapter {
         public ColumnHeaderListener(){}
         
     /**
-     * Receieves a mouse clicked event from the GUI
+     * Receieves a mouse clicked event from the GUI and determines if the mouse click 
+     * corresponds to the head of a column.
+     * If a column was selected a sort is called on the selected column.  
      *
      * @param evt the Mouse click event
      *
