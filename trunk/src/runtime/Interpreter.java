@@ -326,7 +326,7 @@ public class Interpreter {
 
         if ( e == null ) {
             // TODO: Don't use single-arg constructor for LemRuntimeException
-            throw new LemRuntimeException( "Could not find named event" );
+            throw new LemRuntimeException( "Could not find event named '" + a.getEventName() + "'" );
         }
 
 	String type = e.getName();  
