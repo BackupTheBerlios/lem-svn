@@ -28,14 +28,24 @@ import runtime.Signal;
 import runtime.Variable;
 
 /**
- *
+ * Tree node appearing appearing inside an ObjectNode. For graphically
+ * representing and "holding" LEM Signal objects. Has ContextVariableNode as a child.
  * @author David Gavin
  */
 public class ContextSignalNode extends AbstractDescriptionNode {
+        
+        /**The LEM Signal that ContextSignalNode contains.*/
 	Signal thisSignal ; 
+        /**The LoggerFrame that ContextSignalNode contains.*/
 	LoggerFrame frame ; 
 	
-	/** Creates a new instance of SignalNode */
+        
+	/**
+         * Creates a new instance of SignalNode. Examines LEM signal object and creates
+	 *  a subtree based on the objects parameters.
+         * @param s the LEM signal to be contained.
+         * @param frame the logger frame the node will be displayed in.
+         */
 	public ContextSignalNode(Signal s, LoggerFrame frame) {
 		this.frame = frame ; 
 		this.thisSignal = s ; 
@@ -51,23 +61,23 @@ public class ContextSignalNode extends AbstractDescriptionNode {
 		}
 	}
 	/**
-	 * Returns name property of the Object
-	 * @return the Object name.
+	 * Returns Id of the Signal followed by name property of the signal
+	 * @return the Signal Id and name.
 	 */
 	public String toString() {
 		return thisSignal.getSignalId() + " : " + thisSignal.getEvent().getName();
 		//return thisSignal.getName() + " : " + thisSignal.getSignature() ;
 	}
 	/**
-	 * Returns the description property of the Object.
-	 * @return the Object description.
+	 * Returns the description property of the Signal.
+	 * @return the Signal description.
 	 */
 	public String getDescription(){
 		return ""; //thisSignal.getDescription() ; 
 	}
 	/**
-	 * Returns the ContextMenu based on the Scenario.
-	 * @return the Scenario ContextMenu.
+	 * Returns the ContextMenu based on the Signal.
+	 * @return the Signal ContextMenu.
 	 */
 	public JPopupMenu getContextMenu() {
 		JPopupMenu ContextMenu = new JPopupMenu();

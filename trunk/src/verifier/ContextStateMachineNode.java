@@ -33,14 +33,27 @@ import metamodel.Transition;
 
 
 /**
- *
+ * Tree node appearing inside a LEM instance. For representing and "holding" a
+ * LEM StateMachine object. Has StateNode as child.
  * @author David Gavin
  */
 public class ContextStateMachineNode extends AbstractDescriptionNode {
+    
+     /**The LEM StateMachine that ContextStateMachineNode contains.*/
     private StateMachine machine = null;
+    /**The Lem State that ContextStateMachineNode contains.*/
     private State currentState = null;
+    /**JFrame that ContextAssociationInstanceNode contains.*/
     private JFrame frame = null;
-    /** Creates a new instance of ContextStateMachine */
+    
+    /**
+     * Creates a new instance of ContextStateMachine. Examines LEM StateMachine
+     * object and creates subtrees based on the objects states, Current State and
+     * Transitions.
+     *@param inMachine LEM StateMachine object to be contained.
+     *@param inCurrentState LEM State object to be contained.
+     *@param inFrame JFrame to be contained
+     */
     public ContextStateMachineNode(StateMachine inMachine,State inCurrentState, JFrame inFrame ) {
         machine = inMachine;
         currentState = inCurrentState;
@@ -92,7 +105,8 @@ public class ContextStateMachineNode extends AbstractDescriptionNode {
         return "State machine";
     }
     /**
-     * Returns the description property of the LEM StateMachine object.
+     * Returns the description property of the LEM StateMachine object, return
+     * an empty string when the description is null.
      * @return the StateMachine description.
      */
     public String getDescription() {
