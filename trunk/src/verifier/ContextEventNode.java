@@ -87,6 +87,7 @@ public class ContextEventNode extends AbstractDescriptionNode {
 				try {
 					Signal signal = new Signal(thisEvent) ;
 					int signalId = signal.getSignalId().intValue() ;
+					parentObject.getContext().getDebugObject().addEntity();
 					parentObject.addSignal(signal) ;
 					JOptionPane.showMessageDialog( frame , "Signal " + signalId + " Was generated to the object", "Success!",
 							JOptionPane.INFORMATION_MESSAGE );
@@ -108,6 +109,7 @@ public class ContextEventNode extends AbstractDescriptionNode {
 				try {
 					Signal signal = new Signal(thisEvent) ;
 					int signalId = signal.getSignalId().intValue() ;
+					parentObject.getContext().getDebugObject().addEntity();
 					parentObject.addSignal(signal) ;
 					JOptionPane.showMessageDialog( frame , "Self Signal " + signalId + " Was generated to the object", "Success!",
 							JOptionPane.INFORMATION_MESSAGE );
@@ -132,6 +134,7 @@ public class ContextEventNode extends AbstractDescriptionNode {
 				if ( input != null ) {
 					try {
 						DelayedSignal delayedSignal = new DelayedSignal(thisEvent, parentObject , new BigDecimal(Integer.parseInt(input)));
+						parentObject.getContext().getDebugObject().addEntity();
 						parentObject.addDelayedSignal(delayedSignal) ;
 						int signalId = delayedSignal.getSignalId().intValue() ;
 						JOptionPane.showMessageDialog( frame , "Delayed Self Signal " + signalId + " Was generated to the object", "Success!",
@@ -155,6 +158,7 @@ public class ContextEventNode extends AbstractDescriptionNode {
 				if ( input != null ) {
 					try {
 						DelayedSignal delayedSelfSignal = new DelayedSignal(thisEvent, parentObject , new BigDecimal(Integer.parseInt(input)));
+						parentObject.getContext().getDebugObject().addEntity();
 						parentObject.addDelayedSignalSelf(delayedSelfSignal) ;
 						int signalId = delayedSelfSignal.getSignalId().intValue() ;
 						JOptionPane.showMessageDialog( frame , "Delayed Self Signal " + signalId + " Was generated to the object", "Success!",
