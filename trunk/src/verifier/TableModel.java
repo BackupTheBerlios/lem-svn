@@ -65,7 +65,7 @@ import runtime.LemStateTransitionEvent;
  * @author  David Gavin
  * @author  Donna Aloe
  * @author  Simon Franklin
- * @see JContextLoggerPanel
+ * @see ContextLoggerPanel
  */
 
 
@@ -116,7 +116,7 @@ public class TableModel extends AbstractTableModel {
     };//end iconHeaderRenderer
     
     /**
-     * Creates a new instance of TableModel which holds the data of the table.
+     * Creates a new instance of TableModel to hold the data of the table.
      */
     public TableModel() {
         URL imageURL = getClass().getClassLoader().getResource("verifier/up.gif");
@@ -143,9 +143,9 @@ public class TableModel extends AbstractTableModel {
     }
     
     /**
-     * Called by the JContextLoggerPanel when an ObjectCreation occurs.
-     * Adds the objectCreated log message to the table
-     * @param event the object creation event
+     * Called by the ContextLoggerPanel when an ObjectCreation occurs.
+     * Adds the objectCreated log message to the table.
+     * @param event The LEM object creation event
      * @param counter the log message counter
      */
     public void objectCreated(LemObjectCreationEvent event, int counter){
@@ -164,6 +164,12 @@ public class TableModel extends AbstractTableModel {
         refreshTable();
     }
     
+    /**
+     * Called by the ContextLoggerPanel when an ObjectDeletion occurs.
+     * Adds the objectDeleted log message to the table
+     * @param event the LEM Object Deletion Event
+     * @param counter the log message counter
+     */
     
     public void objectDeleted(LemObjectDeletionEvent event, int counter){
         Vector tmp = new Vector();
@@ -180,6 +186,13 @@ public class TableModel extends AbstractTableModel {
         refreshTable();
     }
     
+    /**
+     * Called by the ContextLoggerPanel when an RelationshipCreation occurs.
+     * Adds the RelationshipCreated log message to the table
+     * @param event the LEM Relationship Creation event
+     * @param counter the log message counter
+     */
+    
     public void relationshipCreation(LemRelationshipCreationEvent event, int counter){
         Vector tmp = new Vector();
         tmp = populate(tmp);
@@ -192,6 +205,13 @@ public class TableModel extends AbstractTableModel {
         addRow(tmp);
         refreshTable();
     }
+    
+     /**
+     * Called by the ContextLoggerPanel when an RelationshipDeletion occurs.
+     * Adds the RelationshipDeleted log message to the table
+     * @param event the LEM Relationship Deletion event
+     * @param counter the log message counter
+     */
     
     public void relationshipDeletion(LemRelationshipDeletionEvent event, int counter){
         Vector tmp = new Vector();
@@ -206,6 +226,13 @@ public class TableModel extends AbstractTableModel {
         refreshTable();
     }
     
+     /**
+     * Called by the ContextLoggerPanel when an AttributeChange occurs.
+     * Adds the Attribute write log message to the table
+     * @param event the LEM Attribute Change event
+     * @param counter the log message counter
+     */
+    
     public void attributeChange(LemAttributeChangeEvent event, int counter){
         Vector tmp = new Vector();
         tmp = populate(tmp);
@@ -217,6 +244,13 @@ public class TableModel extends AbstractTableModel {
         addRow(tmp);
         refreshTable();
     }
+
+     /**
+     * Called by the ContextLoggerPanel when an AttributeRead occurs.
+     * Adds the Attribute read log message to the table
+     * @param event the LEM Attribute Read event
+     * @param counter the log message counter
+     */
     
     public void attributeRead(LemAttributeReadEvent event, int counter){
         Vector tmp = new Vector();
@@ -230,6 +264,12 @@ public class TableModel extends AbstractTableModel {
         refreshTable();
     }
     
+     /**
+     * Called by the ContextLoggerPanel when a Transition Event occurs.
+     * Adds the Transition Event log message to the table
+     * @param event the LEM State Transition Event 
+     * @param counter the log message counter
+     */
     
     public void transitionEvent(LemStateTransitionEvent event, int counter){
         Vector tmp = new Vector();
@@ -242,6 +282,13 @@ public class TableModel extends AbstractTableModel {
         addRow(tmp);
         refreshTable();
     }
+    
+     /**
+     * Called by the ContextLoggerPanel when an Event Generation occurs.
+     * Adds the Generation Event log message to the table
+     * @param event the LEM Event Generation Event 
+     * @param counter the log message counter
+     */
     
     public void eventGenerated(LemEventGenerationEvent event, int counter){
         Vector tmp = new Vector();
@@ -263,6 +310,13 @@ public class TableModel extends AbstractTableModel {
         refreshTable();
     }
     
+    /**
+     * Called by the ContextLoggerPanel when a Received Event occurs.
+     * Adds the Received Event log message to the table
+     * @param event the LEM Event Received Event 
+     * @param counter the log message counter
+     */
+    
     public void receivedEvent(LemEventReceivedEvent event, int counter){
         Vector tmp = new Vector();
         tmp = populate(tmp);
@@ -281,6 +335,13 @@ public class TableModel extends AbstractTableModel {
         refreshTable();
     }
     
+     /**
+     * Called by the ContextLoggerPanel when a Selection Event occurs.
+     * Adds the Selection Event log message to the table
+     * @param event the LEM Event Selection Event 
+     * @param counter the log message counter
+     */
+    
     public void selectedEvent(LemSelectionEvent event, int counter){
         Vector tmp = new Vector();
         tmp = populate(tmp);
@@ -296,6 +357,13 @@ public class TableModel extends AbstractTableModel {
         addRow(tmp);
         refreshTable();
     }
+    
+      /**
+     * Called by the ContextLoggerPanel when a Cancellation Event occurs.
+     * Adds the Cancellation Event log message to the table
+     * @param event the LEM Event Cancellation Event 
+     * @param counter the log message counter
+     */
     
     public void cancelledEvent(LemEventCancellationEvent event, int counter){
         Vector tmp = new Vector();
@@ -315,9 +383,20 @@ public class TableModel extends AbstractTableModel {
         
     }
     
+    /**
+     * Adds a row of data to the table model
+     * @param row Row to be added 
+     */
+    
     private synchronized void addRow(Vector row){
         rowData.add(row);
     }
+    
+    /**
+     * Populate a row vector with nulls for all columns
+     * @param tmp Row to be populated
+     * @return The vector filled with nulls 
+     */
     
     private Vector populate(Vector tmp){
         for(int i =0; i< columnNames.size(); i++){
@@ -325,6 +404,10 @@ public class TableModel extends AbstractTableModel {
         }
         return tmp;
     }
+    
+     /**
+     * Reapply the filter to the table model - used when new data has been added. 
+     */
     
     public synchronized void refreshTable(){
         filter.applyFilter();
@@ -339,6 +422,7 @@ public class TableModel extends AbstractTableModel {
     }
     
     /**
+     * Return the size of the table (in rows)
      * @return the number of rows in the table.
      */
     public int getRowCount() {
@@ -383,9 +467,20 @@ public class TableModel extends AbstractTableModel {
      */
     public void setValueAt(Object value, int row, int col) {}
     
+    /**
+     * Removes the filter (if any) that is currently applied to the table
+     */
+    
     public void removeFilter(){
         filter.removeFilter();
     }
+    
+    /**
+     * Apply a filter on the rows of the table that are displayed
+     * @param text Input text to be matched
+     * @param colIndex The column index to filter on
+     * @param type The condition to filter on 0 - Match Exactly 1 - Contains
+     */
     
     public void applyFilter(String text, int colIndex, int type ) {
         filter.applyFilter(text, colIndex, type);
@@ -432,13 +527,18 @@ public class TableModel extends AbstractTableModel {
     }
     
     /**
-     * @return the vector holding all the rows of the table
+     * Returns the data contained in the filtered table
+     * @return the vector holding all the filtered rows of the table
      */
     public synchronized Vector getDataVector() {
         //return rowData;
         return filteredData;
     }
     
+    /**
+     * Returns all the data contained in the table
+     * @return the vector holding all the rows of the table
+     */
     public synchronized Vector getUnfilteredVector(){
         return rowData;
     }
@@ -476,6 +576,11 @@ public class TableModel extends AbstractTableModel {
                 new TextAndIcon(columnNames.elementAt(colIndex).toString(), replaceIcon));
     }
     
+     /**
+     * Update the display of data
+     * @param data The data vector to be displayed
+     * 
+     */
     public void changeDisplayRows(Vector data) {
         filteredData = data;
         fireTableStructureChanged();
@@ -501,6 +606,11 @@ class TextAndIcon {
     String text;
     Icon icon;
     
+    /**
+     * Set the icon displayed on the column head for the column which is currently 
+     * sorted. 
+     * @param newIcon The icon to be displayed
+     */
     void setIcon(Icon newIcon) {
         this.icon=newIcon;
     }
