@@ -27,35 +27,45 @@ import javax.swing.JPopupMenu;
 import runtime.AssociationInstance;
 
 /**
+ * Tree node appearing appearing inside a ContextAssociationNode. For graphically
+ * representing and "holding" LEM Association Instance objects. Has no children.
  *
  * @author Simon Franklin
  */
 public class ContextAssociationInstancesNode extends AbstractDescriptionNode {
     
-    /** Creates a new instance of ContextAssociationInstancesNode */
+    /**The LEM AssociationInstance that ContextAssociationInstanceNode contains.*/
     private AssociationInstance association = null;
+    /**The LoggerFrame that ContextAssociationInstanceNode contains.*/
     private LoggerFrame frame = null ; 
     
-    
+    /**
+     * Creates a new instance of ContextAssociationInstancesNode
+     * @param a the LEM AssociationInstace from which the node is created.
+     * @param frame the logger frame the node will be displayed in
+     */
     public ContextAssociationInstancesNode(AssociationInstance a , LoggerFrame frame) {
         this.association = a;
         this.frame = frame ; 
     }
     
-    
+        /**
+         * Returns the name of the AssociationInstance followed by the Id of the AssociationInstance
+	 * @return the name of the AssociationInstance and the id of the AssociationInstance.
+	 */
     public String toString() {
 		return association.getInstanceClass().getName() + " : " + association.getInstanceInObject().getObjectId() ;
 	}
 	/**
-	 * Returns the description property of the Instance.
-	 * @return the Object description.
+	 * Returns the Description property of the AssociationInstance.
+	 * @return the description of the AssociationInstance.
 	 */
 	public String getDescription(){
 		return "" ; //trim(thisInstance.getDescription());
 	}
     
     /**
-     * Creates and returns a JPopupMenu based on the specified attribute.
+     * Creates and returns a JPopupMenu based on the specified AssociationInstance.
      * @return the ContextMenu.
      */
     public JPopupMenu getContextMenu()

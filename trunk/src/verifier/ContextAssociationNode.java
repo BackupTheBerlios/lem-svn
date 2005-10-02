@@ -31,15 +31,27 @@ import runtime.AssociationInstance;
 import runtime.Instance;
 
 /**
- *
+ * Tree node appearing appearing inside an InstanceNode. For graphically
+ * representing and "holding" LEM Association Instance objects. Has
+ * ContextAssociationNode as a child.
  * @author Simon Franklin
  */
 public class ContextAssociationNode extends AbstractDescriptionNode {
-    /** Creates a new instance of ContextAssociationNode */
+    
+    /**The LEM Association that ContextAssociationNode contains.*/
     private Association association = null;
+    /**The LoggerFrame that ContextAssociationInstanceNode contains.*/
     private LoggerFrame frame = null ;
+    /**The LEM Instance to which this Association belongs **/
     private Instance thisInstance ;
     
+    /**
+     * Creates a new instance of ContextAssociationNode. Creates a subtree based on
+     * the association's AssociationInstances.
+     * @param thisInstance the LEM Instace to which the Association belongs.
+     * @param association the LEM Association from which the node is created.
+     * @param frame the logger frame the node will be displayed in.
+     */
     public ContextAssociationNode(Instance thisInstance, Association association, LoggerFrame fram) {
         this.frame = frame ; 
         this.association = association ; 
@@ -57,13 +69,17 @@ public class ContextAssociationNode extends AbstractDescriptionNode {
     }
     
     
+    /**
+    * Returns the Name property of LEM Association object
+    * @return the name of the Association
+    */
     public String toString() {
         return association.getName();
     }
     /** 
-     * Returns the description of the attribute, will return an empty string if
-     * description is null.
-     * @return the Description
+     * Returns the Description property of LEM Association object, will return
+     * an empty string if the description is null.
+     * @return the Description of the association
      */
     public String getDescription() {        
         if (association.getDescription() != null)
@@ -72,7 +88,7 @@ public class ContextAssociationNode extends AbstractDescriptionNode {
             return "" ;                         
     }
     /**
-     * Creates and returns a JPopupMenu based on the specified attribute.
+     * Creates and returns a JPopupMenu based on the specified association.
      * @return the ContextMenu.
      */
     public JPopupMenu getContextMenu()
