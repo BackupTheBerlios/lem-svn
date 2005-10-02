@@ -112,6 +112,10 @@ public class Interpreter {
 			throws LemRuntimeException {
 		context = c;
 		ActionBlock block = s.getActionBlock();
+
+		runtime.Object ob = new runtime.Object( c );
+		this.currentObject = ob;	
+		
 		executeBlock( block, c );
 		context = null; // ensure no other entry point tries to use this
 	}
@@ -338,6 +342,7 @@ public class Interpreter {
             if ( passedValues != null )
                 ds.setParameters( passedValues );
 
+	    System.out.println(currentObject.getObjectId() + " generating delayed signal (" + delay + ") to " + target.getObjectId());
 	    System.out.println(currentObject.getObjectId() + " generating delayed signal (" + delay + ") to " + target.getObjectId());
             eventid = ds.getSignalId().intValue();            
             new LemEventGenerationEvent(id1, id2, eventid, type, pList, delay).notifyAll( c );            
