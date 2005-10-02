@@ -24,6 +24,13 @@ model TestModel is
 
                                              	myobj := select one from instances of A where selected /= self;
                                                	generate Ev1( self ) to myobj;
+
+						myobj := select any from instances of A where false;
+						if (myobj = null) {
+							print "works well";
+						} else {
+							print "bad";
+						}
 					} end s2;
 
 					deletion state s3( o is objref ) is

@@ -40,10 +40,12 @@ public class VariableFactory {
             return new NumericVariable( type, (String)value );
         } else if( c.equals( BooleanType.getInstance() )) {
             v = new BooleanVariable( (String)value );
-        } else if( c.equals(DateType.getInstance() )) {
+        } else if( c.equals( DateType.getInstance() )) {
             v = new DateVariable((String)value);           
         } else if( c.equals( ObjectReferenceType.getInstance() )) {
-            v = new ObjectReferenceVariable( (runtime.Object)value );
+	    if (value != null && !((String)value).equals("null"))
+	    	throw new Error("Tried to create objref with non-NULL value");
+            v = new ObjectReferenceVariable(null);
         } else if( c.equals( SetType.getInstance() )) {
 	    if (value != null) {
 		    throw new LemRuntimeException( "VariableFactory unable to create SetVariable with non-null value" );

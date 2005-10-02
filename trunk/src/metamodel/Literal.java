@@ -52,7 +52,7 @@ public class Literal extends Expression {
      */
     public Literal( DataType type, String literal ) throws LemException {
         this.value = literal;
-        if( type.equals( StringType.getInstance() ))
+        if( type != null && type.equals( StringType.getInstance() ))
             value = value.substring( 1 ).substring(0, value.length() - 2 );
         this.type = type;
     }

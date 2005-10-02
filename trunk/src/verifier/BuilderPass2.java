@@ -964,7 +964,10 @@ public class BuilderPass2 extends Visitor {
 			break;
 		case LemParserConstants.NULL:
 			// TODO: NullType
+			t = ObjectReferenceType.getInstance();
 			break;
+		default:
+			throw new LemException( "LEMLiteral unknown type" );
 		}
 
 		return new Literal( t, node.getFirstToken().image );
