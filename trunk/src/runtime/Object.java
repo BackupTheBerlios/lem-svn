@@ -78,6 +78,11 @@ public class Object {
 	
 	private Refcount runningInterpreters = new Refcount();
 
+	public Object( DomainContext c ) {
+		context = c;	
+		objectId = ArbitraryIdVariable.getInstance();
+	}
+	
 	/**
 	 * Creates a new instance of Object. The object will contain instances
 	 * of all the classes in the <code>classes</code> collection.
