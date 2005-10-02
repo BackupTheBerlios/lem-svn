@@ -12,24 +12,31 @@ model TheWorld is "where all things happen"
 				event cancelCooking;
 				event cookingPeriodOver;
 				event beepingOver;
-				event cookingPeriod carries (period is objref);
+				event cookingPeriod carries (period is numeric);
 				event ovenSafe;
 				
 				
 				behaviour is 
 					state AwaitingCookingRequest is {
-						remainingCookingTime := 0;
+						objref beeper;
+					
+						self.remainingCookingTime := 0;
 						beeper := select one from instances of Beeper;
 						generate stopBeeping to beeper;
 					} end;
 					
-					state AssigningCookingPeriod is {
-						remainingCookingtime := cookingPeriod.period;
+					state AssigningCookingPeriod (period is numeric) is {
+						self.remainingCookingTime := period;
 					} end;
 					
 					state SignallingCookingPeriodOver is {
+						objref beeper;
+						objref light;
+						objref turntable;
+						objref magnetron;
+
 						beeper := select one from instances of Beeper;
-						generate startBeeping to myBeeper;
+						generate startBeeping to beeper;
 						light := select one from instances of Light;
 						generate switchOff to light;
 						turntable := select one from instances of Turntable;
@@ -39,9 +46,9 @@ model TheWorld is "where all things happen"
 					} end;
 					
 					state CookingSuspended is {
-						remainingCookingTime := ovenTimer.timeRemaining;
+						self.remainingCookingTime := ovenTimer.timeRemaining;
 						cancel cookingPeriodOver to self;
-						light := select one from instances of Light ;
+						light := select one from instances of Light;
 						generate switchOff to light;
 						turntable := select one from instances of Turntable;
 						generate stop to turntable;
@@ -50,7 +57,9 @@ model TheWorld is "where all things happen"
 					} end;
 					
 					state EnsuringSafeToCook is {
-						if(remainingCookingTime /= 0){
+						objref door;
+
+						if(self.remainingCookingTime /= 0){
 							door := select one from instances of Door;
 							if (door.closed) {
 								generate ovenSafe to self;
@@ -59,11 +68,15 @@ model TheWorld is "where all things happen"
 					} end;
 					
 					state Cooking is {
-						generate cookingPeriodOver to self with delay remainingCookingTime;
+						objref light;
+						objref turntable;
+						objref magnetron;
+
+						generate cookingPeriodOver to self with delay self.remainingCookingTime;
                                                 light := select one from instances of Light ;
 						generate switchOn to light;
 						turntable := select one from instances of Turntable;
-						generate start to turntable;
+						generate spin to turntable;
 						magnetron := select one from instances of Magnetron;
 						generate powerOn to magnetron;
 					} end;
@@ -88,15 +101,16 @@ model TheWorld is "where all things happen"
 				event release;
 				event close;
 				behaviour is
-					state Open "The door is open" is{
-						closed := false;
+					state Open "The door is open" is {
+						objref oven;
+						self.closed := false;
 						oven := select one from instances of Oven;
 						generate cancelCooking to oven;
 						}
 					end Open;
 					
-					state Closed "The door is close" is {
-						closed := true;
+					state Closed "The door is closed" is {
+						self.closed := true;
 						}
 					end Closed;
 					
@@ -108,21 +122,21 @@ model TheWorld is "where all things happen"
 			
 			class Magnetron is
 				event genesis;
-				event PowerOn;
-				event PowerOff;
+				event powerOn;
+				event powerOff;
 				behaviour is
 					state On "The magnetron is turned on" is {
 						print "magnetron, transform!!!";
-						}
+					}
 					end On;
 					state Off "The magnetron is turned off" is {
 						print "magnetron off";
-						}
+					}
 					end Off;
 
 					on genesis transition from creation state to Off;
-					on PowerOn transition from Off to On;
-					on PowerOff transition from On to Off;
+					on powerOn transition from Off to On;
+					on powerOff transition from On to Off;
 				end behaviour;
 			end Magnetron;
 
@@ -179,22 +193,24 @@ model TheWorld is "where all things happen"
 
 				behaviour is
 					state AwaitingBeeperRequest is {
-						beepCount := 0;
+						self.beepCount := 0;
 					}
 					end;
 
 					state Beeping "turn beeper on" is {
-						if(beepCount < 4) {
+						objref oven;
+					
+						if(self.beepCount < 4) {
 							print "beep beep";
-							generate beppOver to self with delay 500;
+							generate beepOver to self with delay 500;
 						}
 						else {
 							generate beepingStopped to self;
 							oven := select one from instances of Oven;
-							generate beepingOven to Oven;
+							generate beepingOver to oven;
 						}
 						
-						beepCount := beepCount + 1;
+						self.beepCount := self.beepCount + 1;
 					}
 					end;
 
@@ -263,7 +279,15 @@ model TheWorld is "where all things happen"
 			relate sharehouseOven to sharehouseDoor across R4/*."opens it up"*/;
 			relate sharehouseOven to sharehouseMagnetron across R3/*."heats it up"*/;
 			
-			generate cookingPeriod to sharehouseOven;	
+			generate genesis to sharehouseOven;	
+			generate genesis to sharehouseBeeper;
+			generate genesis to sharehouseLight;
+			generate genesis to sharehouseTurntable;
+			generate genesis to sharehouseDoor;
+			generate genesis to sharehouseMagnetron;
+
+			generate cookingPeriod( 10000 ) to sharehouseOven with delay 10000;
+			generate startCooking to sharehouseOven with delay 15000;
 		}
 
 	end Cooking;
