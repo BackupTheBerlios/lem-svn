@@ -33,6 +33,7 @@ import runtime.LemRuntimeException;
 /**
  * Tree node appearing inside a StateMachineNode. For graphically representing
  * and "holding" a LEM State object. Has no children.
+ *
  * @author Shokouhmand Torabi
  */
 public class StateNode extends AbstractDescriptionNode {
@@ -78,6 +79,10 @@ public class StateNode extends AbstractDescriptionNode {
         contextMenu.add(executeProcedure);
         return contextMenu;
     }
+    
+    /**
+     * Executes the associated procedure
+     */
     
     public void executeProcedure() {
 	/**
