@@ -323,15 +323,16 @@ public class Interpreter {
 
         // Find the event to be fired on the given object
         Event e = target.findEvent( a.getEventName(), a.getParameters() );
-	  String type = e.getName();  
 
         if ( e == null ) {
             // TODO: Don't use single-arg constructor for LemRuntimeException
             throw new LemRuntimeException( "Could not find named event" );
         }
-        
+
+	String type = e.getName();  
+	
         // Create the new signal
-        Expression delayExpression = a.getDelayTime();
+	Expression delayExpression = a.getDelayTime();
         if ( delayExpression != null ) {
             Variable v = evaluateExpression( delayExpression, c );
             if ( !( v instanceof NumericVariable ) ) {
