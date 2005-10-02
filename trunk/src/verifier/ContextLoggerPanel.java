@@ -4,6 +4,9 @@
  * Created on September 16, 2005, 6:04 PM
  *
  * Copyright (C) 2005 Shokouhmand Torabi
+ * Copyright (C) 2005 Simon Franklin
+ * Copyright (C) 2005 David Gavin
+ * Copyright (C) 2005 Donna Aloe
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -44,29 +47,40 @@ import runtime.LemStateTransitionEvent;
 import metamodel.VariableReference;
 
 /**
+ * Creates and Associates a logger panel, including the logger text pane and logger table to a context. 
+ * Initalises the gui components and the associates a table model with the table. 
+ * Receives the mouse click events when the filter buttons are selected. 
  *
+ * @author Simon Franklin
+ * @author David Gavin
+ * @author Donna Aloe
  * @author Shokouhmand Torabi
  *
  */
 public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.LemEventListener {
-	private int counter = 0;
+    private int counter = 0;
     
     // Attribute set for defult text
     SimpleAttributeSet text = new SimpleAttributeSet();
     SimpleAttributeSet values = new SimpleAttributeSet();
     //Set up for table model
     TableModel model = new TableModel();
-	
-	/** Creates new form BeanForm */
-	public ContextLoggerPanel() {
-		initializeComponents();
-	}
-	
-	public void init(runtime.Context c) {
-		
-		c.addLemEventListener(this);       
+    
+    /** Creates new form BeanForm */
+    public ContextLoggerPanel() {
+        initializeComponents();
+    }
+    
+    /**
+     * Initalise the table, includes setting the table model, adding appropriate listeners
+     * set column names from Model,  and set up text formatting for the text area.  
+     * @param c The context in which the logger is operating
+     */
+    public void init(runtime.Context c) {
+        
+        c.addLemEventListener(this);
         // Set the data     model for the table
-        table.setModel(model);      
+        table.setModel(model);
         model.setTable(table);
         JTableHeader header = table.getTableHeader();
         header.setReorderingAllowed(false);
@@ -79,17 +93,17 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
         
         //Add a tool tip to show sorting
         table.getTableHeader().setToolTipText(
-               "Click to specify sorting, Once for Ascending, Twice for Descending");
+                "Click to specify sorting, Once for Ascending, Twice for Descending");
         
         //Set the column names in the combo box
         for (int i=0; i<model.getColumnCount(); i++){
-            colSelection.addItem(model.getColumnName(i));  
+            colSelection.addItem(model.getColumnName(i));
         }
         
         //Set text in matches combo box
         matches.addItem("Exactly");
         matches.addItem("Contains");
-      
+        
         //Defult text formating for log messages
         StyleConstants.setFontFamily(text, "Times New Roman");
         StyleConstants.setFontSize(text, 14);
@@ -100,15 +114,17 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
         StyleConstants.setFontFamily(values, "Times New Roman");
         StyleConstants.setFontSize(values, 16);
         StyleConstants.setForeground(values, Color.DARK_GRAY);
-        StyleConstants.setBold(values,true);	
+        StyleConstants.setBold(values,true);
         
         jSplitPane1.setLeftComponent(jScrollPane1);
         jSplitPane1.setRightComponent(jScrollPane2);
         
-        }
-	
-	public void initializeComponents() {
-	jSplitPane1 = new javax.swing.JSplitPane();
+    }
+    /**
+     * Initalise all the components of the GUI form 
+     */
+    public void initializeComponents() {
+        jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextPane();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -118,25 +134,25 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
         colSelection = new javax.swing.JComboBox();
         matches = new javax.swing.JComboBox();
         clear = new javax.swing.JButton();
-
+        
         setLayout(null);
-
+        
         jSplitPane1.setDividerLocation(200);
         jSplitPane1.setDividerSize(5);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         textArea.setEditable(false);
         jScrollPane1.setViewportView(textArea);
-
+        
         jSplitPane1.setLeftComponent(jScrollPane1);
         jScrollPane2.setViewportView(table);
-       
+        
         add(jSplitPane1);
         jSplitPane1.setBounds(0, 0, 620, 410);
-
+        
         textField.setText("Enter keyword");
         add(textField);
         textField.setBounds(220, 410, 120, 30);
-
+        
         filterButton.setText("Go");
         filterButton.setPreferredSize(new java.awt.Dimension(45, 25));
         filterButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -144,18 +160,18 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
                 filterButtonMouseClicked(evt);
             }
         });
-
+        
         add(filterButton);
         filterButton.setBounds(480, 410, 60, 30);
-
+        
         colSelection.setPreferredSize(new java.awt.Dimension(87, 19));
         add(colSelection);
         colSelection.setBounds(350, 410, 120, 30);
-
+        
         matches.setPreferredSize(new java.awt.Dimension(87, 19));
         add(matches);
         matches.setBounds(90, 410, 120, 30);
-
+        
         clear.setText("Clear");
         clear.setPreferredSize(new java.awt.Dimension(50, 19));
         clear.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -163,16 +179,16 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
                 clearMousePressed(evt);
             }
         });
-
+        
         add(clear);
         clear.setBounds(550, 410, 70, 30);
-	}
-	
-	/** This method is called from within the constructor to
-	 * initialize the form.
-	 * WARNING: Do NOT modify this code. The content of this method is
-	 * always regenerated by the Form Editor.
-	 */
+    }
+    
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
         jSplitPane2 = new javax.swing.JSplitPane();
@@ -284,16 +300,21 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
 
     }
     // </editor-fold>//GEN-END:initComponents
-	
-	private void clearMousePressed(java.awt.event.MouseEvent evt) {                                   
+    
+    /**
+     * Clears the filter operating of the table model so all rows of the table are displayed
+     * @param evt The mouse click event
+     */
+    
+    private void clearMousePressed(java.awt.event.MouseEvent evt) {
         model.removeFilter();
-    }                                  
+    }
     /**
      * Called when user clicks on Go to filter according to keyword and column as selected in the text field and
      * combo box.
-     *
+     * @param evt The mouse click event 
      */
-    private void filterButtonMouseClicked(java.awt.event.MouseEvent evt) {                                          
+    private void filterButtonMouseClicked(java.awt.event.MouseEvent evt) {
         int ind;
         String tmp;
         ind = colSelection.getSelectedIndex();
@@ -305,29 +326,29 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
         } else {
             model.applyFilter(tmp, ind, type);
         }
-    }                                         
+    }
     
     /*
      *Adds StyledDocument to the text area
+     *
      *@param doc Styled Document to be added to text area
      */
     private void addText(StyledDocument doc){
         try {
             for ( int i = 0 ; i < doc.getLength() ; i++ ) {
                 textArea.getDocument().insertString(textArea.getDocument().getLength() ,
-                        doc.getStyledElement(i).getContent(), 
+                        doc.getStyledElement(i).getContent(),
                         doc.getStyledElement(i).getAttributeSet());
             }
             
             counter ++;
         } catch(Exception x) {}
     }
-
+    
     /**
      * Called by the runtime when a CreateAction has been implemented
      * and a new object has been created.
-     * The panel displays an object created message listing all the instances created.
-     * The table displays the object created message listing all the instances created.
+     * A log message is displayed in the text pane and sent to the table model. 
      *
      *@param event The Object Creation event to be logged
      **/
@@ -351,6 +372,7 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
     
     /**
      * Called by the runtime when reading an attribute's value
+     * A log message is displayed in the text pane and sent to the table model. 
      *
      * @param event The event representing the circumstances in which the
      *  attribute is read.
@@ -363,18 +385,17 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
         doc.addStyle(new StyledElement(" Attribute Read, Object ID: " , text));
         doc.addStyle(new StyledElement(event.getObjectId().toString(), values));
         doc.addStyle(new StyledElement(" Attribute Name: ",  text));
-        doc.addStyle(new StyledElement(event.getAttributeName(), values)); 
+        doc.addStyle(new StyledElement(event.getAttributeName(), values));
         doc.addStyle(new StyledElement(" Value: " , text));
         doc.addStyle(new StyledElement(event.getValue().toString(), values));
         doc.addStyle(new StyledElement("\n", text));
-       addText(doc);
+        addText(doc);
     }
     
     /**
      * Called by the runtime when a DeleteAction has been implemented
      * and an existing has been deleted.
-     * The panel displays an object deleted message listing all the
-     * instances of the object deleted.
+     * A log message is displayed in the text pane and sent to the table model. 
      *
      *@param event The Object Deletion event to be logged
      **/
@@ -392,7 +413,7 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
     /**
      * Called by the runtime when a LemEvent has resulted in a object transitioning
      *  from one state to the next.
-     * The panel displays the transition event listing the state the object has moved to.
+     * A log message is displayed in the text pane and sent to the table model. 
      *
      *@param event The State transition event to be logged
      **/
@@ -408,13 +429,14 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
         doc.addStyle(new StyledElement(" New State: ", text));
         doc.addStyle(new StyledElement(event.getToState(), values));
         doc.addStyle(new StyledElement("\n", text));
-      addText(doc);
+        addText(doc);
     }
-                    
+    
     /**
      * Called by the runtime when an attribute's value has changed.
+     * A log message is displayed in the text pane and sent to the table model. 
      *
-     * @param e The event representing the attribute change
+     * @param event The event representing the LEMAttributeChangeEvent
      */
     public synchronized void attributeChange(LemAttributeChangeEvent event) {
         StyledDocument doc = new StyledDocument();
@@ -435,6 +457,7 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
     
     /**
      * Called by the runtime when an existing relationship is deleted
+     * A log message is displayed in the text pane and sent to the table model. 
      *
      * @param event The LemRelationshipDeletionEvent event representing
      * the circumstances in which the relationship has been deleted
@@ -459,6 +482,7 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
     
     /**
      * Called by the runtime when a new relationship is created
+     *  A log message is displayed in the text pane and sent to the table model. 
      *
      * @param event The LemRelationshipCreationEvent event representing
      * the circumstances in which the relationship has been created
@@ -479,7 +503,7 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
         doc.addStyle(new StyledElement("\n", text));
         addText(doc);
     }
-      
+    
     /**
      * Called by the runtime when a ReclassificationAction has been implemented
      * and an existing object in a generalisation heirarchy has been reclassified.
@@ -495,9 +519,10 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
      *
      * }
      */
-
+    
     /**
-     * Called by the runtime when a signal is generated
+     * Called by the runtime when a signal is generated. A log message is displayed 
+     * on the text pane and sent to the table model. 
      *
      * @param event The LemEventGenerationEvent event representing
      * the circumstances in which the signal is generated
@@ -526,19 +551,27 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
         doc.addStyle(new StyledElement(para, values));
         doc.addStyle(new StyledElement(" Delay: ", text));
         if(event.getEventDelay() != null){
-        doc.addStyle(new StyledElement(event.getEventDelay().toString(), values));
+            doc.addStyle(new StyledElement(event.getEventDelay().toString(), values));
         }
         doc.addStyle(new StyledElement("\n", text));
         addText(doc);
     }
     
+    /**
+     * Called by the runtime when a signal is received and a log message is
+     * displayed in the text pane and sent to the table model.
+     *
+     * @param event The LemEventGenerationEvent event representing
+     * the circumstances in which the signal is received
+     */
+    
     public synchronized void receivedEvent(LemEventReceivedEvent event){
-      StyledDocument doc = new StyledDocument();
+        StyledDocument doc = new StyledDocument();
         //send the object created event to the table model.
-        model.receivedEvent(event, counter); 
+        model.receivedEvent(event, counter);
         doc.addStyle(new StyledElement(""+counter, values));
         doc.addStyle(new StyledElement(" Event Received ,", text));
-        doc.addStyle(new StyledElement(" Object Id: ", text));  
+        doc.addStyle(new StyledElement(" Object Id: ", text));
         doc.addStyle(new StyledElement(event.getEventId().toString(), values));
         doc.addStyle(new StyledElement(" Event Type: ", text));
         doc.addStyle(new StyledElement(event.getEventType(), values));
@@ -550,13 +583,14 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
         for (Iterator i = parameters.iterator(); i.hasNext();){
             para = para + i.next() + ", ";
         }
-        doc.addStyle(new StyledElement(para, values));  
-         doc.addStyle(new StyledElement("\n", text));
+        doc.addStyle(new StyledElement(para, values));
+        doc.addStyle(new StyledElement("\n", text));
         addText(doc);
     }
-      
+    
     /**
-     * Called by the runtime when selection statement is executed
+     * Called by the runtime when selection statement is executed. A log message
+     * is displayed in the text pane and sent to the table model.
      *
      *@param event The event representing the condition and the result.
      **/
@@ -564,39 +598,38 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
     public synchronized void selectedEvent(LemSelectionEvent event){
         StyledDocument doc = new StyledDocument();
         //send the object created event to the table model.
-        model.selectedEvent(event, counter);  
+        model.selectedEvent(event, counter);
         doc.addStyle(new StyledElement(""+counter, values));
         doc.addStyle(new StyledElement(" Selection, ", text));
-        doc.addStyle(new StyledElement(" Object Id: ", text));  
+        doc.addStyle(new StyledElement(" Object Id: ", text));
         doc.addStyle(new StyledElement(event.getObjectId().toString(), values));
-       doc.addStyle(new StyledElement(" Condition ", text));
-       doc.addStyle(new StyledElement(event.getSelectCondition(), values));
-       doc.addStyle(new StyledElement(" Object Id's Returned: ", text));
-       Collection idList = event.getObjectList();
-       String list = "";
-       for (Iterator i = idList.iterator(); i.hasNext();){
-           list = list + i.next().toString() + ", ";
-       }
-       doc.addStyle(new StyledElement(list, values));  
+        doc.addStyle(new StyledElement(" Condition ", text));
+        doc.addStyle(new StyledElement(event.getSelectCondition(), values));
+        doc.addStyle(new StyledElement(" Object Id's Returned: ", text));
+        Collection idList = event.getObjectList();
+        String list = "";
+        for (Iterator i = idList.iterator(); i.hasNext();){
+            list = list + i.next().toString() + ", ";
+        }
+        doc.addStyle(new StyledElement(list, values));
         doc.addStyle(new StyledElement("\n", text));
         addText(doc);
     }
     
-       /**
+    /**
      * Called by the runtime when a delayed event sent to self is cancelled.
+     * A log message is displayed in the text pane and sent to the table model.
      *
-     * The panel displays an cancelled event message listing the event which was
-     * cancelled and the object which cancelled it.
-     *
-     *@param event The delayed event which has been cancelled.
-     **/
+     *@param event The LEM Cancellation Event representing the delayed event
+     * which has been cancelled.
+     */
     public synchronized void cancelledEvent(LemEventCancellationEvent event){
-         StyledDocument doc = new StyledDocument();
+        StyledDocument doc = new StyledDocument();
         //send the object created event to the table model.
-        model.cancelledEvent(event, counter);  
+        model.cancelledEvent(event, counter);
         doc.addStyle(new StyledElement(""+counter, values));
         doc.addStyle(new StyledElement(" Cancelled Event ,", text));
-        doc.addStyle(new StyledElement(" Object Id: ", text));  
+        doc.addStyle(new StyledElement(" Object Id: ", text));
         doc.addStyle(new StyledElement(event.getEventId().toString(), values));
         doc.addStyle(new StyledElement(" Event Type: ", text));
         doc.addStyle(new StyledElement(event.getEventType(), values));
@@ -608,15 +641,15 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
         for (Iterator i = parameters.iterator(); i.hasNext();){
             para = para + i.next() + ", ";
         }
-        doc.addStyle(new StyledElement(para, values));   
-         doc.addStyle(new StyledElement("\n", text));
+        doc.addStyle(new StyledElement(para, values));
+        doc.addStyle(new StyledElement("\n", text));
         addText(doc);
     }
     
- 
-   
-         
-
+    
+    
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton clear;
     private javax.swing.JComboBox colSelection;
@@ -631,5 +664,5 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
     private javax.swing.JTextPane textArea;
     private javax.swing.JTextField textField;
     // End of variables declaration//GEN-END:variables
-	
+    
 }
