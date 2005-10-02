@@ -30,7 +30,7 @@ import java.math.BigDecimal;
  * encountered.
  * @author npiggin
  */
-public class DelayedSignal extends Signal {
+public class DelayedSignal extends Signal implements Comparable {
 	private runtime.Object target;
 	private long deliveryTime;
 	
@@ -59,5 +59,26 @@ public class DelayedSignal extends Signal {
 
 	public long getDeliveryTime() {
 		return deliveryTime;
+	}
+
+	/** 
+	 * Compare the given object to this DelayedSignal.
+	 *
+	 * @param o the DelayedSignal to which to compare this delayed signal
+	 * @return Returns -1 if this signal will be delivered before the given
+	 * signal, 0 if they will be delivered at the same time, or 1 otherwise.
+	 *
+	 * @throws ClassCastException if o is not a DelayedSignal. 
+	 */
+	
+	public int compareTo( java.lang.Object o ) {
+		DelayedSignal d = (DelayedSignal)o;
+
+		if (deliveryTime < d.getDeliveryTime() )
+			return -1;
+		else if (deliveryTime == d.getDeliveryTime() ) 
+			return 0;
+		else
+			return 1;
 	}
 }
