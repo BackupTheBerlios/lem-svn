@@ -81,6 +81,9 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
         classIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/scenario.jpg");
         scenarioIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+
+	setClosedIcon( closeIcon );
+	setOpenIcon( openedIcon );
     }
     /**
      * Method for setting the icon of the current JTree component. Recursively 
