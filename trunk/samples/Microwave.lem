@@ -19,7 +19,7 @@ model TheWorld is "where all things happen"
 				behaviour is 
 					state AwaitingCookingRequest is {
 						remainingCookingTime := 0;
-			//			beeper := select one from instances of Beeper where (Oven (related to Beeper across R1));
+						beeper := select one from instances of Beeper;
 						generate stopBeeping to beeper;
 					} end;
 					
@@ -28,31 +28,31 @@ model TheWorld is "where all things happen"
 					} end;
 					
 					state SignallingCookingPeriodOver is {
-			//			beeper := select one from instances of Beeper where (Oven (related to Beeper across R1));
+						beeper := select one from instances of Beeper;
 						generate startBeeping to myBeeper;
-			//			light := select one from instances of Light where (Oven (related to Light across R6));
+						light := select one from instances of Light;
 						generate switchOff to light;
-			//			turntable := select one from instances of Turntable where (Oven (related to Turntable across R2));
+						turntable := select one from instances of Turntable;
 						generate stop to turntable;
-			///			magnetron := select one from instances of Magnetron where (Oven (related to Magnetron across R3));
+						magnetron := select one from instances of Magnetron;
 						generate powerOff to magnetron;
 					} end;
 					
 					state CookingSuspended is {
 						remainingCookingTime := ovenTimer.timeRemaining;
 						cancel cookingPeriodOver to self;
-			//			light := select one from instances of Light where (Oven (related to Light across R6));
+						light := select one from instances of Light ;
 						generate switchOff to light;
-			//			turntable := select one from instances of Turntable where (Oven (related to Turntable across R2));
+						turntable := select one from instances of Turntable;
 						generate stop to turntable;
-			//			magnetron := select one from instances of Magnetron where (Oven (related to Magnetron across R3));
+						magnetron := select one from instances of Magnetron;
 						generate powerOff to magnetron;
 					} end;
 					
 					state EnsuringSafeToCook is {
 						if(remainingCookingTime /= 0){
-			//				door := select one from instances of Door where (Oven (related to Door across R4));
-							if (door.closed){
+							door := select one from instances of Door;
+							if (door.closed) {
 								generate ovenSafe to self;
 							}
 						}
@@ -60,15 +60,15 @@ model TheWorld is "where all things happen"
 					
 					state Cooking is {
 						generate cookingPeriodOver to self with delay remainingCookingTime;
-                        //                      light := select one from instances of Light where (Oven (related to Light across R6));
+                                                light := select one from instances of Light ;
 						generate switchOn to light;
-			//			turntable := select one from instances of Turntable where (Oven (related to Turntable across R2));
+						turntable := select one from instances of Turntable;
 						generate start to turntable;
-			//			magnetron := select one from instances of Magnetron where (Oven (related to Magnetron across R3));
+						magnetron := select one from instances of Magnetron;
 						generate powerOn to magnetron;
 					} end;
 				
-					on genesis transition from Creation to AwaitingCookingRequest;
+					on genesis transition from creation state to AwaitingCookingRequest;
 					on cookingPeriod transition from AwaitingCookingRequest to AssigningCookingPeriod;
 					on startCooking transition from AssigningCookingPeriod to EnsuringSafeToCook;
 					on startCooking transition from EnsuringSafeToCook to EnsuringSafeToCook;
@@ -90,7 +90,7 @@ model TheWorld is "where all things happen"
 				behaviour is
 					state Open "The door is open" is{
 						closed := false;
-			//			oven := select one from instances of Oven where (Door (related to Oven across R4));
+						oven := select one from instances of Oven;
 						generate cancelCooking to oven;
 						}
 					end Open;
@@ -100,7 +100,7 @@ model TheWorld is "where all things happen"
 						}
 					end Closed;
 					
-					on genesis transition from Creation to Closed;
+					on genesis transition from creation state to Closed;
 					on release transition from Closed to Open;
 					on close transition from Open to Closed;
 				end behaviour;
@@ -120,7 +120,7 @@ model TheWorld is "where all things happen"
 						}
 					end Off;
 
-					on genesis transition from Creation to Off;
+					on genesis transition from creation state to Off;
 					on PowerOn transition from Off to On;
 					on PowerOff transition from On to Off;
 				end behaviour;
@@ -141,7 +141,7 @@ model TheWorld is "where all things happen"
 						print "turn turn turn";
 						}
 					end;
-					on genesis transition from Creation to Stationary;
+					on genesis transition from creation state to Stationary;
 					on spin transition from Stationary to Rotating;
 					on stop transition from Rotating to Stationary;
 				end behaviour;
@@ -161,7 +161,7 @@ model TheWorld is "where all things happen"
 						print "light on";
 						}
 					end;
-					on genesis transition from Creation to LightOff;
+					on genesis transition from creation state to LightOff;
 					on switchOn transition from LightOff to LightOn;
 					on switchOff transition from LightOn to LightOff;
 				end behaviour;
@@ -190,7 +190,7 @@ model TheWorld is "where all things happen"
 						}
 						else {
 							generate beepingStopped to self;
-			//			oven := select one from instances of Oven where (Beeper (related to Oven across R1));
+							oven := select one from instances of Oven;
 							generate beepingOven to Oven;
 						}
 						
@@ -204,7 +204,7 @@ model TheWorld is "where all things happen"
 					}
 					end;
 					
-					on genesis transition from Creation to AwaitingBeeperRequest;
+					on genesis transition from creation state to AwaitingBeeperRequest;
 					on startBeeping transition from AwaitingBeeperRequest to Beeping;
 					on stopBeeping transition from Beeping to AwaitingBeeperRequest ;
 					on stopBeeping transition from Pause to AwaitingBeeperRequest ;
@@ -264,6 +264,7 @@ model TheWorld is "where all things happen"
 			relate sharehouseOven to sharehouseMagnetron across R3/*."heats it up"*/;
 			
 			generate cookingPeriod to sharehouseOven;	
-				
+		}
+
 	end Cooking;
 end TheWorld;
