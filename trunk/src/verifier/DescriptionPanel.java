@@ -24,12 +24,15 @@
 package verifier;
 
 /**
+ * Creates a new Description Panel form 
  *
  * @author  Shokouhmand Torabi
  */
 public class DescriptionPanel extends javax.swing.JPanel {
 	
-	/** Creates new form DescriptionPanel */
+	/** 
+         * Creates new form DescriptionPanel to display  text 
+         */
 	public DescriptionPanel() {
 		initComponents();
 	}
