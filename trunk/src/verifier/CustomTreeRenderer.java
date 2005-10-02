@@ -46,9 +46,9 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
     /**Image icon for statemachine objects in model tree*/
     private ImageIcon stateMachineIcon = new ImageIcon();
     /**Image icon for open folders in model tree*/
-    private ImageIcon openIcon = new ImageIcon();
+    private ImageIcon openedIcon = new ImageIcon();
     /**Image icon for closed folders in model tree*/
-    private ImageIcon closedIcon = new ImageIcon();
+    private ImageIcon closeIcon = new ImageIcon();
     /**Image icon for event objects in model tree*/
     private ImageIcon eventIcon = new ImageIcon();
     /**Image icon for class objects in model tree*/
@@ -72,9 +72,9 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer{
         imageURL = getClass().getClassLoader().getResource("verifier/statemachine.jpg");
         stateMachineIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/open.jpg");
-        openIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        openedIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/closed.jpg");
-        closedIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
+        closeIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/event.jpg");
         eventIcon.setImage(Toolkit.getDefaultToolkit().getImage(imageURL));
         imageURL = getClass().getClassLoader().getResource("verifier/class.jpg");
