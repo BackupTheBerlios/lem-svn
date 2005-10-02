@@ -23,11 +23,13 @@ package verifier;
 
 import java.util.Vector;
 
-/** Apply a filter on the JTable
- *Allows the user to enter a text field and a column and only show the rows which match the input.
+/** 
+ * Apply a filter on the JTable to display rows which match a selected condition.
+ * Contains methods: Filter, applyFiler and remove filter.
  *
- *@param model The table model which holds the data
  * @author Donna Aloe
+ * @ see TableModel
+ *
  */
 public class Filter {
     
@@ -38,16 +40,22 @@ public class Filter {
     private int colIndex;
     private int type;
     
-    /** Creates a new instance of Filter */
+    /** Creates a new instance of Filter 
+     *
+     * @param model The table model to apply the filter to
+     */
     public Filter(TableModel model) {
         this.Model = model;
         data = model.getUnfilteredVector();
     }
     
-    /** Selects those rows which match the filtering criteria
-     *@param text the string to filter on
-     *@param colIndex the column to filter the text on
-     *@see tableModel
+    /** 
+     * Apply the filter to the table by selecting the rows which match the filtering criteria
+     *
+     * @param text the string to filter on
+     * @param colIndex the column to filter the text on
+     * @param inType 0 if match text exactly, or 1 to match all data which contains text.
+     *
      */
     public void applyFilter(String inText, int inColIndex, int inType){
         text = inText;
@@ -75,6 +83,10 @@ public class Filter {
         
     }
     
+    /** 
+     * Apply the filter to the table based on previous filtering criteria
+     * 
+     */
     
     public void applyFilter(){
         if(text!=null){
@@ -100,8 +112,10 @@ public class Filter {
             Model.changeDisplayRows(newData);
         }
     }
+    
+    
     /**
-     * Removes the filter from the table model
+     * Removes the filter from the table model to display all rows 
      */
     public void removeFilter(){
         newData.removeAllElements();
