@@ -800,11 +800,12 @@ public class Interpreter {
     }
     
     public Variable evaluateSelectExpression( SelectExpression se, Context c ) throws LemRuntimeException {
+	Variable retVar;
         metamodel.Class selectedClass = se.getSelectedClass() ;
         RelatedToOperation rto = se.getRelatedToOperation() ;
         Expression condition = se.getCondition();
-        SetVariable set = new SetVariable() ;
-	Collection list = new LinkedList();
+	LinkedList idList = new LinkedList();
+	LinkedList refList = new LinkedList();
 	Context tmp = c;
         while (tmp.getParent() != null)
 		tmp = tmp.getParent();
@@ -850,20 +851,36 @@ public class Interpreter {
                         }
                             
                          if ( goodVariable ) {
-                            set.addToSet( var ) ;
-                            list.add(((runtime.Object)var.getValue()).getObjectId());
+                            idList.add(((runtime.Object)var.getValue()).getObjectId());
+                            refList.add(var);
                         }
                     }
                 }
             }
+
+	    if (se.getMultiplicity() == SelectExpression.MULTIPLICITY_ALL) {
+	            SetVariable set = new SetVariable() ;
+		    set.addAllToSet( refList ) ;
+		    retVar = set;
+	    } else {
+		    /* This is a lem runtime bug */
+		    if (refList.size() > 1)
+            	    	throw new LemRuntimeException( "Select with multiplicity any or one returned more than one object!" );
+		    /* This is an action language bug (or lem runtime bug) */
+		    if (se.getMultiplicity() == SelectExpression.MULTIPLICITY_ONE && refList.size() == 0)
+            	    	throw new LemRuntimeException( "Select with multiplicity one returned no objects!" );
+
+		    if (refList.size() == 1)
+			    retVar = (ObjectReferenceVariable)refList.get(0);
+		    else
+			    retVar = new ObjectReferenceVariable(null);
+	    }
         }
         
-        System.out.println( Thread.currentThread().getName() + " selected " + ((LinkedList)set.getValue()).size() + " references" );
-        int id=0;
-        if(currentObject != null)
-            id = currentObject.getObjectId().intValue();
-        new LemSelectionEvent(id, expressionToString(condition), list).notifyAll( c );
-        return set;
+        System.out.println( Thread.currentThread().getName() + " selected " + refList.size() + " references" );
+        int id = currentObject.getObjectId().intValue();
+        new LemSelectionEvent(id, expressionToString(condition), idList).notifyAll( c );
+        return retVar;
     }
     
     /**

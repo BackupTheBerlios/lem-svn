@@ -18,22 +18,16 @@ model TestModel is
 
 					state s2( o is objref ) is
 					{
-
-						set myset;
+						objref myobj;
 
                                                 cancel Ev2 to self;
 
-                                             	myset := select one from instances of A where selected /= self;
-                                       		for each myobj in myset
-                                               	{
-                                                	generate Ev1( self ) to myobj;
-                                               	}
+                                             	myobj := select one from instances of A where selected /= self;
+                                               	generate Ev1( self ) to myobj;
 					} end s2;
 
 					deletion state s3( o is objref ) is
 					{
-						set myset;
-						
 						generate Ev2( self ) to o;
 					} end s3;
 					

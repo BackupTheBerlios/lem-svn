@@ -63,5 +63,16 @@ public class SetVariable extends Variable {
 	 */
 	public void addToSet( Variable b ) throws LemRuntimeException {	   
 		value.add(b);	   
-	}   
+	}
+
+	/**
+	 * This method adds a collection of variables to the set.
+	 * No type checking is done here to make sure the types
+	 * in a set match each other.
+	 *
+	 * @param b the variable to be added.
+	 */
+	public void addAllToSet( Collection c ) {
+		value.addAll(c);
+	}
 }
