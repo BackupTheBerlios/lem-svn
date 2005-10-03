@@ -33,14 +33,14 @@ import runtime.Instance;
 /**
  * Tree node appearing appearing inside an InstanceNode. For graphically
  * representing and "holding" LEM Association Instance objects. Has
- * ContextAssociationNode as a child.
+ * ContextAssociationInstanceNode as a child.
  * @author Simon Franklin
  */
 public class ContextAssociationNode extends AbstractDescriptionNode {
     
     /**The LEM Association that ContextAssociationNode contains.*/
     private Association association = null;
-    /**The LoggerFrame that ContextAssociationInstanceNode contains.*/
+    /**The LoggerFrame that ContextAssociationNode contains.*/
     private LoggerFrame frame = null ;
     /**The LEM Instance to which this Association belongs **/
     private Instance thisInstance ;

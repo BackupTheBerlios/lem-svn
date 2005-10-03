@@ -36,15 +36,23 @@ import metamodel.StateMachine;
 import runtime.Instance;
 
 /**
- *
+ * Tree node appearing appearing inside an ObjectNode. For graphically
+ * representing and "holding" LEM Instance objects. Has ContextAssociationNode,
+ * AttributeNode and ContextStateMachineNode as a children.
  * @author Shokouhmand Torabi
  */
 public class InstanceNode extends AbstractDescriptionNode {
 	
+        /**The LoggerFrame that InstanceNode contains.*/
 	private LoggerFrame frame ;
+        /**The LEM Instance that InstanceNode contains*/
 	private Instance thisInstance ;
 	
-	/** Creates a new instance of InstanceNode */
+	/** Creates a new instance of InstanceNode. Examines the LEM Instance object
+         * and creates subtrees based on the Attributes, Associations and State Machines.
+         *@param instance the LEM instance to be contained.
+         *@param fram the associated logger.
+         */
 	public InstanceNode(Instance instance , LoggerFrame frame) {
 		this.frame = frame ;
 		this.thisInstance = instance ;
@@ -74,27 +82,33 @@ public class InstanceNode extends AbstractDescriptionNode {
 	}
 	
 	/**
-	 * Returns name property of the Instance
-	 * @return the Instance name.
+	 * Returns name property of the Instance followed by it's Id
+	 * @return the Instance name and Id
 	 */
 	public String toString() {
 		return thisInstance.getInstanceClass().getName() + " : " + thisInstance.getInstanceInObject().getObjectId() ;
 	}
 	/**
 	 * Returns the description property of the Instance.
-	 * @return the Object description.
+	 * @return the instance description.
 	 */
 	public String getDescription(){
 		return "" ; //trim(thisInstance.getDescription());
 	}
 	/**
-	 * Returns the ContextMenu based on the Scenario.
-	 * @return the Scenario ContextMenu.
+	 * Returns the ContextMenu based on the Instance.
+	 * @return the Instance ContextMenu.
 	 */
 	public JPopupMenu getContextMenu() {
 		JPopupMenu ContextMenu = new JPopupMenu();
 		return ContextMenu;
 	}
+        
+        /**
+	 * Returns StyledDocument object containing preformatted LEM Instance description,
+	 * followed by the list of attributes that the Instance has.
+	 * @return the StyledDocument of the InstanceNode.
+	 */
 	
 	public StyledDocument getDynamicDescription() {
 		StyledDocument doc = new StyledDocument() ;

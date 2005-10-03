@@ -41,7 +41,7 @@ public class ContextSignalNode extends AbstractDescriptionNode {
 	
         
 	/**
-         * Creates a new instance of SignalNode. Examines LEM signal object and creates
+         * Creates a new instance of ContextSignalNode. Examines LEM signal object and creates
 	 *  a subtree based on the objects parameters.
          * @param s the LEM signal to be contained.
          * @param frame the logger frame the node will be displayed in.

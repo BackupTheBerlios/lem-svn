@@ -30,20 +30,30 @@ import runtime.ObjectReferenceVariable;
 import runtime.Variable;
 
 /**
- *
+ * Tree node appearing appearing inside an ContextSignalNode. For graphically
+ * representing and "holding" LEM variable objects. Has no children.
  * @author David Gavin
  */
 public class ContextVariableNode extends AbstractDescriptionNode {
+    
+        /** The LEM variable which ContextVariableNode contains*/
 	private Variable thisVariable;
+        /**The JFrame that ContextVariableNode contains.*/
 	private JFrame frame;
-	/** Creates a new instance of ContextParameterNode */
+        
+	/**
+         * Creates a new instance of ContextVariableNode
+         * @param inVariable the LEM variable to be contained
+         * @param inFrame the JFrame to be contained
+         */
 	public ContextVariableNode(Variable inVariable, JFrame inFrame) {
 		thisVariable = inVariable;
 		frame = inFrame;
 	}
 	/**
-	 * Returns name property of the Object
-	 * @return the Object name.
+	 * Returns Type property of the Object followed by either the Id or the value
+         * depending on whether this variable is an ObjectReferenceVariable
+	 * @return the Object type follow by the Id or value.
 	 */
 	public String toString() {
             if( thisVariable instanceof ObjectReferenceVariable)
@@ -55,14 +65,14 @@ public class ContextVariableNode extends AbstractDescriptionNode {
             }
 	}
 	/**
-	 * Returns the description property of the Object.
-	 * @return the Object description.
+	 * Returns the description property of the Variable.
+	 * @return the Variable description.
 	 */
 	public String getDescription(){
 		return ""; 
 	}
 	/**
-	 * Returns the ContextMenu based on the Scenario.
+	 * Returns the ContextMenu based on the Variable.
 	 * @return the Scenario ContextMenu.
 	 */
 	public JPopupMenu getContextMenu() {

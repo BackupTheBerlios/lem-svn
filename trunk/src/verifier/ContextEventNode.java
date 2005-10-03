@@ -35,22 +35,24 @@ import runtime.Signal;
 
 
 /**
- * Event node appearing inside a ModelTreePanel based on a particular event, has methods for returning
- * the name, description and ContexMenu for the node. 
- * 
+ * Tree node appearing appearing inside a ClassNode. For graphically
+ * representing and "holding" LEM Events objects. Has no children.
  * @author Shokouhmand Torabi
  */
  
 public class ContextEventNode extends AbstractDescriptionNode {
 	
+        /**The LEM Event that ContextEventNode contains*/
 	Event thisEvent ;
+        /**The LoggerFrame that ContextEventNode contains.*/
 	LoggerFrame frame ;
+        /**The LEM object that ContextEventNode contains.*/
 	private Object parentObject = null ;
 	
 	/** 
-	* Creates a new instance of SignalNode 
+	* Creates a new instance of ContextEventNode 
 	* @param object the parent of the given event
-	* @param e the event from which a node is created
+	* @param e the event to be contained
 	* @param frame the logger frame the node will be displayed in
 	*/
 	public ContextEventNode(Object object, Event e, LoggerFrame frame) {
@@ -59,22 +61,22 @@ public class ContextEventNode extends AbstractDescriptionNode {
 		this.parentObject = object ;
 	}
 	/**
-	 * Returns name property of the Object
-	 * @return the Object name.
+	 * Returns name property of the Event
+	 * @return the Event name.
 	 */
 	public String toString() {
 		return thisEvent.getName() + " : ";
 	}
 	/**
-	 * Returns the description property of the Object.
-	 * @return the Object description.
+	 * Returns the description property of the Event.
+	 * @return the Event description.
 	 */
 	public String getDescription(){
 		return thisEvent.getDescription() ;
 	}
 	/**
-	 * Returns the ContextMenu based on the Scenario.
-	 * @return the Scenario ContextMenu.
+	 * Returns the ContextMenu based on the Events.
+	 * @return the Events ContextMenu.
 	 */
 	public JPopupMenu getContextMenu() {
 		JPopupMenu contextMenu = new JPopupMenu();
