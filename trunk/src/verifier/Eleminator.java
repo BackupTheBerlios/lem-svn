@@ -54,6 +54,8 @@ import javax.xml.transform.stream.*;
 
 
 /**
+ * Creates and runs eLEMinator has methods to load a model, importXMI, importModel,
+ * Generate a state chart, generate a class diagram, exit, new window and kill window, 
  *
  * @author  sjr
  */
@@ -65,7 +67,9 @@ public class Eleminator extends javax.swing.JFrame {
 	//private Vector windows = new Vector(); //Was used for updating changes to the themes, not needed
 	private int windowCounter = 0;
 	
-	/** Creates new form Eleminator */
+	/**
+         * Creates new form Eleminator 
+         */
 	public Eleminator() {
 		getContentPane().add( MTP, BorderLayout.CENTER );
 		try{
@@ -197,14 +201,26 @@ public class Eleminator extends javax.swing.JFrame {
     }
     // </editor-fold>//GEN-END:initComponents
 	
+        /**
+         * Generate a class diagram of the currently loaded model
+         * @param evt The Action Event
+         */
 	private void generateClassDiagramItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateClassDiagramItemActionPerformed
 		GenerateClassDiagramDialog.showDialog( this, activeModel );
 	}//GEN-LAST:event_generateClassDiagramItemActionPerformed
 	
+         /**
+         * Generate a State Chart for currently loaded model
+         * @param evt The Action Event
+         */
 	private void generateStatechartItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateStatechartItemActionPerformed
 		GenerateStatechartDialog.showDialog( this, activeModel );
 	}//GEN-LAST:event_generateStatechartItemActionPerformed
 	
+         /**
+         * Import a XMI file into LEM and load the model
+         * @param evt The Action Event
+         */
 	private void importItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importItemActionPerformed
 		// Display a file chooser
 		
@@ -269,10 +285,19 @@ public class Eleminator extends javax.swing.JFrame {
 		setVisible(true);
 	}//GEN-LAST:event_importItemActionPerformed
 	
+        /**
+         * Close eLEMinator
+         * @param evt The Action Event
+         */
     private void quitItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitItemActionPerformed
 		System.exit( 1 );
     }//GEN-LAST:event_quitItemActionPerformed
 	
+    
+        /** 
+         * Select a LEM file to load through a file selector
+         * @param evt The Action Event
+         */
     private void openItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openItemActionPerformed
 		// Present the user with a file chooser
 		
@@ -342,6 +367,10 @@ public class Eleminator extends javax.swing.JFrame {
 		
     }//GEN-LAST:event_openItemActionPerformed
 	
+    /*
+     * Load a selected file into eLEMinator 
+     * @param modelFile The file to load
+     */
 	public Model loadModel( File modelFile ) throws FileNotFoundException, ParseException, LemException, IOException {
 		Lem l = new Lem();
 		FileReader fis = new FileReader( modelFile );
@@ -363,7 +392,11 @@ public class Eleminator extends javax.swing.JFrame {
 		return l.parse(new StringReader(s));
 	}
 	
-	
+	/**
+         * Convert an XMI file into a LEM model.
+         * @param sourceFile The xmi file to convert to LEM
+         *
+         */
 	private String importXMI(File sourceFile) throws FileNotFoundException, TransformerConfigurationException, TransformerException {
 		
 		BufferedReader styledata;
@@ -392,6 +425,7 @@ public class Eleminator extends javax.swing.JFrame {
 	}
 	
 	/**
+         * Creates and runs eLEMinator
 	 * @param args the command line arguments
 	 */
 	public static void main(String args[]) {
@@ -401,6 +435,11 @@ public class Eleminator extends javax.swing.JFrame {
 			}
 		});
 	}
+        
+        /**
+         * Creates a new window with the appropriate menu. 
+         * @param window The window to be shown 
+         */
 	public void newWindow(JFrame window){
 		JMenuItem showWindow = new JMenuItem();
 		windowMenu.setEnabled(true);
@@ -411,6 +450,11 @@ public class Eleminator extends javax.swing.JFrame {
 		windowMenu.add(showWindow);
 		//windows.add(window);
 	}
+        
+        /**
+         * Closes a window
+         * @param window The JFrame Window to be closed
+         */
 	public void killWindow(JFrame window){
 		for(int i=0; i<windowMenu.getItemCount();i++) {
 			if(window.getTitle().matches(windowMenu.getItem(i).getText())) {
