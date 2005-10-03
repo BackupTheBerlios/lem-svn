@@ -26,15 +26,23 @@ package verifier;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
  /**
- *
+ * Associates a action listener to a frame
  * @author David Gavin
  */
 public class LEMMenuListener implements ActionListener {
     private JFrame frame;
-    /** Creates a new instance of WindowMenuListener */
+    /**
+     * Creates a new instance of WindowMenuListener 
+     * @param inFrame The associated frame
+     */
     public LEMMenuListener(JFrame inFrame) {
         frame=inFrame;
     }
+    
+    /**
+     * Sets the frame visibile upon an action event
+     * @param evt The Action event received  
+     */
     public void actionPerformed(java.awt.event.ActionEvent evt) {
          frame.setState(JFrame.NORMAL);
          frame.setVisible(true);
