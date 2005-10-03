@@ -30,7 +30,8 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 
 /**
- *
+ * Opens the tree panel associated with a context and displays the description of the 
+ * selected object
  * @author  Shokouhmand Torabi
  */
 public class ContextTreePanel extends javax.swing.JPanel {
@@ -47,8 +48,12 @@ public class ContextTreePanel extends javax.swing.JPanel {
 	
 	private LoggerFrame frame ;
 	
-	/** Creates new form ContextTreePanel */
-	/** creates a tree displaying all the major components in a context */
+	/** Creates new form ContextTreePanel 
+         * creates a tree displaying all the major components in a context 
+         * @param c The associated context  
+         * @param frame The associated logger frame
+         */
+        
 	public ContextTreePanel(runtime.Context c,  LoggerFrame frame) {
 		initComponents();
 		this.context = c ;
@@ -60,13 +65,17 @@ public class ContextTreePanel extends javax.swing.JPanel {
 		add(contextTree ) ;
 	}
 	
-	/** Set a descriptionPane for this panel to write information into */
+	/** 
+         * Set a descriptionPane for this panel to write information into 
+         * @param descriptionPane The panel to write to
+         */
 	public void setDescriptionPane(JTextPane descriptionPane) {
 		this.descriptionPane = descriptionPane;
 	}
 	
-	/** get the jtree of this panel *
-	 *@return JTree
+	/**
+         * Get the jtree of this panel 
+	 * @return JTree
 	 */
 	public JTree getTree() {
 		return contextTree ;
@@ -99,6 +108,10 @@ public class ContextTreePanel extends javax.swing.JPanel {
     }
     // </editor-fold>//GEN-END:initComponents
 	
+    /**
+     * Display the context tree when an element is selected by the user (with a mouse click)
+     * @param evt The associated Mouse click event
+     */
 	private void contextTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contextTreeMouseClicked
 // TODO add your handling code here:
 		if (MouseEvent.BUTTON3 == evt.getButton()||MouseEvent.BUTTON2 == evt.getButton()) {
@@ -125,12 +138,20 @@ public class ContextTreePanel extends javax.swing.JPanel {
 		
 	}//GEN-LAST:event_contextTreeMouseClicked
 	
+        /*
+         * Display the description a selected item in the description pane
+         * @param evt The associated action event
+         */
 	private void DescriptionMenuClicked(java.awt.event.ActionEvent evt) {
 		displayDescription(currentContextObject);
 		contextMenu.setVisible(false);
 		currentContextObject=null;
 	}
 	
+        /*
+         * Displays the description on the display pane in a styled document 
+         * @param p The object who's description is to be displayed
+         */
 	public void displayDescription(Object p) {
 		StyledDocument doc = null , dynamicDoc = null ;
 		JTextPane descriptionArea = frame.getDescriptionPane() ;
