@@ -31,18 +31,18 @@ import java.util.GregorianCalendar ;
  * @author shuku
  */
 public class SignalGenerator extends java.lang.Thread {
-    /** The senderObject sending the signal **/
-    private runtime.Object senderObject = null ;
-
-    /** The domain context in which the SignalGenerator runs */
-    private DomainContext context;
+	/** The senderObject sending the signal **/
+	private runtime.Object senderObject = null ;
+    	
+	/** The domain context in which the SignalGenerator runs */
+	private DomainContext context;
     
-    /** Creates a new instance of SignalGenerator */
-    public SignalGenerator(DomainContext c, runtime.Object sender) {
-	context = c;
-        this.senderObject = sender;
-        start() ;
-    }
+	/** Creates a new instance of SignalGenerator */
+	public SignalGenerator( DomainContext c, runtime.Object sender ) {
+		context = c;
+		this.senderObject = sender;
+ 		start();
+	}
     
 	public void run() {
 		while (true) {
