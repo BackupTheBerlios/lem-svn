@@ -30,12 +30,19 @@ import javax.swing.JTextPane;
 import metamodel.Scenario;
 
 /**
+ * Creates a logger frame with the associated scenario executor and 
+ * context tree. Has methods getScenarioExecutor, getContextTree and
+ * getDescriptionPane
  *
  * @author  David Gavin
  */
 public class LoggerFrame extends javax.swing.JFrame {
 	private Eleminator eleminator;
-	/** Creates new form LoggerFrame */
+	/** 
+         * Creates new form LoggerFrame 
+         * @param inScenario The scenario executed
+         * @param inEleminator The eLEMinator  it is running in 
+         */
 	public LoggerFrame(Scenario inScenario, Eleminator inEleminator) {
 		initComponents();
 		eleminator= inEleminator;
@@ -47,14 +54,23 @@ public class LoggerFrame extends javax.swing.JFrame {
 		eleminator.newWindow(this);		
 	}
 	
+        /**
+         * @return The associated Scenario Executor
+         */
 	public ScenarioExecutor getScenarioExecutor() {
 		return scenarioExecutor;
 	}
 	
+        /**
+         * @return The associated Context Tree
+         */
 	public ContextTree getContextTree() {
 		return scenarioExecutor.getContextTree();
 	}
 	
+        /**
+         * @return The associated Description Pane
+         */
 	public JTextPane getDescriptionPane() {
 		return scenarioExecutor.getDescriptionPane() ;
 	}
@@ -86,11 +102,18 @@ public class LoggerFrame extends javax.swing.JFrame {
     }
     // </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Updates the User Interface when a component is resized to resize all components
+     */
 	private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
 // TODO add your handling code here:
 		scenarioExecutor.updateUI() ; 
 	}//GEN-LAST:event_formComponentResized
 	
+        /**
+         * Kills the running scenario when the window is closed. 
+         * @param evt The close window event
+         */
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
 		scenarioExecutor.killScenario();
 		eleminator.killWindow(this);
