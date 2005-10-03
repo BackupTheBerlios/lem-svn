@@ -36,7 +36,8 @@ import runtime.Instance;
 import runtime.Signal;
 
 /**
- *
+ * Creates a node for an object. Has methods: ObjectNode, to string,
+ * getDescription, getContextMenu, getDynamicDescription.
  * @author Shokouhmand Torabi
  */
 public class ObjectNode extends AbstractDescriptionNode {
@@ -44,7 +45,11 @@ public class ObjectNode extends AbstractDescriptionNode {
 	private LoggerFrame frame ;
 	private runtime.Object thisObject ;
 	
-	/** Creates a new instance of ObjectNode */
+	/**
+         * Creates a new instance of ObjectNode 
+         * @param o The associated Object
+         * @param frame The associated Logger Frame
+         */
 	public ObjectNode(runtime.Object o, LoggerFrame frame) {
 		this.frame = frame ;
 		this.thisObject = o ;
@@ -148,6 +153,10 @@ public class ObjectNode extends AbstractDescriptionNode {
 		return ContextMenu;
 	}
 	
+        /**
+         * Returns a styled document containing the dynamic description of the object
+         * @return the description in a styled document
+         */
 	public StyledDocument getDynamicDescription() {
 		StyledDocument doc = new StyledDocument() ;
 		Iterator i = thisObject.getInstances().iterator() ;

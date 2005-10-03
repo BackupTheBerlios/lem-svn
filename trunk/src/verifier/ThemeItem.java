@@ -24,13 +24,19 @@
 package verifier;
 
 /**
+ * Creates a new themeItem. Has methods toString and getClassName
  *
  * @author David Gavin
  */
 public class ThemeItem {
     String name;
     String className;
-    /** Creates a new instance of ThemeItem */
+    
+    /** 
+     * Creates a new instance of ThemeItem 
+     * @param inName The name of the ThemeItem
+     * @param inClass The className of the ThemeItem
+     */
     public ThemeItem(String inName, String inClass) {
         name = inName;
         className = inClass;

@@ -26,15 +26,20 @@ package verifier;
 import java.io.Serializable;
 
 /**
- *
+ * Creates and sets the current workspace.
+ * Has methods WorkSpace and getWorkSpace
  * @author David Gavin
  */
 public class WorkSpace implements Serializable{
     String CurrentWorkspace;
-    /** Creates a new instance of WorkSpace */
+    /**
+     * Creates a new instance of WorkSpace
+     * @param inWorkspace The current workspace
+     */
     public WorkSpace(String inWorkspace) {
         CurrentWorkspace = inWorkspace;
     }
+    
     /**Returns the CurrentWorkspace.
      *@return String the CurrentWorkspace.
      */

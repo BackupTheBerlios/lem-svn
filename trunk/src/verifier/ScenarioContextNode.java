@@ -30,6 +30,8 @@ import runtime.DomainContext;
 
 
 /**
+ * Creates a scenario context node. Has methods scenarioContextNode, 
+ * toString, getDescription, getContextMenu.
  *
  * @author Shokouhmand Torabi
  */
@@ -39,12 +41,15 @@ public class ScenarioContextNode extends AbstractDescriptionNode {
 	
 	private LoggerFrame frame ;
 	
-	/** Creates a new instance of ScenarioContextNode */
+	/** 
+         * Creates a new instance of ScenarioContextNode 
+         * @param frame The associated logger frame
+         */
 	public ScenarioContextNode(Context c, LoggerFrame frame) {
 		this.frame = frame ;
 		this.context = c ;
 		
-// find the DomainContext
+               // find the DomainContext
 		while ((c.getParent()) != null) {
 			c = c.getParent() ;
 		}
@@ -66,13 +71,15 @@ public class ScenarioContextNode extends AbstractDescriptionNode {
 	public String toString() {
 		return "Scenario " ; // + thisScenario.getName();
 	}
+        
 	/**
 	 * Returns the description property of the Scenario.
-	 * @return the Scenario description.
+	 * @return the description.
 	 */
 	public String getDescription(){
 		return "" ; //trim(thisScenario.getDescription());
 	}
+        
 	/**
 	 * Returns the ContextMenu based on the Scenario.
 	 * @return the Scenario ContextMenu.
