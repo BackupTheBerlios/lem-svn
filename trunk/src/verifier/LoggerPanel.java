@@ -62,7 +62,7 @@ public class LoggerPanel extends javax.swing.JPanel implements runtime.LemEventL
 	}
 	
 	public void init(runtime.Context c) {
-		c.addLemEventListener(this);       
+	c.addLemEventListener(this);       
         // Set the data     model for the table
         table.setModel(model);      
         model.setTable(table);
@@ -74,7 +74,7 @@ public class LoggerPanel extends javax.swing.JPanel implements runtime.LemEventL
         // Disable autoCreateColumnsFromModel otherwise all the column customizations
         // and adjustments will be lost when the model data is sorted
         table.setAutoCreateColumnsFromModel(false);
-        
+        //table.setPreferredScrollableViewportSize(new java.awt.Dimension(874 , 400)) ; 
         //Add a tool tip to show sorting
         table.getTableHeader().setToolTipText(
                "Click to specify sorting, Once for Ascending, Twice for Descending");
@@ -112,7 +112,6 @@ public class LoggerPanel extends javax.swing.JPanel implements runtime.LemEventL
 	 */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
-        jScrollPane4 = new javax.swing.JScrollPane();
         jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextPane();
@@ -120,9 +119,13 @@ public class LoggerPanel extends javax.swing.JPanel implements runtime.LemEventL
         table = new javax.swing.JTable();
         filterPanel = new javax.swing.JPanel();
         colSelection = new javax.swing.JComboBox();
+        jSeparator2 = new javax.swing.JSeparator();
         textField = new javax.swing.JTextField();
-        filterButton = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JSeparator();
         matches = new javax.swing.JComboBox();
+        jSeparator4 = new javax.swing.JSeparator();
+        filterButton = new javax.swing.JButton();
+        jSeparator5 = new javax.swing.JSeparator();
         clear = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
@@ -147,18 +150,22 @@ public class LoggerPanel extends javax.swing.JPanel implements runtime.LemEventL
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        table.setMinimumSize(new java.awt.Dimension(60, 200));
-        table.setPreferredSize(new java.awt.Dimension(874, 270));
+        table.setMaximumSize(null);
+        table.setMinimumSize(null);
+        table.setPreferredSize(null);
         jScrollPane2.setViewportView(table);
 
         jSplitPane1.setBottomComponent(jScrollPane2);
 
         add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
-        colSelection.setMaximumSize(new java.awt.Dimension(47, 23));
-        colSelection.setMinimumSize(new java.awt.Dimension(47, 23));
-        colSelection.setPreferredSize(new java.awt.Dimension(60, 23));
+        colSelection.setMaximumSize(new java.awt.Dimension(100, 23));
+        colSelection.setMinimumSize(new java.awt.Dimension(80, 23));
+        colSelection.setPreferredSize(new java.awt.Dimension(80, 23));
         filterPanel.add(colSelection);
+
+        jSeparator2.setPreferredSize(new java.awt.Dimension(20, 0));
+        filterPanel.add(jSeparator2);
 
         textField.setText("Enter keyword");
         textField.setMaximumSize(new java.awt.Dimension(47, 23));
@@ -166,39 +173,65 @@ public class LoggerPanel extends javax.swing.JPanel implements runtime.LemEventL
         textField.setPreferredSize(new java.awt.Dimension(90, 23));
         filterPanel.add(textField);
 
+        jSeparator3.setPreferredSize(new java.awt.Dimension(20, 0));
+        filterPanel.add(jSeparator3);
+
+        matches.setMaximumSize(new java.awt.Dimension(100, 23));
+        matches.setMinimumSize(new java.awt.Dimension(80, 23));
+        matches.setPreferredSize(new java.awt.Dimension(80, 23));
+        filterPanel.add(matches);
+
+        jSeparator4.setPreferredSize(new java.awt.Dimension(20, 0));
+        filterPanel.add(jSeparator4);
+
         filterButton.setText("Go");
         filterButton.setAlignmentY(50.0F);
-        filterButton.setPreferredSize(new java.awt.Dimension(50, 25));
+        filterButton.setMinimumSize(new java.awt.Dimension(70, 25));
+        filterButton.setPreferredSize(new java.awt.Dimension(70, 25));
         filterButton.setVerifyInputWhenFocusTarget(false);
         filterButton.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        filterButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                filterButtonMouseClicked(evt);
+            }
+        });
+
         filterPanel.add(filterButton);
 
-        matches.setMaximumSize(new java.awt.Dimension(47, 23));
-        matches.setMinimumSize(new java.awt.Dimension(47, 23));
-        matches.setPreferredSize(new java.awt.Dimension(60, 23));
-        filterPanel.add(matches);
+        jSeparator5.setPreferredSize(new java.awt.Dimension(20, 0));
+        filterPanel.add(jSeparator5);
 
         clear.setText("Clear");
         clear.setMaximumSize(new java.awt.Dimension(47, 23));
-        clear.setMinimumSize(new java.awt.Dimension(47, 23));
-        clear.setPreferredSize(new java.awt.Dimension(60, 23));
+        clear.setMinimumSize(new java.awt.Dimension(70, 23));
+        clear.setPreferredSize(new java.awt.Dimension(70, 23));
         clear.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        clear.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                clearMouseClicked(evt);
+            }
+        });
+
         filterPanel.add(clear);
 
         add(filterPanel, java.awt.BorderLayout.SOUTH);
 
     }
     // </editor-fold>//GEN-END:initComponents
-	
-	private void clearMousePressed(java.awt.event.MouseEvent evt) {                                   
-        model.removeFilter();
-    }                                  
+
+    private void clearMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clearMouseClicked
+// TODO add your handling code here:
+         model.removeFilter();
+         textField.setText("") ; 
+    }//GEN-LAST:event_clearMouseClicked
+
     /**
      * Called when user clicks on Go to filter according to keyword and column as selected in the text field and
      * combo box.
      *
      */
-    private void filterButtonMouseClicked(java.awt.event.MouseEvent evt) {                                          
+    private void filterButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filterButtonMouseClicked
+// TODO add your handling code here:
         int ind;
         String tmp;
         ind = colSelection.getSelectedIndex();
@@ -210,7 +243,10 @@ public class LoggerPanel extends javax.swing.JPanel implements runtime.LemEventL
         } else {
             model.applyFilter(tmp, ind, type);
         }
-    }                                         
+        System.out.println("Row count " + table.getRowCount()) ;
+    }//GEN-LAST:event_filterButtonMouseClicked
+	
+                                            
     
     /*
      *Adds StyledDocument to the text area
@@ -529,7 +565,10 @@ public class LoggerPanel extends javax.swing.JPanel implements runtime.LemEventL
     private javax.swing.JPanel filterPanel;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JComboBox matches;
     private javax.swing.JTable table;
