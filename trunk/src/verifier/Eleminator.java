@@ -122,6 +122,10 @@ public class Eleminator extends javax.swing.JFrame {
         generateClassDiagramItem = new javax.swing.JMenuItem();
         generateStatechartItem = new javax.swing.JMenuItem();
         windowMenu = new javax.swing.JMenu();
+        jMenu1 = new javax.swing.JMenu();
+        helpEleminatorTeam = new javax.swing.JMenuItem();
+        helpEleminator = new javax.swing.JMenuItem();
+        helpLEM = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("eLEMinator");
@@ -195,11 +199,55 @@ public class Eleminator extends javax.swing.JFrame {
         windowMenu.setEnabled(false);
         menubar.add(windowMenu);
 
+        jMenu1.setText("Help");
+        jMenu1.setToolTipText("Help Menu");
+        jMenu1.setActionCommand("Help_menu");
+        helpEleminatorTeam.setText("LEM team");
+        helpEleminatorTeam.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpEleminatorTeamActionPerformed(evt);
+            }
+        });
+
+        jMenu1.add(helpEleminatorTeam);
+
+        helpEleminator.setText("About eLEMinator");
+        helpEleminator.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpEleminatorActionPerformed(evt);
+            }
+        });
+
+        jMenu1.add(helpEleminator);
+
+        helpLEM.setText("About LEM");
+        helpLEM.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpLEMActionPerformed(evt);
+            }
+        });
+
+        jMenu1.add(helpLEM);
+
+        menubar.add(jMenu1);
+
         setJMenuBar(menubar);
 
         pack();
     }
     // </editor-fold>//GEN-END:initComponents
+
+    private void helpLEMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpLEMActionPerformed
+        JOptionPane.showMessageDialog( this, "See http://xtuml.jdns.org  or See LemSpec");
+    }//GEN-LAST:event_helpLEMActionPerformed
+
+    private void helpEleminatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpEleminatorActionPerformed
+        JOptionPane.showMessageDialog( this, "See http://xtuml.jdns.org select usermanual");
+    }//GEN-LAST:event_helpEleminatorActionPerformed
+
+    private void helpEleminatorTeamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpEleminatorTeamActionPerformed
+        JOptionPane.showMessageDialog( this, "Soon to Come");
+    }//GEN-LAST:event_helpEleminatorTeamActionPerformed
 	
         /**
          * Generate a class diagram of the currently loaded model
@@ -473,7 +521,11 @@ public class Eleminator extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuItem generateClassDiagramItem;
     private javax.swing.JMenuItem generateStatechartItem;
+    private javax.swing.JMenuItem helpEleminator;
+    private javax.swing.JMenuItem helpEleminatorTeam;
+    private javax.swing.JMenuItem helpLEM;
     private javax.swing.JMenuItem importItem;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar menubar;
     private javax.swing.JMenuItem openItem;
     private javax.swing.JMenuItem quitItem;
