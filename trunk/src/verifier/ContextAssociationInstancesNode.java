@@ -54,13 +54,14 @@ public class ContextAssociationInstancesNode extends AbstractDescriptionNode {
 	 * @return the name of the AssociationInstance and the id of the AssociationInstance.
 	 */
     public String toString() {
-		return association.getInstanceClass().getName() + " : " + association.getInstanceInObject().getObjectId() ;
+			return association.getActiveInstance().getInstanceClass().getName() + " - " + association.getPassiveInstance().getInstanceClass().getName() ; 
 	}
+	
 	/**
 	 * Returns the Description property of the AssociationInstance.
 	 * @return the description of the AssociationInstance.
 	 */
-	public String getDescription(){
+	public String getDescription(){		
 		return "" ; //trim(thisInstance.getDescription());
 	}
     
