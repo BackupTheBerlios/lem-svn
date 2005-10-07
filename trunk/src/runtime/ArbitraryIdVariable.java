@@ -26,7 +26,7 @@ import metamodel.ArbitraryIdType;
 import metamodel.DataType;
 
 public class ArbitraryIdVariable extends Variable {
-	private static int currentId = 100000;
+	private static int currentId = 0;
 	private static Integer id;
 	
 	/** Creates a new instance of ArbitaryIdVariable */
@@ -34,9 +34,8 @@ public class ArbitraryIdVariable extends Variable {
 	}
 	
 	public static synchronized Integer getInstance() {
-		currentId++;
 		id = new Integer(currentId);
-
+		currentId++;
 		return id; 
 	}
 	
