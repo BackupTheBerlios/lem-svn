@@ -378,10 +378,10 @@ public class StateMachine implements DescribedEntity {
 	public String dumpDot() {
 		
 		StringBuffer strBuf = new StringBuffer( "digraph G {" );
-		strBuf.append("node [shape=record];");
-		
+		strBuf.append("\n   node [shape=Mrecord];");
+		strBuf.append("\n   edge [color=red];");
 		// Special-case handling for creation state
-		strBuf.append("creation [shape=point,label=\"creation\"];");
+		strBuf.append("\n   creation [shape=point,label=\"creation\",width=0.2];\n");
 		
 		// Get the states
 		Iterator i = states.iterator();
@@ -389,9 +389,9 @@ public class StateMachine implements DescribedEntity {
 		while ( i.hasNext() ) {
 			State s = (State)i.next();
 			// Add the state's name
-			strBuf.append(s.getName() + "[shape=record,label=\"" + s.getNumber(s) + ". " + s.getName() + "\"];" );
+			strBuf.append("\n   " + s.getName() + "[shape=Mrecord,label=\"{" + s.getNumber(s) + ". " + s.getName() + "|entry/\\l}\"];" );
 		}
-				
+		strBuf.append("\n");		
 		// Get the transitions
 		i = transitions.iterator();
 			
@@ -399,13 +399,14 @@ public class StateMachine implements DescribedEntity {
 			Transition t = (Transition)i.next();
 			
 			if (t.getFromState() == null) {
-				strBuf.append("creation -> " + t.getToState().getName() + ";");
+				strBuf.append("\n   creation -> " + t.getToState().getName() + ";");
 			} else {
-				strBuf.append(t.getFromState().getName() + " -> " + t.getToState().getName() + "[label=" + "\""+t.getEvent()+"\"];");
+				strBuf.append("\n   " + t.getFromState().getName() + " -> " + t.getToState().getName() 
+                                            + "[label=" + "\""+t.getEvent()+"\"];");
 			}
 		}
 		
-		strBuf.append("}");
+		strBuf.append("\n}");
 		
 		System.err.println(strBuf.toString());
 		return strBuf.toString();
