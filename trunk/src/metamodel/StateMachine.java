@@ -378,7 +378,17 @@ public class StateMachine implements DescribedEntity {
 	public String dumpDot() {
 		
 		StringBuffer strBuf = new StringBuffer( "digraph G {" );
+                // set the font size of label,18 in this case
+                strBuf.append("\n   fontsize=\"18\";");
+                // set the font color of label, blue in this case
+                strBuf.append("\n   fontcolor=\"blue\";");
+                // set the label location, at the top in this case
+                strBuf.append("\n   labelloc=\"top\";");
+                // set the label for this diagram
+                strBuf.append("\n   label=\"Statechart for class " + domainClass.getName() + "\";");
+                // set the shape of each node
 		strBuf.append("\n   node [shape=Mrecord];");
+                // set the color of each edge
 		strBuf.append("\n   edge [color=red];");
 		// Special-case handling for creation state
 		strBuf.append("\n   creation [shape=point,label=\"creation\",width=0.2];\n");
@@ -389,7 +399,7 @@ public class StateMachine implements DescribedEntity {
 		while ( i.hasNext() ) {
 			State s = (State)i.next();
 			// Add the state's name
-			strBuf.append("\n   " + s.getName() + "[shape=Mrecord,label=\"{" + s.getNumber(s) + ". " + s.getName() + "|entry/\\l}\"];" );
+			strBuf.append("\n   " + s.getName() + "[shape=Mrecord,label=\"{" + s.getNumber(s) + ". " + s.getName() + "|\\l}\"];" );
 		}
 		strBuf.append("\n");		
 		// Get the transitions
@@ -402,7 +412,7 @@ public class StateMachine implements DescribedEntity {
 				strBuf.append("\n   creation -> " + t.getToState().getName() + ";");
 			} else {
 				strBuf.append("\n   " + t.getFromState().getName() + " -> " + t.getToState().getName() 
-                                            + "[label=" + "\""+t.getEvent()+"\"];");
+                                            + "[label=" + "\" "+t.getEvent()+"\"];");
 			}
 		}
 		
