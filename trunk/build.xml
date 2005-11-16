@@ -167,7 +167,15 @@
 		    <arg line="${scenarioName}"/>
     </java>
   </target>
- 
+
+  <target name="runCompileOnly" depends="compile">
+	<fail message="You must specify the file to load" unless="modelFile"/>
+    	<java classname="verifier.Cmdline" fork="false"
+		    classpathref="run.classpath">
+		    <arg line="${modelFile}"/>
+    </java>
+  </target>
+
   <target name="runjar" depends="init">
     <java jar="build/lem.jar" fork="true" classpathref="build.classpath" />
   </target>

@@ -53,6 +53,29 @@ public class Cmdline {
     File workingDirectory = null;
     
     /**
+     * Load a model from the given file and report any compilation errors.
+     *
+     * @param file The name of the file to be loaded
+     * 
+     */
+    public Cmdline(String file) {
+       
+	Model m = null;
+        try {
+            File selectedFile = new File(file);
+            m = loadModel( selectedFile );
+        } catch (FileNotFoundException fnfe) {
+            System.out.println("File not found");
+        } catch( ParseException pe ) {
+            System.out.println("Parse Error: " + pe.getMessage());
+        } catch( LemException le ) {
+            System.out.println("Parse Error: " + le.getMessage());
+        } catch( IOException ioe ) {
+            System.out.println("I/O Error: " + ioe.getMessage());
+        }
+    }
+
+    /**
      * Creates new form Cmdline 
      *
      * @param file The name of the file to be loaded
@@ -122,9 +145,11 @@ public class Cmdline {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        if (args.length != 3)
-            System.out.println("Incorrect usage");
-        else
+        if (args.length == 1)
+	    new Cmdline(args[0]);
+        else if (args.length == 3)
             new Cmdline(args[0], args[1], args[2]);
+	else
+            System.out.println("Incorrect usage");
     }
 }
