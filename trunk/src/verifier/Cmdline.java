@@ -87,6 +87,9 @@ public class Cmdline {
 		System.exit( 1 );
 	}
 
+	// Kick off the scenario
+	c.getDebugObject().runModel();
+
 	try {
 		i.interpret( s, c );
 	} catch( LemRuntimeException e ) {
