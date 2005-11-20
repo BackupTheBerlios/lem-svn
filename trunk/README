@@ -1,0 +1,92 @@
+========================
+The eLEMinator README
+
+James Ring - 2005
+========================
+
+Hi, and thanks for taking the time to download the eLEMinator.
+
+========================
+What is it?
+========================
+
+Ok, there's two parts to it... There's LEM, and then there's the eLEMinator.
+
+LEM is the "Language for Executable Models". Essentially, it is a plain-text
+representation of Executable/Translatable UML models. This language allows you
+to write xtUML models without using UML. This might seem a bit strange, but
+there are good reasons for doing it! The idea behind LEM is that any model which
+you can represent using UML diagrams can also be represented using LEM.
+
+Importantly, LEM can be used to express use cases, or what we call "scenarios".
+More on this in a second...
+
+Now, the eLEMinator is a piece of software which takes, as input, LEM (.lem)
+files. Once a LEM file is loaded, you can actually execute any scenario you have
+defined. This execution will be logged, so that you can see what your model is
+doing and "verify" that it is behaving as expected. Hence, eLEMinator could be
+called an "xtUML dynamic model verifier".
+
+So, for example, see the samples/Microwave.lem file. It defines a few classes
+and state machines pertaining to the common household microwave. You can execute
+the defined scenario, "cook a pie", in order to simulate the cooking of a pie
+(or other delicious item of food).
+
+You can answer questions such as
+
+- "Does the light turn on when I open the door?"
+- "Does the magnetron turn off when I open the door?"
+- "What happens if I press the power button with the door open?"
+
+and other things.
+
+Of course, xtUML is not restricted to embedded systems like microwaves. You can
+model anything from bookstores to ordering systems and even government
+legislation. LEM should give you the expressivity you need to model some pretty
+complex things. The eLEMinator should then give you the ability to see how these
+things behave in certain scenarios.
+
+========================
+Building
+========================
+
+Ok.. Before you build this piece of software, you need
+
+- Java SDK (1.4 or later) (http://java.sun.com/)
+- Ant (http://ant.apache.org)
+- JavaCC 3.2 or later (http://javacc.dev.java.net/)
+
+There are a few other dependencies, but these are already contained in the lib/
+directory.
+
+Now, edit your build.properties file in the root source directory. Set the
+javacc.home to the directory where you installed JavaCC.
+
+After that, just type 'ant'.
+
+========================
+Running
+========================
+
+After building the software, just type 'ant run' from the project root
+directory.
+
+Enjoy!
+
+========================
+Notes
+========================
+
+This is a very alpha piece of software. There are many bugs, unimplemented
+features other annoyances. The source code could use some pretty major
+refactoring.
+
+========================
+Who is responsible for the eLEMinator?
+========================
+
+The eLEMinator was written as part of a year-long group project by a team of
+students at the Australian National University. The objective of the project was
+to produce a "proof of concept" for an open-source dynamic xtUML verifier. In
+the end, we believe that we not only produced a good proof of concept, but also
+some pretty neat xtUML semantics at the same time.
