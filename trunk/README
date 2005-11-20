@@ -42,7 +42,7 @@ and other things.
 
 Of course, xtUML is not restricted to embedded systems like microwaves. You can
 model anything from bookstores to ordering systems and even government
-legislation. LEM should give you the expressivity you need to model some pretty
+legislation. LEM should give you the expressiveness you need to model some pretty
 complex things. The eLEMinator should then give you the ability to see how these
 things behave in certain scenarios.
 
