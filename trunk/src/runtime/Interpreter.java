@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import java.util.Collection;
 import java.util.ArrayList ;
 import java.util.HashMap;
+import java.util.Map;
 import java.math.BigDecimal;
 
 
@@ -844,7 +845,7 @@ public class Interpreter {
                             Relationship r = rto.getRelationship() ;
                             metamodel.Class relatedClass = rto.getRelatedClass() ;
                             metamodel.Class instanceClass = instance.getInstanceClass() ;
-                            HashMap associations = instanceClass.getAssociations() ;
+                            Map associations = instanceClass.getAssociations() ;
                             if ( ! ( associations.containsKey( r.getName() ) &&
                                     ( ( metamodel.Class ) associations.get( r.getName() ) ).getName().equals( relatedClass.getName() ) ) ) {
                                 goodVariable = false;

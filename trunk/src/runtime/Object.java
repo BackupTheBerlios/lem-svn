@@ -24,6 +24,7 @@ package runtime;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -388,7 +389,7 @@ public class Object {
 			
 			if ( c.isAbstract() )
 				return false;
-			HashMap gens = c.getAllGeneralisations();
+			Map gens = c.getAllGeneralisations();
 			
 			// Add each generalisation to the big list of generalisations
 			Iterator j = gens.values().iterator();

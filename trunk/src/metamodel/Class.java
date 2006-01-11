@@ -46,7 +46,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
 	private String abbreviation = null;
 	
 	/** identifiers for this class. There may be zero, one or many */
-	private ArrayList identifiers = new ArrayList();
+	private List identifiers = new ArrayList();
 	
 	/** store the Association if this is an AssociationClass */
 	private Association association = null;
@@ -55,20 +55,20 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
 	private Subsystem subsystem = null;
 	
 	/** attributes of this class */
-	private HashMap attributes = new HashMap();
+	private Map attributes = new HashMap();
 	
 	/** generalisation roles in which this class participates */
-	private HashMap generalisationRoles = new HashMap();
+	private Map generalisationRoles = new HashMap();
 	
 	/** Associations in which this class participates */
-	private HashMap associations = new HashMap();
+	private Map associations = new HashMap();
 	
 	/**
 	 * The events to which this class responds.
 	 * This excludes non-public (self directed) events delared in the LEM "behaviour" block.
 	 * This attribute supports metamodel relationship R901.
 	 */
-	private HashMap events = new HashMap();
+	private Map events = new HashMap();
 	
 	/**
 	 * The state machine associated with this class [R501]
@@ -78,7 +78,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
 	/**
 	 * a list store association's names which have a assciation class
 	 */
-	private ArrayList list = new ArrayList();
+	private List list = new ArrayList();
 	
 	/**
 	 * Creates a new instance of Class given a Domain and name
@@ -211,7 +211,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
 	 * @return Value of property attributes.
 	 *
 	 */
-	public java.util.HashMap getAttributes() {
+	public Map getAttributes() {
 		return attributes;
 	}
 	
@@ -219,7 +219,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
 	 * @param attributes New value of property attributes.
 	 *
 	 */
-	public void setAttributes(java.util.HashMap attributes) {
+	public void setAttributes(Map attributes) {
 		this.attributes = attributes;
 	}
 	
@@ -360,9 +360,9 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
 	/**
 	 * Gets the Associations in which this class participates.
 	 *
-	 * @return the HashMap of association name to Associations
+	 * @return the Map of association name to Associations
 	 */
-	public HashMap getAssociations() {
+	public Map getAssociations() {
 		return associations;
 	}
 	
@@ -390,7 +390,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
 	 * relationships in which the class participates as a sub class.
 	 *
 	 * @return a collection of all attributes defined for this class. The returned
-	 * HashMap contains values which are Attribute instances. Each key consists of the
+	 * Collection contains values which are Attribute instances. Each key consists of the
 	 * attributes class name and attribute name separated by a dot.
 	 */
 	public Collection getAllAttributes() {
@@ -426,7 +426,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
 	 * @return all generalisations in which this class participates, including participation by parent and grandparent classes
 	 * @todo This method is misnamed: it returns only Generalisations in which this class participates as a subclass
 	 */
-	public HashMap getAllGeneralisations() {
+	public Map getAllGeneralisations() {
 		
 		HashMap result = new HashMap();
 		
@@ -445,7 +445,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
 			GeneralisationRole role = (GeneralisationRole) it.next();
 			if ( role instanceof SubclassRole ) {
 				metamodel.Class superClass = role.getGeneralisation().getSuperClassRole().getParticipant();
-				HashMap superclassGeneralisations = superClass.getAllGeneralisations();
+				Map superclassGeneralisations = superClass.getAllGeneralisations();
 				result.putAll( superclassGeneralisations );
 			}
 		}
@@ -476,7 +476,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
 	 *
 	 * @return an ArrayList containing the Identifiers of this class
 	 */
-	public ArrayList getIdentifiers() {
+	public List getIdentifiers() {
 		return identifiers;
 	}
 	
@@ -512,23 +512,23 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
 	}
 	
 	/**
-	 * Return a HashMap of all the generalisation roles for which this class
+	 * Return a Map of all the generalisation roles for which this class
 	 * is a direct participant.
 	 *
 	 * @return the the generalisation roles for which this class
 	 * is a direct participant
 	 */
-	public HashMap getGeneralisationRoles() {
+	public Map getGeneralisationRoles() {
 		return generalisationRoles;
 	}
 	
 	/**
-	 * Return a HashMap containing all generalisations in which this class directly participates.
+	 * Return a Map containing all generalisations in which this class directly participates.
 	 *
-	 * @return a HashMap containing all generalisations in which this class directly participates
+	 * @return a Map containing all generalisations in which this class directly participates
 	 * Each key consists of the Generalisation name.
 	 */
-	public HashMap getGeneralisations() {
+	public Map getGeneralisations() {
 		
 		HashMap result = new HashMap();
 		
@@ -550,7 +550,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
 	 * @return an ArrayList containing all generalisations in which
 	 * this class directly participates as a superclass
 	 */
-	public HashMap getSuperclassParticipation()  {
+	public Map getSuperclassParticipation()  {
 		
 		HashMap result = new HashMap();
 		
@@ -574,7 +574,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
 	 * @return an ArrayList containing all generalisations in which
 	 * this class directly participates as a subclass
 	 */
-	public HashMap getSubclassParticipation() {
+	public Map getSubclassParticipation() {
 		
 		HashMap result = new HashMap();
 		

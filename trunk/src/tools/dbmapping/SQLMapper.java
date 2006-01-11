@@ -72,7 +72,7 @@ public class SQLMapper {
         
         while( i.hasNext() ) {
             c = (metamodel.Class)i.next();
-            HashMap h = null;
+            Map h = null;
             if( (h = c.getSubclassParticipation()) != null ) {
                 Iterator j = h.values().iterator();
                 
