@@ -1108,43 +1108,6 @@ public class BuilderPass2 extends Visitor {
 	 */
 	public Object visit( LEMActiveSubject node, Object data ) throws LemException {
 
-		if ( data instanceof ActivePerspective ) {
-
-			// start of new ActivePerspective
-
-			ActivePerspective perspective = ( ActivePerspective ) data;
-			Association association = perspective.getAssociation();
-
-
-			// get the participating class
-
-			Domain domain = association.getSubsystem().getDomain();
-			String name = node.getFirstToken().image;
-
-			metamodel.Class subjectClass = domain.getClass( name );
-			if ( null == subjectClass ) {
-				throw new LemException(
-				    "Class " + subjectClass + " does not exist.",
-				    node.getFirstToken(),
-				    "LEM_E_01017" );
-			}
-
-			// create a ParticipatingClassRole to represent the classes involvement in this
-			// association
-
-			ParticipatingClassRole pcr = new ParticipatingClassRole( subjectClass, association );
-			getMapper().add( node, pcr );
-			perspective.setAttachedClassRole( pcr );
-
-			// add the perspective to this association
-
-			perspective.setAssociation( association );
-			association.setActivePerspective( perspective );
-
-			subjectClass.add( association );
-
-		}
-
 		super.visit( node, data );
 		return data;
 
@@ -1160,39 +1123,6 @@ public class BuilderPass2 extends Visitor {
 	 * @return
 	 */
 	public Object visit( LEMActiveObject node, Object data ) throws LemException {
-
-		if ( data instanceof PassivePerspective ) {
-
-			// start of new ActivePerspective
-
-			PassivePerspective perspective = ( PassivePerspective ) data;
-			Association association = perspective.getAssociation();
-
-
-			// get the participating class
-
-			Domain domain = association.getSubsystem().getDomain();
-			String name = node.getFirstToken().image;
-			metamodel.Class objectClass = domain.getClass( name );
-			if ( null == objectClass ) {
-				throw new LemException(
-				    "Class " + objectClass + " does not exist.",
-				    node.getFirstToken(),
-				    "LEM_E_01020" );
-			}
-
-			// create a ParticipatingClassRole to represent the classes involvement in this
-			// association
-
-			ParticipatingClassRole pcr = new ParticipatingClassRole( objectClass, association );
-			perspective.setAttachedClassRole( pcr );
-
-			// add the perspective to this association
-
-			perspective.setAssociation( association );
-			association.setPassivePerspective( perspective );
-			objectClass.add( association );
-		}
 
 		super.visit( node, data );
 		return data;
@@ -1332,6 +1262,9 @@ public class BuilderPass2 extends Visitor {
 			    node.getLastToken(),
 			    "LEM_E_01035" );
 		}
+
+		// TODO: check if the attribute is a referential attribute, it must be navigated via a "mandatory"
+		// association perspective
 
 		// add the attribute and handle any exception
 

@@ -36,8 +36,8 @@ package metamodel;
 public class ReferentialAttribute extends Attribute {
     
     
-    /** An association role is traversed to gain access to the required attribute */
-    private AssociationRole traversed = null;
+    /** A perspective  is traversed to gain access to the required attribute */
+    private Perspective traversed = null;
     
     /** The attribute referenced */
     private Attribute referenced = null;
@@ -47,20 +47,20 @@ public class ReferentialAttribute extends Attribute {
     }
 
     /**
-     * Return the AssociationRole traversed to gain access to the remote attribute
+     * Return the Perspective traversed to gain access to the remote attribute
      *
-     * @return the AssociationRole traversed to gain access to the remote attribute
+     * @return the Perspective traversed to gain access to the remote attribute
      */
-    public AssociationRole getTraversed() {
+    public Perspective getTraversed() {
         return traversed;
     }
 
     /**
-     * Set the AssociationRole traversed to gain access to the remote attribute
+     * Set the Perspective traversed to gain access to the remote attribute
      *
-     * @param traversed - the AssociationRole traversed to gain access to the remote attribute
+     * @param traversed - the Perspective traversed to gain access to the remote attribute
      */
-    public void setTraversedPerspective(AssociationRole traversed) {
+    public void setTraversedPerspective(Perspective traversed) {
         this.traversed = traversed;
     }
     

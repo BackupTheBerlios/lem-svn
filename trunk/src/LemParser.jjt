@@ -703,7 +703,7 @@ void PassivePerspective() : {
 // constraint: LEM_E_01019=In an association, the subject of an passive perspective must be a class defined in the domain.
 // constraint: LEM_E_01020=In an association, the object of an passive perspective must be a class defined in the domain.
 }
-{ ActiveObject() ActiveVerbClause() Multiplicity() ActiveSubject() }
+{ ActiveObject() PassiveVerbClause() Multiplicity() ActiveSubject() }
 
 void ActiveSubject() : {}
 { <SIMPLE_IDENTIFIER> }

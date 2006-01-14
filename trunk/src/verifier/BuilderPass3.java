@@ -84,21 +84,22 @@ public class BuilderPass3 extends Visitor {
     
     /**
      * Process an ActiveSubject reference. This node might be visited in the
-     * context of either an Active or Passive perspective
+     * context of either an Active or Passive perspective. We are only interested
+     * in the ActivePerspective in order to check the symmetry of the association
      */
     public Object visit(LEMActiveSubject node, Object data) throws LemException {
         
-        if ( data instanceof PassivePerspective ) {
+        if ( data instanceof ActivePerspective ) {
             
             // we are finalising a pespectve
             // get the context
             
-            PassivePerspective perspective = (PassivePerspective) data;
+            ActivePerspective perspective = (ActivePerspective) data;
             Association association = perspective.getAssociation();
             Domain domain = association.getDomain();
             ParticipatingClassRole pcr = perspective.getAttachedClassRole();
             
-            // add this class role to the perspective
+            // get the details for the ActiveSubject class
             
             String name =  node.getFirstToken().image;
             metamodel.Class subjectClass = domain.getClass( name );
@@ -114,11 +115,11 @@ public class BuilderPass3 extends Visitor {
             
             // check the the classes in the perspectives match
             
-            ActivePerspective ap = association.getActivePerspective();
-            metamodel.Class apClass = ap.getAttachedClassRole().getParticipant();
-            if ( subjectClass != apClass ) {
+            PassivePerspective pp = association.getPassivePerspective();
+            metamodel.Class ppClass = pp.getAttachedClassRole().getParticipant();
+            if ( subjectClass != ppClass ) {
                 throw new LemException(
-                "Expecting " + apClass.getName() + ".",
+                "Expecting '" + ppClass.getName() + "' as ActiveSubject in active perspective of association " + association.getName(),
                 node.getFirstToken(),
                 "LEM_E_01021" );
                 
@@ -130,44 +131,46 @@ public class BuilderPass3 extends Visitor {
         
     }
     
-    
     /**
      * Process an ActiveObject reference. This node might be visited in the
-     * context of either an Active or Passive perspective
+     * context of either an Active or Passive perspective. We are only interested
+     * in the PassivePerspective in order to check the symmetry of the association
      */
     public Object visit(LEMActiveObject node, Object data) throws LemException {
         
-        if ( data instanceof ActivePerspective ) {
+        if ( data instanceof PassivePerspective ) {
             
             // we are finalising a pespectve
             // get the context
             
-            ActivePerspective perspective = (ActivePerspective) data;
+            PassivePerspective perspective = (PassivePerspective) data;
             Association association = perspective.getAssociation();
             Domain domain = association.getDomain();
             ParticipatingClassRole pcr = perspective.getAttachedClassRole();
             
-            // make sure the named class is in the domain
+            // get the details for the ActiveObject class
             
             String name =  node.getFirstToken().image;
             metamodel.Class objectClass = domain.getClass( name );
             
+            // make sure the named class is in the domain
+            
             if ( null == objectClass ) {
                 throw new LemException(
-                "Class " + objectClass + " does not exist.",
+                "Class " + name + " does not exist.",
                 node.getFirstToken(),
-                "LEM_E_01018" );
+                "LEM_E_01019" );
             }
             
             // check the the classes in the perspectives match
             
-            PassivePerspective pp = association.getPassivePerspective();
-            metamodel.Class ppClass = pp.getAttachedClassRole().getParticipant();
-            if ( objectClass != ppClass ) {
+            ActivePerspective ap = association.getActivePerspective();
+            metamodel.Class apClass = ap.getAttachedClassRole().getParticipant();
+            if ( objectClass != apClass ) {
                 throw new LemException(
-                "Expecting " + ppClass.getName() + ".",
+                "Expecting '" + apClass.getName() + "' as ActiveObject in passive perspective of association " + association.getName(),
                 node.getFirstToken(),
-                "LEM_E_01022" );
+                "LEM_E_01021" );
                 
             }
         }
@@ -176,6 +179,7 @@ public class BuilderPass3 extends Visitor {
         return data;
         
     }
+    
     /**
      * Process a referential attribute declaration
      */
@@ -318,19 +322,11 @@ public class BuilderPass3 extends Visitor {
             if ( perspective.getDomainClass() == attribute.getDomainClass() )
                 perspective = association.getPassivePerspective();
             
-            // now choose the appropriate AssociationRole using the referenced class
-            
-            if ( referencedClass ==  perspective.getDomainClass() ) {
-                traversed = perspective.getAttachedClassRole();
-            } else {
-                traversed = association.getAssociationClassRole();
-            }
-            
         }
         
         // check that we have got a valid relationship to traverse
         
-        if ( traversed == null ) {
+        if ( perspective == null ) {
             throw new LemException(
             "Class " + remoteClassName + " is not a participant in association "+ relationId,
             node.getFirstToken(),
@@ -357,7 +353,7 @@ public class BuilderPass3 extends Visitor {
         // set the referenced attribute
         
         attribute.setReferenced( referencedAttribute );
-        attribute.setTraversedPerspective( traversed );
+        attribute.setTraversedPerspective( perspective );
         
         return data;
     }

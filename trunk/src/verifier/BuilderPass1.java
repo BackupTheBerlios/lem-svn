@@ -571,6 +571,7 @@ public class BuilderPass1 extends Visitor {
         Association association = (Association) data;
         ActivePerspective perspective = new ActivePerspective();
         getMapper().add( node, perspective );
+	perspective.setAssociation( association );
         association.setActivePerspective( perspective );
         
         super.visit( node, perspective );
@@ -589,6 +590,7 @@ public class BuilderPass1 extends Visitor {
         Association association = (Association) data;
         PassivePerspective perspective = new PassivePerspective();
         getMapper().add( node, perspective );
+	perspective.setAssociation( association );
         association.setPassivePerspective( perspective );
         
         super.visit( node, perspective );
@@ -604,6 +606,36 @@ public class BuilderPass1 extends Visitor {
      */
     public Object visit(LEMActiveSubject node, Object data) throws LemException {
         
+	if ( data instanceof PassivePerspective ) {
+
+		// recover the information we need 
+
+		PassivePerspective perspective = ( PassivePerspective ) data;
+		Association association = perspective.getAssociation();
+
+		// get the class participating as the ActiveObject
+
+		Domain domain = association.getSubsystem().getDomain();
+		String name = node.getFirstToken().image;
+		metamodel.Class subjectClass = domain.getClass( name );
+		if ( null == subjectClass ) {
+			throw new LemException(
+			    "Class " + subjectClass + " does not exist.",
+			    node.getFirstToken(),
+			    "LEM_E_01020" );
+		}
+		
+		// create a ParticipatingClassRole to represent the ActiveObject's role and 
+		// involvement in this association
+
+		ParticipatingClassRole pcr = new ParticipatingClassRole( subjectClass, association );
+		perspective.setAttachedClassRole( pcr );
+
+		// register the association with the class
+
+		subjectClass.add( association ); // TODO: this could be done in the ParticipatingClassRole constructor
+	}
+
         super.visit( node, data );
         return data;
         
@@ -616,7 +648,37 @@ public class BuilderPass1 extends Visitor {
      * is deferred to the second pass where all domain classes are known
      */
     public Object visit(LEMActiveObject node, Object data) throws LemException {
-        
+       	
+	if ( data instanceof ActivePerspective ) {
+
+		// recover the information we need 
+
+		ActivePerspective perspective = ( ActivePerspective ) data;
+		Association association = perspective.getAssociation();
+
+		// get the class participating as the ActiveObject
+
+		Domain domain = association.getSubsystem().getDomain();
+		String name = node.getFirstToken().image;
+		metamodel.Class objectClass = domain.getClass( name );
+		if ( null == objectClass ) {
+			throw new LemException(
+			    "Class " + objectClass + " does not exist.",
+			    node.getFirstToken(),
+			    "LEM_E_01020" );
+		}
+		
+		// create a ParticipatingClassRole to represent the ActiveObject's role and 
+		// involvement in this association
+
+		ParticipatingClassRole pcr = new ParticipatingClassRole( objectClass, association );
+		perspective.setAttachedClassRole( pcr );
+
+		// register the association with the class
+
+		objectClass.add( association ); // TODO: this could be done in the ParticipatingClassRole constructor
+	}
+ 
         super.visit( node, data );
         return data;
     }
