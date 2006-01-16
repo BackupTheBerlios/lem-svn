@@ -19,7 +19,7 @@
  * USA. 
  */
 
-package util;
+package org.jdns.xtuml.util;
 
 import java.util.LinkedList;
 

@@ -77,7 +77,7 @@
 
     <exec executable="perl"
       output="${src.dir}/verifier/Visitor.java">
-      <arg line="${src.dir}/util/generateVisitor.pl
+      <arg line="${src.dir}/org/jdns/xtuml/util/generateVisitor.pl
       ${src.dir}/parser/LemParserVisitor.java"/>
     </exec>
 

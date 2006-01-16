@@ -2,7 +2,7 @@
 # 
 # Generate visitor methods 
 #
-# $Id$
+# $Id: generateVisitor.pl 596 2005-08-03 02:35:37Z u3293115 $
 # --------------------
 
 	use FileHandle;

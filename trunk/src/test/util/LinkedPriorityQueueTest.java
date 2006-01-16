@@ -7,6 +7,10 @@
 
 package util;
 
+import org.jdns.xtuml.util.LinkedPriorityQueue;
+
+import org.jdns.xtuml.util.LinkedPriorityQueue;
+
 public class LinkedPriorityQueueTest extends junit.framework.TestCase {
 
 	Integer one = new Integer( 1 );

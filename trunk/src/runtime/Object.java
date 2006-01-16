@@ -33,7 +33,7 @@ import java.util.LinkedList;
 import org.jdns.xtuml.metamodel.Generalisation;
 import org.jdns.xtuml.metamodel.Event;
 
-import util.LinkedPriorityQueue;
+import org.jdns.xtuml.util.LinkedPriorityQueue;
 
 /**
  * This class represents a LEM runtime object. When the model is being executed,

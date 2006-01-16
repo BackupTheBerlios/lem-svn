@@ -4,7 +4,7 @@
  * Created on September 20, 2004, 5:14 PM
  */
 
-package util;
+package org.jdns.xtuml.util;
 
 import java.util.*;
 import java.io.*;

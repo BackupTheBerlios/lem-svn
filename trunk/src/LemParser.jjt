@@ -16,7 +16,6 @@ package parser;
 
 import org.jdns.xtuml.metamodel.*;
 import verifier.*;
-import util.*;
 import java.io.*;
 
 

@@ -8,9 +8,9 @@ package tools;
 
 import org.jdns.xtuml.metamodel.LemException;
 import org.jdns.xtuml.metamodel.Model;
+import org.jdns.xtuml.util.SourceBuffer;
 import verifier.*;
 import parser.*;
-import util.*;
 import java.io.*;
 import java.net.URL;
 
