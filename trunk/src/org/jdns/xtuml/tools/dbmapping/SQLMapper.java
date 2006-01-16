@@ -4,7 +4,7 @@
  * Created on October 29, 2004, 9:46 AM
  */
 
-package tools.dbmapping;
+package org.jdns.xtuml.tools.dbmapping;
 
 import org.jdns.xtuml.metamodel.ArbitraryIdType;
 import org.jdns.xtuml.metamodel.Association;
@@ -20,9 +20,9 @@ import org.jdns.xtuml.metamodel.Model;
 import org.jdns.xtuml.metamodel.NumericType;
 import org.jdns.xtuml.metamodel.Relationship;
 import org.jdns.xtuml.metamodel.StringType;
-import tools.*;
 import java.util.*;
 import java.io.*;
+import org.jdns.xtuml.tools.Lem;
 
 /**
  * Create PERL value objects from a LEM model supplied on standard in

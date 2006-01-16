@@ -4,7 +4,7 @@
  * Created on October 29, 2004, 3:45 PM
  */
 
-package tools;
+package org.jdns.xtuml.tools;
 
 import com.sun.java_cup.internal.parser;
 import org.jdns.xtuml.metamodel.LemException;

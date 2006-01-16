@@ -17,7 +17,7 @@ import org.jdns.xtuml.metamodel.LemException;
 import org.jdns.xtuml.metamodel.Literal;
 import org.jdns.xtuml.metamodel.Model;
 import parser.ParseException;
-import tools.Lem;
+import org.jdns.xtuml.tools.Lem;
 
 /**
  *

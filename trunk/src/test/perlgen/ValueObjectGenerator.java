@@ -9,7 +9,7 @@ package test.perlgen;
 import org.jdns.xtuml.metamodel.Attribute;
 import org.jdns.xtuml.metamodel.Domain;
 import org.jdns.xtuml.metamodel.Model;
-import tools.*;
+
 *;
 import java.util.*;
 import java.io.*;

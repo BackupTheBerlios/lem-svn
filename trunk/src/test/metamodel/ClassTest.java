@@ -15,7 +15,7 @@ import org.jdns.xtuml.metamodel.Model;
 import parser.ParseException;
 import java.util.*;
 import junit.framework.TestCase;
-import tools.Lem;
+import org.jdns.xtuml.tools.Lem;
 
 /**
  *

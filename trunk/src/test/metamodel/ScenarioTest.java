@@ -14,7 +14,7 @@ import org.jdns.xtuml.metamodel.CreateAction;
 import org.jdns.xtuml.metamodel.Domain;
 import org.jdns.xtuml.metamodel.Scenario;
 import parser.ParseException;
-import tools.Lem;
+import org.jdns.xtuml.tools.Lem;
 
 /**
  *

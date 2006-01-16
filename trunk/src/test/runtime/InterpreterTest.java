@@ -24,7 +24,7 @@ import org.jdns.xtuml.runtime.Instance;
 import org.jdns.xtuml.runtime.Interpreter;
 import org.jdns.xtuml.runtime.LemRuntimeException;
 import parser.ParseException;
-import tools.Lem;
+import org.jdns.xtuml.tools.Lem;
 
 /**
  *

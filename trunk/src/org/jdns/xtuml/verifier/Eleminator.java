@@ -42,7 +42,7 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import org.jdns.xtuml.metamodel.LemException;
 import org.jdns.xtuml.metamodel.Model;
-import tools.Lem;
+import org.jdns.xtuml.tools.Lem;
 
 import java.io.*;
 import javax.swing.JFrame;

@@ -34,7 +34,7 @@ import org.jdns.xtuml.metamodel.Model;
 import org.jdns.xtuml.metamodel.Scenario;
 import org.jdns.xtuml.parser.ParseException;
 
-import tools.Lem;
+import org.jdns.xtuml.tools.Lem;
 
 /**
  * Allows the user to load a LEM model from the command line, has methods: Cmdline 

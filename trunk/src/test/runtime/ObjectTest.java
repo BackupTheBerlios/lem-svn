@@ -19,7 +19,7 @@ import org.jdns.xtuml.metamodel.Model;
 import org.jdns.xtuml.runtime.LemRuntimeException;
 import org.jdns.xtuml.runtime.Object;
 import parser.ParseException;
-import tools.Lem;
+import org.jdns.xtuml.tools.Lem;
 
 /**
  *
