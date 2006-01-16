@@ -81,7 +81,7 @@
         ${src.dir}/org/jdns/xtuml/parser/LemParserVisitor.java"/>
     </exec>
 
-    <touch file="${src.dir}/parser/.timestamp" />
+    <touch file="${src.dir}/org/jdns/xtuml/parser/.timestamp" />
   </target>
 
   <target name="compile_one" depends="init">
