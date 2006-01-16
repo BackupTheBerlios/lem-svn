@@ -26,10 +26,10 @@ package runtime;
 
 import java.util.LinkedList;
 import java.util.Iterator;
-import metamodel.Event;
-import metamodel.EventSignature;
-import metamodel.Parameter;
-import metamodel.Expression ; 
+import org.jdns.xtuml.metamodel.Event;
+import org.jdns.xtuml.metamodel.EventSignature;
+import org.jdns.xtuml.metamodel.Parameter;
+import org.jdns.xtuml.metamodel.Expression ; 
 
 /**
  * This class represents a LEM runtime signal. When the model is being executed,

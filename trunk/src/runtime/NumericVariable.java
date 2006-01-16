@@ -22,10 +22,10 @@
 package runtime;
 
 import java.math.BigDecimal;
-import metamodel.CoreDataType;
-import metamodel.DataType;
-import metamodel.NumericType;
-import metamodel.StringType;
+import org.jdns.xtuml.metamodel.CoreDataType;
+import org.jdns.xtuml.metamodel.DataType;
+import org.jdns.xtuml.metamodel.NumericType;
+import org.jdns.xtuml.metamodel.StringType;
 
 /**
  * This class represents instances of LEM NumericTypes. Operations on this

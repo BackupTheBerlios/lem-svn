@@ -44,7 +44,7 @@ import runtime.LemRelationshipCreationEvent;
 import runtime.LemRelationshipDeletionEvent;
 import runtime.LemSelectionEvent;
 import runtime.LemStateTransitionEvent;
-import metamodel.VariableReference;
+import org.jdns.xtuml.metamodel.VariableReference;
 
 /**
  * Creates and Associates a logger panel, including the logger text pane and logger table to a context. 

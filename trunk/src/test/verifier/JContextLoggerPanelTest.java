@@ -7,11 +7,11 @@
 package verifier;
 
 import java.util.Vector;
-import metamodel.ActionBlock;
-import metamodel.CreateAction;
-import metamodel.Procedure;
-import metamodel.VariableReference;
-import metamodel.Class;
+import org.jdns.xtuml.metamodel.ActionBlock;
+import org.jdns.xtuml.metamodel.CreateAction;
+import org.jdns.xtuml.metamodel.Procedure;
+import org.jdns.xtuml.metamodel.VariableReference;
+import org.jdns.xtuml.metamodel.Class;
 import runtime.DomainContext;
 import runtime.LemRuntimeException;
 import runtime.Interpreter;

@@ -21,8 +21,8 @@
 
 package runtime;
 
-import metamodel.DataType;
-import metamodel.SetType;
+import org.jdns.xtuml.metamodel.DataType;
+import org.jdns.xtuml.metamodel.SetType;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;

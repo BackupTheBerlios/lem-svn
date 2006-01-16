@@ -26,7 +26,7 @@ package verifier;
 import java.util.Iterator;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
-import metamodel.Association;
+import org.jdns.xtuml.metamodel.Association;
 import runtime.AssociationInstance;
 import runtime.Instance;
 

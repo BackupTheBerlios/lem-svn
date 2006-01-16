@@ -27,8 +27,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
-import metamodel.Domain;
-import metamodel.Model;
+import org.jdns.xtuml.metamodel.Domain;
+import org.jdns.xtuml.metamodel.Model;
 
 
 /**
@@ -55,7 +55,7 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
 	/**
 	 * The currently selected LEM Class
 	 */
-	private metamodel.Class selectedClass;
+	private org.jdns.xtuml.metamodel.Class selectedClass;
 	
 	/**
 	 * Hardcoded name of dot binary
@@ -310,9 +310,9 @@ public class GenerateStatechartDialog extends javax.swing.JDialog {
 				stateMachineList.setSelectedIndex( 0 );
 				selectedClass = null;
 			} else {
-				metamodel.Class c;
+				org.jdns.xtuml.metamodel.Class c;
 				while (classIter.hasNext()) {
-					c = (metamodel.Class)classIter.next();
+					c = (org.jdns.xtuml.metamodel.Class)classIter.next();
 					// Only add classes that have state machines
 					if (c.getStateMachine() != null) {
 						stateMachineList.addItem( c.getName() );

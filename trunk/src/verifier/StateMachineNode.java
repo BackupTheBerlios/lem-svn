@@ -27,9 +27,9 @@ package verifier;
 import java.util.Iterator;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
-import metamodel.InitialisingTransition;
-import metamodel.StateMachine;
-import metamodel.Transition;
+import org.jdns.xtuml.metamodel.InitialisingTransition;
+import org.jdns.xtuml.metamodel.StateMachine;
+import org.jdns.xtuml.metamodel.Transition;
 
 /**
  * Tree node appearing inside a ClassNode. For graphically representing and
@@ -62,7 +62,7 @@ public class StateMachineNode extends AbstractDescriptionNode {
         if(i.hasNext()) {
             DefaultMutableTreeNode stateLevel = new DefaultMutableTreeNode("States");
             while( i.hasNext() ) {
-                stateLevel.add( new StateNode((metamodel.State) i.next()) ) ;
+                stateLevel.add( new StateNode((org.jdns.xtuml.metamodel.State) i.next()) ) ;
             }
             add( stateLevel );
         }

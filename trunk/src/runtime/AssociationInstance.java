@@ -19,7 +19,7 @@
 
 package runtime;
 
-import metamodel.Association;
+import org.jdns.xtuml.metamodel.Association;
 
 /**
  * Represents an instance of an association class. Association classes can

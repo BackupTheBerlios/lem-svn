@@ -30,8 +30,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
 
-import metamodel.Generalisation;
-import metamodel.Event;
+import org.jdns.xtuml.metamodel.Generalisation;
+import org.jdns.xtuml.metamodel.Event;
 
 import util.LinkedPriorityQueue;
 
@@ -112,7 +112,7 @@ public class Object {
 		ArrayList instantiatedClasses = new ArrayList();
 		
 		for ( Iterator i = classes.iterator(); i.hasNext(); ) {
-			metamodel.Class theClass = (metamodel.Class) i.next();
+			org.jdns.xtuml.metamodel.Class theClass = (org.jdns.xtuml.metamodel.Class) i.next();
 			Instance inst = new Instance( theClass, this );
 			
 			// Instantiate all parent classes as well
@@ -121,7 +121,7 @@ public class Object {
 			for ( Iterator j = gens.iterator(); j.hasNext() ; ) {
 				Generalisation g = (Generalisation) j.next();
 				
-				metamodel.Class superClass = g.getSuperclass();
+				org.jdns.xtuml.metamodel.Class superClass = g.getSuperclass();
 				/* The root class of a generalisation hierarchy can
 				 * appear in more than one call to "getAllGeneraliations",
 				 * but we don't want to instantiate it again
@@ -385,7 +385,7 @@ public class Object {
 		
 		Iterator i = classes.iterator();
 		while ( i.hasNext() ) {
-			metamodel.Class c = (metamodel.Class)i.next();
+			org.jdns.xtuml.metamodel.Class c = (org.jdns.xtuml.metamodel.Class)i.next();
 			
 			if ( c.isAbstract() )
 				return false;
@@ -431,13 +431,13 @@ public class Object {
 	 * @todo the search only matches event names, not event name + parameter
 	 * list
 	 */
-	public metamodel.Event findEvent( String name, LinkedList params ) {
+	public org.jdns.xtuml.metamodel.Event findEvent( String name, LinkedList params ) {
 		Iterator i = instances.iterator();
 		
 		while( i.hasNext() ) {
 			Instance inst = (Instance)i.next();
-			metamodel.Class c = inst.getInstanceClass();
-			metamodel.Event e = c.getEvent( name );
+			org.jdns.xtuml.metamodel.Class c = inst.getInstanceClass();
+			org.jdns.xtuml.metamodel.Event e = c.getEvent( name );
 			if( e != null )
 				return e;
 		}

@@ -10,8 +10,8 @@
 
 package runtime;
 
-import metamodel.DataType;
-import metamodel.StringType;
+import org.jdns.xtuml.metamodel.DataType;
+import org.jdns.xtuml.metamodel.StringType;
 
 /**
  *

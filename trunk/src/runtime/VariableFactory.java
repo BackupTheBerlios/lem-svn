@@ -1,16 +1,16 @@
 
 package runtime;
 
-import metamodel.BooleanType;
-import metamodel.ArbitraryIdType;
-import metamodel.CoreDataType;
-import metamodel.DataType;
-import metamodel.DateType;
-import metamodel.DomainSpecificDataType;
-import metamodel.NumericType;
-import metamodel.ObjectReferenceType;
-import metamodel.StringType;
-import metamodel.SetType;
+import org.jdns.xtuml.metamodel.BooleanType;
+import org.jdns.xtuml.metamodel.ArbitraryIdType;
+import org.jdns.xtuml.metamodel.CoreDataType;
+import org.jdns.xtuml.metamodel.DataType;
+import org.jdns.xtuml.metamodel.DateType;
+import org.jdns.xtuml.metamodel.DomainSpecificDataType;
+import org.jdns.xtuml.metamodel.NumericType;
+import org.jdns.xtuml.metamodel.ObjectReferenceType;
+import org.jdns.xtuml.metamodel.StringType;
+import org.jdns.xtuml.metamodel.SetType;
 
 /**
  * The VariableFactory is responsible for creating new subtypes of the Variable

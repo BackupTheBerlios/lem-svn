@@ -25,7 +25,35 @@
 
 package runtime;
 import java.math.BigDecimal;
-import metamodel.*;
+import org.jdns.xtuml.metamodel.Action;
+import org.jdns.xtuml.metamodel.ActionBlock;
+import org.jdns.xtuml.metamodel.AssignmentAction;
+import org.jdns.xtuml.metamodel.BinaryOperation;
+import org.jdns.xtuml.metamodel.BreakStatement;
+import org.jdns.xtuml.metamodel.CancelAction;
+import org.jdns.xtuml.metamodel.ConditionalAlternative;
+import org.jdns.xtuml.metamodel.CreateAction;
+import org.jdns.xtuml.metamodel.CreationTransaction;
+import org.jdns.xtuml.metamodel.DeleteAction;
+import org.jdns.xtuml.metamodel.Event;
+import org.jdns.xtuml.metamodel.Expression;
+import org.jdns.xtuml.metamodel.ForStatement;
+import org.jdns.xtuml.metamodel.GenerateAction;
+import org.jdns.xtuml.metamodel.IfStatement;
+import org.jdns.xtuml.metamodel.Literal;
+import org.jdns.xtuml.metamodel.ObjectReferenceType;
+import org.jdns.xtuml.metamodel.PrintAction;
+import org.jdns.xtuml.metamodel.Procedure;
+import org.jdns.xtuml.metamodel.RelateAction;
+import org.jdns.xtuml.metamodel.RelatedToOperation;
+import org.jdns.xtuml.metamodel.Relationship;
+import org.jdns.xtuml.metamodel.Scenario;
+import org.jdns.xtuml.metamodel.SelectExpression;
+import org.jdns.xtuml.metamodel.UnaryOperation;
+import org.jdns.xtuml.metamodel.UnrelateAction;
+import org.jdns.xtuml.metamodel.VariableDeclaration;
+import org.jdns.xtuml.metamodel.VariableReference;
+import org.jdns.xtuml.metamodel.WhileStatement;
 import runtime.Object ;
 import runtime.Instance ;
 import java.util.Iterator;
@@ -735,8 +763,8 @@ public class Interpreter {
         runtime.Object pP = (runtime.Object)(( ObjectReferenceVariable ) c.getVariable( a.getPassiveObjectName() )).getValue();
         
         // retrieve the names of the classes participating in the association
-        metamodel.Class aP_class = a.getAssociation().getActivePerspective().getDomainClass();
-        metamodel.Class pP_class = a.getAssociation().getPassivePerspective().getDomainClass();
+        org.jdns.xtuml.metamodel.Class aP_class = a.getAssociation().getActivePerspective().getDomainClass();
+        org.jdns.xtuml.metamodel.Class pP_class = a.getAssociation().getPassivePerspective().getDomainClass();
         
         Collection ac = aP.getInstances();
         Collection pc = pP.getInstances();
@@ -803,7 +831,7 @@ public class Interpreter {
     
     public Variable evaluateSelectExpression( SelectExpression se, Context c ) throws LemRuntimeException {
 	Variable retVar;
-        metamodel.Class selectedClass = se.getSelectedClass() ;
+        org.jdns.xtuml.metamodel.Class selectedClass = se.getSelectedClass() ;
         RelatedToOperation rto = se.getRelatedToOperation() ;
         Expression condition = se.getCondition();
 	LinkedList idList = new LinkedList();
@@ -843,11 +871,11 @@ public class Interpreter {
                             
                         if ( goodVariable && rto != null ) {
                             Relationship r = rto.getRelationship() ;
-                            metamodel.Class relatedClass = rto.getRelatedClass() ;
-                            metamodel.Class instanceClass = instance.getInstanceClass() ;
+                            org.jdns.xtuml.metamodel.Class relatedClass = rto.getRelatedClass() ;
+                            org.jdns.xtuml.metamodel.Class instanceClass = instance.getInstanceClass() ;
                             Map associations = instanceClass.getAssociations() ;
                             if ( ! ( associations.containsKey( r.getName() ) &&
-                                    ( ( metamodel.Class ) associations.get( r.getName() ) ).getName().equals( relatedClass.getName() ) ) ) {
+                                    ( ( org.jdns.xtuml.metamodel.Class ) associations.get( r.getName() ) ).getName().equals( relatedClass.getName() ) ) ) {
                                 goodVariable = false;
                             }
                         }
@@ -906,8 +934,8 @@ public class Interpreter {
         runtime.Object pP = (runtime.Object)(( ObjectReferenceVariable ) c.getVariable( a.getPassiveObjectName() )).getValue();        
 
         // retrieve the names of the classes participating in the association
-        metamodel.Class aP_class = a.getAssociation().getActivePerspective().getDomainClass();
-        metamodel.Class pP_class = a.getAssociation().getPassivePerspective().getDomainClass();
+        org.jdns.xtuml.metamodel.Class aP_class = a.getAssociation().getActivePerspective().getDomainClass();
+        org.jdns.xtuml.metamodel.Class pP_class = a.getAssociation().getPassivePerspective().getDomainClass();
         
         Collection ac = aP.getInstances();
         Collection pc = pP.getInstances();

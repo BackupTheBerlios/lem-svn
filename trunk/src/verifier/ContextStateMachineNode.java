@@ -26,10 +26,10 @@ import java.util.Iterator;
 import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
-import metamodel.InitialisingTransition;
-import metamodel.State;
-import metamodel.StateMachine;
-import metamodel.Transition;
+import org.jdns.xtuml.metamodel.InitialisingTransition;
+import org.jdns.xtuml.metamodel.State;
+import org.jdns.xtuml.metamodel.StateMachine;
+import org.jdns.xtuml.metamodel.Transition;
 
 
 /**
@@ -67,7 +67,7 @@ public class ContextStateMachineNode extends AbstractDescriptionNode {
             DefaultMutableTreeNode stateLevel = new DefaultMutableTreeNode("States");
             DefaultMutableTreeNode currentLevel = new DefaultMutableTreeNode("Current State");
             while( i.hasNext() ) {
-                State s = (metamodel.State)i.next();
+                State s = (org.jdns.xtuml.metamodel.State)i.next();
                 if(s == currentState) {
                  currentLevel.add(new StateNode( s ) );
                 }

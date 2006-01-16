@@ -20,10 +20,9 @@
  */
 
 package runtime;
-import metamodel.CoreDataType;
-import metamodel.DataType;
-import metamodel.*;
-import metamodel.DomainSpecificDataType;
+import org.jdns.xtuml.metamodel.CoreDataType;
+import org.jdns.xtuml.metamodel.DataType;
+import org.jdns.xtuml.metamodel.DomainSpecificDataType;
 
 /**
  * This class represents an instance of a LEM DataType.

@@ -6,6 +6,9 @@
 
 package test.perlgen;
 
+import org.jdns.xtuml.metamodel.Attribute;
+import org.jdns.xtuml.metamodel.Domain;
+import org.jdns.xtuml.metamodel.Model;
 import tools.*;
 import parser.*;
 import metamodel.*;
@@ -78,7 +81,7 @@ public class ValueObjectGenerator {
                 File outDir = new File( "/tmp/");
 		System.out.println( "Domain is called: " + domain.getName());
 		for ( Iterator it = classes.values().iterator(); it.hasNext(); ) {
-			metamodel.Class theClass = (metamodel.Class) it.next();
+			org.jdns.xtuml.metamodel.Class theClass = (org.jdns.xtuml.metamodel.Class) it.next();
 			listAttributes( theClass );
                         buildPackage( theClass, outDir );
 		}
@@ -88,7 +91,7 @@ public class ValueObjectGenerator {
         /**
 	 * List the attributes
 	 */
-	private static void listAttributes( metamodel.Class theClass ) {
+	private static void listAttributes( org.jdns.xtuml.metamodel.Class theClass ) {
 
 		HashMap attributes = theClass.getAllAttributes();
 
@@ -101,7 +104,7 @@ public class ValueObjectGenerator {
 		}
 	}
         
-        private static void buildPackage( metamodel.Class theClass, File outDir )
+        private static void buildPackage( org.jdns.xtuml.metamodel.Class theClass, File outDir )
             throws IOException {
             
             

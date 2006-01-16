@@ -10,8 +10,8 @@
 
 package runtime;
 
-import metamodel.BooleanType;
-import metamodel.DataType;
+import org.jdns.xtuml.metamodel.BooleanType;
+import org.jdns.xtuml.metamodel.DataType;
 
 /**
  * Encapsulates a Java Boolean object.

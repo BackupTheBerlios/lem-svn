@@ -25,7 +25,7 @@ package verifier;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
-import metamodel.Scenario;
+import org.jdns.xtuml.metamodel.Scenario;
 import runtime.DomainContext;
 import runtime.Interpreter;
 import runtime.LemRuntimeException;

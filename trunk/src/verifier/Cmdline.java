@@ -32,9 +32,9 @@ import java.net.URL;
 import java.util.Vector;
 import runtime.*;
 
-import metamodel.LemException;
-import metamodel.Model;
-import metamodel.Scenario;
+import org.jdns.xtuml.metamodel.LemException;
+import org.jdns.xtuml.metamodel.Model;
+import org.jdns.xtuml.metamodel.Scenario;
 
 import parser.ParseException;
 import tools.Lem;

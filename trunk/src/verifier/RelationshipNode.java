@@ -24,7 +24,7 @@
 package verifier;
 
 import javax.swing.JPopupMenu;
-import metamodel.Relationship;
+import org.jdns.xtuml.metamodel.Relationship;
 
 /**
  * Tree node appearing inside a DomainNode. For graphically representing and 
@@ -39,7 +39,7 @@ public class RelationshipNode extends AbstractDescriptionNode{
      * Creates a new instance of RelationshipNode. 
      * @param r LEM Relationship object to be contained.
      */
-    public RelationshipNode( metamodel.Relationship r ) {
+    public RelationshipNode( org.jdns.xtuml.metamodel.Relationship r ) {
         this.relationship = r;
     }
     /**

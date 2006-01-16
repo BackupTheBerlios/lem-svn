@@ -30,9 +30,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import metamodel.Association;
-import metamodel.Attribute;
-import metamodel.State;
+import org.jdns.xtuml.metamodel.Association;
+import org.jdns.xtuml.metamodel.Attribute;
+import org.jdns.xtuml.metamodel.State;
 
 
 /**
@@ -62,7 +62,7 @@ public class Instance {
 	/**
 	 * The Class of which this Instance is an instance
 	 */
-	metamodel.Class instanceOfClass = null;
+	org.jdns.xtuml.metamodel.Class instanceOfClass = null;
 
 	/**
 	 * The Object in which this Instance participates
@@ -89,7 +89,7 @@ public class Instance {
 	 * @param theClass the class which is instantiated by this instance
 	 * @throws runtime.LemRuntimeException in case any class attributes could not be initialised to their default values
 	 */
-	public Instance( metamodel.Class theClass, runtime.Object theObject ) throws LemRuntimeException {
+	public Instance( org.jdns.xtuml.metamodel.Class theClass, runtime.Object theObject ) throws LemRuntimeException {
 		instanceOfClass = theClass;
 		instanceInObject = theObject;
 
@@ -121,7 +121,7 @@ public class Instance {
 	 *
 	 * @return the Class of which this Instance is an instance
 	 */
-	public metamodel.Class getInstanceClass() {
+	public org.jdns.xtuml.metamodel.Class getInstanceClass() {
 		return instanceOfClass;
 	}
 

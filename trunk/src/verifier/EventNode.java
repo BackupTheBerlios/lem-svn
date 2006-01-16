@@ -24,7 +24,7 @@
 package verifier;
 
 import javax.swing.JPopupMenu;
-import metamodel.Event ;
+import org.jdns.xtuml.metamodel.Event ;
 
 /**
  * Tree node appearing inside a ClassNode. For representing and containing a LEM

@@ -22,8 +22,8 @@
 
 package runtime;
 
-import metamodel.ArbitraryIdType;
-import metamodel.DataType;
+import org.jdns.xtuml.metamodel.ArbitraryIdType;
+import org.jdns.xtuml.metamodel.DataType;
 
 public class ArbitraryIdVariable extends Variable {
 	private static int currentId = 0;

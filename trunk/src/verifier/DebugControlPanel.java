@@ -23,7 +23,7 @@
 
 package verifier;
 
-import metamodel.Scenario;
+import org.jdns.xtuml.metamodel.Scenario;
 import runtime.DomainContext;
 
 /**

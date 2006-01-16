@@ -24,7 +24,6 @@
 package verifier;
 
 import java.util.*;
-import metamodel.*;
 import parser.*;
 
 /**

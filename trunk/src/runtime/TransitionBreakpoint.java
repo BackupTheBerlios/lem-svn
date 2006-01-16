@@ -21,7 +21,7 @@
 
 package runtime;
 
-import metamodel.Transition;
+import org.jdns.xtuml.metamodel.Transition;
 
 /**
  * Objects of this class represent a breakpoint on a state transition.

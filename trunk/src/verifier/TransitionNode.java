@@ -24,7 +24,7 @@
 package verifier;
 
 import javax.swing.JPopupMenu;
-import metamodel.Transition;
+import org.jdns.xtuml.metamodel.Transition;
 
 /**
  * Tree node appearing inside a StateMachineNode. For graphically representing 

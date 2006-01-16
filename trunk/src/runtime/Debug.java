@@ -21,9 +21,9 @@
 
 package runtime;
 
-import metamodel.State;
-import metamodel.Transition;
-import metamodel.Action;
+import org.jdns.xtuml.metamodel.State;
+import org.jdns.xtuml.metamodel.Transition;
+import org.jdns.xtuml.metamodel.Action;
 
 import java.util.Iterator;
 import java.util.List;

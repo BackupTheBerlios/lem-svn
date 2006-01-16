@@ -27,7 +27,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.net.URL;
 import javax.swing.JTextPane;
-import metamodel.Scenario;
+import org.jdns.xtuml.metamodel.Scenario;
 
 /**
  * Creates a logger frame with the associated scenario executor and 

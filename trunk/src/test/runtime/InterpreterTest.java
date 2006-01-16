@@ -11,13 +11,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
-import metamodel.VariableDeclaration;
-import metamodel.AssignmentAction;
-import metamodel.LemException;
-import metamodel.Model;
-import metamodel.Procedure;
-import metamodel.Action;
-import metamodel.CreateAction;
+import org.jdns.xtuml.metamodel.VariableDeclaration;
+import org.jdns.xtuml.metamodel.AssignmentAction;
+import org.jdns.xtuml.metamodel.LemException;
+import org.jdns.xtuml.metamodel.Model;
+import org.jdns.xtuml.metamodel.Procedure;
+import org.jdns.xtuml.metamodel.Action;
+import org.jdns.xtuml.metamodel.CreateAction;
 import parser.ParseException;
 import tools.Lem;
 
@@ -239,9 +239,9 @@ public class InterpreterTest extends junit.framework.TestCase {
             fail( "Some LEMException occurred: " + e.getMessage() );
         }
         
-        metamodel.Class a = m.getDomain("TestDomain").getClass("A");
-        metamodel.Class b = m.getDomain("TestDomain").getClass("B");
-        metamodel.Class c = m.getDomain("TestDomain").getClass("C");
+        org.jdns.xtuml.metamodel.Class a = m.getDomain("TestDomain").getClass("A");
+        org.jdns.xtuml.metamodel.Class b = m.getDomain("TestDomain").getClass("B");
+        org.jdns.xtuml.metamodel.Class c = m.getDomain("TestDomain").getClass("C");
         
         assertEquals( "Class A participates in 1 association", 1, a.getAssociations().size() );
         assertEquals( "Class B participates in 1 association", 1, b.getAssociations().size() );

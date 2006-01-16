@@ -29,10 +29,10 @@ import javax.swing.JPopupMenu;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
-import metamodel.Association;
-import metamodel.Attribute;
-import metamodel.State;
-import metamodel.StateMachine;
+import org.jdns.xtuml.metamodel.Association;
+import org.jdns.xtuml.metamodel.Attribute;
+import org.jdns.xtuml.metamodel.State;
+import org.jdns.xtuml.metamodel.StateMachine;
 import runtime.Instance;
 
 /**

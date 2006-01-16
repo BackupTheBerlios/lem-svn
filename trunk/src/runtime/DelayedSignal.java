@@ -21,7 +21,7 @@
 
 package runtime;
 
-import metamodel.Event;
+import org.jdns.xtuml.metamodel.Event;
 import java.math.BigDecimal;
 
 /**

@@ -7,8 +7,8 @@
 
 package runtime;
 
-import metamodel.StringType;
-import metamodel.DataType;
+import org.jdns.xtuml.metamodel.StringType;
+import org.jdns.xtuml.metamodel.DataType;
 import runtime.VariableFactory;
 
 /**

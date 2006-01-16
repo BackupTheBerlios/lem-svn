@@ -27,7 +27,7 @@ import java.math.BigDecimal;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
-import metamodel.Event ;
+import org.jdns.xtuml.metamodel.Event ;
 import runtime.DelayedSignal;
 import runtime.LemRuntimeException;
 import runtime.Object ;

@@ -22,8 +22,8 @@
 package verifier;
 
 import java.util.Collection;
-import metamodel.Domain;
-import metamodel.Association;
+import org.jdns.xtuml.metamodel.Domain;
+import org.jdns.xtuml.metamodel.Association;
 import java.util.Iterator;
 import java.util.ArrayList;
 
@@ -107,7 +107,7 @@ public class ClassWriter {
 		
 		// append  UMLGraph code of all classes into string buffer
 		for ( Iterator it = allClassList.iterator(); it.hasNext(); ) {
-			metamodel.Class umlclass = (metamodel.Class) it.next();
+			org.jdns.xtuml.metamodel.Class umlclass = (org.jdns.xtuml.metamodel.Class) it.next();
 			// decide  whether a class is selected or not
 			if (selectedClassList.contains(umlclass))
 				strBuf.append(umlclass.dumpUMLGraph(isSelected));
@@ -151,7 +151,7 @@ public class ClassWriter {
 	private static void topUpList()  {
 		list.clear(); // empty the list
 		for ( Iterator it = allAssociationList.iterator(); it.hasNext(); ) {
-			metamodel.Relationship relationalship = (metamodel.Relationship) it.next();
+			org.jdns.xtuml.metamodel.Relationship relationalship = (org.jdns.xtuml.metamodel.Relationship) it.next();
 			list.add(relationalship);
 		}
 	}

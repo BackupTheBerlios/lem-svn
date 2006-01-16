@@ -31,7 +31,7 @@ import javax.swing.JTextPane;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
-import metamodel.Event;
+import org.jdns.xtuml.metamodel.Event;
 import runtime.Instance;
 import runtime.Signal;
 
@@ -67,7 +67,7 @@ public class ObjectNode extends AbstractDescriptionNode {
 			Instance instance = (Instance) i.next() ;
 			InstanceNode instanceNode = new InstanceNode( instance, frame ) ;
 			instancesLevel.add( instanceNode ) ;
-			metamodel.Class thisClass = instance.getInstanceClass() ;
+			org.jdns.xtuml.metamodel.Class thisClass = instance.getInstanceClass() ;
 			// add signals to the object tree.
 			Iterator j = thisClass.getEvents().iterator();
 			if ( j.hasNext() ) {

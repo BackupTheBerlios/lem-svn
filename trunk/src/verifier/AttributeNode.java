@@ -30,7 +30,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
-import metamodel.Attribute;
+import org.jdns.xtuml.metamodel.Attribute;
 import runtime.Instance ;
 import runtime.Variable;
 import runtime.VariableFactory;

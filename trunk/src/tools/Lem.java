@@ -6,7 +6,8 @@
 
 package tools;
 
-import metamodel.*;
+import org.jdns.xtuml.metamodel.LemException;
+import org.jdns.xtuml.metamodel.Model;
 import verifier.*;
 import parser.*;
 import util.*;

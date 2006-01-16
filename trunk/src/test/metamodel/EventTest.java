@@ -11,10 +11,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
-import metamodel.AssignmentAction;
-import metamodel.LemException;
-import metamodel.Model;
-import metamodel.Procedure;
+import org.jdns.xtuml.metamodel.AssignmentAction;
+import org.jdns.xtuml.metamodel.LemException;
+import org.jdns.xtuml.metamodel.Model;
+import org.jdns.xtuml.metamodel.Procedure;
 import parser.ParseException;
 import tools.Lem;
 

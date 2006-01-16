@@ -31,8 +31,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
-import metamodel.StateMachine;
-import metamodel.Event ;
+import org.jdns.xtuml.metamodel.StateMachine;
+import org.jdns.xtuml.metamodel.Event ;
 
 /**
  * Tree node appearing inside a SubsystemNode. For representing and "holding" a
@@ -42,7 +42,7 @@ import metamodel.Event ;
  */
 public class ClassNode extends AbstractDescriptionNode {
 	/**The LEM Class object that ClassNode contains*/
-	metamodel.Class thisClass;
+	org.jdns.xtuml.metamodel.Class thisClass;
 	/**The StyledDocument object that ClassNode maintains*/
 	private StyledDocument attributeListing ;
 	
@@ -51,12 +51,12 @@ public class ClassNode extends AbstractDescriptionNode {
 	 * subtrees based on the objects attributes, state machine and events.
 	 * @param c LEM class object to be contained.
 	 */
-	public ClassNode( metamodel.Class c ) {
+	public ClassNode( org.jdns.xtuml.metamodel.Class c ) {
 		this.thisClass = c;
 		attributeListing = new StyledDocument() ;		
 		Iterator i = c.getAllAttributes().iterator();		
 		while( i.hasNext() ) {
-			AttributeNode attribute =  new AttributeNode( (metamodel.Attribute) i.next(), null , null ) ;
+			AttributeNode attribute =  new AttributeNode( (org.jdns.xtuml.metamodel.Attribute) i.next(), null , null ) ;
 			add( attribute);
 			attributeListing.append(attribute.getStyledDocument() ) ;
 		}

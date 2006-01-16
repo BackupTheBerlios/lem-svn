@@ -26,7 +26,7 @@ package verifier;
 import java.util.Iterator;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
-import metamodel.Domain;
+import org.jdns.xtuml.metamodel.Domain;
 
 /**
  * Tree node appearing inside a ModelTreeNode. For graphically representing and 
@@ -49,7 +49,7 @@ public class DomainNode extends AbstractDescriptionNode {
 		eleminator = inEleminator ; 
 		Iterator i = d.getSubsystems().values().iterator();
 		while( i.hasNext() ) {
-			add( new SubsystemNode( (metamodel.Subsystem)i.next() ));
+			add( new SubsystemNode( (org.jdns.xtuml.metamodel.Subsystem)i.next() ));
 		}
 		
 		
@@ -57,7 +57,7 @@ public class DomainNode extends AbstractDescriptionNode {
                 if(i.hasNext()){
                     DefaultMutableTreeNode relationshipLevel = new DefaultMutableTreeNode( "Relationships" );
                     while( i.hasNext() ) {
-    			relationshipLevel.add( new RelationshipNode( (metamodel.Relationship)i.next() ));
+    			relationshipLevel.add( new RelationshipNode( (org.jdns.xtuml.metamodel.Relationship)i.next() ));
                     }
                     add( relationshipLevel );
                 }
@@ -66,7 +66,7 @@ public class DomainNode extends AbstractDescriptionNode {
                 if(i.hasNext()){
                     DefaultMutableTreeNode scenarioLevel = new DefaultMutableTreeNode( "Scenarios" );
                     while( i.hasNext() ) {
-                        ScenarioNode s = new ScenarioNode( (metamodel.Scenario)i.next(), eleminator ) ;                        
+                        ScenarioNode s = new ScenarioNode( (org.jdns.xtuml.metamodel.Scenario)i.next(), eleminator ) ;                        
                         scenarioLevel.add( s );
                     	//scenarioLevel.add( new ScenarioNode( (metamodel.Scenario)i.next() ));
                     }

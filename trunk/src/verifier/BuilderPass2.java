@@ -26,13 +26,66 @@ package verifier;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Vector;
+import org.jdns.xtuml.metamodel.Action;
+import org.jdns.xtuml.metamodel.ActionBlock;
+import org.jdns.xtuml.metamodel.ActivePerspective;
+import org.jdns.xtuml.metamodel.AssignmentAction;
+import org.jdns.xtuml.metamodel.Association;
+import org.jdns.xtuml.metamodel.Attribute;
+import org.jdns.xtuml.metamodel.BinaryOperation;
+import org.jdns.xtuml.metamodel.BooleanType;
+import org.jdns.xtuml.metamodel.BreakStatement;
+import org.jdns.xtuml.metamodel.CancelAction;
+import org.jdns.xtuml.metamodel.ConditionalAlternative;
+import org.jdns.xtuml.metamodel.CoreDataType;
+import org.jdns.xtuml.metamodel.CreateAction;
+import org.jdns.xtuml.metamodel.CreationTransaction;
+import org.jdns.xtuml.metamodel.DataType;
+import org.jdns.xtuml.metamodel.DeleteAction;
+import org.jdns.xtuml.metamodel.Domain;
+import org.jdns.xtuml.metamodel.DomainSpecificDataType;
+import org.jdns.xtuml.metamodel.Event;
+import org.jdns.xtuml.metamodel.Expression;
+import org.jdns.xtuml.metamodel.ForStatement;
+import org.jdns.xtuml.metamodel.Generalisation;
+import org.jdns.xtuml.metamodel.GenerateAction;
+import org.jdns.xtuml.metamodel.Identifier;
+import org.jdns.xtuml.metamodel.IfStatement;
+import org.jdns.xtuml.metamodel.InitialisingTransition;
+import org.jdns.xtuml.metamodel.LemException;
+import org.jdns.xtuml.metamodel.Literal;
+import org.jdns.xtuml.metamodel.Model;
+import org.jdns.xtuml.metamodel.NonDeletionState;
+import org.jdns.xtuml.metamodel.NumericType;
+import org.jdns.xtuml.metamodel.ObjectReferenceType;
+import org.jdns.xtuml.metamodel.Parameter;
+import org.jdns.xtuml.metamodel.PassivePerspective;
+import org.jdns.xtuml.metamodel.PrintAction;
+import org.jdns.xtuml.metamodel.Procedure;
+import org.jdns.xtuml.metamodel.RelateAction;
+import org.jdns.xtuml.metamodel.RelatedToOperation;
+import org.jdns.xtuml.metamodel.Relationship;
+import org.jdns.xtuml.metamodel.ReturnAction;
+import org.jdns.xtuml.metamodel.Scenario;
+import org.jdns.xtuml.metamodel.SelectExpression;
+import org.jdns.xtuml.metamodel.State;
+import org.jdns.xtuml.metamodel.StateMachine;
+import org.jdns.xtuml.metamodel.StateTransition;
+import org.jdns.xtuml.metamodel.StringType;
+import org.jdns.xtuml.metamodel.SubclassRole;
+import org.jdns.xtuml.metamodel.SuperclassRole;
+import org.jdns.xtuml.metamodel.Transition;
+import org.jdns.xtuml.metamodel.UnaryOperation;
+import org.jdns.xtuml.metamodel.UnrelateAction;
+import org.jdns.xtuml.metamodel.VariableDeclaration;
+import org.jdns.xtuml.metamodel.VariableReference;
+import org.jdns.xtuml.metamodel.WhileStatement;
 
-import metamodel.*;
 import parser.*;
 
 /**
- * The second pass of the parse tree adds further infomation to the metamodel object
- * graph, resolves some references and allows basic validation of the metamodel to be
+ * The second pass of the parse tree adds further infomation to the org.jdns.xtuml.metamodel object
+ * graph, resolves some references and allows basic validation of the org.jdns.xtuml.metamodel to be
  * performed.
  *
  * This class implements the Visitor pattern. Each node in the parse tree is "visited" by executing the
@@ -51,7 +104,7 @@ public class BuilderPass2 extends Visitor {
 	/**
 	 * A reference to the class in which we're currently visiting nodes
 	 */
-	private metamodel.Class currentClass = null;
+	private org.jdns.xtuml.metamodel.Class currentClass = null;
 
 	/**
 	  * A reference to the action block in which we're currently visiting nodes
@@ -82,7 +135,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMModelDeclaration node, Object data ) throws LemException {
@@ -94,7 +147,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMDomainDeclaration node, Object data ) throws LemException {
@@ -128,7 +181,7 @@ public class BuilderPass2 extends Visitor {
 	 * Process an Generalisation
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMGeneralisation node, Object data ) throws LemException {
@@ -151,7 +204,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 
@@ -183,7 +236,7 @@ public class BuilderPass2 extends Visitor {
 		Expression condition = ( Expression ) node.jjtGetChild( 2 ).jjtAccept( this, data );
 		// selected is no longer valid after here
 		inSelect = false;
-		metamodel.Class fromClass = getClass( fromClassName );
+		org.jdns.xtuml.metamodel.Class fromClass = getClass( fromClassName );
 
 		if ( fromClass == null )
 			throw new LemException( "Class '" + fromClassName + "' not defined.",node.getFirstToken(), "LEM_E_01044" );
@@ -259,7 +312,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMActionBlock node, Object data ) throws LemException {
@@ -299,7 +352,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMClassList node, Object data ) throws LemException {
@@ -307,7 +360,7 @@ public class BuilderPass2 extends Visitor {
 
 		for ( int i = 0; i < node.jjtGetNumChildren(); i++ ) {
 			String className = getIdentifier( node.jjtGetChild( i ) );
-			metamodel.Class c = currentDomain.getClass( className );
+			org.jdns.xtuml.metamodel.Class c = currentDomain.getClass( className );
 
 			if ( c == null ) {
 				throw new LemException(
@@ -327,7 +380,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMUnaryOperator node, Object data ) throws LemException {
@@ -345,7 +398,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMUnary node, Object data ) throws LemException {
@@ -367,7 +420,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMFactor node, Object data ) throws LemException {
@@ -386,7 +439,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMPrimary node, Object data ) throws LemException {
@@ -400,7 +453,7 @@ public class BuilderPass2 extends Visitor {
 	/**
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMObjectCreation node, Object data ) throws LemException {
@@ -417,7 +470,7 @@ public class BuilderPass2 extends Visitor {
 	/**
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMObjectDeletion node, Object data ) throws LemException {
@@ -475,7 +528,7 @@ public class BuilderPass2 extends Visitor {
 		VariableReference vr = ( VariableReference ) node.jjtGetChild( 2 ).jjtAccept( this, null );
 		a.setTarget( vr );
 
-		metamodel.Expression delay = ( metamodel.Expression ) node.jjtGetChild( 3 ).jjtAccept( this, null );
+		org.jdns.xtuml.metamodel.Expression delay = ( org.jdns.xtuml.metamodel.Expression ) node.jjtGetChild( 3 ).jjtAccept( this, null );
 		a.setDelayTime ( delay ) ;
 
 		return a;
@@ -671,7 +724,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMExpression node, Object data ) throws LemException {
@@ -686,7 +739,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMAndRelation node, Object data ) throws LemException {
@@ -701,7 +754,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMRelation node, Object data ) throws LemException {
@@ -716,7 +769,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMRelatedTo node, Object data ) throws LemException {
@@ -725,7 +778,7 @@ public class BuilderPass2 extends Visitor {
 			throw new LemException( "Related To is a ternary operator,\n Use:  Related To class1 Across R1 ", node.getFirstToken(), "LEM_E_01050" ) ;
 		} else {
 			String relatedClassName = getIdentifier( node.jjtGetChild( 0 ) );
-			metamodel.Class relatedClass = getClass( relatedClassName );
+			org.jdns.xtuml.metamodel.Class relatedClass = getClass( relatedClassName );
 			String relationshipName = getIdentifier( node.jjtGetChild( 1 ) );
 			Relationship r = currentDomain.getRelationship( relationshipName );
 			o = new RelatedToOperation ( relatedClass, r ) ;
@@ -738,7 +791,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMSimpleExpression node, Object data ) throws LemException {
@@ -780,7 +833,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMTerm node, Object data ) throws LemException {
@@ -795,7 +848,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMAdding node, Object data ) throws LemException {
@@ -813,7 +866,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMLogicalOr node, Object data ) throws LemException {
@@ -824,7 +877,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMLogicalAnd node, Object data ) throws LemException {
@@ -835,7 +888,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMRelational node, Object data ) throws LemException {
@@ -861,7 +914,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMMultiplying node, Object data ) throws LemException {
@@ -881,7 +934,7 @@ public class BuilderPass2 extends Visitor {
 	 *
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMObjectReference node, Object data ) throws LemException {
@@ -902,11 +955,11 @@ public class BuilderPass2 extends Visitor {
 	}
 
 	/**
-	 * Visit a LEMVariableReference. Return the instance of metamodel.VariableReference
+	 * Visit a LEMVariableReference. Return the instance of org.jdns.xtuml.metamodel.VariableReference
 	 * which represents this LEMVariableReferenceNode.
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 
@@ -941,11 +994,11 @@ public class BuilderPass2 extends Visitor {
     	}
 
 	/**
-	 * Visit a LEMLiteral node. Return the instance of metamodel.Literal representing
+	 * Visit a LEMLiteral node. Return the instance of org.jdns.xtuml.metamodel.Literal representing
 	 * this literal.
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMLiteral node, Object data ) throws LemException {
@@ -978,7 +1031,7 @@ public class BuilderPass2 extends Visitor {
 	 */
 	public Object visit( LEMClassDeclaration node, Object data ) throws LemException {
 
-		metamodel.Class c = ( metamodel.Class ) mapper.getObject( node );
+		org.jdns.xtuml.metamodel.Class c = ( org.jdns.xtuml.metamodel.Class ) mapper.getObject( node );
 		currentClass = c;
 		super.visit( node, c );
 
@@ -991,7 +1044,7 @@ public class BuilderPass2 extends Visitor {
 	 * This node can exist in the context of a generalisation or is a specialisation list
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMSuperClassIdentifier node, Object data ) throws LemException {
@@ -1008,7 +1061,7 @@ public class BuilderPass2 extends Visitor {
 			// find the class being refered to, or create a new class
 
 			String superclassName = node.getFirstToken().image;
-			metamodel.Class superclass = domain.getClass( superclassName );
+			org.jdns.xtuml.metamodel.Class superclass = domain.getClass( superclassName );
 
 			// now create the Generalisation role that has been defined
 
@@ -1025,7 +1078,7 @@ public class BuilderPass2 extends Visitor {
 	 * Process the subclass identifier in a Generalisation
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMSubClassIdentifier node, Object data ) throws LemException {
@@ -1040,7 +1093,7 @@ public class BuilderPass2 extends Visitor {
 		// find the class being refered to, or create a new class
 
 		String subclassName = node.getFirstToken().image;
-		metamodel.Class subclass = domain.getClass( subclassName );
+		org.jdns.xtuml.metamodel.Class subclass = domain.getClass( subclassName );
 
 		// must exist
 
@@ -1066,7 +1119,7 @@ public class BuilderPass2 extends Visitor {
 	 * Process an ActivePerspective
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMActivePerspective node, Object data ) throws LemException {
@@ -1084,7 +1137,7 @@ public class BuilderPass2 extends Visitor {
 	 * Process a PassivePerspective
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMPassivePerspective node, Object data ) throws LemException {
@@ -1103,7 +1156,7 @@ public class BuilderPass2 extends Visitor {
 	 * context of either an Active or Passive perspective
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMActiveSubject node, Object data ) throws LemException {
@@ -1119,7 +1172,7 @@ public class BuilderPass2 extends Visitor {
 	 * context of either an Active or Passive perspective
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMActiveObject node, Object data ) throws LemException {
@@ -1135,10 +1188,10 @@ public class BuilderPass2 extends Visitor {
 	 * is unique with the signature
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
-	public Object visit( LEMParameterDeclaration node, Object data ) throws metamodel.LemException {
+	public Object visit( LEMParameterDeclaration node, Object data ) throws org.jdns.xtuml.metamodel.LemException {
 
 		Parameter parameter = ( Parameter ) getMapper().getObject( node );
 		super.visit( node, parameter );
@@ -1153,7 +1206,7 @@ public class BuilderPass2 extends Visitor {
 	 * Process an attribute declaration
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMBaseAttribute node, Object data ) throws LemException {
@@ -1169,7 +1222,7 @@ public class BuilderPass2 extends Visitor {
 	 * We can now discard the proxy object.
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMDomainSpecificType node, Object data ) throws LemException {
@@ -1222,7 +1275,7 @@ public class BuilderPass2 extends Visitor {
 	 * Process an IdentifierDeclaration
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMIdentifierDeclaration node, Object data ) throws LemException {
@@ -1240,7 +1293,7 @@ public class BuilderPass2 extends Visitor {
 	 * Process an IdentifyingAttribute
 	 * @param node
 	 * @param data
-	 * @throws metamodel.LemException
+	 * @throws org.jdns.xtuml.metamodel.LemException
 	 * @return
 	 */
 	public Object visit( LEMIdentifyingAttribute node, Object data ) throws LemException {
@@ -1254,7 +1307,7 @@ public class BuilderPass2 extends Visitor {
 
 		// check that the attribute exists
 
-		metamodel.Class domainClass = id.getDomainClass();
+		org.jdns.xtuml.metamodel.Class domainClass = id.getDomainClass();
 		Attribute attribute = domainClass.getAttribute( attributeName );
 		if ( null == attribute ) {
 			throw new LemException(
@@ -1395,7 +1448,7 @@ public class BuilderPass2 extends Visitor {
 		       : null;
 	}
 
-	protected metamodel.Class getClass( String className ) {
+	protected org.jdns.xtuml.metamodel.Class getClass( String className ) {
 		return currentDomain.getClass( className );
 	}
 

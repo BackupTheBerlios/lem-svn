@@ -26,7 +26,7 @@ import java.awt.BorderLayout;
 import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import metamodel.Scenario;
+import org.jdns.xtuml.metamodel.Scenario;
 import runtime.DomainContext;
 import runtime.Interpreter;
 import runtime.LemRuntimeException;

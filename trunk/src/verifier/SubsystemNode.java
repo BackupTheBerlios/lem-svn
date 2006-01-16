@@ -25,8 +25,8 @@ package verifier;
 import java.util.Iterator;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
-import metamodel.Domain;
-import metamodel.Subsystem;
+import org.jdns.xtuml.metamodel.Domain;
+import org.jdns.xtuml.metamodel.Subsystem;
 
 /**
  * Tree node appearing inside a DomainNode. For graphically representing and 
@@ -54,7 +54,7 @@ public class SubsystemNode extends AbstractDescriptionNode {
 			
 			Iterator i = s.getClasses().values().iterator();
 			while (i.hasNext()) {
-				classLevel.add( new ClassNode( (metamodel.Class)i.next() ));
+				classLevel.add( new ClassNode( (org.jdns.xtuml.metamodel.Class)i.next() ));
 			}
 			
 			add( classLevel );

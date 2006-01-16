@@ -6,7 +6,7 @@ options {
     NODE_USES_PARSER=true;
 	NODE_PREFIX = "LEM";
 	NODE_PACKAGE = "parser";
-    VISITOR_EXCEPTION = "metamodel.LemException";
+    VISITOR_EXCEPTION = "org.jdns.xtuml.metamodel.LemException";
 //    DEBUG_PARSER           = true;
 //    DEBUG_TOKEN_MANAGER    = true;
 }
@@ -14,7 +14,7 @@ options {
 PARSER_BEGIN(LemParser)
 package parser;
 
-import metamodel.*;
+import org.jdns.xtuml.metamodel.*;
 import verifier.*;
 import util.*;
 import java.io.*;

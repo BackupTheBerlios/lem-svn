@@ -6,9 +6,22 @@
 
 package tools.dbmapping;
 
+import org.jdns.xtuml.metamodel.ArbitraryIdType;
+import org.jdns.xtuml.metamodel.Association;
+import org.jdns.xtuml.metamodel.Attribute;
+import org.jdns.xtuml.metamodel.BooleanType;
+import org.jdns.xtuml.metamodel.DataType;
+import org.jdns.xtuml.metamodel.DateType;
+import org.jdns.xtuml.metamodel.Domain;
+import org.jdns.xtuml.metamodel.DomainSpecificDataType;
+import org.jdns.xtuml.metamodel.Generalisation;
+import org.jdns.xtuml.metamodel.IntegerType;
+import org.jdns.xtuml.metamodel.Model;
+import org.jdns.xtuml.metamodel.NumericType;
+import org.jdns.xtuml.metamodel.Relationship;
+import org.jdns.xtuml.metamodel.StringType;
 import tools.*;
 import parser.*;
-import metamodel.*;
 import java.util.*;
 import java.io.*;
 
@@ -62,23 +75,23 @@ public class SQLMapper {
         System.out.println( "CREATE DATABASE " + d.getName() + ";" );
         System.out.println( "USE " + d.getName() + ";" );
         while( i.hasNext() ) {
-            mapClass( (metamodel.Class)i.next() );
+            mapClass( (org.jdns.xtuml.metamodel.Class)i.next() );
         }
         
         i = d.getClasses().values().iterator();
-        metamodel.Class c = null;
-        metamodel.Class superclass = null;
-        metamodel.Generalisation g = null;
+        org.jdns.xtuml.metamodel.Class c = null;
+        org.jdns.xtuml.metamodel.Class superclass = null;
+        org.jdns.xtuml.metamodel.Generalisation g = null;
         
         while( i.hasNext() ) {
-            c = (metamodel.Class)i.next();
+            c = (org.jdns.xtuml.metamodel.Class)i.next();
             Map h = null;
             if( (h = c.getSubclassParticipation()) != null ) {
                 Iterator j = h.values().iterator();
                 
                 while( j.hasNext() ) {
                     g = (Generalisation)j.next();
-                    superclass = (metamodel.Class)(g.getSuperclass());
+                    superclass = (org.jdns.xtuml.metamodel.Class)(g.getSuperclass());
                     System.out.println( "ALTER TABLE " + c.getName()
                     + " ADD CONSTRAINT FOREIGN KEY FK_" + superclass.getName()
                     + "_" + g.getName() + " (oid) REFERENCES " + superclass.getName() + " (oid);" );
@@ -98,7 +111,7 @@ public class SQLMapper {
         }
     }
     
-    protected void mapClass( metamodel.Class c ) {
+    protected void mapClass( org.jdns.xtuml.metamodel.Class c ) {
         System.out.println( "CREATE TABLE " + c.getName() + " (" );
         
         Iterator i = c.getAllAttributes().iterator();
@@ -113,11 +126,11 @@ public class SQLMapper {
         System.out.println( ") TYPE=InnoDB;\n" );
     }
     
-    protected void mapAssociation( metamodel.Association a ) {
+    protected void mapAssociation( org.jdns.xtuml.metamodel.Association a ) {
         System.err.println( "Mapping " + a.getName() );
         
-        metamodel.Class act = a.getActivePerspective().getDomainClass();
-        metamodel.Class pasv = a.getPassivePerspective().getDomainClass();
+        org.jdns.xtuml.metamodel.Class act = a.getActivePerspective().getDomainClass();
+        org.jdns.xtuml.metamodel.Class pasv = a.getPassivePerspective().getDomainClass();
         
         boolean[][] acm = new boolean[2][2];
         acm[0][0] = !a.getActivePerspective().getMultiplicity().isOptional();
@@ -155,7 +168,7 @@ public class SQLMapper {
         } else {
             // Ok.. there's an association class
             // Add the relevant columns
-            metamodel.Class assClass = a.getAssociationClassRole().getAssociationClass();
+            org.jdns.xtuml.metamodel.Class assClass = a.getAssociationClassRole().getAssociationClass();
             System.out.println( "ALTER TABLE " + assClass.getName() + " ADD COLUMN (" + act.getName() + "_oid BIGINT NOT NULL"
                     + (!acm[0][1] ? " UNIQUE" : "" ) + ", " + pasv.getName() + "_oid BIGINT NOT NULL" + (!acm[1][1] ? " UNIQUE" : "" )
                     + ");" );
@@ -168,7 +181,7 @@ public class SQLMapper {
         }
     }
     
-    protected void mapAttribute( metamodel.Attribute a ) {
+    protected void mapAttribute( org.jdns.xtuml.metamodel.Attribute a ) {
         System.out.print( a.getName() + " " );
         
         DataType type = a.getCoreDataType();

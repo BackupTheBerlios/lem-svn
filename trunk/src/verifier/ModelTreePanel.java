@@ -28,7 +28,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultTreeSelectionModel;
-import metamodel.Model;
+import org.jdns.xtuml.metamodel.Model;
 
 /**
  * Displays the model tree for an executing scenario

@@ -21,7 +21,7 @@
 
 package runtime;
 
-import metamodel.State;
+import org.jdns.xtuml.metamodel.State;
 
 /**
  * Objects of this class represent a breakpoint on execution of a state.

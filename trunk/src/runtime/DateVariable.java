@@ -14,8 +14,8 @@ import java.util.Calendar ;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.StringTokenizer ; 
-import metamodel.DateType ; 
-import metamodel.DataType ; 
+import org.jdns.xtuml.metamodel.DateType ; 
+import org.jdns.xtuml.metamodel.DataType ; 
 /**
  *
  * @author shuku

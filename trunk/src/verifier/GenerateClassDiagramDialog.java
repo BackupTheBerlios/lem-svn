@@ -29,9 +29,9 @@ import java.util.Iterator;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
-import metamodel.Domain;
-import metamodel.Model;
-import metamodel.Subsystem;
+import org.jdns.xtuml.metamodel.Domain;
+import org.jdns.xtuml.metamodel.Model;
+import org.jdns.xtuml.metamodel.Subsystem;
 
 /**
  * Dialog for generating class diagrams from LEM models.
@@ -331,9 +331,9 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 			} else { // 'Normal' case
 				// A special-case 'all classes in domain' option
 				subsystemList.addItem( "<All>" );
-				metamodel.Subsystem s;
+				org.jdns.xtuml.metamodel.Subsystem s;
 				while (subsystemIter.hasNext()) {
-					s = (metamodel.Subsystem)subsystemIter.next();
+					s = (org.jdns.xtuml.metamodel.Subsystem)subsystemIter.next();
 					subsystemList.addItem( s.getName() );
 				}
 			}
@@ -359,14 +359,14 @@ public class GenerateClassDiagramDialog extends javax.swing.JDialog {
 		if (isSelectedSubsystem == false) {
 			Iterator classIter = selectedDomain.getClasses().values().iterator();
 			while (classIter.hasNext()) {
-				listModel.addElement( ( (metamodel.Class)( classIter.next() )).getName() );
+				listModel.addElement( ( (org.jdns.xtuml.metamodel.Class)( classIter.next() )).getName() );
 			}
 		}
 		// List only those classes in the selected subsystem
 		else {
 			Iterator classIter = selectedSubsystem.getClasses().values().iterator();
 			while (classIter.hasNext()) {
-				listModel.addElement( ( (metamodel.Class)( classIter.next() )).getName() );
+				listModel.addElement( ( (org.jdns.xtuml.metamodel.Class)( classIter.next() )).getName() );
 			}
 		}
 		classList.setModel( listModel );

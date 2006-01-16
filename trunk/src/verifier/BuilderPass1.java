@@ -22,12 +22,45 @@
  */
 
 package verifier;
-import metamodel.*;
+import org.jdns.xtuml.metamodel.ActivePerspective;
+import org.jdns.xtuml.metamodel.Association;
+import org.jdns.xtuml.metamodel.AssociationClassRole;
+import org.jdns.xtuml.metamodel.Attribute;
+import org.jdns.xtuml.metamodel.BaseAttribute;
+import org.jdns.xtuml.metamodel.Bridge;
+import org.jdns.xtuml.metamodel.CoreDataType;
+import org.jdns.xtuml.metamodel.DeletionState;
+import org.jdns.xtuml.metamodel.DescribedEntity;
+import org.jdns.xtuml.metamodel.Domain;
+import org.jdns.xtuml.metamodel.DomainSpecificDataType;
+import org.jdns.xtuml.metamodel.Event;
+import org.jdns.xtuml.metamodel.EventSignature;
+import org.jdns.xtuml.metamodel.Generalisation;
+import org.jdns.xtuml.metamodel.Identifier;
+import org.jdns.xtuml.metamodel.LemException;
+import org.jdns.xtuml.metamodel.Model;
+import org.jdns.xtuml.metamodel.Multiplicity;
+import org.jdns.xtuml.metamodel.NonDeletionState;
+import org.jdns.xtuml.metamodel.Parameter;
+import org.jdns.xtuml.metamodel.ParticipatingClassRole;
+import org.jdns.xtuml.metamodel.PassivePerspective;
+import org.jdns.xtuml.metamodel.Perspective;
+import org.jdns.xtuml.metamodel.Procedure;
+import org.jdns.xtuml.metamodel.Range;
+import org.jdns.xtuml.metamodel.ReferentialAttribute;
+import org.jdns.xtuml.metamodel.Signature;
+import org.jdns.xtuml.metamodel.SourceReference;
+import org.jdns.xtuml.metamodel.State;
+import org.jdns.xtuml.metamodel.StateMachine;
+import org.jdns.xtuml.metamodel.StateSignature;
+import org.jdns.xtuml.metamodel.Subsystem;
+import org.jdns.xtuml.metamodel.VerbClause;
+
 import parser.*;
 
 /**
  * Populates the basic object graph representing the subject model and builds a map between
- * the parse tree (returned by the LemParser) and the metamodel instances. This map is used in later passes of the
+ * the parse tree (returned by the LemParser) and the org.jdns.xtuml.metamodel instances. This map is used in later passes of the
  * parse tree.
  *
  * This class implements the Visitor pattern. Each node in the parse tree is "visited" by executing the
@@ -187,7 +220,7 @@ public class BuilderPass1 extends Visitor {
         
         // now create a new class as a placeholder
         
-        metamodel.Class theClass = new metamodel.Class();
+        org.jdns.xtuml.metamodel.Class theClass = new org.jdns.xtuml.metamodel.Class();
        	String name = getIdentifier( node.jjtGetChild( 0 ));
 	String endName = getEndIdentifier( node.jjtGetChild( node.jjtGetNumChildren() - 1 ));
 	checkIdentity( name, endName, node.getLastToken() );
@@ -324,7 +357,7 @@ public class BuilderPass1 extends Visitor {
         
         // create the Attribure to be constructed by this visitor
         
-        metamodel.Class theClass = (metamodel.Class) data;
+        org.jdns.xtuml.metamodel.Class theClass = (org.jdns.xtuml.metamodel.Class) data;
         BaseAttribute attribute = new BaseAttribute();
         getMapper().add( node, attribute );
         attribute.setDomainClass( theClass );
@@ -346,7 +379,7 @@ public class BuilderPass1 extends Visitor {
         
         // create the Attribure to be constructed by this visitor
         
-        metamodel.Class theClass = (metamodel.Class) data;
+        org.jdns.xtuml.metamodel.Class theClass = (org.jdns.xtuml.metamodel.Class) data;
         ReferentialAttribute attribute = new ReferentialAttribute();
         getMapper().add( node, attribute );
         attribute.setDomainClass( theClass );
@@ -552,7 +585,7 @@ public class BuilderPass1 extends Visitor {
         
         // create the Identifier to be constructed by this visitor
         
-        metamodel.Class theClass = (metamodel.Class) data;
+        org.jdns.xtuml.metamodel.Class theClass = (org.jdns.xtuml.metamodel.Class) data;
         Identifier id = theClass.createNewIdentifier();
         
         getMapper().add( node, id );
@@ -617,7 +650,7 @@ public class BuilderPass1 extends Visitor {
 
 		Domain domain = association.getSubsystem().getDomain();
 		String name = node.getFirstToken().image;
-		metamodel.Class subjectClass = domain.getClass( name );
+		org.jdns.xtuml.metamodel.Class subjectClass = domain.getClass( name );
 		if ( null == subjectClass ) {
 			throw new LemException(
 			    "Class " + subjectClass + " does not exist.",
@@ -660,7 +693,7 @@ public class BuilderPass1 extends Visitor {
 
 		Domain domain = association.getSubsystem().getDomain();
 		String name = node.getFirstToken().image;
-		metamodel.Class objectClass = domain.getClass( name );
+		org.jdns.xtuml.metamodel.Class objectClass = domain.getClass( name );
 		if ( null == objectClass ) {
 			throw new LemException(
 			    "Class " + objectClass + " does not exist.",
@@ -759,13 +792,13 @@ public class BuilderPass1 extends Visitor {
      * Process an event declaration. An event declaration may be made in the context of a class
      * (public event) or in the context of a State Machine (private or self directed event).
      */
-    public Object visit(LEMEventDeclaration node, Object data) throws metamodel.LemException {
+    public Object visit(LEMEventDeclaration node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
-        metamodel.Class theClass = null;
+        org.jdns.xtuml.metamodel.Class theClass = null;
         StateMachine stateMachine = null;
         
-        if ( data instanceof metamodel.Class ) {
-            theClass = (metamodel.Class) data;
+        if ( data instanceof org.jdns.xtuml.metamodel.Class ) {
+            theClass = (org.jdns.xtuml.metamodel.Class) data;
         } else {
             stateMachine = (StateMachine) data;
             theClass = stateMachine.getDomainClass();
@@ -783,7 +816,7 @@ public class BuilderPass1 extends Visitor {
         
         // check constraints
         
-        if ( data instanceof metamodel.Class ) {
+        if ( data instanceof org.jdns.xtuml.metamodel.Class ) {
             if ( null != theClass.getEvent( event.getName() )) {
                 throw new LemException(
                         "Event " + event.getName() + " is already defined",
@@ -819,7 +852,7 @@ public class BuilderPass1 extends Visitor {
     /**
      * Create a signature for the current event
      */
-    public Object visit(LEMEventSignature node, Object data) throws metamodel.LemException {
+    public Object visit(LEMEventSignature node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
         EventSignature eventSignature = new EventSignature();
         getMapper().add( node, eventSignature );
@@ -836,9 +869,9 @@ public class BuilderPass1 extends Visitor {
     /**
      * Create a new state machine to capture class behaviour
      */
-    public Object visit(LEMBehaviour node, Object data) throws metamodel.LemException {
+    public Object visit(LEMBehaviour node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
-        metamodel.Class domainClass = (metamodel.Class) data;
+        org.jdns.xtuml.metamodel.Class domainClass = (org.jdns.xtuml.metamodel.Class) data;
         
         StateMachine stateMachine = new StateMachine();
         getMapper().add( node, stateMachine );
@@ -857,7 +890,7 @@ public class BuilderPass1 extends Visitor {
     /**
      * Process a state declaration
      */
-    public Object visit(LEMStateDeclaration node, Object data) throws metamodel.LemException {
+    public Object visit(LEMStateDeclaration node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
         State state = null;
         
@@ -900,7 +933,7 @@ public class BuilderPass1 extends Visitor {
         return data;
     }
     
-    public Object visit (LEMProcedure node, Object data) throws metamodel.LemException {
+    public Object visit (LEMProcedure node, Object data) throws org.jdns.xtuml.metamodel.LemException {
 	Procedure p = new Procedure();
 	getMapper().add(node, p);
 
@@ -912,7 +945,7 @@ public class BuilderPass1 extends Visitor {
     /**
      * Process a variable declaration. Temporary hack.
      */
-    public Object visit (LEMVariableDeclaration node, Object data) throws metamodel.LemException {
+    public Object visit (LEMVariableDeclaration node, Object data) throws org.jdns.xtuml.metamodel.LemException {
 	    /* Hack to keep LEMPrimitiveType running (see LEMPrimitiveType) */
 	    super.visit (node, node);
 
@@ -922,7 +955,7 @@ public class BuilderPass1 extends Visitor {
     /**
      * Create a signature for the current state
      */
-    public Object visit(LEMStateSignature node, Object data) throws metamodel.LemException {
+    public Object visit(LEMStateSignature node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
         StateSignature stateSignature = new StateSignature();
         
@@ -937,7 +970,7 @@ public class BuilderPass1 extends Visitor {
      * add it to the Signature. We much ensure that the name of the parameter
      * is unique with the signature
      */
-    public Object visit(LEMParameterDeclaration node, Object data) throws metamodel.LemException {
+    public Object visit(LEMParameterDeclaration node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
         Signature signature = (Signature) data;
         Parameter parameter = new Parameter();
@@ -968,7 +1001,7 @@ public class BuilderPass1 extends Visitor {
     /**
      * Process a enumeration list associate with a domain specific data type
      */
-    public Object visit(LEMEnumeratedList node, Object data) throws metamodel.LemException {
+    public Object visit(LEMEnumeratedList node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
         DomainSpecificDataType type = (DomainSpecificDataType) data;
         type.setCoreType( CoreDataType.findByName( "integer" ));
@@ -981,7 +1014,7 @@ public class BuilderPass1 extends Visitor {
     /**
      * Process a date type associate with a domain specific data type
      */
-    public Object visit(LEMDateTypeSpecification node, Object data) throws metamodel.LemException {
+    public Object visit(LEMDateTypeSpecification node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
         DomainSpecificDataType type = (DomainSpecificDataType) data;
         type.setCoreType( CoreDataType.findByName( "date" ));
@@ -994,7 +1027,7 @@ public class BuilderPass1 extends Visitor {
     /**
      * Process an SetType associate with a domain specific data type
      */
-    public Object visit(LEMSetTypeSpecification node, Object data) throws metamodel.LemException {
+    public Object visit(LEMSetTypeSpecification node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
         DomainSpecificDataType type = (DomainSpecificDataType) data;
         type.setCoreType( CoreDataType.findByName( "setf" ));
@@ -1006,7 +1039,7 @@ public class BuilderPass1 extends Visitor {
     /**
      * Process an ObjectReferenceType associate with a domain specific data type
      */
-    public Object visit(LEMObjectReferenceTypeSpecification node, Object data) throws metamodel.LemException {
+    public Object visit(LEMObjectReferenceTypeSpecification node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
         DomainSpecificDataType type = (DomainSpecificDataType) data;
         type.setCoreType( CoreDataType.findByName( "objref" ));
@@ -1018,7 +1051,7 @@ public class BuilderPass1 extends Visitor {
     /**
      * Process a NumericType associate with a domain specific data type
      */
-    public Object visit(LEMNumericTypeSpecification node, Object data) throws metamodel.LemException {
+    public Object visit(LEMNumericTypeSpecification node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
         DomainSpecificDataType type = (DomainSpecificDataType) data;
         type.setCoreType( CoreDataType.findByName( "numeric" ));
@@ -1031,7 +1064,7 @@ public class BuilderPass1 extends Visitor {
     /**
      * Process a string type associated with a domain specific data type
      */
-    public Object visit(LEMStringTypeSpecification node, Object data) throws metamodel.LemException {
+    public Object visit(LEMStringTypeSpecification node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
         DomainSpecificDataType type = (DomainSpecificDataType) data;
         type.setCoreType( CoreDataType.findByName( "string" ));
@@ -1044,7 +1077,7 @@ public class BuilderPass1 extends Visitor {
     /**
      * Process an arbitrary_id type associated with a domain specific data type
      */
-    public Object visit(LEMArbitraryIdTypeSpecification node, Object data) throws metamodel.LemException {
+    public Object visit(LEMArbitraryIdTypeSpecification node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
         DomainSpecificDataType type = (DomainSpecificDataType) data;
         type.setCoreType( CoreDataType.findByName( "arbitrary_id" ));
@@ -1058,7 +1091,7 @@ public class BuilderPass1 extends Visitor {
      * Add an enumeration member to a DomainSpecificDataType
      * Check to make sure the member does not already exist
      */
-    public Object visit(LEMEnumerationMember node, Object data) throws metamodel.LemException {
+    public Object visit(LEMEnumerationMember node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
         super.visit( node, data );
         
@@ -1080,7 +1113,7 @@ public class BuilderPass1 extends Visitor {
     /**
      * Process a length specification in a DomainSpecificDataType
      */
-    public Object visit(LEMLengthSpec node, Object data) throws metamodel.LemException {
+    public Object visit(LEMLengthSpec node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
         DomainSpecificDataType type = (DomainSpecificDataType) data;
         super.visit( node, data );
@@ -1105,7 +1138,7 @@ public class BuilderPass1 extends Visitor {
     /**
      * Process a pattern specification in a DomainSpecificDataType
      */
-    public Object visit(LEMPatternSpec node, Object data) throws metamodel.LemException {
+    public Object visit(LEMPatternSpec node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
         DomainSpecificDataType type = (DomainSpecificDataType) data;
         super.visit( node, data );
@@ -1120,7 +1153,7 @@ public class BuilderPass1 extends Visitor {
     /**
      * Process a units specification in a DomainSpecificDataType
      */
-    public Object visit(LEMUnitsSpec node, Object data) throws metamodel.LemException {
+    public Object visit(LEMUnitsSpec node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
         DomainSpecificDataType type = (DomainSpecificDataType) data;
         super.visit( node, data );
@@ -1135,7 +1168,7 @@ public class BuilderPass1 extends Visitor {
     /**
      * Process a precision specification in a DomainSpecificDataType
      */
-    public Object visit(LEMPrecisionSpec node, Object data) throws metamodel.LemException {
+    public Object visit(LEMPrecisionSpec node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
         DomainSpecificDataType type = (DomainSpecificDataType) data;
         super.visit( node, data );
@@ -1160,7 +1193,7 @@ public class BuilderPass1 extends Visitor {
     /**
      * Process a precision specification in a DomainSpecificDataType
      */
-    public Object visit(LEMRangeSpec node, Object data) throws metamodel.LemException {
+    public Object visit(LEMRangeSpec node, Object data) throws org.jdns.xtuml.metamodel.LemException {
         
         DomainSpecificDataType type = (DomainSpecificDataType) data;
         Range range = new Range();

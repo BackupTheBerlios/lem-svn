@@ -25,7 +25,7 @@ package verifier;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import metamodel.State;
+import org.jdns.xtuml.metamodel.State;
 import runtime.DomainContext;
 import runtime.Interpreter;
 import runtime.LemRuntimeException;
@@ -89,7 +89,7 @@ public class StateNode extends AbstractDescriptionNode {
 	 * @todo: remove the ability to execute an arbitrary procedure.
 	 * Program entry must only be through a scenario
 	 */
-        metamodel.Procedure p = this.state.getProcedure();
+        org.jdns.xtuml.metamodel.Procedure p = this.state.getProcedure();
         runtime.DomainContext d = new DomainContext();
         ConsoleLogger c = new ConsoleLogger(d);
 	/* Not executing in the context of an object! */

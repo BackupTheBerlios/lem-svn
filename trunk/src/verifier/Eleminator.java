@@ -40,8 +40,8 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
-import metamodel.LemException;
-import metamodel.Model;
+import org.jdns.xtuml.metamodel.LemException;
+import org.jdns.xtuml.metamodel.Model;
 import parser.ParseException;
 import tools.Lem;
 

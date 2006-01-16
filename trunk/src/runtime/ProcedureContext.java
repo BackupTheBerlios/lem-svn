@@ -21,8 +21,8 @@
 
 package runtime;
 
-import metamodel.EventSignature;
-import metamodel.Parameter;
+import org.jdns.xtuml.metamodel.EventSignature;
+import org.jdns.xtuml.metamodel.Parameter;
 
 import java.util.Iterator;
 

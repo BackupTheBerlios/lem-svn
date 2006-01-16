@@ -22,7 +22,19 @@
  */
 
 package verifier;
-import metamodel.*;
+import org.jdns.xtuml.metamodel.ActivePerspective;
+import org.jdns.xtuml.metamodel.Association;
+import org.jdns.xtuml.metamodel.AssociationRole;
+import org.jdns.xtuml.metamodel.Attribute;
+import org.jdns.xtuml.metamodel.Domain;
+import org.jdns.xtuml.metamodel.Identifier;
+import org.jdns.xtuml.metamodel.LemException;
+import org.jdns.xtuml.metamodel.Model;
+import org.jdns.xtuml.metamodel.ParticipatingClassRole;
+import org.jdns.xtuml.metamodel.PassivePerspective;
+import org.jdns.xtuml.metamodel.Perspective;
+import org.jdns.xtuml.metamodel.ReferentialAttribute;
+import org.jdns.xtuml.metamodel.Relationship;
 import parser.*;
 
 /**
@@ -102,7 +114,7 @@ public class BuilderPass3 extends Visitor {
             // get the details for the ActiveSubject class
             
             String name =  node.getFirstToken().image;
-            metamodel.Class subjectClass = domain.getClass( name );
+            org.jdns.xtuml.metamodel.Class subjectClass = domain.getClass( name );
             
             // make sure the named class is in the domain
             
@@ -116,7 +128,7 @@ public class BuilderPass3 extends Visitor {
             // check the the classes in the perspectives match
             
             PassivePerspective pp = association.getPassivePerspective();
-            metamodel.Class ppClass = pp.getAttachedClassRole().getParticipant();
+            org.jdns.xtuml.metamodel.Class ppClass = pp.getAttachedClassRole().getParticipant();
             if ( subjectClass != ppClass ) {
                 throw new LemException(
                 "Expecting '" + ppClass.getName() + "' as ActiveSubject in active perspective of association " + association.getName(),
@@ -151,7 +163,7 @@ public class BuilderPass3 extends Visitor {
             // get the details for the ActiveObject class
             
             String name =  node.getFirstToken().image;
-            metamodel.Class objectClass = domain.getClass( name );
+            org.jdns.xtuml.metamodel.Class objectClass = domain.getClass( name );
             
             // make sure the named class is in the domain
             
@@ -165,7 +177,7 @@ public class BuilderPass3 extends Visitor {
             // check the the classes in the perspectives match
             
             ActivePerspective ap = association.getActivePerspective();
-            metamodel.Class apClass = ap.getAttachedClassRole().getParticipant();
+            org.jdns.xtuml.metamodel.Class apClass = ap.getAttachedClassRole().getParticipant();
             if ( objectClass != apClass ) {
                 throw new LemException(
                 "Expecting '" + apClass.getName() + "' as ActiveObject in passive perspective of association " + association.getName(),
@@ -244,7 +256,7 @@ public class BuilderPass3 extends Visitor {
         
         // check that the class exists
         
-        metamodel.Class referencedClass = domain.getClass( remoteClassName );
+        org.jdns.xtuml.metamodel.Class referencedClass = domain.getClass( remoteClassName );
         if ( null == referencedClass ) {
             throw new LemException(
             "Class " + remoteClassName + " does not exist.",
@@ -371,7 +383,7 @@ public class BuilderPass3 extends Visitor {
         
         // make sure that this identifier is not duplicated in this class
         
-        metamodel.Class domainClass = id.getDomainClass();
+        org.jdns.xtuml.metamodel.Class domainClass = id.getDomainClass();
         
         
         Identifier dupId = domainClass.getFirstDuplicate( id );

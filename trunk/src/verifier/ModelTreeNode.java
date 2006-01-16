@@ -25,8 +25,8 @@ package verifier;
 
 import java.util.Iterator;
 import javax.swing.JPopupMenu;
-import metamodel.Domain;
-import metamodel.Model;
+import org.jdns.xtuml.metamodel.Domain;
+import org.jdns.xtuml.metamodel.Model;
 
 /**
  * Tree node appearing inside a ModelTreePanel. For graphically representing and

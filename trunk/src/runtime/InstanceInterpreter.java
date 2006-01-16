@@ -21,11 +21,14 @@
  */
 
 package runtime;
-import metamodel.*;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Collection;
 import java.util.HashMap;
+import org.jdns.xtuml.metamodel.NonDeletionState;
+import org.jdns.xtuml.metamodel.Procedure;
+import org.jdns.xtuml.metamodel.Scenario;
+import org.jdns.xtuml.metamodel.Transition;
 
 /**
  * This is the main InstanceInterpreter file.
@@ -62,8 +65,8 @@ public class InstanceInterpreter extends java.lang.Thread {
      *with the new state ( only if the new state is not a DeletionState ).
      */
     public boolean init() throws LemRuntimeException {
-        metamodel.Class c = instance.getInstanceClass() ;
-        metamodel.StateMachine m = c.getStateMachine() ;
+        org.jdns.xtuml.metamodel.Class c = instance.getInstanceClass() ;
+        org.jdns.xtuml.metamodel.StateMachine m = c.getStateMachine() ;
         int tCount = m.getInitialisingTransitionCount();
         
         if ( tCount == 0 )
@@ -90,7 +93,7 @@ public class InstanceInterpreter extends java.lang.Thread {
                     continue;
                 
                 if ( s.getEvent() == t.getEvent() ) {
-                    metamodel.State newState = t.getToState() ;
+                    org.jdns.xtuml.metamodel.State newState = t.getToState() ;
                     int id = instance.instanceInObject.getObjectId().intValue();
                     instance.currentState = newState ;
                     String to = instance.currentState.getName();
@@ -157,9 +160,9 @@ public class InstanceInterpreter extends java.lang.Thread {
      *DeletionState.
      **/
     private boolean advance() throws LemRuntimeException {
-        metamodel.Class c = instance.getInstanceClass() ;
-        metamodel.StateMachine m = c.getStateMachine() ;
-        metamodel.State currentState = instance.currentState ;
+        org.jdns.xtuml.metamodel.Class c = instance.getInstanceClass() ;
+        org.jdns.xtuml.metamodel.StateMachine m = c.getStateMachine() ;
+        org.jdns.xtuml.metamodel.State currentState = instance.currentState ;
         
         if ( m.getStateTransitionCount() == 0 )
             return false;
@@ -184,7 +187,7 @@ public class InstanceInterpreter extends java.lang.Thread {
             
             if ( s.getEvent() == t.getEvent()
             			&& t.getFromState() == currentState ) {
-                metamodel.State newState = t.getToState();
+                org.jdns.xtuml.metamodel.State newState = t.getToState();
                 int id = instance.instanceInObject.getObjectId().intValue();
                 String from = instance.currentState.getName();
                 String to = newState.getName();

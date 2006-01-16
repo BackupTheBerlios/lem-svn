@@ -61,12 +61,12 @@ public class SimpleNode implements Node {
   }
 
   /** Accept the visitor. **/
-  public Object jjtAccept(LemParserVisitor visitor, Object data) throws metamodel.LemException {
+  public Object jjtAccept(LemParserVisitor visitor, Object data) throws org.jdns.xtuml.metamodel.LemException {
     return visitor.visit(this, data);
   }
 
   /** Accept the visitor. **/
-  public Object childrenAccept(LemParserVisitor visitor, Object data) throws metamodel.LemException {
+  public Object childrenAccept(LemParserVisitor visitor, Object data) throws org.jdns.xtuml.metamodel.LemException {
     if (children != null) {
       for (int i = 0; i < children.length; ++i) {
         children[i].jjtAccept(visitor, data);

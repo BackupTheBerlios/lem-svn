@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import metamodel.LemException;
-import metamodel.Model;
+import org.jdns.xtuml.metamodel.LemException;
+import org.jdns.xtuml.metamodel.Model;
 import parser.ParseException;
 import tools.Lem;
 
@@ -54,11 +54,11 @@ public class ObjectTest extends junit.framework.TestCase {
         HashMap classes = m.getDomain("TestDomain").getClasses();
         HashMap parents = new HashMap();
         
-        metamodel.Class a = (metamodel.Class)classes.get( "A" );
-        metamodel.Class b = (metamodel.Class)classes.get( "B" );
-        metamodel.Class c = (metamodel.Class)classes.get( "C" );
-        metamodel.Class d = (metamodel.Class)classes.get( "D" );
-        metamodel.Class e = (metamodel.Class)classes.get( "E" );
+        org.jdns.xtuml.metamodel.Class a = (org.jdns.xtuml.metamodel.Class)classes.get( "A" );
+        org.jdns.xtuml.metamodel.Class b = (org.jdns.xtuml.metamodel.Class)classes.get( "B" );
+        org.jdns.xtuml.metamodel.Class c = (org.jdns.xtuml.metamodel.Class)classes.get( "C" );
+        org.jdns.xtuml.metamodel.Class d = (org.jdns.xtuml.metamodel.Class)classes.get( "D" );
+        org.jdns.xtuml.metamodel.Class e = (org.jdns.xtuml.metamodel.Class)classes.get( "E" );
         
         ArrayList classList = new ArrayList();
         classList.add( b );
@@ -100,15 +100,15 @@ public class ObjectTest extends junit.framework.TestCase {
         HashMap classes = m.getDomain("TestDomain").getClasses();
         HashMap parents = new HashMap();
         
-        metamodel.Class a = (metamodel.Class)classes.get( "A" );
-        metamodel.Class b = (metamodel.Class)classes.get( "B" );
-        metamodel.Class c = (metamodel.Class)classes.get( "C" );
-        metamodel.Class d = (metamodel.Class)classes.get( "D" );
-        metamodel.Class e = (metamodel.Class)classes.get( "E" );
-        metamodel.Class f = (metamodel.Class)classes.get( "F" );
-        metamodel.Class g = (metamodel.Class)classes.get( "G" );
-        metamodel.Class h = (metamodel.Class)classes.get( "H" );
-        metamodel.Class i = (metamodel.Class)classes.get( "I" );
+        org.jdns.xtuml.metamodel.Class a = (org.jdns.xtuml.metamodel.Class)classes.get( "A" );
+        org.jdns.xtuml.metamodel.Class b = (org.jdns.xtuml.metamodel.Class)classes.get( "B" );
+        org.jdns.xtuml.metamodel.Class c = (org.jdns.xtuml.metamodel.Class)classes.get( "C" );
+        org.jdns.xtuml.metamodel.Class d = (org.jdns.xtuml.metamodel.Class)classes.get( "D" );
+        org.jdns.xtuml.metamodel.Class e = (org.jdns.xtuml.metamodel.Class)classes.get( "E" );
+        org.jdns.xtuml.metamodel.Class f = (org.jdns.xtuml.metamodel.Class)classes.get( "F" );
+        org.jdns.xtuml.metamodel.Class g = (org.jdns.xtuml.metamodel.Class)classes.get( "G" );
+        org.jdns.xtuml.metamodel.Class h = (org.jdns.xtuml.metamodel.Class)classes.get( "H" );
+        org.jdns.xtuml.metamodel.Class i = (org.jdns.xtuml.metamodel.Class)classes.get( "I" );
         
         ArrayList classList = new ArrayList();
         classList.add( b );
@@ -138,15 +138,15 @@ public class ObjectTest extends junit.framework.TestCase {
         HashMap classes = m.getDomain("TestDomain").getClasses();
         HashMap parents = new HashMap();
         
-        metamodel.Class a = (metamodel.Class)classes.get( "A" );
-        metamodel.Class b = (metamodel.Class)classes.get( "B" );
-        metamodel.Class c = (metamodel.Class)classes.get( "C" );
-        metamodel.Class d = (metamodel.Class)classes.get( "D" );
-        metamodel.Class e = (metamodel.Class)classes.get( "E" );
-        metamodel.Class f = (metamodel.Class)classes.get( "F" );
-        metamodel.Class g = (metamodel.Class)classes.get( "G" );
-        metamodel.Class h = (metamodel.Class)classes.get( "H" );
-        metamodel.Class i = (metamodel.Class)classes.get( "I" );
+        org.jdns.xtuml.metamodel.Class a = (org.jdns.xtuml.metamodel.Class)classes.get( "A" );
+        org.jdns.xtuml.metamodel.Class b = (org.jdns.xtuml.metamodel.Class)classes.get( "B" );
+        org.jdns.xtuml.metamodel.Class c = (org.jdns.xtuml.metamodel.Class)classes.get( "C" );
+        org.jdns.xtuml.metamodel.Class d = (org.jdns.xtuml.metamodel.Class)classes.get( "D" );
+        org.jdns.xtuml.metamodel.Class e = (org.jdns.xtuml.metamodel.Class)classes.get( "E" );
+        org.jdns.xtuml.metamodel.Class f = (org.jdns.xtuml.metamodel.Class)classes.get( "F" );
+        org.jdns.xtuml.metamodel.Class g = (org.jdns.xtuml.metamodel.Class)classes.get( "G" );
+        org.jdns.xtuml.metamodel.Class h = (org.jdns.xtuml.metamodel.Class)classes.get( "H" );
+        org.jdns.xtuml.metamodel.Class i = (org.jdns.xtuml.metamodel.Class)classes.get( "I" );
         
         ArrayList classList = new ArrayList();
         

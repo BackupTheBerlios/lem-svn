@@ -10,6 +10,12 @@ package metamodel;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import org.jdns.xtuml.metamodel.AssignmentAction;
+import org.jdns.xtuml.metamodel.BinaryOperation;
+import org.jdns.xtuml.metamodel.Expression;
+import org.jdns.xtuml.metamodel.LemException;
+import org.jdns.xtuml.metamodel.Literal;
+import org.jdns.xtuml.metamodel.Model;
 import parser.ParseException;
 import tools.Lem;
 
