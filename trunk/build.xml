@@ -76,7 +76,7 @@
     outputdirectory="${src.dir}/org/jdns/xtuml/parser" />
 
     <exec executable="perl"
-      output="${src.dir}/verifier/Visitor.java">
+      output="${src.dir}/org/jdns/xtuml/verifier/Visitor.java">
       <arg line="${src.dir}/org/jdns/xtuml/util/generateVisitor.pl
         ${src.dir}/org/jdns/xtuml/parser/LemParserVisitor.java"/>
     </exec>
@@ -93,13 +93,13 @@
   
   <target name="compile" depends="prepare">
     <copy todir="${classes.dir}/verifier">
-        <fileset dir="${src.dir}/verifier/">
+	<fileset dir="${src.dir}/org/jdns/xtuml/verifier/">
             <include name="*.jpg"/>
             <include name="*.gif"/>
             <exclude name="eLEMinator.jpg"/>
         </fileset>
     </copy>
-    <copy file="${src.dir}/splash/eLEMinator.jpg" todir="${classes.dir}/splash"/>
+    <copy file="${src.dir}/org/jdns/xtuml/splash/eLEMinator.jpg" todir="${classes.dir}/splash"/>
     <depend srcdir="${src.dir}" destdir="${classes.dir}"
 	    cache="depcache" closure="yes"/>
     <javac srcdir="${src.dir}" destdir="${classes.dir}"
@@ -152,7 +152,7 @@
   </target>
   
   <target name="run" depends="compile">
-    <java classname="splash.Splasher" fork="true"
+    <java classname="org.jdns.xtuml.splash.Splasher" fork="true"
     classpathref="run.classpath"/>
   </target>
 
@@ -160,7 +160,7 @@
 	<fail message="You must specify the file to load" unless="modelFile"/>
 	<fail message="You must specify the domain name" unless="domainName"/>
     	<fail message="You must specify the scenario to run" unless="scenarioName"/>
-    	<java classname="verifier.Cmdline" fork="false"
+    	<java classname="org.jdns.xtuml.verifier.Cmdline" fork="false"
 		    classpathref="run.classpath">
 		    <arg line="${modelFile}"/>
 		    <arg line="${domainName}"/>
@@ -170,7 +170,7 @@
 
   <target name="runCompileOnly" depends="compile">
 	<fail message="You must specify the file to load (use -DmodelFile='path')" unless="modelFile"/>
-    	<java classname="verifier.Cmdline" fork="false"
+    	<java classname="org.jdns.xtuml.verifier.Cmdline" fork="false"
 		    classpathref="run.classpath">
 		    <arg line="${modelFile}"/>
     </java>
@@ -186,7 +186,7 @@
   </target>
   
   <target name="debug" depends="init">
-    <java classname="verifier.Eleminator" fork="true"
+    <java classname="org.jdns.xtuml.verifier.Eleminator" fork="true"
     classpathref="run.classpath">
       <jvmarg line="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=y" />
       <arg line="${lemSourceFile}" />

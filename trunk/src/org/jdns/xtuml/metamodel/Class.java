@@ -617,7 +617,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
 			for ( Iterator it = associations.values().iterator(); it.hasNext(); ) {
 				Association asso = (Association) it.next();
 				// if this association have not be printed
-				if (verifier.ClassWriter.getAssociationList().contains(asso)) {
+				if (org.jdns.xtuml.verifier.ClassWriter.getAssociationList().contains(asso)) {
 					// decide which side Multiplicity belongs to
 					if (this.name == asso.getPassivePerspective().
 							getAttachedClassRole().getParticipant().getName()) {
@@ -642,7 +642,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
 					if (asso.getAssociationClassRole()!=null)  {
 						list.add(asso);
 					}
-					verifier.ClassWriter.removeAssociation(asso);
+					org.jdns.xtuml.verifier.ClassWriter.removeAssociation(asso);
 				}
 			} //end for
 			
@@ -678,7 +678,7 @@ public class Class extends DomainElement implements SubsystemElement, DescribedE
 			// append  AssociationClass option
 			strBuf.append("/**\n");
 			// set color for this class
-			if (verifier.ClassWriter.getSelectedClassList().contains(associationClass))
+			if (org.jdns.xtuml.verifier.ClassWriter.getSelectedClassList().contains(associationClass))
 				strBuf.append(" *  @opt nodefillcolor \"#FFFF99\"\n");
 			// add name of the association that it belongs to
 			strBuf.append(" *  @tagvalue " + "Association " +  asso.getName() + "\n*/\n" );

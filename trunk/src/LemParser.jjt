@@ -15,7 +15,7 @@ PARSER_BEGIN(LemParser)
 package org.jdns.xtuml.parser;
 
 import org.jdns.xtuml.metamodel.*;
-import verifier.*;
+import org.jdns.xtuml.verifier.*;
 import java.io.*;
 
 
