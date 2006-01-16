@@ -18,6 +18,11 @@ import org.jdns.xtuml.metamodel.Model;
 import org.jdns.xtuml.metamodel.Procedure;
 import org.jdns.xtuml.metamodel.Action;
 import org.jdns.xtuml.metamodel.CreateAction;
+import org.jdns.xtuml.runtime.AssociationInstance;
+import org.jdns.xtuml.runtime.DomainContext;
+import org.jdns.xtuml.runtime.Instance;
+import org.jdns.xtuml.runtime.Interpreter;
+import org.jdns.xtuml.runtime.LemRuntimeException;
 import parser.ParseException;
 import tools.Lem;
 
@@ -183,7 +188,7 @@ public class InterpreterTest extends junit.framework.TestCase {
         Interpreter i = new Interpreter(null);
         
         try {
-            runtime.Object obj = i.executeCreateAction( create, c );
+            org.jdns.xtuml.runtime.Object obj = i.executeCreateAction( create, c );
 	    i = new Interpreter(obj);
 	    i.interpret(mainProc, c);
         } catch( LemRuntimeException e ) {
@@ -283,7 +288,7 @@ public class InterpreterTest extends junit.framework.TestCase {
         Interpreter i = new Interpreter(null);
         int k=0;
         try {
-            runtime.Object obj = i.executeCreateAction( create, c );
+            org.jdns.xtuml.runtime.Object obj = i.executeCreateAction( create, c );
 	    i = new Interpreter(obj);
 	    i.interpret(mainProc, c);
         } catch( LemRuntimeException e ) {
@@ -319,7 +324,7 @@ public class InterpreterTest extends junit.framework.TestCase {
         c = new DomainContext();
         i = new Interpreter(null);
         try {
-            runtime.Object obj = i.executeCreateAction( create, c );
+            org.jdns.xtuml.runtime.Object obj = i.executeCreateAction( create, c );
 	    i = new Interpreter(obj);
 	    i.interpret(mainProc, c);
         } catch( LemRuntimeException e ) {
@@ -363,7 +368,7 @@ public class InterpreterTest extends junit.framework.TestCase {
         Interpreter i = new Interpreter(null);
         int k=0;
         try {
-            runtime.Object obj = i.executeCreateAction( create, c );
+            org.jdns.xtuml.runtime.Object obj = i.executeCreateAction( create, c );
 	    i = new Interpreter(obj);
 	    i.interpret(mainProc, c);
         } catch( LemRuntimeException e ) {
@@ -384,7 +389,7 @@ public class InterpreterTest extends junit.framework.TestCase {
         .getState("unrelateTestClass2")
         .getProcedure();        
         try {
-            runtime.Object obj = i.executeCreateAction( create, c );
+            org.jdns.xtuml.runtime.Object obj = i.executeCreateAction( create, c );
 	    i = new Interpreter(obj);
 	    i.interpret(mainProc, c);
         } catch( LemRuntimeException e ) {

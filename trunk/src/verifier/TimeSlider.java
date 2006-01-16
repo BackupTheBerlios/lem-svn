@@ -23,8 +23,8 @@
 
 package verifier;
 
-import runtime.Debug;
-import runtime.DomainContext;
+import org.jdns.xtuml.runtime.Debug;
+import org.jdns.xtuml.runtime.DomainContext;
 
 /**
  * Creates the time slider and time display for an executing scenario.

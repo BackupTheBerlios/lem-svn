@@ -37,7 +37,7 @@ import javax.swing.tree.DefaultTreeModel;
 public class ContextTreePanel extends javax.swing.JPanel {
 	
 	/** the source context of this panel*/
-	private runtime.Context context ;
+	private org.jdns.xtuml.runtime.Context context ;
 	/** the description panel into which display the information
 	 *about objects, instances etc.*/
 	private JTextPane descriptionPane ;
@@ -54,7 +54,7 @@ public class ContextTreePanel extends javax.swing.JPanel {
          * @param frame The associated logger frame
          */
         
-	public ContextTreePanel(runtime.Context c,  LoggerFrame frame) {
+	public ContextTreePanel(org.jdns.xtuml.runtime.Context c,  LoggerFrame frame) {
 		initComponents();
 		this.context = c ;
 		this.frame = frame ;

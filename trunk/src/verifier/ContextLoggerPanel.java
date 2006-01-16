@@ -33,17 +33,17 @@ import java.util.LinkedList;
 import javax.swing.table.JTableHeader;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
-import runtime.LemAttributeChangeEvent;
-import runtime.LemAttributeReadEvent;
-import runtime.LemEventCancellationEvent;
-import runtime.LemEventGenerationEvent;
-import runtime.LemEventReceivedEvent;
-import runtime.LemObjectCreationEvent;
-import runtime.LemObjectDeletionEvent;
-import runtime.LemRelationshipCreationEvent;
-import runtime.LemRelationshipDeletionEvent;
-import runtime.LemSelectionEvent;
-import runtime.LemStateTransitionEvent;
+import org.jdns.xtuml.runtime.LemAttributeChangeEvent;
+import org.jdns.xtuml.runtime.LemAttributeReadEvent;
+import org.jdns.xtuml.runtime.LemEventCancellationEvent;
+import org.jdns.xtuml.runtime.LemEventGenerationEvent;
+import org.jdns.xtuml.runtime.LemEventReceivedEvent;
+import org.jdns.xtuml.runtime.LemObjectCreationEvent;
+import org.jdns.xtuml.runtime.LemObjectDeletionEvent;
+import org.jdns.xtuml.runtime.LemRelationshipCreationEvent;
+import org.jdns.xtuml.runtime.LemRelationshipDeletionEvent;
+import org.jdns.xtuml.runtime.LemSelectionEvent;
+import org.jdns.xtuml.runtime.LemStateTransitionEvent;
 import org.jdns.xtuml.metamodel.VariableReference;
 
 /**
@@ -57,7 +57,7 @@ import org.jdns.xtuml.metamodel.VariableReference;
  * @author Shokouhmand Torabi
  *
  */
-public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.LemEventListener {
+public class ContextLoggerPanel extends javax.swing.JPanel implements org.jdns.xtuml.runtime.LemEventListener {
     private int counter = 0;
     
     // Attribute set for defult text
@@ -76,7 +76,7 @@ public class ContextLoggerPanel extends javax.swing.JPanel implements runtime.Le
      * set column names from Model,  and set up text formatting for the text area.  
      * @param c The context in which the logger is operating
      */
-    public void init(runtime.Context c) {
+    public void init(org.jdns.xtuml.runtime.Context c) {
         
         c.addLemEventListener(this);
         // Set the data     model for the table

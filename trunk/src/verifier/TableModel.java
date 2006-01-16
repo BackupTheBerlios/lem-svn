@@ -41,17 +41,17 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
-import runtime.LemAttributeChangeEvent;
-import runtime.LemAttributeReadEvent;
-import runtime.LemEventCancellationEvent;
-import runtime.LemEventGenerationEvent;
-import runtime.LemEventReceivedEvent;
-import runtime.LemObjectCreationEvent;
-import runtime.LemObjectDeletionEvent;
-import runtime.LemRelationshipCreationEvent;
-import runtime.LemRelationshipDeletionEvent;
-import runtime.LemSelectionEvent;
-import runtime.LemStateTransitionEvent;
+import org.jdns.xtuml.runtime.LemAttributeChangeEvent;
+import org.jdns.xtuml.runtime.LemAttributeReadEvent;
+import org.jdns.xtuml.runtime.LemEventCancellationEvent;
+import org.jdns.xtuml.runtime.LemEventGenerationEvent;
+import org.jdns.xtuml.runtime.LemEventReceivedEvent;
+import org.jdns.xtuml.runtime.LemObjectCreationEvent;
+import org.jdns.xtuml.runtime.LemObjectDeletionEvent;
+import org.jdns.xtuml.runtime.LemRelationshipCreationEvent;
+import org.jdns.xtuml.runtime.LemRelationshipDeletionEvent;
+import org.jdns.xtuml.runtime.LemSelectionEvent;
+import org.jdns.xtuml.runtime.LemStateTransitionEvent;
 
 
 

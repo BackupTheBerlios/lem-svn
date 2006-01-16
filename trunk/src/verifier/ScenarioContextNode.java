@@ -25,8 +25,8 @@ package verifier;
 import java.util.Iterator;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
-import runtime.Context ;
-import runtime.DomainContext;
+import org.jdns.xtuml.runtime.Context ;
+import org.jdns.xtuml.runtime.DomainContext;
 
 
 /**
@@ -59,7 +59,7 @@ public class ScenarioContextNode extends AbstractDescriptionNode {
 		if ( i.hasNext() ) {
 			add( objectLevel ) ;
 			while( i.hasNext() ) {
-				objectLevel.add( new ObjectNode( (runtime.Object)i.next(), frame)) ;
+				objectLevel.add( new ObjectNode( (org.jdns.xtuml.runtime.Object)i.next(), frame)) ;
 			}
 		}		
 	}

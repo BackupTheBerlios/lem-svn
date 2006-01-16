@@ -25,7 +25,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import runtime.*;
+import org.jdns.xtuml.runtime.DomainContext;
+import org.jdns.xtuml.runtime.Interpreter;
+import org.jdns.xtuml.runtime.LemRuntimeException;
 
 import org.jdns.xtuml.metamodel.LemException;
 import org.jdns.xtuml.metamodel.Model;

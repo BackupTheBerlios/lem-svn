@@ -33,7 +33,7 @@ import org.jdns.xtuml.metamodel.Association;
 import org.jdns.xtuml.metamodel.Attribute;
 import org.jdns.xtuml.metamodel.State;
 import org.jdns.xtuml.metamodel.StateMachine;
-import runtime.Instance;
+import org.jdns.xtuml.runtime.Instance;
 
 /**
  * Tree node appearing appearing inside an ObjectNode. For graphically

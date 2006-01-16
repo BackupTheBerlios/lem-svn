@@ -10,8 +10,8 @@
  */
 package runtime;
 
-import runtime.ArbitraryIdVariable ;
-import runtime.LemRuntimeException ;
+import org.jdns.xtuml.runtime.ArbitraryIdVariable ;
+import org.jdns.xtuml.runtime.LemRuntimeException ;
 
 public class ArbitraryIdTest extends junit.framework.TestCase{
     

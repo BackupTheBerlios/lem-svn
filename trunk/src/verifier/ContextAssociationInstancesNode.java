@@ -24,7 +24,7 @@
 package verifier;
 
 import javax.swing.JPopupMenu;
-import runtime.AssociationInstance;
+import org.jdns.xtuml.runtime.AssociationInstance;
 
 /**
  * Tree node appearing appearing inside a ContextAssociationNode. For graphically

@@ -26,9 +26,9 @@ package verifier;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.jdns.xtuml.metamodel.State;
-import runtime.DomainContext;
-import runtime.Interpreter;
-import runtime.LemRuntimeException;
+import org.jdns.xtuml.runtime.DomainContext;
+import org.jdns.xtuml.runtime.Interpreter;
+import org.jdns.xtuml.runtime.LemRuntimeException;
 
 /**
  * Tree node appearing inside a StateMachineNode. For graphically representing
@@ -90,9 +90,9 @@ public class StateNode extends AbstractDescriptionNode {
 	 * Program entry must only be through a scenario
 	 */
         org.jdns.xtuml.metamodel.Procedure p = this.state.getProcedure();
-        runtime.DomainContext d = new DomainContext();
+        org.jdns.xtuml.runtime.DomainContext d = new DomainContext();
         ConsoleLogger c = new ConsoleLogger(d);
 	/* Not executing in the context of an object! */
-        runtime.Interpreter i = new Interpreter(null);
+        org.jdns.xtuml.runtime.Interpreter i = new Interpreter(null);
     }
 }

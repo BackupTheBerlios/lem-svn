@@ -32,8 +32,8 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.jdns.xtuml.metamodel.Event;
-import runtime.Instance;
-import runtime.Signal;
+import org.jdns.xtuml.runtime.Instance;
+import org.jdns.xtuml.runtime.Signal;
 
 /**
  * Creates a node for an object. Has methods: ObjectNode, to string,
@@ -43,14 +43,14 @@ import runtime.Signal;
 public class ObjectNode extends AbstractDescriptionNode {
 	
 	private LoggerFrame frame ;
-	private runtime.Object thisObject ;
+	private org.jdns.xtuml.runtime.Object thisObject ;
 	
 	/**
          * Creates a new instance of ObjectNode 
          * @param o The associated Object
          * @param frame The associated Logger Frame
          */
-	public ObjectNode(runtime.Object o, LoggerFrame frame) {
+	public ObjectNode(org.jdns.xtuml.runtime.Object o, LoggerFrame frame) {
 		this.frame = frame ;
 		this.thisObject = o ;
 		Iterator i = thisObject.getInstances().iterator() ;

@@ -27,9 +27,9 @@ import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.jdns.xtuml.metamodel.Scenario;
-import runtime.DomainContext;
-import runtime.Interpreter;
-import runtime.LemRuntimeException;
+import org.jdns.xtuml.runtime.DomainContext;
+import org.jdns.xtuml.runtime.Interpreter;
+import org.jdns.xtuml.runtime.LemRuntimeException;
 import javax.swing.JPanel ;
 /**
  *

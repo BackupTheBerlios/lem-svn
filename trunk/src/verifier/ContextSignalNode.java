@@ -24,8 +24,8 @@ package verifier;
 import java.util.Iterator;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
-import runtime.Signal;
-import runtime.Variable;
+import org.jdns.xtuml.runtime.Signal;
+import org.jdns.xtuml.runtime.Variable;
 
 /**
  * Tree node appearing appearing inside an ObjectNode. For graphically

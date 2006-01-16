@@ -24,15 +24,15 @@ package verifier;
 import java.util.Iterator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import runtime.LemAttributeChangeEvent;
-import runtime.LemRelationshipCreationEvent;
-import runtime.LemRelationshipDeletionEvent;
-import runtime.LemEventGenerationEvent;
-import runtime.LemAttributeReadEvent;
-import runtime.LemStateTransitionEvent;
-import runtime.LemEventReceivedEvent;
-import runtime.LemEventCancellationEvent;
-import runtime.LemSelectionEvent;
+import org.jdns.xtuml.runtime.LemAttributeChangeEvent;
+import org.jdns.xtuml.runtime.LemRelationshipCreationEvent;
+import org.jdns.xtuml.runtime.LemRelationshipDeletionEvent;
+import org.jdns.xtuml.runtime.LemEventGenerationEvent;
+import org.jdns.xtuml.runtime.LemAttributeReadEvent;
+import org.jdns.xtuml.runtime.LemStateTransitionEvent;
+import org.jdns.xtuml.runtime.LemEventReceivedEvent;
+import org.jdns.xtuml.runtime.LemEventCancellationEvent;
+import org.jdns.xtuml.runtime.LemSelectionEvent;
 import java.math.BigDecimal;
 
 /**
@@ -46,7 +46,7 @@ import java.math.BigDecimal;
  * @author  Donna Aloe
  * @see LemEventListener
  */
-public class ConsoleLogger implements runtime.LemEventListener {
+public class ConsoleLogger implements org.jdns.xtuml.runtime.LemEventListener {
     
     static Logger logger = Logger.getRootLogger();
     private int counter = 0;
@@ -58,7 +58,7 @@ public class ConsoleLogger implements runtime.LemEventListener {
      *
      * @param c The context in which the console logger is operating
      */
-    public ConsoleLogger(runtime.Context c) {
+    public ConsoleLogger(org.jdns.xtuml.runtime.Context c) {
         c.addLemEventListener(this);
         PropertyConfigurator.configure("eventLog.txt");
         
@@ -87,7 +87,7 @@ public class ConsoleLogger implements runtime.LemEventListener {
      * @param event The Object Creation event to be logged
      **/
     
-    public synchronized void objectCreated(runtime.LemObjectCreationEvent event) {
+    public synchronized void objectCreated(org.jdns.xtuml.runtime.LemObjectCreationEvent event) {
         String message = " OC \n";
         message = message + "Object id:"+event.getObjectId().intValue()+"\n";
         message = message + "ClassName=";
@@ -105,7 +105,7 @@ public class ConsoleLogger implements runtime.LemEventListener {
      *
      * @param event The Object Deletion event to be logged
      **/
-    public synchronized void objectDeleted(runtime.LemObjectDeletionEvent event) {
+    public synchronized void objectDeleted(org.jdns.xtuml.runtime.LemObjectDeletionEvent event) {
         // testing message
         String message = " OD \n";
         message = message + "Object id:"+event.getObjectId().intValue()+"\n";

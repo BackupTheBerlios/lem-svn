@@ -10,8 +10,7 @@
 
 package org.jdns.xtuml.metamodel;
 
-import runtime.* ; 
-import runtime.LemRuntimeException ;
+import org.jdns.xtuml.runtime.LemRuntimeException ;
 /**
  *
  * @author shuku
@@ -27,7 +26,7 @@ public class NullType extends CoreDataType {
      *Will throw a LemRuntimeException.
      *@throws LemRuntimeException
      */
-    public void setValue(runtime.Object v) throws LemRuntimeException {
+    public void setValue(org.jdns.xtuml.runtime.Object v) throws LemRuntimeException {
         throw new LemRuntimeException("NullType needs to be given a DataType before a value") ;
     }                
 }

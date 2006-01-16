@@ -8,8 +8,8 @@
 package test.runtime;
 
 import java.util.Date;
-import runtime.DateVariable ;
-import runtime.LemRuntimeException ;
+import org.jdns.xtuml.runtime.DateVariable ;
+import org.jdns.xtuml.runtime.LemRuntimeException ;
 /**
  *
  * @author shuku

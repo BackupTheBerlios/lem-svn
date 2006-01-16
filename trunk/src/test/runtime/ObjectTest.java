@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import org.jdns.xtuml.metamodel.LemException;
 import org.jdns.xtuml.metamodel.Model;
+import org.jdns.xtuml.runtime.LemRuntimeException;
+import org.jdns.xtuml.runtime.Object;
 import parser.ParseException;
 import tools.Lem;
 
@@ -63,10 +65,10 @@ public class ObjectTest extends junit.framework.TestCase {
         ArrayList classList = new ArrayList();
         classList.add( b );
         
-        assertEquals( "B is a valid object in and of itself", true, runtime.Object.validClasses( classList ));
+        assertEquals( "B is a valid object in and of itself", true, org.jdns.xtuml.runtime.Object.validClasses( classList ));
         
         classList.add( e );
-        assertEquals( "B,E participate in the same hierarchy", false, runtime.Object.validClasses( classList ));
+        assertEquals( "B,E participate in the same hierarchy", false, org.jdns.xtuml.runtime.Object.validClasses( classList ));
         
         classList.add( a );
         assertEquals( "A is abstract", true, a.isAbstract() );
@@ -75,7 +77,7 @@ public class ObjectTest extends junit.framework.TestCase {
         classList.add( b );
         classList.add( d );
         classList.add( e );
-        assertEquals( "B, D and E participate in the same hierarchy", false, runtime.Object.validClasses( classList ));
+        assertEquals( "B, D and E participate in the same hierarchy", false, org.jdns.xtuml.runtime.Object.validClasses( classList ));
     }
     
     /**
@@ -112,11 +114,11 @@ public class ObjectTest extends junit.framework.TestCase {
         
         ArrayList classList = new ArrayList();
         classList.add( b );
-        assertEquals( "B is a valid object in and of itself", true, runtime.Object.validClasses( classList ));
+        assertEquals( "B is a valid object in and of itself", true, org.jdns.xtuml.runtime.Object.validClasses( classList ));
         classList.add( h );
-        assertEquals( "B,H is a valid object in and of itself", true, runtime.Object.validClasses( classList ));
+        assertEquals( "B,H is a valid object in and of itself", true, org.jdns.xtuml.runtime.Object.validClasses( classList ));
         classList.add( f );
-        assertEquals( "F,H participate in the same hierarchy", false, runtime.Object.validClasses( classList ));
+        assertEquals( "F,H participate in the same hierarchy", false, org.jdns.xtuml.runtime.Object.validClasses( classList ));
     }
     
     public void testInstantiate() {
@@ -153,14 +155,14 @@ public class ObjectTest extends junit.framework.TestCase {
         /** Test instantiating b */
         classList.add( b );
         try {
-            runtime.Object o = new Object( classList );
+            org.jdns.xtuml.runtime.Object o = new Object( classList );
             Collection instances = o.getInstances();
             
             assertEquals( "Should be two instances", 2, instances.size() );
             Iterator it = instances.iterator();
             
-            assertEquals( "The first instance should be of type 'A'", a, ((runtime.Instance)it.next()).getInstanceClass() );
-            assertEquals( "The second instance should be of type 'B'", b, ((runtime.Instance)it.next()).getInstanceClass() );
+            assertEquals( "The first instance should be of type 'A'", a, ((org.jdns.xtuml.runtime.Instance)it.next()).getInstanceClass() );
+            assertEquals( "The second instance should be of type 'B'", b, ((org.jdns.xtuml.runtime.Instance)it.next()).getInstanceClass() );
             
         } catch( LemRuntimeException ex ) {
             fail( "Failed to instantiate B: " + ex.getMessage() );
@@ -172,7 +174,7 @@ public class ObjectTest extends junit.framework.TestCase {
         classList.add( i );
         classList.add( d );
         try {
-            runtime.Object o = new Object( classList );
+            org.jdns.xtuml.runtime.Object o = new Object( classList );
             Collection instances = o.getInstances();
             
             assertEquals( "Should be 5 instances", 5, instances.size() );

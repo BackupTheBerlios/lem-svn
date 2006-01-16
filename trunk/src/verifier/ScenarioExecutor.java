@@ -26,9 +26,9 @@ package verifier;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import org.jdns.xtuml.metamodel.Scenario;
-import runtime.DomainContext;
-import runtime.Interpreter;
-import runtime.LemRuntimeException;
+import org.jdns.xtuml.runtime.DomainContext;
+import org.jdns.xtuml.runtime.Interpreter;
+import org.jdns.xtuml.runtime.LemRuntimeException;
 
 /**
  * Displays an executing scenario on the GUI.

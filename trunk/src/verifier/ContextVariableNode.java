@@ -25,9 +25,9 @@ package verifier;
 
 import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
-import runtime.ObjectReferenceVariable;
+import org.jdns.xtuml.runtime.ObjectReferenceVariable;
 
-import runtime.Variable;
+import org.jdns.xtuml.runtime.Variable;
 
 /**
  * Tree node appearing appearing inside an ContextSignalNode. For graphically
@@ -58,7 +58,7 @@ public class ContextVariableNode extends AbstractDescriptionNode {
 	public String toString() {
             if( thisVariable instanceof ObjectReferenceVariable)
             {
-		return thisVariable.getType() + " : " + ((runtime.Object)thisVariable.getValue()).getObjectId();
+		return thisVariable.getType() + " : " + ((org.jdns.xtuml.runtime.Object)thisVariable.getValue()).getObjectId();
             }
             else{
                 return thisVariable.getType() + " : " + thisVariable.getValue().toString();

@@ -31,9 +31,9 @@ import javax.swing.JPopupMenu;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import org.jdns.xtuml.metamodel.Attribute;
-import runtime.Instance ;
-import runtime.Variable;
-import runtime.VariableFactory;
+import org.jdns.xtuml.runtime.Instance ;
+import org.jdns.xtuml.runtime.Variable;
+import org.jdns.xtuml.runtime.VariableFactory;
 
 /**
  * Tree node appearing appearing inside a ClassNode. For graphically

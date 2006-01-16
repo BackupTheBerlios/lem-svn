@@ -28,10 +28,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import org.jdns.xtuml.metamodel.Event ;
-import runtime.DelayedSignal;
-import runtime.LemRuntimeException;
-import runtime.Object ;
-import runtime.Signal;
+import org.jdns.xtuml.runtime.DelayedSignal;
+import org.jdns.xtuml.runtime.LemRuntimeException;
+import org.jdns.xtuml.runtime.Object ;
+import org.jdns.xtuml.runtime.Signal;
 
 
 /**

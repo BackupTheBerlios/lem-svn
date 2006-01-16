@@ -9,7 +9,10 @@ package runtime;
 
 import org.jdns.xtuml.metamodel.StringType;
 import org.jdns.xtuml.metamodel.DataType;
-import runtime.VariableFactory;
+import org.jdns.xtuml.runtime.Context;
+import org.jdns.xtuml.runtime.LemRuntimeException;
+import org.jdns.xtuml.runtime.Variable;
+import org.jdns.xtuml.runtime.VariableFactory;
 
 /**
  *

@@ -27,8 +27,8 @@ import java.util.Iterator;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.jdns.xtuml.metamodel.Association;
-import runtime.AssociationInstance;
-import runtime.Instance;
+import org.jdns.xtuml.runtime.AssociationInstance;
+import org.jdns.xtuml.runtime.Instance;
 
 /**
  * Tree node appearing appearing inside an InstanceNode. For graphically

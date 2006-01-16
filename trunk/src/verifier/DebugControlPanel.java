@@ -24,7 +24,7 @@
 package verifier;
 
 import org.jdns.xtuml.metamodel.Scenario;
-import runtime.DomainContext;
+import org.jdns.xtuml.runtime.DomainContext;
 
 /**
  * Displays and contains the play, stop and pause buttons, time slider and lem time box 

@@ -12,9 +12,9 @@ import org.jdns.xtuml.metamodel.CreateAction;
 import org.jdns.xtuml.metamodel.Procedure;
 import org.jdns.xtuml.metamodel.VariableReference;
 import org.jdns.xtuml.metamodel.Class;
-import runtime.DomainContext;
-import runtime.LemRuntimeException;
-import runtime.Interpreter;
+import org.jdns.xtuml.runtime.DomainContext;
+import org.jdns.xtuml.runtime.LemRuntimeException;
+import org.jdns.xtuml.runtime.Interpreter;
 import javax.swing.JFrame;
 /**
  *

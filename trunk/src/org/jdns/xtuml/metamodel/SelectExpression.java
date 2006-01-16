@@ -21,7 +21,7 @@
 
 package org.jdns.xtuml.metamodel;
 
-import runtime.SetVariable;
+import org.jdns.xtuml.runtime.SetVariable;
 
 /**
  *
