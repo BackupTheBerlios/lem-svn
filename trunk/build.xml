@@ -32,7 +32,7 @@
   <target name="init">
     <uptodate property="build.jjtUptodate"
       srcfile="${src.dir}/LemParser.jjt"
-      targetfile="${src.dir}/parser/.timestamp" />
+      targetfile="${src.dir}/org/jdns/xtuml/parser/.timestamp" />
   </target>
   
   <target name="prepare" depends="generate">
@@ -40,10 +40,10 @@
   </target>
 
   <target name="cleanjjt_maybe" depends="init" unless="build.jjtUptodate">
-    <delete file="${src.dir}/parser/.timestamp" />
+   <delete file="${src.dir}/org/jdns/xtuml/parser/.timestamp" />
     <delete file="${src.dir}/LemParser.jj" />
     <delete>
-      <fileset dir="${src.dir}/parser">
+	<fileset dir="${src.dir}/org/jdns/xtuml/parser">
         <include name="*.*" />
         <exclude name="LemNode.java" />
         <exclude name="SimpleNode.java" />
@@ -54,10 +54,10 @@
 
   <!-- cleanjjt should be set jjtUptodate to false, call cleanjjt_maybe -->
   <target name="cleanjjt">
-    <delete file="${src.dir}/parser/.timestamp" />
+    <delete file="${src.dir}/org/jdns/xtuml/parser/.timestamp" />
     <delete file="${src.dir}/LemParser.jj" />
     <delete>
-      <fileset dir="${src.dir}/parser">
+      <fileset dir="${src.dir}/org/jdns/xtuml/parser">
         <include name="*.*" />
         <exclude name="LemNode.java" />
         <exclude name="SimpleNode.java" />
@@ -69,16 +69,16 @@
   <target name="generate" depends="init,cleanjjt_maybe" unless="build.jjtUptodate">
     <jjtree target="${src.dir}/LemParser.jjt"
     javacchome="${javacc.home}"
-    outputdirectory="${src.dir}/parser" />
+    outputdirectory="${src.dir}/org/jdns/xtuml/parser" />
 
-    <javacc target="${src.dir}/parser/LemParser.jj"
+    <javacc target="${src.dir}/org/jdns/xtuml/parser/LemParser.jj"
     javacchome="${javacc.home}"
-    outputdirectory="${src.dir}/parser" />
+    outputdirectory="${src.dir}/org/jdns/xtuml/parser" />
 
     <exec executable="perl"
       output="${src.dir}/verifier/Visitor.java">
       <arg line="${src.dir}/org/jdns/xtuml/util/generateVisitor.pl
-      ${src.dir}/parser/LemParserVisitor.java"/>
+        ${src.dir}/org/jdns/xtuml/parser/LemParserVisitor.java"/>
     </exec>
 
     <touch file="${src.dir}/parser/.timestamp" />

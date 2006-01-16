@@ -16,7 +16,7 @@
  */
 
 package verifier;
-import parser.*;
+import org.jdns.xtuml.parser.*;
 /**
  * A generic visitor for the LemParser
  */

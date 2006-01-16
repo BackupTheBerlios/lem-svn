@@ -4,9 +4,7 @@
 
 package runtime;
 
-import parser.Token;
-import java.util.*;
-import java.io.*;
+import org.jdns.xtuml.parser.Token;
 
 /**
  * A general LEM runtime exception. It is expected that instances of this class

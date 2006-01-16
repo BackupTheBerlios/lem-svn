@@ -6,13 +6,16 @@
 
 package tools;
 
+import com.sun.java_cup.internal.parser;
 import org.jdns.xtuml.metamodel.LemException;
 import org.jdns.xtuml.metamodel.Model;
 import org.jdns.xtuml.util.SourceBuffer;
-import verifier.*;
-import parser.*;
 import java.io.*;
 import java.net.URL;
+import org.jdns.xtuml.parser.LEMModelDeclaration;
+import org.jdns.xtuml.parser.LemParser;
+import org.jdns.xtuml.parser.ParseException;
+import org.jdns.xtuml.parser.Token;
 
 
 /**
@@ -96,7 +99,7 @@ public class Lem {
 
             System.err.println("Oops! ... got " + e.getClass().getName() );
             
-            parser.Token token = e.getToken();
+            Token token = e.getToken();
             printSourceLine( token );
             System.err.println(e.getMessage());
             System.err.println( e.getExplanation() );
@@ -337,7 +340,7 @@ public class Lem {
      */
     public static String getRevision() {
         
-        String revision = parser.LemParser.getRevision();
+        String revision = LemParser.getRevision();
         String [] substrings = revision.split( " " );
         return( substrings[1] );
     }

@@ -111,7 +111,7 @@ public class LinkedPriorityQueue extends LinkedList {
 	 * @return the smallest or largest element, depending on the queue type,
 	 * or <code>null</code> if the list is empty
 	 */
-	public Comparable pop() {
+	public Object pop() {
 		if( isEmpty() ) 
 			return null;
 		return (Comparable)removeFirst();

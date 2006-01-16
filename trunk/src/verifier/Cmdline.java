@@ -24,23 +24,15 @@ package verifier;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.URL;
-import java.util.Vector;
 import runtime.*;
 
 import org.jdns.xtuml.metamodel.LemException;
 import org.jdns.xtuml.metamodel.Model;
 import org.jdns.xtuml.metamodel.Scenario;
+import org.jdns.xtuml.parser.ParseException;
 
-import parser.ParseException;
 import tools.Lem;
-
-import java.io.*;
-
 
 /**
  * Allows the user to load a LEM model from the command line, has methods: Cmdline 

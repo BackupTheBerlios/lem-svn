@@ -26,12 +26,15 @@
  */
 
 package org.jdns.xtuml.metamodel;
+
+import org.jdns.xtuml.parser.ParseException;
+
 /**
  * A general xtUML exception
  *
  * @author  smr
  */
-public class XtUmlException extends parser.ParseException {
+public class XtUmlException extends ParseException {
     
     /**
      * Creates a new instance of <code>XtUmlException</code> without detail message.

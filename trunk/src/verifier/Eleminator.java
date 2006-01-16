@@ -42,7 +42,6 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import org.jdns.xtuml.metamodel.LemException;
 import org.jdns.xtuml.metamodel.Model;
-import parser.ParseException;
 import tools.Lem;
 
 import java.io.*;
@@ -50,6 +49,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.*;
+import org.jdns.xtuml.parser.ParseException;
 
 
 

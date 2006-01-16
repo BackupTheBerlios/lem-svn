@@ -21,7 +21,6 @@ import org.jdns.xtuml.metamodel.NumericType;
 import org.jdns.xtuml.metamodel.Relationship;
 import org.jdns.xtuml.metamodel.StringType;
 import tools.*;
-import parser.*;
 import java.util.*;
 import java.io.*;
 

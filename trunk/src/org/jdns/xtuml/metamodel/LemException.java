@@ -27,9 +27,8 @@
 
 package org.jdns.xtuml.metamodel;
 
-import parser.Token;
 import java.util.*;
-import java.io.*;
+import org.jdns.xtuml.parser.Token;
 
 /**
  * A general LEM exception
@@ -91,7 +90,7 @@ public class LemException extends Exception  {
      *
      * @return the Token that generated the erro
      */
-    public parser.Token getToken() {
+    public Token getToken() {
         return token;
     }
     

@@ -35,7 +35,15 @@ import org.jdns.xtuml.metamodel.PassivePerspective;
 import org.jdns.xtuml.metamodel.Perspective;
 import org.jdns.xtuml.metamodel.ReferentialAttribute;
 import org.jdns.xtuml.metamodel.Relationship;
-import parser.*;
+import org.jdns.xtuml.parser.LEMActiveObject;
+import org.jdns.xtuml.parser.LEMActivePerspective;
+import org.jdns.xtuml.parser.LEMActiveSubject;
+import org.jdns.xtuml.parser.LEMAttributeReference;
+import org.jdns.xtuml.parser.LEMIdentifierDeclaration;
+import org.jdns.xtuml.parser.LEMModelDeclaration;
+import org.jdns.xtuml.parser.LEMPassivePerspective;
+import org.jdns.xtuml.parser.LEMReferentialAttribute;
+import org.jdns.xtuml.parser.Token;
 
 /**
  * The third (and final) pass of the parse tree resolves remaining references

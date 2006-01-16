@@ -10,8 +10,7 @@ import org.jdns.xtuml.metamodel.Attribute;
 import org.jdns.xtuml.metamodel.Domain;
 import org.jdns.xtuml.metamodel.Model;
 import tools.*;
-import parser.*;
-import metamodel.*;
+*;
 import java.util.*;
 import java.io.*;
 

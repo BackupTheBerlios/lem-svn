@@ -24,7 +24,7 @@
 package verifier;
 
 import java.util.*;
-import parser.*;
+import org.jdns.xtuml.parser.SimpleNode;
 
 /**
  * Provides a map between SimpleNodes and Metamodel objects. 

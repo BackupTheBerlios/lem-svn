@@ -5,14 +5,14 @@ options {
     MULTI = true;
     NODE_USES_PARSER=true;
 	NODE_PREFIX = "LEM";
-	NODE_PACKAGE = "parser";
+	NODE_PACKAGE = "org.jdns.xtuml.parser";
     VISITOR_EXCEPTION = "org.jdns.xtuml.metamodel.LemException";
 //    DEBUG_PARSER           = true;
 //    DEBUG_TOKEN_MANAGER    = true;
 }
 
 PARSER_BEGIN(LemParser)
-package parser;
+package org.jdns.xtuml.parser;
 
 import org.jdns.xtuml.metamodel.*;
 import verifier.*;
