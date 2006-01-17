@@ -87,10 +87,8 @@ public class LemParser {
      * Return a parsed model based on the LEM input stream supplied to the constructor
      *
      * @return the model as an instatiated graph of metamodel object instances
-     * @throws Throwable in the event of an error. A ParseException is thrown
-     * if parsing fails, a LemException is thrown if the model fails is semantic
-     * checking fails. Any Throwable may be thrown in the event of a program bug (this
-     * is a "work in progress" after all!)
+     * @throws ParseException in the event of a parse error 
+     * @throws LemException if the model fails semantic checks
      */
      public Model parse() throws ParseException, LemException {
 
