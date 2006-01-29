@@ -1,0 +1,116 @@
+// Model of a chess game
+//
+// epsf{./model.eps}
+//==================================================================================
+
+model XtumlModel is "a collection of domains and bridges representing a system.
+					 The domains and bridges in a model each subscribe to the
+					 semantic of Executable Translatable UML as described by
+					 XTUML meta model."
+					 
+   domain XtumlMetaModel is "concerned with all the elements of the XTUML
+   							language, their syndax and semantics"
+
+
+		subsystem HighLevelStructure is "concerned with the overall structure of
+										an XTUML model"
+
+
+		class Model is 
+			"a complete description of a system capturing its static and dynamic
+			requirments."
+			
+
+			attribute name  
+				"the name of the system represented by the Model" is string;
+
+			attribute purpose
+				"the purpose of the modelled system" is string;
+
+			identifier is name ;
+
+		end Model;
+
+		class Domain is 
+			"an autonomous, real, hypothetical, or abstract world
+			inhabited by a set of conceptual entities that behave according to
+			characteristic rules and policies.
+
+			A domain encapsulate subject matter into a cohesive set that
+			characterises the domain and which are unique to the domain. Each i
+			domain is authonomous of other domains. The conceptual entities of
+			one domain does not require the existence of conceptual entities 
+			in another domain.
+
+			For a given system, we first identify the several domains that make
+			up the system as a whole. Generally, systems comprise domains such
+			as an appication (e.g. a bookstore), some implementation
+			technologies (e.g. Java, HTML, XML and a relational database) and
+			some intermediate abstractions (e.g. a Web GUI, messaging and
+			workfolw).
+
+			We then understand and model the application and intermediate
+			abstractions using executable UML and apply various implementation
+			technologies to realise the abstractions in the applicatoin and
+			intermediate domains."
+
+			attribute name  
+				"the name of the domain" is string;
+
+			attribute mission
+				"the purpose or goal of the domain. The mission statement
+				clearly defines the subject matter of the domain and draws clear
+				boundaries for the domain allowing it to be easily distinguished
+				from the subject matter of another domain."
+
+			identifier is name ;
+
+		end Domain;
+
+		// associations
+
+		association R1 is 
+			"the notion that an XTUML model is composed of, in part, a
+			collection of domains representing independent subject matter that
+			are required to satisify the broad requirements of the system being
+			specified."
+			
+			Model "separates subject matter into" 0..* Domain;
+			Domain "contributes subject matter to" 0..* Model;
+
+			class DomainUsedInModel is
+				"a representation of a single domain being used in a single
+				model. Domains are autonomous collections of subject matter.
+				They can be reused by many models. The usage of a single domain
+				by one model is represented by an instance of this class."
+			end DomainUsedInModel;
+		end R1;
+
+		association R2 is 
+			"the notion that an XTUML model is composed of, in part, a
+			collection of relationships between domains. Each relationship
+			between a pair of domains is called a bridge."
+			
+			Domian "serves, as client" 0..* Domain;
+			Domian "uses, as server" 0..* Domain;
+
+			class Bridge is
+				"a dependency between two domains. One domain (the 'client'
+				domain) specifies assumptions concerning concepts and services
+				that are to be provided by another domain (the 'server' or
+				'service' domain).
+
+				A bridge is a specification of how the requirements expressed in
+				the client domain are to be serviced by concepts expressed in
+				the service domain."
+
+				referential attribute clientName is R2."serves, as client".name;
+				referential attribute serverName is R2."uses, as server".name;
+
+				identifier is clientName and serverName;
+			end Bridge;
+		end R2;
+
+	   end HighLevelStructure;
+   end XtumlMetaModel;
+end XtumlModel;
