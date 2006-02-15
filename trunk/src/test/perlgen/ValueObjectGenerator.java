@@ -9,8 +9,8 @@ package test.perlgen;
 import org.jdns.xtuml.metamodel.Attribute;
 import org.jdns.xtuml.metamodel.Domain;
 import org.jdns.xtuml.metamodel.Model;
+import org.jdns.xtuml.tools.Lem;
 
-*;
 import java.util.*;
 import java.io.*;
 
@@ -92,12 +92,12 @@ public class ValueObjectGenerator {
 	 */
 	private static void listAttributes( org.jdns.xtuml.metamodel.Class theClass ) {
 
-		HashMap attributes = theClass.getAllAttributes();
+		Collection attributes = theClass.getAllAttributes();
 
 		System.out.println( "Class is " + theClass.getName() );
                
                 
-		for ( Iterator it = attributes.values().iterator(); it.hasNext(); ) {
+		for ( Iterator it = attributes.iterator(); it.hasNext(); ) {
 			Attribute attribute = (Attribute) it.next();
 			System.out.println( "  attribute: " + attribute.getName() );
 		}
