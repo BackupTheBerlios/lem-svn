@@ -1,0 +1,2 @@
+lem.st		syntax highlighting specification for enscript. Put in /usr/share/enscript/hl
+lem.vim		syntax highlighting specification for vim. Put in the syntax/ directory in .vim directory 
