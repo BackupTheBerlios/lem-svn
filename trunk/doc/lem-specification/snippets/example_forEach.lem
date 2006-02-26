@@ -1,0 +1,9 @@
+set products;
+
+for each p in products {
+	if (p.numberInStock = 0) {
+		/* ... some action ... */
+	} else {
+		delete p;
+	}
+}

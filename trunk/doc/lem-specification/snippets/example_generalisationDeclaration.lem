@@ -1,0 +1,7 @@
+generalisation R1 is
+	Product is InStockProduct or OutOfStockProduct;
+end R1;
+
+generalisation R2 is "Specialisation for Products in Bookstore"
+	Product is BookProduct, VideoProduct or SoftwareProduct;
+end R2;

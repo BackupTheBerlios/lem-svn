@@ -1,0 +1,4 @@
+\begin{rail}
+SubSystemDeclaration : 'subsystem' Identifier 'is' Description ? SubSystemBody \\
+EndIdentifier ';' 
+\end{rail}

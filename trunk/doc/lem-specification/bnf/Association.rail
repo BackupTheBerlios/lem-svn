@@ -1,0 +1,3 @@
+\begin{rail}
+Association : 'association' Identifier 'is' Description ? AssociationBody \\ EndIdentifier ';'
+\end{rail}

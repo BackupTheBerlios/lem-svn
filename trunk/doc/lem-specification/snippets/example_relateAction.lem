@@ -1,0 +1,8 @@
+objref newBook;
+objref newPublisher;
+
+newBook := /* ... */;
+newPublisher := /* ... */;
+
+relate newBook to newPublisher across R1;
+relate newBook to newPublisher across R1."produces and markets";

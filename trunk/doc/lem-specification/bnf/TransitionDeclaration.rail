@@ -1,0 +1,3 @@
+\begin{rail}
+TransitionDeclaration : 'on' Identifier Description ? 'transition' 'from' \\ ( 'creation' 'state'  | Identifier  ) 'to' Identifier ';' 
+\end{rail}

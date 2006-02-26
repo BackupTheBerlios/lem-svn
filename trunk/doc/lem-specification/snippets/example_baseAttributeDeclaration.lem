@@ -1,0 +1,5 @@
+attribute productName "the name of this product" is string;
+
+attribute senderAddress "the address of sender" is address;
+
+attribute marks is numeric := 100.0;

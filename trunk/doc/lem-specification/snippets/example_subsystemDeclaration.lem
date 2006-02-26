@@ -1,0 +1,9 @@
+domain Cooking is "pleasurable and rewarding"
+	subsystem MicrowaveOven is "the quickest way to cook a pie"
+		<<SubsystemBody>>
+	end MicrowaveOven;
+	
+	subsystem ConventionalOven is "the baker best friend"
+		<<SubsystemBody>>
+	end ConventionalOven;		
+end Cooking;

@@ -1,0 +1,3 @@
+objref myObject; 
+
+myObject := create Author;

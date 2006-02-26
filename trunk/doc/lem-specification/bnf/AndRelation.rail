@@ -1,0 +1,3 @@
+\begin{rail}
+AndRelation : Relation ( LogicalAnd Relation  * )  
+\end{rail}

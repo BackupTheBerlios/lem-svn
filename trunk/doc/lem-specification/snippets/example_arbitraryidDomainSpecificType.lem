@@ -1,0 +1,1 @@
+type key "a unique key to identify me" is arbitrary_id;

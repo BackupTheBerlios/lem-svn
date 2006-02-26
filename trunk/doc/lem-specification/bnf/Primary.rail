@@ -1,0 +1,3 @@
+\begin{rail}
+Primary :  ( Literal  | VariableReference  | ParenthesizedPrimary  | ObjectCreation  | SelectStatement  ) 
+\end{rail}

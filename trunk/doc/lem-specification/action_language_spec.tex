@@ -1,0 +1,593 @@
+\chapter{LEM action language}
+\label{chap:actionLanguage}
+
+\section{Introduction}
+
+This chapter describes the LEM action language constructs available to the modeller.
+Example LEM code is included to illustrate important syntactical structures.
+
+The ``official'' LEM grammar is a work in progress. An automatically generated
+BNF version is provided on the LEM homepage:
+\href{http://xtuml.jdns.org/LemParser.html}{http://xtuml.jdns.org/LemParser.html}.
+
+\section{Expressions}
+
+LEM provides the user with a versatile expression language for the purposes of
+describing relationships between values. Users of popular programming languages,
+such as C and Java, will find similarities in the expression syntax between these
+languages and in LEM.
+
+The simple example in Figure \ref{frag:example_expression1} illustrates a very
+simple LEM expression.
+
+\codefrag{example_expression1}{A simple expression resulting in the numeric
+value $5$ being assigned to the variable $a$.}{1}
+
+The following sections will describe LEM's core data types and the operations
+available to manipulate these types.
+
+\subsection{Arithmetic and relational expressions}
+
+The arithmetic and relational expressions in LEM are based on the precedence of
+operations found in most programming languages (for example, C and Java). Users
+familiar with these programming languages will find the operators in LEM have
+very similar precedence rules.  Table \ref{tab:operatorPrecedence} shows the 
+precedence and the corresponding notations that were chosen for use in LEM.
+
+\begin{table}[!ht]
+		\centering
+		\begin{tabular}{|c|c|c|}
+		\hline
+		\textbf{Operation} & \textbf{LEM syntax} & \textbf{Associativity}
+		\\\hline\hline
+		Logical OR & \verb^||^ & Left-right \\\hline
+		Logical AND & \verb|&&| & Left-right \\\hline 
+		$=$, $\neq$, $<$, $\leq$, $>$, $\geq$ & \verb|=|, \verb|/=|, \verb|<|,
+		\verb|<=|, \verb|>|, \verb|>=| & Left-right \\\hline
+		$+$, $-$  & \verb|+|, \verb|-| & Left-right \\\hline
+		$*$, $/$, $modulo$  & \verb|*|, \verb|/|, \verb|mod| & Left-right
+		\\\hline
+		Exponentiation  & \verb|^| & Left-right \\\hline
+	 	Unary plus, unary negation, logical NOT & \verb|+|, \verb|-|, \verb|!| &
+		Right-left \\\hline
+		\end{tabular}
+		\caption{Operator precedence in LEM}
+		\label{tab:operatorPrecedence}
+\end{table}
+
+\section{Core data types}
+\label{section:coreDataTypes}
+
+LEM has 7 core data types:
+
+\begin{itemize}
+        \item boolean
+        \item numeric
+        \item date
+        \item object reference
+        \item set
+        \item string
+        \item arbitrary identifier
+\end{itemize}
+
+The value of variables of these core types can be changed by using operations
+defined by each of these types. These operations are described in the following
+sections.
+
+\subsection{Boolean}
+
+The boolean type represents the values of ``true'' and ``false''. It provides
+the following operations which can be applied to these values:
+
+\begin{itemize}
+	\item logical ``and'' (\verb|&&|)
+	\item logical ``or'' (\verb^||^)
+	\item logical ``not'' (\verb|!|)
+\end{itemize}
+
+\subsection{Numeric}
+
+The numeric type represents elements of $\Re$, the set of real numbers.
+Internally, LEM represents variables of this type as arbitrary precision decimal
+numbers. Thus, for practical purposes, LEM numeric types have no upper or lower
+size boundaries.
+
+The numeric type provides the following operations:
+
+\begin{itemize}
+	\item multiplication (\verb|*|), addition (\verb|+|) and subtraction
+			(\verb|-|)
+	\item division (\verb|/|). \textbf{Note:} Division imposes an arbitrary
+			precision limit of 10 decimal places. This will be subject to change
+			in the future
+	\item comparison (\verb|<|, \verb|<=|, \verb|>|, \verb|>=| and
+			\verb|=|). These operations return a variable of boolean type
+	\item modulo (\verb|%|)
+	\item unary negation (\verb|-|)
+\end{itemize}
+
+% TODO: Add exponentiation
+
+\subsection{Date}
+
+Dates in LEM are a work in progress.
+
+% TODO: Discuss what operations dates will support, implement and update this
+% section
+	
+\subsection{Object reference}
+
+The object reference type is used as a ``handle'' to an object. This type
+supports only one operation: comparison (\verb|=|).
+
+% TODO: Reference object creation and selection sections
+% TODO: Explain or provide a reference to a section explaining equality of
+% object references
+
+\subsection{Set}
+
+% TODO: Describe the set type. Before we do this, however, I think we need to
+% call it something other than ``Set'', because we have no uniqueness
+% constraints built into this type. Perhaps ``List'' is a better name?
+% 
+% We do currently guarantee objects in a set are unique (simply due to the
+% virtue that selectable objects (those in Contexts) are unique).
+% --nickp
+
+\subsection{String}
+
+The string type represents an arbitrary size sequence of characters. 
+
+Strings support only the concatenation operation (\verb|+|).
+
+\section{Domain specific data types}
+\label{section:domainSpecificDataTypes}
+
+The modeller may define ``domain specific'' data types. These types allow the
+value of any variables of that type to be constrained in various ways.
+
+For example, the modeller may specify an
+ISBN\footnote{http://en.wikipedia.org/wiki/ISBN} type in the manner described in
+Figure \ref{frag:example_domainSpecificDataType}.
+
+\codefrag{example_domainSpecificDataType}{An example of declaring an ISBN type
+in LEM}{1}
+
+% TODO: Complete list of data types.
+% TODO: Data types are not specific to action language. Move this section
+% to chapter 2
+
+\section{Variable declarations}
+
+LEM requires all variables to be declared. Declarations are C-style: a type name
+followed by an identifier. Figure \ref{frag:example_declarations} provides an
+example of some variable declarations.
+
+\codefrag{example_declarations}{An example of variable declarations in LEM.}{1}
+
+\section{Flow control}
+
+This section describes flow control constructs available to the modeller in LEM.
+
+\subsection{Conditional execution}
+
+Conditional execution of a block of actions is achieved using the universally
+familiar ``if'' statement.
+
+The syntax of the ``if'' statement is given in Figure \ref{bnf:IfStatement}.
+
+\bnf{IfStatement}{The syntax of the ``if'' statement.}
+
+The expression must evaluate to a boolean. If the resulting boolean is ``true'',
+then the actions in the action block are executed; otherwise, they are not
+executed.
+
+\subsection{``For each'' loop}
+Given an expression which evaluates to a set, the for loop executes a list of
+actions for each element of the set. The syntax of the for each loop is given in
+Figure \ref{bnf:ForStatement}.
+
+\bnf{ForStatement}{The syntax of the ``for each'' loop.}
+
+Figure \ref{frag:example_forEach} gives an example of a for each loop.
+
+\codefrag{example_forEach}{An example of a ``for each'' loop.}{1}
+
+One of the important uses of for loops is after select statements, as
+demonstrated in Figure \ref{frag:example_forEach1}.
+
+\codefrag{example_forEach1}{An example of a ``for each'' loop occurring after a
+select statement.}{1}
+
+\subsection{While loops}
+While loops are used frequently in popular programming languages such as
+C and Java.  The syntax used in LEM will be familiar to users of those or
+similar languages. This syntax is given in Figure \ref{bnf:WhileStatement}.
+
+\bnf{WhileStatement}{The syntax of the ``while'' loop.}
+
+The actions in the ``while'' loop are executed repeatedly until the expression
+evaluates to ``false''. If the expression does not evaluate to a boolean, then
+an error is returned.
+
+Figure \ref{frag:example_whileLoop} gives an example of the use of the ``while''
+loop.
+
+\codefrag{example_whileLoop}{An example of a ``while'' loop in LEM.}{1}
+
+\subsection{Breaking out of loops}
+The ``break'' keyword is used to instantly terminate ``while'' and ``for each'' 
+loops. The execution of the ``break'' keyword causes execution to immediately
+exit the innermost loop and continue after the end of the loop.
+
+\codefrag{example_while_break}{Breaking out of a while loop in LEM.}{1}
+
+\section{Object manipulation}
+
+This section describes the action language syntax structures associated with
+object manipulation.
+
+\subsection{Creation}
+
+In LEM, objects are created using the ``create'' action. The syntax of this
+action is expressed in Figure \ref{bnf:ObjectCreation}.
+
+\bnf{ObjectCreation}{The syntax of the create action.}
+
+The semantics of object creation are described in Section
+\ref{sec:objectCreation}.
+
+% TODO: Fix cross-chapter references which don't look like they work
+The object create action returns an object reference type. Figure
+\ref{frag:example_objectCreation} gives an example of a simple object creation
+statement.
+
+\codefrag{example_objectCreation}{A simple object creation example.}{1}
+
+To create objects participating in a generalisation hierarchy, list the classes
+to be created. Figure \ref{frag:example_objectCreation1} gives an example.
+
+\codefrag{example_objectCreation1}{An object creation with multiple
+participating classes.}{1}
+
+\subsection{Deletion}
+
+In LEM, objects are deleted using the ``delete'' action. The syntax of this
+action is expressed in Figure \ref{bnf:ObjectDeletion}.
+
+\bnf{ObjectDeletion}{The syntax of the delete action.}
+
+The semantics of object deletion are described in Section
+\ref{sec:objectDeletion}.
+
+The object deletion action does not return anything.
+
+Figure \ref{frag:example_objectDeletion} gives a couple of examples of the use
+of the object deletion action.
+
+% TODO: This example assumes ``select any'' returns an objref and not a set!
+% We need to clarify this
+\codefrag{example_objectDeletion}{An example of object deletion.}{1}
+
+\subsection{Reading attributes}
+% TODO: Are they attributes? Or variables?
+
+Attributes of an object may be read by utilising a variable reference.
+Variable references have a ``dot'' notation similar to Java and other
+languages. The syntax of the variable reference is described in Figure
+\ref{bnf:VariableReference}.
+
+\bnf{VariableReference}{The syntax of variable references.}
+
+Figure \ref{frag:example_variableReference} gives an example of reading some
+attributes from an object using the variable reference construct.
+
+\codefrag{example_variableReference}{An example of some variable references in
+action language.}{1}
+
+A variable reference returns the value of the referenced variable. The returned
+type is the same as the referenced variable's type.
+
+The semantics of the variable reference are described in Section
+\ref{sec:attributeManipulation}.
+
+\subsection{Writing attributes}
+
+Modifying the value of an object's attributes is achieved simply by using an
+assignment action (See Section \ref{sec:attributeManipulation}).
+
+% TODO: Write this section!
+
+\subsection{Associating objects}
+Two object references can be associated using the ``relate'' action. The syntax
+of this action is given in Figure \ref{bnf:LinkCreation}.
+
+\bnf{LinkCreation}{The syntax of the relate action.}
+
+In LEM, the relationship reference has the syntax given in Figure
+\ref{bnf:RelationshipReference}.
+
+\bnf{RelationshipReference}{The syntax of relationship references.}
+
+An example of the usage of the relate action is given in Figure
+\ref{frag:example_relateAction}.
+
+\codefrag{example_relateAction}{An example of two of the forms of the relate
+action.}{1}
+
+For creating an association that involves the instantiation of an association
+class, a ``creating'' clause can be appended to the end of the relate action.
+Figure \ref{frag:example_relateActionWithClass} provides an example.
+
+\codefrag{example_relateActionWithClass}{An example of a relate action which
+instantiates an association class.}{1}
+
+The semantics of the relate action are described in Section
+\ref{sec:relateAction}.
+
+\subsection{Disassociating objects}
+A corollary of object association is object disassociation. Two objects can be
+``disassociated'' from each other using the ``unrelate'' action.
+
+The syntax of the unrelate action is given in Figure
+\ref{bnf:LinkDeletion}.
+
+\bnf{LinkDeletion}{The syntax of the unrelate action.} 
+
+An example of an unrelate statement is given in Figure
+\ref{frag:example_unrelateAction}.
+
+\codefrag{example_unrelateAction}{An example of an unrelate action.}{1}
+
+There is no special syntax for deleting associations with association classes.
+
+The semantics of the unrelate action are described in Section
+\ref{sec:relateAction}.
+
+% Semantics!
+%The same action can be applied to unrelate two object references with a link
+%object. The link object will be deleted and the link unrelated in '''one single
+%operation'''.
+
+\subsection{Selection}
+Object selection allows the programmer to obtain a handle of the instances of
+objects created by the ``create'' action.  Selection of the objects is done via using
+a ``select'' expression.  
+
+Figure \ref{bnf:SelectStatement} gives the syntax of the select expression.
+
+\bnf{SelectStatement}{The syntax of the select expression.} 
+
+% Semantics
+%\begin{verbatim}
+%  '''<Selection_Clause>''' : one of the following keywords [ Any | One | All ] in which case :
+%   '''Any''' means just any instance of given class that matches the conditions. 
+%   '''One''' means the only one in a 1 .. 1 or 1 .. * relationship which matches the conditions. 
+%   '''All''' means all of the eligible instances of given class which satisfy the conditions.   
+%  '''<name of handle>''' : any identifier that conforms to LEM identifier rules.  This identifier is going to be the handle to the selected instance.
+%  '''<class name>''' : Name of the class from which the instances belong to.
+%  '''<condition>''' : A boolean condition , see Condition subheading for more details.
+%\end{verbatim}
+
+The semantics of the select expression are described in detail in Section
+\ref{sec:selectAction}. 
+
+The return type of the select expression depends on the selection quantity:
+
+% TODO: Confirm this!
+
+\begin{itemize}
+	\item \verb|select one| and \verb|select any| result in an object reference
+	\item \verb|select many| results in a set of object references
+\end{itemize}
+
+Figure \ref{frag:example_selectExpression} gives some examples of the select
+expression in use.
+
+\codefrag{example_selectExpression}{An example of the select expression in
+various forms.}{1}
+
+\subsubsection{Conditional selection}
+
+The ``where'' clause in the select expression can be used to filter the results
+of the expression. The where clause takes a condition, which can be any valid
+LEM boolean expression.
+
+The expression in the ``where'' clause is evaluated for each object in the
+global object pool which contains an instance of the class named in the
+``select'' statement. For each iteration, the object reference variable named
+``selected'' is implicitly declared. This variable refers to the current object
+being tested.
+
+% TODO: Too many beers.. have to rewrite this!
+
+Figure \ref{frag:example_selectExpressionWhere} gives an example of selecting
+all products available in stock.
+
+% TODO: Implement the ternary ``related to'' operator
+
+% or a relationship
+%between an object and instances of another class.  
+
+\codefrag{example_selectExpressionWhere}{An example of applying a where
+clause to all instances of a class.}{1}
+
+%'''Examples'''
+%  '''Where''' ( a = b )
+%  '''Where''' ( p.numberInStock < numberRequested + 100 ) ;
+%  '''Where''' ('''selected'''.lastname = 'King' ) ;
+
+%*please note '''selected''' is a keyword and it is referencing the instances
+%that the condition is being tested on them.  e.g. '''selected'''.lastname =
+%'King' means if value of lastname variable of current instance is equal to
+%'King', current instance passes the criteria.  2.'''Syntax'''
+%  '''Where''' <instance name> '''Related to''' <class name>
+%'''Examples'''
+%  '''Where''' ''myProduct'' '''Related to''' ''Consumer''
+
+%\subsection{Reclassifying objects}
+%An object can be reclassified from one leaf subclass in a
+%generalisation-specialisation hierarchy to another.
+
+%'''Syntax:'''
+%  '''reclassify''' <object reference> '''from''' <class> '''to''' <class>
+
+%Based on S.J Mellor, an object can only be reclassified from one class to another at a time. 
+
+%'''Example'''
+%  '''reclassify''' ''newBook'' '''from''' ''StockedProduct'' '''to''' ''SpecialOrderProduct''
+
+
+%Just a small issue:
+%Do we want to allow multiclass reclassification?
+
+\section{Signal generation}
+
+Signals are generated to ``self'' or other objects using the ``generate''
+action.
+
+The syntax of the generate action is given in Figure \ref{bnf:EventGeneration}.
+
+\bnf{EventGeneration}{The syntax of the generate action.} 
+
+The ``with delay'' clause specifies a lower bound on the number of milliseconds
+that must elapse before the signal is delivered to the target.
+
+Figure \ref{frag:example_generateAction} gives an example of some usages
+of the generate action.
+
+\codefrag{example_generateAction}{A few examples of the generate action in
+use.}{1}
+
+%\subsubsection{Semantics}
+%The operations defined in this section may not be applicable to some core data
+%types. A quick listing is given below showing the operations and the valid data
+%type:
+
+%\begin{verbatim}
+%<center>
+%{| border="1" cellpadding="2"
+%|+Operation and operand data type
+%|-
+%! Operation !! Valid data type 
+%|-
+%| Logical OR || boolean 
+%|-
+%| Logical AND || boolean
+%|-
+%| Logical NOT || boolean
+%|-
+%| &equiv;, &ne;  || date, integer, real, timestamp, arbitary_id, string, object instances
+%|-
+%| &lt;, &le;, &gt;, &ge;  || date, integer, real, timestamp, arbitary_id, 
+%|-
+%| +  || integer, real, date, timestamp, arbitary_id, string
+%|-
+%| -  || integer, real, date, timestamp, arbitary_id
+%|-
+%| *, /, modulo  || integer, real
+%|-
+%| exponential  || integer, real
+%|-
+%| Unary Plus, Unary Minus || integer, real, arbitary_id
+%|}
+%</center>
+%<br>
+%'''Logical OR''' is a binary operation returning a boolean value of '''true''' or '''false''' based on the table below:
+%{| border="1" cellpadding="2"
+%|+Truth table for Logical OR
+%|-
+%! Operand 1 / Operand 2 !! True !! False
+%|-
+%| '''True''' || True || True 
+%|-
+%| '''False''' || True || False
+%|}
+%<br>
+%'''Logical AND''' is a binary operation returning a boolean value of '''true''' or '''false''' based on the table below:
+%{| border="1" cellpadding="2"
+%|+Truth table for Logical AND
+%|-
+%! Operand 1 / Operand 2 !! True !! False
+%|-
+%| '''True''' || True || False
+%|-
+%| '''False''' || False || False
+%|}
+%\end{verbatim}
+
+%'''Logical NOT''' is an unary operation returning the negation of a boolean expression. (i.e !true = false).
+
+%'''Equality'''
+%Two integers or reals '''A''' and '''B''' are equal iff A-B=0. For date and
+%timestamp, the equality is defined by the equality of the individual
+%components. (i.e day, month, year for date and hours, minutes, seconds for
+%timestamp) <br><br>
+%'''Equality of object instances'''
+%<br>
+%Idea 1:
+%Two object instances A and B are equivalent iff '''ALL''' the below conditions are satisfied:
+%*the exact same number of class instances
+%*For all class instances in A, there exists a corresponding instance in B of the same class
+%*Each attribute in each class instance of B is equivalent to the corresponding attribute in A
+
+%This idea would mean the two selection statements below will produce the same set of object instances.
+
+% example_aircon1.lem
+% example_aircon2.lem
+
+%\begin{verbatim}
+%    a := create Aircon, Govt_Building;
+%    '''select All''' gbuilding '''from Instances of''' Govt_Building '''Where''' (selected = a)
+%
+%    a := create Aircon, Govt_Building;
+%    '''select All''' gbuilding '''from Instances of''' Aircon,Govt_Building '''Where''' (selected = a)
+%\end{verbatim}
+
+%This gives better consistency since the user can be sure that the below conditional is true for all gbuilding selected.
+%
+%    for each building in gbuilding
+%        if(building = a)
+%
+%The method seems to be less expressive though.
+%<br><br>
+%Idea 2:
+%Two object instances A and B are equivalent iff '''ALL''' the below conditions
+%are satisfied: *Each attribute in each class instance of B is equivalent to the
+%corresponding attribute in A in the given action/expression
+
+%This means the comparison changes based on when and how it is used. This will
+%give the select statement better filtering capabilities. Though I am not
+%exactly sure how to implement this at the moment. 
+
+%This idea would mean the two selection statements below will produce the different set of object instances.
+%
+%\begin{verbatim}
+%    a := create Aircon, Govt_Building;
+%    '''select All''' gbuilding '''from Instances of''' Govt_Building '''Where''' (selected = a)
+%\end{verbatim}
+
+%In the above select statement, the equivalent comparison is only interested in
+%all attributes of Govt\_Building class (and abstract Building class?). The
+%branch of the Aircon and NonAircon specialization is totally ignored. Result of
+%the statement maybe an mixture of Aircon and NonAircon buildings.
+%
+%\begin{verbatim}
+%    a := create Aircon, Govt_Building;
+%    '''select All''' gbuilding '''from Instances of''' Aircon,Govt_Building '''Where''' (selected = a)
+%\end{verbatim}
+%
+%In the above select statement, the equivalent comparison compares every
+%attribute and class of the object instance. Result of the statement will only
+%be object instances of type Aircon,Govt\_Building which are exactly the same as
+%'''a'''.
+%
+%However, we loss some consistency in this case, since the below conditional will not always be true if the user selects gbuilding using the first selection statement. (Not sure if this is totally a bad thing)
+%
+%    for each building in gbuilding
+%        if(building = a)
+%
+%We might have to even make some changes to grammar if we were to take this approach to make the implementation easier. Idea 1 would be whole lot easier to implement and ideal 2 more expressive I feel. Maybe someone can add to this on how they think it should be.
+%
+%\subsubsection{Implementation}
+%TODO: To describe how the parser builds a binary tree from a list and tranverse the tree for evaluation

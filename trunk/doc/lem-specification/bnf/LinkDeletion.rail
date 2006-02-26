@@ -1,0 +1,3 @@
+\begin{rail}
+LinkDeletion : 'unrelate' ObjectReference 'from' ObjectReference \\ 'across' Identifier 
+\end{rail}

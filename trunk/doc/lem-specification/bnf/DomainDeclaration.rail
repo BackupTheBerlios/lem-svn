@@ -1,0 +1,3 @@
+\begin{rail}
+DomainDeclaration : 'domain' Identifier 'is' Description ? DomainBody EndIdentifier \\ ';' 
+\end{rail}

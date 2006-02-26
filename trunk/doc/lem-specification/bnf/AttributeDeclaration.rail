@@ -1,0 +1,3 @@
+\begin{rail}
+AttributeDeclaration :  ( BaseAttribute  | ReferentialAttribute  | DerivedAttribute  )  
+\end{rail}

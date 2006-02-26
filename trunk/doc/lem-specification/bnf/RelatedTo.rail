@@ -1,0 +1,3 @@
+\begin{rail}
+RelatedTo : 'related' 'to' Identifier 'across' Identifier 
+\end{rail}

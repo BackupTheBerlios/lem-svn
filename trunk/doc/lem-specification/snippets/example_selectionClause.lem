@@ -1,0 +1,7 @@
+ <Selection_Clause> : one of the following keywords [ Any | One | All ] in which case :
+  Any means just any instance of given class that matches the conditions. 
+  One means the only one in a 1 .. 1 or 1 .. * relationship which matches the conditions. 
+  All means all of the eligible instances of given class which satisfy the conditions.   
+ <name of handle> : any identifier that conforms to LEM identifier rules.  This identifier is going to be the handle to the selected instance.
+ <class name> : Name of the class from which the instances belong to.
+ <condition> : A boolean condition , see Condition subheading for more details.

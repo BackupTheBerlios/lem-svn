@@ -1,0 +1,3 @@
+\begin{rail}
+AttributeReference : (  ( 'active'  | 'passive'  )  ? ) ReferredClass '.' ReferredAttribute \\ 'across' ReferredAssociation 
+\end{rail}

@@ -1,0 +1,1 @@
+type answer "true false answer to the question" is boolean;

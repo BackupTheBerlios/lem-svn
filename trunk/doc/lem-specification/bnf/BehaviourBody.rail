@@ -1,0 +1,3 @@
+\begin{rail}
+BehaviourBody : ( StateDeclaration *) ( TransitionDeclaration *)
+\end{rail}

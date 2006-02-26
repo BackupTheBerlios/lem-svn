@@ -1,0 +1,5 @@
+referential attribute publisherCode "ISBN prefix of the publisher" \\
+		refers to active Publisher.publisherCode across R1;
+
+referential attribute publisherGroupCode refers to \\
+		Publisher.groupCode across R1;

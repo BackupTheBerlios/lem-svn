@@ -1,0 +1,3 @@
+\begin{rail}
+AssociationBody : ActivePerspective  PassivePerspective  ( AssociationClassDeclaration  ? ) 
+\end{rail}

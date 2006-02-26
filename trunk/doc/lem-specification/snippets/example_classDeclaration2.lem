@@ -1,0 +1,22 @@
+class A is
+	<<ClassBody>>
+end A;
+class B is
+	<<ClassBody>>
+end B;
+class C specialization of A and B is
+	<<ClassBody>>
+end C;
+
+class D is
+	<<ClassBody>>
+end D;
+class E is
+	<<ClassBody>>
+end E;
+class F is
+	<<ClassBody>>
+end F;
+class G specialization of D,E and F is
+	<<ClassBody>>
+end G;

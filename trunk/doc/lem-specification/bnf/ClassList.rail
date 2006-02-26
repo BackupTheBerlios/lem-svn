@@ -1,0 +1,3 @@
+\begin{rail}
+ClassList : Identifier ( ',' Identifier  * )  
+\end{rail}

@@ -1,0 +1,3 @@
+\begin{rail}
+ActiveObject : 'SIMPLE_IDENTIFIER' 
+\end{rail}

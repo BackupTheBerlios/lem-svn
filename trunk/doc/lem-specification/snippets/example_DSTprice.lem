@@ -1,0 +1,5 @@
+domain Sales is 
+	type price is numeric invariant { value > 0 };
+
+	...
+end Sales;

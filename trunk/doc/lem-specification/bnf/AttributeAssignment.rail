@@ -1,0 +1,3 @@
+\begin{rail}
+AttributeAssignment : LValue ':=' Expression 
+\end{rail}

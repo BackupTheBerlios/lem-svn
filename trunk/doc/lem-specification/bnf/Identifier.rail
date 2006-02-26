@@ -1,0 +1,3 @@
+\begin{rail}
+Identifier : 'SIMPLE_IDENTIFIER' 
+\end{rail}

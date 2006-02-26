@@ -1,0 +1,2 @@
+    a := create Aircon, Govt_Building;
+    '''select All''' gbuilding '''from Instances of''' Govt_Building '''Where''' (selected = a)

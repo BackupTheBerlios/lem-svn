@@ -1,0 +1,3 @@
+on genesis "the start of everything" transition from creation state \\
+	to AwaitingCookingRequest;
+on ovenSafe transition from EnsuringSafeToCook to Cooking;

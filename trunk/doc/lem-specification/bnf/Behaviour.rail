@@ -1,0 +1,3 @@
+\begin{rail}
+Behaviour : 'behaviour' 'is' Description ?  BehaviourBody  'end' 'behaviour' ';' 
+\end{rail}

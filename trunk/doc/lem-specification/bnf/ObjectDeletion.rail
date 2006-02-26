@@ -1,0 +1,3 @@
+\begin{rail}
+ObjectDeletion : 'delete' ObjectReference 
+\end{rail}

@@ -1,0 +1,2 @@
+generate s1 to obj with delay 10000;
+generate s2 to obj with delay 10000;

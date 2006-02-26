@@ -1,0 +1,3 @@
+\begin{rail}
+DerivedAttribute : 'derived' 'attribute' AttributeIdentifier Description ? \\ 'is' Type 'calculation' 'is' AttributeCalculationProcedure \\ 'end' 'calculation' ';' 
+\end{rail}

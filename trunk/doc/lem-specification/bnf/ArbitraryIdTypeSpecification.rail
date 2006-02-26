@@ -1,0 +1,3 @@
+\begin{rail}
+ArbitraryIdTypeSpecification : 'arbitrary_id' 
+\end{rail}

@@ -1,0 +1,8 @@
+// The example Governemtn domain for the sdd
+
+model Government is "concerned with how governments works"
+    domain Elections is "concerned with how goverments are elected"
+        subsystem Counting is "how votes are actually counted"
+            ...
+        end subsystem;
+    end domain; end model;

@@ -1,0 +1,3 @@
+\begin{rail}
+PrecisionSpec : 'precision' ':' PrecisionValue 
+\end{rail}

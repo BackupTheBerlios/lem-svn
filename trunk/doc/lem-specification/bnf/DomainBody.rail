@@ -1,0 +1,3 @@
+\begin{rail}
+DomainBody : ( TypeDeclaration  * )  ( SubSystemDeclaration  + ) \\ ( ScenarioDeclaration  * )  
+\end{rail}

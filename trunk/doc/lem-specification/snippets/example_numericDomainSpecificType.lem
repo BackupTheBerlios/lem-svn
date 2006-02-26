@@ -1,0 +1,3 @@
+type Year is numeric units: "years" range: precision: 1;
+type Year1 is numeric units: "years" precision: 1 \\
+		      invariant: (Year1<2100 && Year1>1900);

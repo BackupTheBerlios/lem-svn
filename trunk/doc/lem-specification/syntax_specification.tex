@@ -1,0 +1,574 @@
+\chapter{LEM syntax}
+
+\section{Introduction}
+
+This chapter describes the LEM language constructs available to the modeller.
+Example LEM code is included to illustrate syntactical structures.
+
+The ``official'' LEM grammar is a work in progress. An automatically generated
+BNF version is provided on the LEM homepage:
+\href{http://xtuml.jdns.org/LemParser.html}{http://xtuml.jdns.org/LemParser.html}.
+
+%This chapter does not specify:
+%- the mechanism by which LEM action language is transformed or interpreted
+%- the size or complexity of a program or data that will exceed the capacity
+%  of any specific system or implementation
+\section{Character set}
+
+The character set that the source code is written in is as follows:
+
+\begin{itemize}
+        \item The 52 upper and lower case letters of the Latin alphabet\\
+\verb|A a B b C c D d E e F f G g H h I i J j K k L l M m|\\
+\verb|N n O o P p Q q R r S s T t U u V v W w X x Y y Z z|
+
+        \item The 10 decimal digits\\
+\verb|0 1 2 3 4 5 6 7 8 9|
+
+        \item The 23 following graphic characters\\
+\verb$" _ ; { } [ ] ( ) , : . ! & | = < > * / + - ^$
+
+        \item The space character, the tab character, 
+        the newline and carriage return characters.
+
+\end{itemize}
+
+\section{Terms and definitions}
+
+\begin{itemize}
+\item \textbf{Boolean Literal} a string of either \textit{true} or \textit{false}.
+
+\item \textbf{Decimal Literal} : a string of decimal digits used to specify a whole number.
+
+\item \textbf{EndIdentifier} : the string end followed by an optional identifier of the corresponding declaration.
+
+\item \textbf{EnumerationMember} : refer to the definition of \textit{Simple Identifier}.
+
+\item \textbf{Real Literal} : a string of decimal digits and mathematical symbols (i.e '.', 'E' or 'e' for exponent, 'F' or 'f' for float and 'D' or 'd' for double). Examples of real literal are: 0.999E-2D, .00999, 999E-5D, 999E-5, 999D, etc.
+
+\item \textbf{Procedure} : a procedure is a set of zero or more variable declarations followed a set of zero or more actions specified in Chapter \ref{chap:actionLanguage}. The procedure is to be enclosed in a set of curly braces(i.e '{' and '}').
+
+\item \textbf{Simple Identifier} : a string of characters starting with a letter followed by zero or more letters or digits. A letter can be any of the 52 Latin alphabets or the underscore character.
+
+\item \textbf{String Literal} : a list of characters quoted with a double quote.
+\end{itemize}
+
+\section{Tokens}
+The following is a list of tokens of LEM:
+\begin{table}[!ht]
+\begin{center}
+\begin{tabular}{lll}
+association & null & identifier\\
+generalisation & specialisation & attribute\\
+end & between & bridge\\
+class & is & or\\
+domain & scenario & subsystem\\
+model & type & state\\
+transition & event & behaviour\\
+to & from & by\\
+at & on & and\\
+creation & deletion & range\\
+pattern & numeric & objref\\
+set & units & length\\
+precision & refers & active\\
+pattern & numeric & objref\\
+passive & calculation & derived\\
+referential & carries & 
+\end{tabular}
+\end{center}
+\caption{List of tokens of LEM}
+\end{table}
+                
+
+\section{Model declaration}
+The model declaration is the root of a xtUML model in LEM. All other declarations described in the subsequent sections are descendents of the model declaration. The model declaration requires the following user inputs:
+
+\begin{itemize}
+\item a simple identifier for the Identifier
+\item an optional string literal for the Description
+\item a Model Body
+\end{itemize}
+
+A railroad diagram representation of the model declaration syntax is shown in Figure \ref{bnf:ModelDeclaration}
+\bnf{ModelDeclaration}{The syntax of the model declaration.}
+
+An example of a model declaration is shown in Figure \ref{frag:example_modelDeclaration}.
+
+\codefrag{example_modelDeclaration}{A sample of model declaration with description.}{1}
+
+A model body is made up of the following components:
+\begin{itemize}
+\item \textbf{one or more} \textit{Domain declarations} as described in Section \ref{sec:DomainDeclaration}
+\item \textbf{zero or more} \textit{Bridge declarations} as described in Section \ref{sec:BridgeDeclaration}
+\end{itemize}
+
+A rail diagram representation of a model body is shown in Figure \ref{bnf:ModelBody}
+
+\bnf{ModelBody}{Rail diagram representation of the model body}
+
+\section{Domain declaration}\label{sec:DomainDeclaration}
+A xtUML domain can be specified in LEM using the domain declaration syntax. The domain declaration requires the following user inputs:
+
+\begin{itemize}
+\item a simple identifier for the Identifier
+\item an optional string literal for the Description
+\item a Domain Body
+\end{itemize}
+
+The syntax of a domain declaration is given in Figure \ref{bnf:DomainDeclaration}
+\bnf{DomainDeclaration}{The syntax of the domain declaration}
+
+Multiple domains can be specified by appending domain declarations one after
+another. An example of multiple domain declarations is shown in Figure
+\ref{frag:example_domainDeclaration}.
+
+\codefrag{example_domainDeclaration}{A sample of multiple domain declarations with description.}{1}
+
+The domain body consists of the following components:
+\begin{itemize}
+\item \textbf{zero or more} \textit{Domain specific type declarations} as described in Section \ref{sec:domainSpecificType}.
+\item \textbf{one or more} \textit{Subsystem declarations} as described in Section \ref{sec:subsystemDeclaration}.
+\item \textbf{zero or more} \textit{Scenario declarations} as described in Section \ref{sec:scenarioDeclaration}.
+\end{itemize}
+
+A rail road diagram representation of the order of the components is shown in Figure \ref{bnf:DomainBody}.
+
+\bnf{DomainBody}{A rail road diagram representation of the domain body composition.}
+
+\section{Domain specific type declaration}\label{sec:domainSpecificType}
+The modeller is allowed to specify domain specific type using the domain specific type declarations. The inputs to the declaration are as follows:
+
+\begin{itemize}
+\item a simple identifier for the TypeIdentifier
+\item an optional string literal for the Description
+\item a Type Specification
+\end{itemize}
+
+The syntax of the domain specific type declarations is shown in Figure \ref{bnf:TypeDeclaration}.
+\bnf{TypeDeclaration}{The syntax of the type declaration}
+
+There are 8 different type specifications the modeller can use and they are as follows:
+\begin{itemize}
+\item arbitrary id
+\item enumerated list
+\item boolean
+\item numeric
+\item string
+\item date
+\item object reference
+\item set
+\end{itemize}
+
+\subsection{Arbitrary id type}
+An example LEM code to declare a domain specific type of the core type arbitrary id is shown in Figure \ref{frag:example_arbitraryidDomainSpecificType}
+
+\codefrag{example_arbitraryidDomainSpecificType}{Declaration of domain specific type of core type arbitrary id.}{1}
+
+\subsection{Enumerated list type}
+The enumerated list type contains a list of simple identifiers as enumerated members. The value of the attribute of such a type can only be one of the enumerated members in the list.
+
+The syntax to specify the list is shown in Figure \ref{bnf:EnumeratedList} is used to specify an enumerated list.
+
+\bnf{EnumeratedList}{The syntax to specify a enumerated list}
+
+Figure \ref{frag:example_enumeratedlistDomainSpecificType} shows an example of declaring a domain specific type of core type enumerated list.
+
+\codefrag{example_enumeratedlistDomainSpecificType}{Declaration of domain specific type of core type enumerated list.}{1}
+
+\subsection{Boolean type}
+An example LEM code to declare a domain specific type of the core type boolean is shown in Figure \ref{frag:example_booleanDomainSpecificType}
+
+\codefrag{example_booleanDomainSpecificType}{Declaration of domain specific type of core type boolean.}{1}
+
+\subsection{Numeric type}
+The numeric type specification has 3 optional fields for the modeller to constraint the variable. They are as follows:
+
+\begin{itemize}
+\item \textbf{units} : a string representation of the units this numeric is representing (e.g kilogram)
+
+\item \textbf{precision specification} : a real value used to specify
+  the precision of the numeric.
+
+\item \textbf{invariant specification} : a boolean expression 
+\end{itemize}
+
+An example of domain specific type of core type numeric is shown in Figure \ref{frag:example_numericDomainSpecificType}
+
+\codefrag{example_numericDomainSpecificType}{Declaration of domain specific type of core type numeric with all the optional fields.}{1}
+
+\subsection{String type}
+The string type specification has 2 optional fields for the modeller to constraint the variable. They are as follows:
+
+\begin{itemize}
+\item \textbf{length} : the maximum number of characters the string can have
+\item \textbf{pattern} : a regular expression specifying the pattern the string should have
+\end{itemize}
+
+The regular expression constructs employed by LEM is based on Java 1.4.2 and a summary of the constructs can be found at \href{http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html}{http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html}.
+
+An example of domain specific type of core type string is shown in Figure \ref{frag:example_stringDomainSpecificType}
+
+\codefrag{example_stringDomainSpecificType}{Declaration of domain specific type of core type string with all the optional fields.}{1}
+
+\subsection{Date type}
+An example LEM code to declare a domain specific type of the core type date is shown in Figure \ref{frag:example_dateDomainSpecificType}
+
+\codefrag{example_dateDomainSpecificType}{Declaration of domain specific type of core type date.}{1}
+
+\subsection{Object reference type}
+An example LEM code to declare a domain specific type of the core type object reference is shown in Figure \ref{frag:example_objrefDomainSpecificType}
+
+\codefrag{example_objrefDomainSpecificType}{Declaration of domain specific type of core type arbitrary id.}{1}
+
+\subsection{Set type}
+An example LEM code to declare a domain specific type of the core type set is shown in Figure \ref{frag:example_setDomainSpecificType}
+
+\codefrag{example_setDomainSpecificType}{Declaration of domain specific type of core type arbitrary id.}{1}
+
+\section{Subsystem declaration}\label{sec:subsystemDeclaration}
+The subsystem declaration is used to declare one or more subsystems within a domain. Just like the domain, a subsystem requires the following inputs:
+\begin{itemize}
+\item a simple identifier for the Identifier
+\item an optional string literal for the Description
+\item Subsystem Body
+\end{itemize}
+
+The syntax of a subsystem declaration is given in Figure \ref{bnf:SubSystemDeclaration}
+
+\bnf{SubSystemDeclaration}{The syntax of the subsystem declaration}
+
+Multiple subsystems within a domain can be specified by appending the subsystem declarations one after another as shown in Figure \ref{frag:example_subsystemDeclaration}
+
+\codefrag{example_subsystemDeclaration}{A sample of multiple subsystem declarations within a domain.}{1}
+
+The subsystem body is made up of the following components:
+\begin{itemize}
+\item \textbf{zero or more} \textit{class declarations} as described in Section \ref{sec:ClassDeclaration}.
+\item \textbf{zero or more} \textit{relationship declarations} as described in Section \ref{sec:RelationshipDeclaration}.
+\end{itemize}
+
+A railroad diagram representation of the subsystem body is shown in Figure \ref{bnf:SubSystemBody}
+
+\bnf{SubSystemBody}{The composition of the subsystem body}
+
+\section{Class declaration}\label{sec:ClassDeclaration}
+A xtUML superclass or subclass is specified in LEM using the class declaration. The class declaration takes in the following user inputs:
+
+\begin{itemize}
+\item a simple identifier for the Identifier
+\item an optional string literal for the Description
+\item a Specialisation clause for subclass
+\item Class Body
+\end{itemize}
+
+The syntax of the declaration is shown in Figure \ref{bnf:ClassDeclaration}
+\bnf{ClassDeclaration}{The syntax of the class declaration}
+
+An example of a superclass and subclass declaration is shown in Figure \ref{frag:example_classDeclaration}. In the example, the class Product is a superclass and BookProduct is a subclass of Product.
+
+\codefrag{example_classDeclaration}{A sample of multiple class declarations within a subsystem.}{1}
+
+It is possible to specify more than 1 superclass for a subclass. The syntax to specify the superclass list is given in Figure \ref{bnf:SuperClassList}. In Figure \ref{frag:example_classDeclaration2}, class C is a subclass of 2 superclasses and class G is a subclass of 3 superclasses.
+\bnf{SuperClassList}{The syntax of the super class list}
+\codefrag{example_classDeclaration2}{A sample of multiple class declarations within a subsystem.}{1}
+
+Apart from the specialisation, LEM allows you to further define a class through the following components:
+
+\begin{itemize}
+\item \textbf{zero or more} \textit{Attribute declarations} as described in Section \ref{attributeDeclaration}
+\item \textbf{zero or more} \textit{Identifier declarations} as described in Section \ref{identifierDeclaration}
+\item \textbf{zero or more} \textit{Event declarations} as described in Section \ref{sec:eventDeclaration}
+\item \textbf{zero or one} \textit{Behaviour declaration} as described in Section \ref{behaviourDeclaration}
+\end{itemize}
+
+These components also makes up the class body and the syntax for class body is shown in Figure \ref{bnf:ClassBody}.
+
+\bnf{ClassBody}{A rail road diagram representation of the composition of the class body.}
+
+\subsection{Attribute declaration}\label{attributeDeclaration}
+There are 3 different types of attribute declaration in LEM. They are as follows:
+
+\begin{itemize}
+\item base attribute
+\item referential attribute
+\item derived attribute
+\end{itemize}
+
+\subsubsection{Base attribute declaration}
+The base attribute declaration is used to declare a standard class attribute. It requires the following inputs from the modeller:
+
+\begin{itemize}
+\item a simple identifier for the Attribute Identifier
+\item an optional string literal Description
+\item the type of the attribute (as specified in Section \ref{sec:domainSpecificType} and Section \ref{section:coreDataTypes})
+\item an optional literal (i.e String, Real, Decimal or Boolean Literal) for the initial value
+\end{itemize}
+
+The syntax of a base attribute declaration is shown in Figure \ref{bnf:BaseAttribute}.
+
+\bnf{BaseAttribute}{The syntax for declaring a base attribute.}
+
+Various examples of base attribute declaration are given in Figure \ref{frag:example_baseAttributeDeclaration}.
+
+\codefrag{example_baseAttributeDeclaration}{Various examples of base attribute declaration. Core type base attribute, domain specific type attribute and initial value assignment are shown in Line 1, 3 and 5 respectively.}{1}
+
+\subsubsection{Referential attribute declaration}
+A referential attribute is used to identify the associated class and LEM provides support for this type of attribute through the referential attribute declaration. The inputs for the declaration is as follows:
+
+\begin{itemize}
+\item a simple identifier for the Attribute Identifier
+\item an optional string literal for the Description
+\item an Attribute Reference
+\end{itemize}
+
+No type specification is required since the referential attribute takes the type of the corresponding identifying attribute in the associated class. The syntax of the declaration is shown in Figure \ref{bnf:ReferentialAttribute}.
+
+\bnf{ReferentialAttribute}{The syntax for declaring a referential attribute.}
+
+The corresponding identifying attribute is specified in the attribute reference through specifying the following pieces of information:
+
+\begin{itemize}
+\item an optional '\textit{active}' or '\textit{passive}' perspective specification
+\item a simple identifier for the name of the Referred Class
+\item a simple identifier for the name of the corresponding Referred Attribute
+\item a simple identifier for the the name of the corresponding Referred Association
+\end{itemize}
+
+The syntax for the attribute reference is shown in Figure \ref{bnf:AttributeReference}.
+
+\bnf{AttributeReference}{The syntax to specify the corresponding identifying attribute for the referential attribute.}
+
+Examples of referential attribute declaration is shown in Figure \ref{frag:example_referentialAttributeDeclaration}.
+
+\codefrag{example_referentialAttributeDeclaration}{Examples of referential attribute declaration with and without the optional inputs.}{1}
+
+\subsubsection{Derived attribute declaration}
+Derived attributes are attributes whose values are computed based on other attributes in the model. The only way to change their values is through the changing the values of the attributes involved in the computation. To declare a derived attribute in LEM, the modeller needs to specify the following:
+
+\begin{itemize}
+\item a simple identifier for the Attribute Identifier
+\item an optional string literal for the Description
+\item the type of the attribute (as specified in Section \ref{section:coreDataTypes} and Section \ref{sec:domainSpecificType})
+\item a procedure for the Attribute Calculation Procedure.
+\end{itemize}
+
+The procedure should have at least one assignment action in which the derived attribute is assigned a value.
+
+The syntax for the declaration is given in Figure \ref{bnf:DerivedAttribute}
+
+\bnf{DerivedAttribute}{The syntax for derived attribute declaration.}
+
+\codefrag{example_derivedAttributeDeclaration}{Examples of derived attribute declaration.}{1}
+
+\subsection{Identifier declaration}\label{identifierDeclaration}
+In the xtUML context, identifier is the term given to a set of one or more attributes that uniquely distinguishes the instance of the class. LEM provides the identifier declaration to define such identifier in a model.
+
+The inputs to the declaration are as follows:
+\begin{itemize}
+\item an optional string literal Description
+\item a list of one or more simple identifiers for  the Identifying Attributes
+\end{itemize}
+
+The syntax of the declaration is given in Figure \ref{bnf:IdentifierDeclaration}.
+
+\bnf{IdentifierDeclaration}{The syntax of the identifier declaration}
+
+Examples of identifier declaration is shown in Figure \ref{frag:example_identifierDeclaration}.
+
+\codefrag{example_identifierDeclaration}{Examples of identifier declaration.}{1}
+
+\subsection{Event declaration}\label{sec:eventDeclaration}
+For classes with state machine, it is likely that they will be able to receive events or signals generated by itself or by others. The event declaration syntax is used to define the events that a class can receive. 
+
+The inputs to the declaration are as follows:
+\begin{itemize}
+\item an optional \textit{self} to specify self generated events
+\item an optional string literal Description
+\item a simple identifier for the event Identifier
+\item an optional clause to specify Event Signature
+\end{itemize}
+
+The syntax of the declaration is given in Figure \ref{bnf:EventDeclaration}.\\
+
+\bnf{EventDeclaration}{The syntax of event declaration.}
+
+Event signature is a list of \textbf{one or more} comma-separated parameter declarations enclosed in a pair of brackets.The syntax for parameter declaration is similar to that of base attribute declaration and takes the following inputs from the modeller:
+
+\begin{itemize}
+\item a simple identifier for the parameter Identifier
+\item an optional string literal for the Description
+\item the type of the parameter(as specified in Section \ref{sec:domainSpecificType} and Section \ref{section:coreDataTypes}) 
+\end{itemize}
+
+The syntax is given in Figure \ref{bnf:ParameterDeclaration}.
+
+\bnf{ParameterDeclaration}{The syntax of parameter declaration.} 
+
+Example of various event declarations is shown in Figure \ref{frag:example_eventDeclaration}.
+
+\codefrag{example_eventDeclaration}{Examples of event declaration with and without event signature.}{1}
+
+\subsection{Behaviour declaration}\label{behaviourDeclaration}
+Having defined the events that a class can received, the modeller may need to define the kind of transitions or procedures required for the events. LEM uses the notion of behaviour to describe the reaction required by the class. Inputs to a behaviour declaration is minimal and are as follows:
+
+\begin{itemize}
+\item an optional string literal for the Description
+\item a Behaviour Body
+\end{itemize}
+
+The syntax is shown in Figure \ref{bnf:Behaviour} and example of the declaration can be seen in Figure \ref{frag:example_behaviourDeclaration}.
+
+\bnf{Behaviour}{The syntax of the behaviour declaration}
+
+\codefrag{example_behaviourDeclaration}{Example of behaviour declaration.}{1}
+
+The body of the behaviour is made up of:
+\begin{itemize}
+\item \textbf{zero or more} \textit{states declarations}
+\item \textbf{zero or more} \textit{transition declarations}
+\end{itemize}
+
+The order they should appear in the body is represented as a rail road diagram in Figure \ref{bnf:BehaviourBody}.
+
+\bnf{BehaviourBody}{The composition of the behaviour body.}
+
+\subsubsection{States declaration}
+There are 2 types of state available in LEM and they are the deletion and non-deletion states. An optional deletion keyword is used to mark a deletion state. Inputs to the declaration is as follows:
+
+\begin{itemize}
+\item an optional \textit{deletion} keyword to indicate deletion state
+\item a simple identifier for the state Identifier
+\item an optional string literal Description
+\item an optional State Signature (refer to event signature in Section \ref{sec:eventDeclaration} for more details)
+\item an optional procedure for the state Procedure
+\end{itemize}
+
+Figure \ref{bnf:StateDeclaration} shows a rail road diagram representation of the syntax for the declaration.
+
+\bnf{StateDeclaration}{The syntax for state declaration.}
+
+Example of state declarations with and without procedure is shown in Figure \ref{frag:example_stateDeclaration}.
+
+\codefrag{example_stateDeclaration}{Example of state declarations with and without procedure within a behaviour declaration.}{1}
+
+\subsubsection{Transition declaration}
+A state transition occurs when an event is received by an instance. For each event that an instance of a class may receive, a corresponding transition declaration is required. The following are inputs to a transition declaration:
+
+\begin{itemize}
+\item a simple identifier for the Identifier of the event that triggers this transition
+\item an optional string literal for the Description
+\item a simple identifier for the Identifier of a \textbf{non deletion} source state or keyword \textbf{creation state}
+\item a simple identifier for the Identifier of the destination state
+\end{itemize}
+
+A rail road diagram representation of the syntax is shown in Figure \ref{bnf:TransitionDeclaration}.
+
+\bnf{TransitionDeclaration}{The syntax for transition declaration.}
+
+Example of various transition declarations is presented in Figure \ref{frag:example_transitionDeclaration}.
+
+\codefrag{example_transitionDeclaration}{Example of transition declarations.}{1}
+
+\section{Relationship declaration}\label{sec:RelationshipDeclaration}
+There are two types of relationship in LEM and they are association and generalisation.
+\subsection{Association declaration}
+To specify an association in LEM, modeller should provide the following pieces of information:
+
+\begin{itemize}
+\item a simple identifier for the Identifier of the association in the form of Rx where x is a number. (e.g. R1, R20,etc)
+\item an optional string literal for the Description
+\item an Association Body
+\end{itemize}
+
+The syntax for the declaration is shown in Figure \ref{bnf:Association}.
+\bnf{Association}{The syntax of the association declaration}
+
+The association body is made up of the following:
+\begin{itemize}
+\item an active perspective definition of the association
+\item a passive perspective definition of the association
+\item an optional association class declaration
+\end{itemize}
+
+The active/passive perspective definition is made up of the following pieces of information:
+\begin{itemize}
+\item a simple identifier for the Identifier of a class within the domain for the subject/object
+\item a string literal for the active/passive verb phrase
+\item the active/passive multiplicity specification
+\item a simple identifier for the Identifier of a class within the domain for the object/subject
+\end{itemize}
+
+The 4 different kinds of multiplicity specification available in LEM are: \textit{1..1}, \textit{0..1}, \textit{1..*} and \textit{0..*}. 
+
+An example of the active and passive perspective definition of an association is shown in Figure \ref{frag:example_perspectiveDefinition}. In the example, the subject matter is the Oven and the object matter is the Beeper.
+
+\codefrag{example_perspectiveDefinition}{Example of active and passive perspective definition of an association.}{1}
+
+The association class declaration uses the same class declaration as a normal class within a domain. For more detail, please refer to Section \ref{sec:ClassDeclaration}. 
+
+A rail road diagram representation of the association body is shown in Figure \ref{bnf:AssociationBody} and example of association declarations is shown in Figure \ref{frag:example_associationDeclaration}.
+
+\bnf{AssociationBody}{A rail road diagram representation of the association body.}
+
+\codefrag{example_associationDeclaration}{Example of association declaration with and without association class declaration.}{1}
+
+\subsection{Generalisation declaration}
+The generalisation declaration is used to specify the subclass/es that a superclass has. This declaration, together with the specialisation clause of the class declaration, provides the full mechanism to specify xtUML generalisation and specialisation relationship. The declaration takes in the following inputs from the modeller:
+
+\begin{itemize}
+\item a simple identifier for the Identifier for the generalisation in the form of Rx where x is a number. (e.g. R1, R20,etc) 
+\item an optional string literal for the Description
+\item a Generalisation Body
+\end{itemize}
+
+The syntax for the declaration is shown in Figure \ref{bnf:Generalisation}.
+\bnf{Generalisation}{The syntax of the Generalisation declaration}
+
+The generalisation body contains the actual specification of the superclass and subclass/es. The syntax for the specification is shown in Figure \ref{bnf:GeneralisationBody}.
+
+\bnf{GeneralisationBody}{The syntax of the Generalisation body used to specify superclass and its subclass/es.}
+
+Example of generalisation declarations is shown in Figure \ref{frag:example_generalisationDeclaration}.
+
+\codefrag{example_generalisationDeclaration}{Example of generalisation declarations.}{1}
+
+\section{Scenario declaration}\label{sec:scenarioDeclaration}
+The scenario declaration provides the modeller a mechanism to execute the model through the use of LEM Action Language specified in Chapter \ref{chap:actionLanguage}. Signals can be generated to instance of class/es and state machine procedures will be executed. All instructions of LEM Action Language are valid in a scenario except the use of keyword \textbf{self} which is undefined in a scenario. 
+
+The inputs to a scenario declaration is as follows:
+\begin{itemize}
+\item a simple identifier for the Identifier for the scenario
+\item an optional string literal for the Description
+\item an optional procedure for the scenario Procedure
+\end{itemize}
+
+The syntax of the declaration is presented in Figure \ref{bnf:ScenarioDeclaration} followed by a example of a scenario declaration in Figure \ref{frag:example_scenarioDeclaration}.
+\bnf{ScenarioDeclaration}{The syntax of the scenario declaration}
+
+\codefrag{example_scenarioDeclaration}{Example of scenario declaration.}{1}
+
+\section{Bridge declaration} \label{sec:BridgeDeclaration}
+To create a bridge between two domain in LEM is fairly straightforward. The bridge declaration has the following inputs:
+
+\begin{itemize}
+\item a simple identifier for the Identifier of the bridge
+\item an optional string literal for the Description
+\item a Bridge Body
+\end{itemize}
+
+The syntax of the declaration is shown in Figure \ref{bnf:BridgeDeclaration}.
+\bnf{BridgeDeclaration}{The syntax of the bridge declaration}
+
+The bridge body is where the modeller can specify the two domains involved in the bridge. The inputs for the body are:
+
+\begin{itemize}
+\item a simple identifier for the Identifier of a domain within the model
+\item a simple identifier for the Identifier of another domain within the model
+\item an optional string literal for the Description
+\end{itemize}
+
+The syntax for the body is shown in Figure \ref{bnf:BridgeBody} and an example of a bridge declaration is shown in Figure \ref{frag:example_bridgeDeclaration}.
+
+\bnf{BridgeBody}{The syntax of the bridge body.}
+
+\codefrag{example_bridgeDeclaration}{Example of bridge declaration.}{1}

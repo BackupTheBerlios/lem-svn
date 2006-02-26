@@ -1,0 +1,2 @@
+Oven "has" 1..1 Beeper;
+Beeper "indicates completion of cooking by " 1..1 Oven;

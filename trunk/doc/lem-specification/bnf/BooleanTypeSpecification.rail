@@ -1,0 +1,3 @@
+\begin{rail}
+BooleanTypeSpecification : 'boolean' 
+\end{rail}

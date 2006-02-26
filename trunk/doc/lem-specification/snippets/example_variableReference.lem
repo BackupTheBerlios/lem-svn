@@ -1,0 +1,7 @@
+objref myAuthor;
+
+myAuthor := create Author;
+
+myAuthor.lastName := "Jones";
+myAuthor.firstName := "Jim";
+myAuthor.fullName := myAuthor.firstName + " " + myAuthor.lastName;

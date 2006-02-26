@@ -1,0 +1,3 @@
+\begin{rail}
+EnumerationMember : 'SIMPLE_IDENTIFIER' 
+\end{rail}

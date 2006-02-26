@@ -1,0 +1,3 @@
+\begin{rail}
+ActivePerspective : ActiveSubject ActiveVerbClause Multiplicity \\ ActiveObject 
+\end{rail}

@@ -1,0 +1,11 @@
+numeric a;
+objref b;
+
+a := -10;
+b := /* ... */;
+
+while( a < 0 ) {
+	a := a + 1;
+
+	generate someEvent( a ) to b;
+}

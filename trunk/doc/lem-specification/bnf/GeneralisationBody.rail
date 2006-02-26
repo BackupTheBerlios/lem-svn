@@ -1,0 +1,3 @@
+\begin{rail}
+GeneralisationBody : SuperClassIdentifier 'is' SubClassIdentifier \\ ( ( ',' SubClassIdentifier  * )  'or' SubClassIdentifier )?  
+\end{rail}

@@ -1,0 +1,7 @@
+string description;
+string name;
+numeric age;
+
+name := "James";
+age := 21;
+description := "Name: " + name + ", " + age;

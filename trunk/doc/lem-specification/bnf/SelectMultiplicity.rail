@@ -1,0 +1,3 @@
+\begin{rail}
+SelectMultiplicity :  ( 'one'  | 'all'  | 'any'  )  
+\end{rail}

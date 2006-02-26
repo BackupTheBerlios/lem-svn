@@ -1,0 +1,3 @@
+\begin{rail}
+EventGeneration : 'generate' Identifier ParameterList 'to' ObjectReference \\ WithDelay 
+\end{rail}

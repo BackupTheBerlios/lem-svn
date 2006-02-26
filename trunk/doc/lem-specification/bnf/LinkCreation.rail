@@ -1,0 +1,3 @@
+\begin{rail}
+LinkCreation : 'relate' ObjectReference 'to' ObjectReference \\ 'across' RelationshipReference LinkObjectCreation 
+\end{rail}

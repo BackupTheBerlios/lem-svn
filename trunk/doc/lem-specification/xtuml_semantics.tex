@@ -1,0 +1,472 @@
+% TODO we need to be less focussed on the LEM implementation, and try
+% to describe semantics in terms of a theoretical behaviour (or theoretical
+% implementation).
+%
+% It shouldn't be much work, mainly just moving away from "in LEM, ..."
+
+\chapter{Executable UML semantics as implemented by LEM}
+
+\section{Scope}
+
+This chapter rigorously defines the semantics expected of xtUML actions where
+they were found to be deficient or in need of clarification. Otherwise the
+semantics implemented are as described in \cite{mellor:2002}.
+
+A rationale will be delivered in cases where behaviour significantly deviates
+from that prescribed in \cite{mellor:2002}, or in cases where a significant gap
+in the specification has been filled.
+
+The action language syntax used in examples is the LEM action language, a
+detailed description of which may be found in Chapter \ref{chap:actionLanguage}.
+
+\section{Concepts and entities}
+\subsection{Model error conditions}
+A model error condition occurs when when the modeller has made an error in
+the action language and an inconsistent or non-sensical state is reached.
+Behaviour in case of a model error condition is implementation-defined.
+
+The conditions under which a model is determined to be in an inconsistent state
+are defined in later sections.
+
+\subsubsection{Rationale}
+The reason for deferring the specification of behaviour in the case of a model
+error conditions is that the final implementation can determine the best way to
+handle the error. For example, a mission critical redundant distributed system
+may wish to immediately restart the model, while a model verifier may instead
+wish to halt the interpreter and display useful error messages.
+
+\subsection{Time}
+The passage of time in an xtUML model is quantified only as intervals, and
+only when used in the \textsf{delayed signal} action. The only other concept of
+time is the execution of past, present future actions and state transitions,
+and only then within the context of a single state machine.
+
+\subsubsection{Rationale}
+For these reasons, the only requirement for an implementation is that each
+state machine have the ability for accurate measurement of time intervals, and
+may be distributed without the need for a synchronised clock.
+
+It will be defined that any action takes an amount of time $t \geq 0$ in order
+to be completely executed by a state machine.
+
+\subsubsection{Rationale}
+The allowance for $t = 0$ is made to allow an action language optimiser to
+completely remove a redundant or superfluous action. It would not appear to
+be more constraining in practice than $t \geq \epsilon > 0$.
+
+The allowance for arbitrarily large t is to allow an architecture for a given
+model to be completely flexible with regard to its execution characteristics.
+This constraint is likely to be a problem when modelling real-time systems. The
+solution is for such a system to set up its own notion of time within the model
+(for example, a timer tick class), however this will only be of use when
+specifying and verifying the requirements of the system rather than having the
+model generate a real architecture that has to run in \textsf{real time}.
+
+It is thought that guarantees of timeliness, if any, should exist in
+the architecture of implementation rather than the model.
+
+\subsection{Objects}
+\label{subsec:objects}
+An object contains storage of the values of all attributes of all its
+instances. These values are referred to with the same name as their
+corresponding attributes.
+
+Conceptually, the attributes of an object comprised of more than one
+instance behave in the same way as would an object comprised of one
+instance containing the union of the attributes of the original instances.
+
+\codefrag{example_attributes1}{Some examples of classes with various
+attributes.}{1}
+
+Figure \ref{frag:example_attributes1} provides an illustrative example of this
+concept.  The behaviour of an object comprised of instances of classes $A$ and
+$B$ is identical to that of an object comprised of an instance class $C$.
+
+LEM provides no way to resolve namespace collisions. So, in the example given,
+attribute $a3$ in class $B$ may not be named $a1$ or $a2$ due to a namespace
+collision with class $A$. Such a situation is a model error condition. 
+
+An object contains the running state machines of all its instances.
+
+In the context of any state's action language procedure, \textsf{self} is a
+reference to the object in which this state machine is contained. Of course,
+the object \textsf{self} may contain other state machines and instances.
+
+\diadiagram{objects}{Example object of 2 classes}{0.42}{0}
+
+\subsubsection{Rationale}
+After examining a range of use cases, it was determined that these semantics
+most closely match what is described in \cite{mellor:2002} without reducing
+the expressiveness of the semantics. The semantics are simple and somewhat
+similar to ``multiple inheritance'' in object oriented languages (in terms of
+the contents of the object).
+
+\subsection{Global object pool}
+In LEM, the \textsf{global object pool} contains a reference to all objects
+known to the LEM runtime. Objects which are not in the global object pool
+cannot be selected using the \textsf{select} statement, unless otherwise
+specified.
+
+For further discussion about how objects enter and leave the global object pool,
+see Sections \ref{sec:objectCreation} and \ref{sec:objectDeletion}.
+
+\subsection{Associations}
+\label{sec:relateAction}
+
+Associations in LEM behave as defined in \cite{mellor:2002}. This includes
+the relation and unrelation of objects from one another.
+
+\subsection{State machines}
+As outlined in \ref{subsec:objects}, a state machine is a property of an
+instance, and a running state machine exists in the context of an object.
+
+A state machine consumes signals and in response may transition states and
+execute actions.
+
+\subsection{Signals}
+\label{subsec:signals}
+A signal can be generated by a state machine and is targeted at an object.
+A signal is said to be a \textsf{signal to self}, if the target is the object in
+which the state machine itself is a part.
+
+\cite{mellor:2002} describes ``external events''. These are signals which do not
+originate from a state machine within the model. The generation of these signals
+is implementation defined. Upon delivery, these signals behave just as any other
+LEM signal.
+
+\subsubsection{Signal delivery}
+Delivery ordering of signals is as defined in \cite{mellor:2002}. That is, 2
+signals from a state machine to a given object will be received in the order
+they are generated. There are no other ordering requirements.
+
+A signal delivered to an object causes the signal to be delivered to all
+state machines in the object.
+
+A signal will either be delivered to all state machines in an object, or
+none at all (this is important due to signal cancellation). Note that some
+or all state machines of an object may ignore any signal (this follows
+from the xtUML requirements).
+
+\subsubsection{Signal consumption}
+Signal consumption ordering is as defined in \cite{mellor:2002}. That is, any
+\textsf{signal to self} that has been delivered to a state machine will be
+consumed before any other type of signal.
+
+Apart from the above signal delivery semantics, state machines in the same
+object are not synchronised any more than are state machines of different
+objects. That is, any state machine may have consumed any number of signals
+regardless of the progress of other state machines in the object.
+
+% [signal delivery queue conceptual diagram]
+
+\diadiagram{signalSources}{An example of two events: one from \textsf{self}, one
+from another LEM object. Events to \textsf{self} are consumed before other
+events and so reside on their own queue.}{0.42}{0}
+
+\diadiagram{signalDelivery1}{After the delivery of the events in Figure
+\ref{frag:signalSources}, the object has consumed the \textsf{self} event and
+has delivered it to the \textsf{self} queue of each of its instances.}{0.5}{0}
+
+\subsection{Action ordering}
+Action language actions are defined to be run by a state machine, and to
+change the state of the model. There may be multiple state machines running
+concurrently in a model, and so there must be some prescribed ordering of
+visibility of these modifications to the model as seen from another state
+machine. Much like signal delivery ordering semantics must be defined.
+
+It is defined that the results of the execution of any 2 actions by a single
+state machine, in terms of visibility of changes to the model from the
+perspective of an observing state machine, be ``strongly ordered'' with
+respect to one another.
+
+In other words, actions are always seen to complete in the same order that
+they were issued.
+
+To illustrate strong ordering, Figure
+\ref{frag:example_concurrentAttributeManipulation} shows concurrent state
+machines running sequences of attribute manipulations.  Strong ordering
+specifies that 
+
+\begin{eqnarray*}x = 20 & \rightarrow & y = 10\end{eqnarray*}
+
+when viewed from any state machine.
+
+Note this ordering does not only apply to attribute manipulation, but to any and
+all actions which are observed from another state machine.
+
+\sidebysidefrag{example_concurrentAttributeManipulation}
+	{example_concurrentAttributeManipulation1}
+	{Concurrent attribute manipulation from 2 state machines.}{1}
+
+\subsubsection{Rationale}
+The rationale for using strong action ordering is primarily that it is the
+most intuitive ordering model for the action language programmer. Also, it
+matches signal delivery ordering semantics as prescribed by \cite{mellor:2002}.
+
+\section{Actions}
+Actions are run by state machines. Actions provide the only mechanism to
+change the current state of the model.
+
+\subsection{Object creation}
+\label{sec:objectCreation}
+
+The create object action creates an object which is comprised of a
+conglomeration of instances of the classes specified in the create action.
+
+\codefrag{example_createAction}{A creation action with multiple classes.}{1}
+
+The LEM code in Figure \ref{frag:example_createAction} will create an object 
+comprised of instances of classes $A$,$B$ and $C$. xtUML specifies that these
+classes must be participants of multiple generalisation hierarchies of the same
+base class. LEM will generate an error if this restriction is violated.
+
+When an object is created, it is added to the global object pool as part of
+the the creation statement unless it has been created within an ``atomic
+creation'' block. In that case, all objects created within the atomic creation
+block will be atomically added to the global pool when the creation block ends.
+
+\codefrag{example_createContext}{An example of an object creation inside an
+\textsf{atomic creation} block.}{1}
+
+For example, in Figure \ref{frag:example_createContext}, the newly created
+objects will enter the global object pool at the end of the atomic creation.
+
+\subsubsection{Rationale}
+Atomic creation blocks were devised as a means to solve the problem of having
+inconsistent object in the global object pool. Newly created objects often do
+not meet all their invariants - the classic example is 2 objects participating
+in an unconditional 1..1 relationship with one another.
+
+Atomic creation blocks allow multiple objects to be created and made consistent
+before allowing them into the wider system.
+
+Initially, a more transparent proposal for this problem was devised -
+\textsf{delayed object propagation}, in which a newly created object was not
+allowed into the global object pool until its last reference disappeared. This
+makes perfect sense because the object can no longer be in the process of being
+set up if it cannot be referenced. The problem with this is that it could
+violate the strong ``action ordering'' semantic in numerous ways. For example,
+an object may not be visible to an object created after it was.
+
+Solving this problem would have either required relaxing the action ordering,
+or delaying the effects of all actions in order to match the strong action
+ordering semantics. Both solutions result in a much less intuitive set of
+semantics for the action language programmer.
+
+\subsection{Object deletion}
+\label{sec:objectDeletion}
+
+Synchronous object deletion via the explicit \textsf{delete object} action is
+only allowed for static objects - those without state machines. The reason it
+is not allowed for objects with state machines is because it would give rise to
+race conditions and special cases versus the object's state machines.
+
+Attempted explicit deletion of a dynamic object is a model error condition.
+
+Deletion of dynamic objects comes about when all the object's state
+machines reach the deletion state. If one or more state machines reaches
+a quiescent state, or otherwise never reaches a deletion state, the object
+will never be deleted.
+
+Object deletion (either static or dynamic objects), removes the object from
+the global object pool.
+
+This object may still be referred to via current references, or by following
+any associations it participates in.
+
+An object will be completely deleted when all associations are removed (or
+objects participating on the other end of associations are deleted), and
+when all references to the object go out of scope.
+
+This ``delayed object deletion'' allows objects to remain in a consistent
+state until all references to them disappear. 
+
+\diadiagram{1to1}{Two classes participating in a mutually unconditional
+association.}{1}{0}
+
+Figure \ref{frag:1to1} is illustrative: an object containing an instance of A
+cannot exist without being related to an object containing an instance of B.
+However, deletion actions may only delete one object at a time; without delayed
+object deletion, it would not be possible to delete both objects without
+violating those invariants.
+
+\subsection{Object reclassification}
+The object reclassification action is removed from this xtUML specification.
+
+\subsubsection{Rationale}
+There are a number of reasons for disallowing object reclassification. The
+first is that it is fundamentally very difficult to reclassify objects while
+also obeying object lifetime and reference rules, and to devise a reasonable
+set of semantics for the live state machines of objects being reclassified.
+
+The burden of object lifetimes, references, and state machine consistency could
+be mostly pushed into the modeller's domain however it was thought to be an
+undue burden. Also, once the modeller has come to grips with these problems,
+reclassification would appear to be able to be implemented by creating a new
+object and deleting the old one.
+
+The second reason is simply that no realistic models were put forward where
+reclassification was a requirement. All cases appeared to be trivially
+solvable using object creation and deletion.
+
+\subsection{Attribute manipulation}
+\label{sec:attributeManipulation}
+An object's attributes (ie. those attributes present in all instances
+that make up the object) can be directly set and queried by any state
+machine that has a reference to the object.
+
+The query and set actions are atomic with respect to other state machines.
+That is, the result of an attribute query action is always guaranteed to
+return the value that was provided by a previous attribute set action.
+
+There are no other synchronisation or atomicity guarantees given. In particular
+there is no possibility to perform an atomic read-modify-write operation.
+
+It is recommended that synchronisation of attribute manipulation be
+handled by signals and state machines.
+
+% TODO: example code of an atomic incrementer state machine?
+
+\subsection{Object selection}
+\label{sec:selectAction}
+
+The object selection action conceptually selects from all objects which are in
+the global pool. Within an ``atomic create'' block, all created objects which
+have not yet propagated to the global object pool will also be selected.
+
+\subsection{Signal generation}
+Signals are specified to be delivered to their target object at some time
+$t >= 0$ after the signal generation action occurs, with an exception being made
+for cancelled signals.
+
+Signal delivery, ordering and consumption by target state machines is defined
+in \ref{subsec:signals}.
+
+\subsection{Delayed signals}
+Delayed signals have a specified delay $d \geq 0$. Delayed signals are specified to
+be delivered to their target object at time $t \geq d$ after the signal generation
+action occurs, again with an exception for cancelled signals.
+
+It is specified that a delayed signal with delay d will be delivered
+\emph{after} a previously generated delayed signal with $delay \leq d$. For example,
+\ref{frag:example_delayedSignals} shows a sequence of delayed signal generation,
+where s2 is guaranteed to be delivered after s1.
+
+\codefrag{example_delayedSignals}{Delayed signal generation sequence}{1}
+
+The target object will have no knowledge of the delayed signal until it has
+been delivered.
+
+A delayed signal otherwise behaves exactly as a regular signal with respect
+to delivery, ordering, consumption.
+
+\subsection{Signal cancellation}
+
+Signals, both immediate and delayed, to other objects may not be cancelled. The
+reason for this is that a signal to another object cannot be deterministically
+cancelled because there is usually no way to know whether or not that signal
+has been consumed without elaborate schemes. It would probably be simpler to
+solve the same problem in a different manner.
+
+Immediate signals to self may not be cancelled. There is no use for this: the
+same effect can be achieved by only delivering the signal at the point where
+it was decided \emph{not} to cancel it.
+
+Delayed signals to self are the only type of signal that may be cancelled.
+A cancel signal action will delete \emph{one} signal from the object's
+\textsf{self} signal queue.
+
+% Diagram to illustrate?
+
+A delayed signal to self may be cancelled regardless of whether the delay
+time has not yet elapsed, or the delay time has elapsed and the signal
+delivered (but not yet processed).
+
+If the cancel signal action does not find a signal to delete it is a model
+error with undefined results.
+
+\textbf{Note:} When there is more than one state machine in an object, the
+cancelling of delayed signals to self may be non deterministic and therefore
+may result in a model error condition.
+
+% Warning box with exclamation mark required! Just like in the textbooks!
+
+For example, suppose an object consists of instances of classes A and B, each
+with a state machine. One state machine may execute the actions shown in figure
+\ref{frag:example_signalCancel}.
+
+\codefrag{example_signalCancel}{Signal cancellation example}{1}
+
+During this time, if the other state machine is \emph{ever} waiting for a
+signal to be delivered then the cancel is non deterministic and may result in
+a model error.
+
+The reason is that the action language provides no guarantees about the
+speed of execution of actions, and thus the signal delay may have already
+past before the cancel statement has executed. In which case, the signal
+will have been delivered and can have been picked up by the other (waiting)
+state machine.
+
+The requirement that signals are delivered to all or none of the state
+machines means that the signal to self can no longer be cancelled because
+it has already been delivered to one state machine.
+
+\section{Data types}
+\label{section:coreDataTypes}
+
+LEM has two sets of types:
+\begin{itemize}
+	\item core types
+	\item domain-specific types
+\end{itemize}
+
+\subsection{Core types}
+
+LEM has 7 core data types:
+
+\begin{itemize}
+        \item boolean
+        \item numeric
+        \item date
+        \item object reference
+        \item set
+        \item string
+        \item arbitrary identifier
+\end{itemize}
+
+The semantics of each of these types are described in subsequent sections.
+
+\subsubsection{Boolean}
+
+The boolean type represents the values ``true'' and ``false''. Variables of
+boolean type can be permuted using the familiar boolean operations: logical
+``and'', ``or'' and ``not''.
+
+\subsubsection{Numeric}
+
+Unlike some programming languages, LEM does not allow the modeller to choose the
+size of the internal representation of numeric values. Instead, LEM provides one
+single type ``numeric'', which is of arbitrary size and precision.
+
+LEM allows the modeller to place constraints on the value of numeric variables
+using the domain-specific type mechanism, described in the next section.
+
+% TODO: Add reference to domain-specific type section
+
+If the modeller does not specify the it explicitly, an arbitrary
+precision of 10 decimal places is imposed by the runtime implementation.
+
+\subsection{Domain-specific types}
+
+In LEM, domain-specific data types are effectively core types with constraints.
+
+For example, the modeller may wish to specify that the price of an item is always
+positive. This can be achieved with the construct shown in Figure
+\ref{frag:example_DSTprice}.
+
+\codefrag{example_DSTprice}{An example of constraining the value of a core data
+type}{1}
+
+In fact, the invariant clause can be any valid boolean expression. Any attempt
+to violate the invariant will result in a \textsf{model error condition}.
+

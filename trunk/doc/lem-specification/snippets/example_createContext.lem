@@ -1,0 +1,13 @@
+atomic create{
+	objref obj1;
+	objref obj2;
+	
+	obj1 := create A;
+	obj1.attr := 10;
+
+	obj2 := create B;
+	obj2.width := 10;
+	obj2.length := 10;
+	obj2.area := 10*10;
+}
+/* at this point, obj1 and obj2 will be put in the global object pool */

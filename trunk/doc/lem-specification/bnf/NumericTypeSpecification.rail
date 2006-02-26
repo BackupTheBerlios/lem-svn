@@ -1,0 +1,3 @@
+\begin{rail}
+NumericTypeSpecification : 'numeric' ( UnitsSpec  ? ) ( RangeSpec  ? ) ( PrecisionSpec  ? ) 
+\end{rail}

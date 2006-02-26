@@ -1,0 +1,3 @@
+\begin{rail}
+BaseAttribute : 'attribute' AttributeIdentifier Description ? \\ 'is' Type ( ':=' Literal )? ';' 
+\end{rail}

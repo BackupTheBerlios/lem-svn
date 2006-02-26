@@ -1,0 +1,2 @@
+type ISBN "is used to uniquely identify books" is 
+	string pattern: "\d-\d\d\d\d-\d\d\d\d-\d";

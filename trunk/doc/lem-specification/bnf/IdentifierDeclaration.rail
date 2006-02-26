@@ -1,0 +1,3 @@
+\begin{rail}
+IdentifierDeclaration : 'identifier' Description ? 'is' IdentifyingAttribute \\ ( ( ',' IdentifyingAttribute *)  'and' IdentifyingAttribute  ) ? \\ ';' 
+\end{rail}

@@ -1,0 +1,3 @@
+\begin{rail}
+ParameterDeclaration : Identifier Description ? 'is' Type 
+\end{rail}

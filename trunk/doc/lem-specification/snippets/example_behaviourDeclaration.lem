@@ -1,0 +1,3 @@
+behaviour is "the state machine for a microwave oven"
+	<<BehaviourBody>>
+end behaviour;

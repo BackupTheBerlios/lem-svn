@@ -1,0 +1,12 @@
+set products;
+
+/*
+ * Generate a quantity warning to all products
+ * with less than 100 units available.
+ */
+products := select all from instances of Product
+				where (selected.quantity < 100);
+
+for each product in products {
+	generate QuantityWarning to product;
+}

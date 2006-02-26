@@ -1,0 +1,3 @@
+\begin{rail}
+ModelDeclaration : 'model' Identifier 'is' Description ? ModelBody \\ EndIdentifier ';' 
+\end{rail}

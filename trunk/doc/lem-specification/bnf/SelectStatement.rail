@@ -1,0 +1,3 @@
+\begin{rail}
+SelectStatement : 'select' SelectMultiplicity 'from' 'instances' \\ 'of' Identifier WhereClause 
+\end{rail}

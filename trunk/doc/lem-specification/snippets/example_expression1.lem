@@ -1,0 +1,5 @@
+/* This is an example of a simple assignment expression */
+
+numeric a;
+
+a := 2 + 3;

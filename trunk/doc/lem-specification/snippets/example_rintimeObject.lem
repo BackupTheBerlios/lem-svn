@@ -1,0 +1,5 @@
+ public class runtime.Object extends java.lang.object {
+  
+      private HashMap instances;
+      ...
+ }

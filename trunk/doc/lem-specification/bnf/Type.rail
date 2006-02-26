@@ -1,0 +1,3 @@
+\begin{rail}
+Type :  ( PrimitiveType  | DomainSpecificType  ) 
+\end{rail}

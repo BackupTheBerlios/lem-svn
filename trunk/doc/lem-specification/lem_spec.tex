@@ -1,0 +1,134 @@
+\documentclass[a4paper,11pt]{book}
+\input{template.tex}
+
+\usepackage[pdftex,
+	citebordercolor={.7 .8 .8},
+	linkbordercolor={.7 .8 .8}, 
+	pdfborder={0 0 1 [3]}]{hyperref}
+
+\usepackage{rail}
+
+\railoptions{+ac}
+\railalias{quote}{'}
+\railalias{dquote}{``}
+\railalias{cr}{\char''5C\char``5C}
+\railterm{quote,dquote,cr}
+
+\newcommand\Rail{Rail}
+\newcommand\nt[1]{\textit{#1}}
+\newcommand\file[1]{\textit{file}\texttt{.#1}}
+\newcommand\lit[1]{\texttt{#1}}
+\newcommand\cs[1]{\lit{\char``5C\relax#1}}
+
+%\begin{document}
+%opening
+
+% Embed a code fragment in the document
+% Parameters:
+% * The file to include
+% * The caption
+% * The scale
+% Example: \codefrag{object}{Object creation}{0.5}
+\newcommand{\codefrag}[3]{
+	\begin{figure}[!ht]
+		\begin{center}
+			\framebox{\includegraphics[scale=#3]{snippets/#1.eps}}
+			\caption{#2}
+			\label{frag:#1}
+		\end{center}
+	\end{figure}
+}
+
+% Embed a code fragment in the document
+% Parameters:
+% * The file to include
+% * The caption
+% * The scale
+% Example: \codefrag{object}{Object creation}{0.5}
+\newcommand{\sidebysidefrag}[4]{
+	\begin{figure}[!ht]
+		\begin{center}
+			\framebox{\includegraphics[scale=#4]{snippets/#1.eps}}
+			\framebox{\includegraphics[scale=#4]{snippets/#2.eps}}
+			\caption{#3}
+			\label{frag:#1}
+		\end{center}
+	\end{figure}
+}
+
+% Embed a dia diagram in the document
+% Parameters:
+% * The file to include
+% * The caption
+% * The scale
+% * The rotation
+\newcommand{\diadiagram}[4]{
+	\begin{figure}[!ht]
+		\begin{center}
+			\includegraphics[scale=#3,angle=#4]{images/#1.eps}
+			\caption{#2}
+			\label{frag:#1}
+		\end{center}
+	\end{figure}
+}
+
+\newcommand{\bnf}[2]{
+	\begin{figure}[!ht]
+		\begin{center}
+			\input{bnf/#1.rail}
+		\end{center}
+		\caption{#2}
+		\label{bnf:#1}
+	\end{figure}
+}
+
+% I'd like this command to display a little warning box, maybe with an
+% exclamation mark inside it, to bring attention to important points within the
+% text.
+%
+% For now, it just displays the text in boldface! :)
+\newcommand{\warning}[1]{
+	\emph{#1}
+}
+
+% Uncomment this if we want subsubsections numbered
+% \setcounter{secnumdepth}{5}
+
+\title{Specification of the Language for Executable Models (LEM)}
+\author{Team eLEMinator}
+
+\begin{document}
+
+\frontmatter
+
+% Any stuff to do with document meta-information (how we typeset it, who should
+% read it, blah blah)
+
+\mytitlepage{}{$Revision: 1.8 $}
+
+% ============================================================================
+
+\tableofcontents
+
+% ##############################################################################
+
+\mainmatter
+
+\input{xtuml_semantics.tex}
+\input{syntax_specification.tex}
+\input{action_language_spec.tex}
+
+% ============================================================================
+
+\appendix
+
+% Appendix information here (if any)
+
+\backmatter
+
+% Any futher matter (bibliography, index)
+
+\bibliographystyle{alpha}
+\bibliography{../bibliography/lem}
+
+\end{document}

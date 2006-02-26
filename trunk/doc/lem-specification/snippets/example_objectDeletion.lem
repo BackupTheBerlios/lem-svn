@@ -1,0 +1,6 @@
+objref victim1;
+
+victim1 := select any Author where selected.name = "James";
+
+delete victim1;
+delete self;

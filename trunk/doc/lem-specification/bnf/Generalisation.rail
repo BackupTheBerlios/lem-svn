@@ -1,0 +1,3 @@
+\begin{rail}
+Generalisation : 'generalisation' Identifier 'is' Description ? \\ GeneralisationBody EndIdentifier ';'
+\end{rail}

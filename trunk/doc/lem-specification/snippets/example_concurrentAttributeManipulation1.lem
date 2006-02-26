@@ -1,0 +1,2 @@
+x := object2.b;
+y := object1.a;

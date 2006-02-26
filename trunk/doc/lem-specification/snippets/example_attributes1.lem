@@ -1,0 +1,14 @@
+class A is
+	attribute a1 is numeric;
+	attribute a2 is numeric;
+end class A;
+
+class B is
+	attribute a3 is string;
+end class B;
+
+class C is
+	attribute a1 is numeric;
+	attribute a2 is numeric;
+	attribute a3 is string;
+end class C;

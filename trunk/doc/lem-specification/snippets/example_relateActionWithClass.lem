@@ -1,0 +1,7 @@
+objref borrower;
+objref book;
+
+borrower := /* ... */;
+book := /* ... */;
+
+relate borrower to book across R4."has borrowed" creating Loan;

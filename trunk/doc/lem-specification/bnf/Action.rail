@@ -1,0 +1,3 @@
+\begin{rail}
+Action :  ( ObjectCreation ';'  | ObjectDeletion ';'  | AttributeAssignment ';'  | EventGeneration ';'  | EventCancel ';'  | LinkCreation ';'  | LinkDeletion ';'  | IfStatement  | WhileStatement  | ActionBlock  | ForStatement  | Break  | Return  ) 
+\end{rail}

@@ -1,0 +1,2 @@
+type UniversalProductCode "a string that identifies a product" is \\
+string length: 10 pattern: "\d-\d\d\d\d-\d\d\d";

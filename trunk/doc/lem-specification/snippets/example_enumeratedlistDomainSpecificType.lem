@@ -1,0 +1,2 @@
+type season "Enumerated type for specifying seasons" is \\
+(Spring, Summer, Autumn or Winter);

@@ -1,0 +1,13 @@
+scenario CookAPie is "a program to cook a pie" {
+	objref sharehouseOven;
+	objref sharehouseMagnetron;
+	sharehouseOven := create Oven;
+	sharehouseMagnetron := create Magnetron;
+		
+	relate sharehouseOven to sharehouseMagnetron across R3/*."heats it up"*/;
+	
+	generate genesis to sharehouseOven;	
+	generate genesis to sharehouseMagnetron;
+	generate cookingPeriod( 10000 ) to sharehouseOven with delay 10000;
+	generate startCooking to sharehouseOven with delay 15000;
+} end CookAPie;

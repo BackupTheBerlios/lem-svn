@@ -1,0 +1,4 @@
+\begin{rail}
+SuperClassList : SuperClassIdentifier (  (',' SuperClassIdentifier *) 'and' \\
+SuperClassIdentifier ) ?
+\end{rail}

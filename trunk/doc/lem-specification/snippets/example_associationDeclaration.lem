@@ -1,0 +1,13 @@
+association R1 is "a record of the fact that each Oven has a Beeper" 
+	Oven "has" 1..1 Beeper;
+	Beeper "indicates completion of cooking by " 1..1 Oven;
+end R1;
+
+association R2 is
+	Order "contains customer selections of" 1..* Book;
+	Book "is purchased on" 0..* Order;
+	class ProductSelection is
+		attribute quantity is numeric precision: 1;
+		attribute unitPriceOfSelection is Money;
+	end ProductSelection;
+end R2;

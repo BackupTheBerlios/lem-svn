@@ -1,0 +1,7 @@
+objref myObject;
+string authorName;
+date dateOfBirth;
+
+myObject := select one Author where /* ... */;
+authorName := myObject.author;
+dateOfBirth := myObject.birthDate;

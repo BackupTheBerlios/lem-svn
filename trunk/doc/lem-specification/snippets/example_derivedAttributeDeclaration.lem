@@ -1,0 +1,8 @@
+derived attribute TotalCost is numeric
+calculation is
+	set list;
+	list := select all Items related to this across R1;
+	for each i in list {
+		TotalCost := TotalCost + i.cost;
+	}
+end calculation;

@@ -1,0 +1,15 @@
+behaviour is "the state machine for a microwave oven"
+	state AwaitingCookingRequest is {
+		objref beeper;	
+		self.remainingCookingTime := 0;
+		beeper := select one from instances of Beeper;
+		generate stopBeeping to beeper;
+	} end AwaitingCookingRequest;
+					
+	state AssigningCookingPeriod (period is numeric) is {
+		self.remainingCookingTime := period;
+	} end AssigningCookingPeriod;
+
+	state Idle is "just a demonstration"
+	end Idle;
+end behaviour;

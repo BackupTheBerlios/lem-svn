@@ -1,0 +1,17 @@
+class Publisher is
+	attribute publisherCode is string;
+	attribute groupCode is string;
+
+	identifier "unique key to distinguish instance" is \\
+		publisherCode and groupCode;
+end Publisher
+
+class Location is
+	attribute streetName is string;
+	attribute buildingName is numeric;
+	attribute state is string;
+	attribute city is string;
+	attribute postalCode is numeric;
+
+	identifier is streetName, buildingName, state, city and postalCode;
+end Location

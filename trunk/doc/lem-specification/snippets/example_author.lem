@@ -1,0 +1,8 @@
+ class Author is "the writer of one or more books (titles)" 
+    authorId "a unique identifier for the author" is arbitrary_id;
+    name "identifies the author" is string;
+    birthDate is date;
+    website "provides useful details about the author. Of course
+             not all authors have a website" is string;
+    email "allows use to communicate via electronic mail" is string;
+ end Author;

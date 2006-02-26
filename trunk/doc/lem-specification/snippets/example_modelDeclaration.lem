@@ -1,0 +1,4 @@
+model TheWorld is "where all things happen"
+	<<ModelBody>>	
+end TheWorld;
+

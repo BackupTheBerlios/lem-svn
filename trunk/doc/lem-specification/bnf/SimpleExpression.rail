@@ -1,0 +1,3 @@
+\begin{rail}
+SimpleExpression : Term ( Adding Term  * )  
+\end{rail}

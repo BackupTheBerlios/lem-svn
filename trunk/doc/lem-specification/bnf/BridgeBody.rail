@@ -1,0 +1,3 @@
+\begin{rail}
+BridgeBody : 'between' Identifier 'and' Identifier Description ? ';'
+\end{rail}

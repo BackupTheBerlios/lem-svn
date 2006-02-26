@@ -1,0 +1,7 @@
+objref myBook;
+objref myAuthor;
+
+myBook := /* ... */;
+myAuthor := /* ... */;
+
+unrelate myBook from myAuthor across R2;

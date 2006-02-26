@@ -1,0 +1,3 @@
+\begin{rail}
+EventDeclaration : ( 'self'  ? ) 'event' Identifier Description ? \\ ( 'carries' EventSignature )? ';' 
+\end{rail}

@@ -1,0 +1,3 @@
+\begin{rail}
+ClassDeclaration : 'class' Identifier ( 'specialisation' 'of' SuperClassList )? \\ 'is' Description ? ClassBody EndIdentifier ';' 
+\end{rail}

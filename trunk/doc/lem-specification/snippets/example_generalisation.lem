@@ -1,0 +1,39 @@
+ class A is
+     ...
+ end;
+ 
+ class B specialisation of A is
+     ...
+ end;
+ 
+ class C specialisation of A is
+     ...
+ end;
+ 
+ class D specialisation of C is
+     ...
+ end;
+ 
+ class E specialisation of C is
+     ...
+ end;
+ 
+ class X specialisation of A is
+     ...
+ end;
+ 
+ class Y specialisation of A is
+     ...
+ end;
+ 
+ generalisation R1 is
+     A is B or C;
+ end;
+ 
+ generalisation R2 is
+     C is D or E;
+ end;
+ 
+ generalisation R3 is
+     A is X or Y;
+ end;

@@ -1,0 +1,4 @@
+bridge B1 is 
+	between WebGUI and WebServer "All communication will be over \\
+						secure communciation";
+end B1;

@@ -1,0 +1,3 @@
+\begin{rail}
+StateDeclaration : ( 'deletion'  ? ) 'state' Identifier StateSignature ? 'is' \\ Description ? Procedure ? EndIdentifier ';' 
+\end{rail}

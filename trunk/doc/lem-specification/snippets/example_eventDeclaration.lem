@@ -1,0 +1,6 @@
+class Oven is
+	event genesis;
+	event cookingPeriod carries (period is numeric);
+	event cookingProgram carries (period is numeric, program is string);
+	self event ovenSafe;
+end Oven;

@@ -1,0 +1,7 @@
+model TestModel is
+	domain TestDomain is
+		subsystem TestSubsystem is
+			...
+		end;
+	end;
+end;

@@ -1,0 +1,3 @@
+\begin{rail}
+PrecisionValue :  ( 'REAL_LITERAL'  | 'DECIMAL_LITERAL'  ) 
+\end{rail}

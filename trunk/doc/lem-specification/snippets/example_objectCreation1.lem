@@ -1,0 +1,3 @@
+objref aircon_govt_building;
+  
+aircon_govt_building := create AirconditionedBuilding, GovernmentBuilding;

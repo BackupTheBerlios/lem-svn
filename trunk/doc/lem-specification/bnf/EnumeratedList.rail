@@ -1,0 +1,3 @@
+\begin{rail}
+EnumeratedList :  EnumerationMember (  ',' EnumerationMember  * )  'or' \\ EnumerationMember   
+\end{rail}

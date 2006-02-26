@@ -1,0 +1,11 @@
+objref p1;
+set customers;
+objref manuscript;
+objref card;
+
+select any p1 from instances of Product;
+select all customers from instances of Customer;
+select one manuscript from instances of Manuscript 
+	where myAuthor related to Manuscript;  
+select any card from instances of CreditCard 
+	where (selected.type = "Visa");

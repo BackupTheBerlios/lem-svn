@@ -1,0 +1,8 @@
+class Product is "a superclass of all product subclasses"
+	<<ClassBody>>
+end Product;
+
+class BookProduct specialization of Product is \\ 
+			"a subclass of Product for book products"
+	<<ClassBody>>
+end BookProduct;

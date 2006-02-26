@@ -1,0 +1,11 @@
+objref client;
+objref bookStore;
+objref USArmy;
+
+client := /* ... */;
+bookStore := /* ... */;
+USArmy := /* ... */
+
+generate requestPayment to client;
+generate paymentReceived( 1401 / 12.5, "Bob" ) to bookStore;
+generate fireMissile to USArmy with delay 100;

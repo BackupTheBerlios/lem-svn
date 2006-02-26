@@ -1,0 +1,3 @@
+\begin{rail}
+TypeSpecification :  ( ArbitraryIdTypeSpecification  | EnumeratedList  | BooleanTypeSpecification  | NumericTypeSpecification  | StringTypeSpecification  | DateTypeSpecification  | ObjectReferenceTypeSpecification  | SetTypeSpecification  )  
+\end{rail}

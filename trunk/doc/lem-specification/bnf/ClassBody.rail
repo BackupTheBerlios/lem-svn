@@ -1,0 +1,3 @@
+\begin{rail}
+ClassBody : ( AttributeDeclaration  * )  ( IdentifierDeclaration  * )  \\ ( EventDeclaration  * )  ( Behaviour  ? ) 
+\end{rail}

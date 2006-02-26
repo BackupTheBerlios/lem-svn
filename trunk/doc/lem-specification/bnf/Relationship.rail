@@ -1,0 +1,3 @@
+\begin{rail}
+Relationship :  ( Association  | Generalisation  )  
+\end{rail}

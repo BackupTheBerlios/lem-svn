@@ -1,0 +1,4 @@
+set products;
+
+products := select all from instances of Product 
+	where (selected.quantityAvailable > 0);

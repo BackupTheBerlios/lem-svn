@@ -1,0 +1,3 @@
+\begin{rail}
+Literal :  ( 'DECIMAL_LITERAL'  | 'REAL_LITERAL'  | 'STRING_LITERAL'  | 'BOOLEAN_LITERAL'  | 'null'  ) 
+\end{rail}

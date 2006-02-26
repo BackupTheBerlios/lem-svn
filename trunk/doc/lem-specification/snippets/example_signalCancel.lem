@@ -1,0 +1,2 @@
+generate ev1 to self with delay 10;
+cancel ev1 to self;

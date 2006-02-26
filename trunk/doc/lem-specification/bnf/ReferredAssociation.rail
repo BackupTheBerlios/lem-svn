@@ -1,0 +1,3 @@
+\begin{rail}
+ReferredAssociation : 'SIMPLE_IDENTIFIER' 
+\end{rail}
